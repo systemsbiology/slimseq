@@ -1,0 +1,16 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+mouse_jan:
+  id: 1
+  lab_group_id: 1
+  charge_period_id: 1
+  name: MouseGroup
+  budget_manager: Some Guy
+  budget: 12345678
+alligator_jan:
+  id: 2
+  lab_group_id: 1
+  charge_period_id: 1
+  name: Alligator-Internal
+  budget_manager: Jose Cuervo
+  budget: 11112222
+

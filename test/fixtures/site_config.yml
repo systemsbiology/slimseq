@@ -1,0 +1,12 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first:
+  id: 1
+  site_name: Test Site
+  organization_name: Test Organization
+  facility_name: Test Facility
+  array_platform: both
+  track_inventory: 1
+  track_hybridizations: 1
+  track_charges: 1
+  create_gcos_files: 1
+  gcos_output_path: /tmp/

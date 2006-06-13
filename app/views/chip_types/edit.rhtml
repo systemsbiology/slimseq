@@ -1,0 +1,8 @@
+<h2>Editing Chip Type</h2>
+
+<%= start_form_tag :action => 'update', :id => @chip_type %>
+  <%= render :partial => 'form' %>
+  <%= submit_tag 'Edit' %>
+<%= end_form_tag %>
+
+<%= link_to 'Back', :action => 'list' %>

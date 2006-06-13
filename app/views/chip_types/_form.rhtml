@@ -1,0 +1,17 @@
+<%= error_messages_for 'chip_type' %>
+
+<!--[form:chip_type]-->
+<p><label for="chip_type_name">Name</label><br/>
+<%= text_field 'chip_type', 'name'  %></p>
+
+<p><label for="chip_type_short_name">Short name</label><br/>
+<%= text_field 'chip_type', 'short_name'  %></p>
+
+<p><label for="chip_type_default_organism_id">Organism</label><br/>
+<select id="default_organism_id" name="chip_type[default_organism_id]">
+    <%= options_from_collection_for_select @organisms, "id", "name", selected_value=@chip_type.default_organism_id %></select>
+    If Other, name the organism:
+    <input id="organism" 
+        name="organism" size="15" type="text" /></p></p>
+<!--[eoform:chip_type]-->
+

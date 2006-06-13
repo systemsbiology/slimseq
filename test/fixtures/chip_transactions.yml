@@ -1,0 +1,27 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+acquired:
+  id: 1
+  lab_group_id: 1
+  chip_type_id: 2
+  date: 2006-01-04
+  description: Bought some chips
+  acquired: 180
+  used: 0
+  traded_sold: 0
+  borrowed_in: 0
+  returned_out: 0
+  borrowed_out: 0
+  returned_in: 0
+used:
+  id: 2
+  lab_group_id: 1
+  chip_type_id: 2
+  date: 2006-01-05
+  description: Used some chips
+  acquired: 0
+  used: 30
+  traded_sold: 0
+  borrowed_in: 0
+  returned_out: 0
+  borrowed_out: 0
+  returned_in: 0

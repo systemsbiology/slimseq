@@ -1,0 +1,42 @@
+<h2>Listing Charges for <%= @charge_set.name %></h2>
+
+<%= start_form_tag :action => 'move' %>
+	<table class="sortable" id="charges">
+	  <tr>
+	    <th>Select</th>
+	    <th>Date</th>
+	    <th>Description</th>
+	    <th>Chips Used</th>
+	    <th>Chip Cost</th>
+	    <th>Labeling Cost</th>
+	    <th>Hybridization Cost</th>
+	    <th>QC Cost</th>
+	    <th>Other Cost</th>
+	    <th>Edit</th>
+	    <th>Destroy</th>
+	  </tr>
+	  
+	<% for charge in @charges %>
+	  <tr>
+	    <td><%= check_box 'selected_charges', charge.id %></td>
+	    <td><%= charge.date %></td>
+	    <td><%= charge.description %></td>
+	    <td><%= charge.chips_used %></td>
+	    <td><%= fmt_dollars(charge.chip_cost) %></td>
+	    <td><%= fmt_dollars(charge.labeling_cost) %></td>
+	    <td><%= fmt_dollars(charge.hybridization_cost) %></td>
+	    <td><%= fmt_dollars(charge.qc_cost) %></td>
+	    <td><%= fmt_dollars(charge.other_cost) %></td>
+	    <td><%= link_to 'Edit', :action => 'edit', :id => charge %></td>
+	    <td><%= link_to 'Destroy', { :action => 'destroy', :id => charge }, :confirm => 'Are you sure?' %></td>
+	  </tr>
+	<% end %>
+	</table>
+    <p><select id="charge_set_id" name="charge_set_id">
+        <%= charge_set_options_for_select %></select>
+    <%= submit_tag 'Move Charges To This Charge Set' %></p>
+<%= end_form_tag %>
+
+<br>
+<%= link_to 'Back to Charge Sets', :controller => 'charge_sets', :action => 'list' %> | 
+<%= link_to 'New charge', :action => 'new', :charge_set_id => @charge_set.id %>

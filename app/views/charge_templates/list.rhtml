@@ -1,0 +1,23 @@
+<h2>Listing Charge Templates</h2>
+
+<table class="sortable" id="charge_template">
+  <tr>
+  <% for column in ChargeTemplate.content_columns %>
+    <th><%= column.human_name %></th>
+  <% end %>
+    <th>Edit</th>
+    <th>Destroy</th>
+  </tr>
+  
+<% for charge_template in @charge_templates %>
+  <tr>
+  <% for column in ChargeTemplate.content_columns %>
+    <td><%=h charge_template.send(column.name) %></td>
+  <% end %>
+    <td><%= link_to 'Edit', :action => 'edit', :id => charge_template %></td>
+    <td><%= link_to 'Destroy', { :action => 'destroy', :id => charge_template }, :confirm => 'Are you sure?' %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'New charge_template', :action => 'new' %>

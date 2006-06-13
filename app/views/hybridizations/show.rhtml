@@ -1,0 +1,23 @@
+<h2>Hybridizations Recorded:</h2>
+
+<table class="table">
+  <th>Date</th>
+  <th>Chip Number</th>
+  <th>Short Name</th>
+  <th>Full Sample Name</th>
+  <th>Lab Group</th>
+  <th>Chip Type</th>
+  <% for n in 0..@hybridizations.size-1 %>
+  <tr>
+    <% hybridization = @hybridizations[n] %>
+    <td><%= hybridization.date %></td>
+    <td><%= hybridization.chip_number %></td>    
+    <td><%= hybridization.short_sample_name %></td>
+    <td><%= hybridization.sample_name %></td>
+    <td><%= LabGroup.find(hybridization.lab_group_id).name %></td>
+    <td><%= ChipType.find(hybridization.chip_type_id).name %></td>
+  </tr>
+  <% end %>
+</table>
+
+<%= link_to 'Hybridization List', :action => 'list' %>

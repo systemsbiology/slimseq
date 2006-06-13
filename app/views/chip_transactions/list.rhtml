@@ -1,0 +1,47 @@
+<h2>Listing Chip Transactions for <%= @lab_group_name%> and <%= @chip_type_name%></h2>
+
+<%= link_if_authorized 'Chip Inventory Home', :controller => 'inventory', :action=>'index'%> 
+<%= link_if_authorized 'New chip_transaction', :action => 'new' %> 
+<%= link_if_authorized 'Enter an Inventory Check', :controller => 'inventory_checks',
+    :action => 'new', :expected => @totals['chips'], :lab_group_id => session[:lab_group_id],
+    :chip_type_id => session[:chip_type_id] %>
+
+<h2>Totals</h2>
+<table class="table">
+  <tr>
+  <% @total_column_human_names = ['Acquired','Used','Traded or Sold','Borrowed(In)',
+                                  'Returned(Out)','Borrowed(Out)','Returned(In)','Current Number of Chips'] %>
+  <% for column_name in @total_column_human_names %>
+    <th class="table"><%= column_name %></th>
+  <% end %>
+  </tr>
+    <tr>
+    <% @total_column_names = ['acquired','used','traded_sold','borrowed_in',
+                              'returned_out','borrowed_out','returned_in','chips'] %>
+    <% for column_name in @total_column_names %>
+        <td class="table"><%=h @totals[column_name] %></td>
+    <% end %>
+  </tr>
+</table>
+  
+<h2>Individual Transactions</h2>
+<table class="sortable" id="individual_chip_transactions">
+  <tr>
+  <% for column in ChipTransaction.content_columns %>
+    <th class="table"><%= column.human_name %></th>
+  <% end %>
+    <% authorized?(:action => 'edit'){ %><th>Edit</th><% } %>
+    <% authorized?(:action => 'destroy'){ %><th>Destroy</th><% } %>
+  </tr>  
+
+    <% for chip_transaction in @chip_transactions %>
+  <tr>
+        <% for column in ChipTransaction.content_columns %>
+    <td class="table"><%=h chip_transaction.send(column.name) %></td>
+        <% end %>
+    <% authorized?(:action => 'edit'){ %><td class="table"><%= link_to 'Edit', :action => 'edit', :id => chip_transaction %></td><% } %>
+    <% authorized?(:action => 'edit'){ %><td class="table"><%= link_to 'Destroy', { :action => 'destroy', :id => chip_transaction }, :confirm => 'Are you sure?' %></td><% } %>
+  </tr>
+    <% end %>
+</table>
+

@@ -1,0 +1,8 @@
+<h2>Enter Hybridizations</h2>
+
+<%= start_form_tag :action => 'add' %>
+    <%= render :partial => 'form' %>
+  <%= submit_tag "Add to Hybridization Table" %>
+<%= end_form_tag %>
+
+<%= link_to 'Back to List', :action => 'list' %>

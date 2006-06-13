@@ -1,0 +1,40 @@
+<%= error_messages_for 'chip_transaction' %>
+
+<!--[form:chip_transaction]-->
+<table class="table">
+    <tr>
+        <td class="table">Date</td>
+        <td class="table">Lab<br>Group</td>
+        <td class="table">Chip<br>Type</td>
+        <td class="table">Description</td>
+        <td class="table">Acquired</td>
+        <td class="table">Used</td>
+        <td class="table">Traded/<br>Sold</td>
+        <td class="table">Borrowed from<br>another group</td>
+        <td class="table">Returned to<br>another group</td>
+        <td class="table">Borrowed from<br>this group</td>
+        <td class="table">Returned to<br>this group</td>
+<!--            <td class="table">Borrow/Return<br>Group</td>  -->
+    </tr>
+        <td class="table"><%= date_select 'chip_transaction', 'date', :use_month_numbers => true  %></td>
+        <td class="table"><select id="lab_group_id" name="chip_transaction[lab_group_id]">
+            <%= options_from_collection_for_select @lab_groups, "id", "name",
+            @chip_transaction.lab_group_id %></select></td>
+        <td class="table"><select id="chip_type_id" name="chip_transaction[chip_type_id]">
+            <%= options_from_collection_for_select @chip_types, "id", "name",
+            @chip_transaction.chip_type_id %></select></td>
+        <td class="table"><%= text_field 'chip_transaction', 'description', 'size' => 25  %></td>
+        <td class="table"><%= text_field 'chip_transaction', 'acquired', 'size' => 5  %></td>
+        <td class="table"><%= text_field 'chip_transaction', 'used', 'size' => 5  %></td>
+        <td class="table"><%= text_field 'chip_transaction', 'traded_sold', 'size' => 5  %></td>
+        <td class="table"><%= text_field 'chip_transaction', 'borrowed_in', 'size' => 5  %></td>
+        <td class="table"><%= text_field 'chip_transaction', 'returned_out', 'size' => 5  %></td>
+        <td class="table"><%= text_field 'chip_transaction', 'borrowed_out', 'size' => 5  %></td>
+        <td class="table"><%= text_field 'chip_transaction', 'returned_in', 'size' => 5  %></td>
+<!--    <td class="table"><select id="chip_borrow_lab_group_id" name="chip_transaction[lab_group_id]">
+            <%= options_from_collection_for_select @lab_groups, "id", "name",
+            @chip_transaction.lab_group_id %></select></td> -->
+</table>    
+
+<!--[eoform:chip_transaction]-->
+

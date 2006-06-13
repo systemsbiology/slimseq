@@ -1,0 +1,561 @@
+-- MySQL dump 10.10
+--
+-- Host: localhost    Database: slimarray_development
+-- ------------------------------------------------------
+-- Server version	5.0.21
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `add_hybs`
+--
+
+DROP TABLE IF EXISTS `add_hybs`;
+CREATE TABLE `add_hybs` (
+  `id` int(11) NOT NULL auto_increment,
+  `number` int(11) default NULL,
+  `lab_group_id` int(11) default NULL,
+  `chip_type_id` int(11) default NULL,
+  `date` date default NULL,
+  `sbeams_user` varchar(20) default NULL,
+  `sbeams_project` varchar(50) default NULL,
+  `charge_template_id` int(11) default NULL,
+  `array_platform` varchar(20) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `add_hybs`
+--
+
+
+/*!40000 ALTER TABLE `add_hybs` DISABLE KEYS */;
+LOCK TABLES `add_hybs` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `add_hybs` ENABLE KEYS */;
+
+--
+-- Table structure for table `charge_periods`
+--
+
+DROP TABLE IF EXISTS `charge_periods`;
+CREATE TABLE `charge_periods` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(50) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `charge_periods`
+--
+
+
+/*!40000 ALTER TABLE `charge_periods` DISABLE KEYS */;
+LOCK TABLES `charge_periods` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `charge_periods` ENABLE KEYS */;
+
+--
+-- Table structure for table `charge_sets`
+--
+
+DROP TABLE IF EXISTS `charge_sets`;
+CREATE TABLE `charge_sets` (
+  `id` int(11) NOT NULL auto_increment,
+  `lab_group_id` int(11) default NULL,
+  `charge_period_id` int(11) default NULL,
+  `name` varchar(50) default NULL,
+  `budget_manager` varchar(50) default NULL,
+  `budget` varchar(8) default NULL,
+  `charge_method` varchar(20) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `lab_group_id` (`lab_group_id`),
+  KEY `charge_period_id` (`charge_period_id`),
+  CONSTRAINT `charge_period_id` FOREIGN KEY (`charge_period_id`) REFERENCES `charge_periods` (`id`),
+  CONSTRAINT `lab_group_id` FOREIGN KEY (`lab_group_id`) REFERENCES `lab_groups` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `charge_sets`
+--
+
+
+/*!40000 ALTER TABLE `charge_sets` DISABLE KEYS */;
+LOCK TABLES `charge_sets` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `charge_sets` ENABLE KEYS */;
+
+--
+-- Table structure for table `charge_templates`
+--
+
+DROP TABLE IF EXISTS `charge_templates`;
+CREATE TABLE `charge_templates` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(40) default NULL,
+  `description` varchar(100) default NULL,
+  `chips_used` int(11) default NULL,
+  `chip_cost` float default NULL,
+  `labeling_cost` float default NULL,
+  `hybridization_cost` float default NULL,
+  `qc_cost` float default NULL,
+  `other_cost` float default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `charge_templates`
+--
+
+
+/*!40000 ALTER TABLE `charge_templates` DISABLE KEYS */;
+LOCK TABLES `charge_templates` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `charge_templates` ENABLE KEYS */;
+
+--
+-- Table structure for table `charges`
+--
+
+DROP TABLE IF EXISTS `charges`;
+CREATE TABLE `charges` (
+  `id` int(11) NOT NULL auto_increment,
+  `charge_set_id` int(11) default NULL,
+  `date` date default NULL,
+  `description` varchar(100) default NULL,
+  `chips_used` int(11) default NULL,
+  `chip_cost` float default NULL,
+  `labeling_cost` float default NULL,
+  `hybridization_cost` float default NULL,
+  `qc_cost` float default NULL,
+  `other_cost` float default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `charge_set_id` (`charge_set_id`),
+  CONSTRAINT `charge_set_id` FOREIGN KEY (`charge_set_id`) REFERENCES `charge_sets` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `charges`
+--
+
+
+/*!40000 ALTER TABLE `charges` DISABLE KEYS */;
+LOCK TABLES `charges` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `charges` ENABLE KEYS */;
+
+--
+-- Table structure for table `chip_transactions`
+--
+
+DROP TABLE IF EXISTS `chip_transactions`;
+CREATE TABLE `chip_transactions` (
+  `id` int(11) NOT NULL auto_increment,
+  `lab_group_id` int(11) NOT NULL default '0',
+  `chip_type_id` int(11) NOT NULL default '0',
+  `date` date NOT NULL,
+  `description` varchar(255) default NULL,
+  `acquired` int(5) default NULL,
+  `used` int(5) default NULL,
+  `traded_sold` int(5) default NULL,
+  `borrowed_in` int(5) default NULL,
+  `returned_out` int(5) default NULL,
+  `borrowed_out` int(5) default NULL,
+  `returned_in` int(5) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `chip_type_id` (`chip_type_id`),
+  KEY `lab_groups_id` (`lab_group_id`),
+  CONSTRAINT `chip_transactions_ibfk_1` FOREIGN KEY (`chip_type_id`) REFERENCES `chip_types` (`id`),
+  CONSTRAINT `chip_transactions_ibfk_2` FOREIGN KEY (`lab_group_id`) REFERENCES `lab_groups` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `chip_transactions`
+--
+
+
+/*!40000 ALTER TABLE `chip_transactions` DISABLE KEYS */;
+LOCK TABLES `chip_transactions` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `chip_transactions` ENABLE KEYS */;
+
+--
+-- Table structure for table `chip_types`
+--
+
+DROP TABLE IF EXISTS `chip_types`;
+CREATE TABLE `chip_types` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(20) NOT NULL default '',
+  `short_name` varchar(20) NOT NULL default '',
+  `default_organism_id` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `default_organism_id` (`default_organism_id`),
+  CONSTRAINT `chip_types_ibfk_1` FOREIGN KEY (`default_organism_id`) REFERENCES `organisms` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `chip_types`
+--
+
+
+/*!40000 ALTER TABLE `chip_types` DISABLE KEYS */;
+LOCK TABLES `chip_types` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `chip_types` ENABLE KEYS */;
+
+--
+-- Table structure for table `engine_schema_info`
+--
+
+DROP TABLE IF EXISTS `engine_schema_info`;
+CREATE TABLE `engine_schema_info` (
+  `engine_name` varchar(255) default NULL,
+  `version` int(11) default NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `engine_schema_info`
+--
+
+
+/*!40000 ALTER TABLE `engine_schema_info` DISABLE KEYS */;
+LOCK TABLES `engine_schema_info` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `engine_schema_info` ENABLE KEYS */;
+
+--
+-- Table structure for table `hybridizations`
+--
+
+DROP TABLE IF EXISTS `hybridizations`;
+CREATE TABLE `hybridizations` (
+  `id` int(11) NOT NULL auto_increment,
+  `date` date default NULL,
+  `chip_number` int(4) default NULL,
+  `short_sample_name` varchar(8) default NULL,
+  `sample_name` varchar(48) default NULL,
+  `sample_group_name` varchar(50) default NULL,
+  `lab_group_id` int(11) default NULL,
+  `chip_type_id` int(11) default NULL,
+  `organism_id` int(11) NOT NULL default '0',
+  `sbeams_user` varchar(20) default NULL,
+  `sbeams_project` varchar(50) default NULL,
+  `charge_template_id` int(11) default NULL,
+  `array_platform` varchar(20) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `lab_group_id` (`lab_group_id`),
+  KEY `chip_type_id` (`chip_type_id`),
+  KEY `charge_template_id` (`charge_template_id`),
+  CONSTRAINT `charge_template_id` FOREIGN KEY (`charge_template_id`) REFERENCES `charge_templates` (`id`),
+  CONSTRAINT `hybridizations_ibfk_1` FOREIGN KEY (`lab_group_id`) REFERENCES `lab_groups` (`id`),
+  CONSTRAINT `hybridizations_ibfk_2` FOREIGN KEY (`chip_type_id`) REFERENCES `chip_types` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `hybridizations`
+--
+
+
+/*!40000 ALTER TABLE `hybridizations` DISABLE KEYS */;
+LOCK TABLES `hybridizations` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `hybridizations` ENABLE KEYS */;
+
+--
+-- Table structure for table `inventory_checks`
+--
+
+DROP TABLE IF EXISTS `inventory_checks`;
+CREATE TABLE `inventory_checks` (
+  `id` int(11) NOT NULL auto_increment,
+  `date` date NOT NULL,
+  `lab_group_id` int(11) default NULL,
+  `chip_type_id` int(11) default NULL,
+  `number_expected` int(11) default NULL,
+  `number_counted` int(11) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `lab_group_id` (`lab_group_id`),
+  KEY `chip_type_id` (`chip_type_id`),
+  CONSTRAINT `inventory_checks_ibfk_1` FOREIGN KEY (`lab_group_id`) REFERENCES `lab_groups` (`id`),
+  CONSTRAINT `inventory_checks_ibfk_2` FOREIGN KEY (`chip_type_id`) REFERENCES `chip_types` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `inventory_checks`
+--
+
+
+/*!40000 ALTER TABLE `inventory_checks` DISABLE KEYS */;
+LOCK TABLES `inventory_checks` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `inventory_checks` ENABLE KEYS */;
+
+--
+-- Table structure for table `lab_groups`
+--
+
+DROP TABLE IF EXISTS `lab_groups`;
+CREATE TABLE `lab_groups` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(20) NOT NULL default '',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `lab_groups`
+--
+
+
+/*!40000 ALTER TABLE `lab_groups` DISABLE KEYS */;
+LOCK TABLES `lab_groups` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `lab_groups` ENABLE KEYS */;
+
+--
+-- Table structure for table `lab_memberships`
+--
+
+DROP TABLE IF EXISTS `lab_memberships`;
+CREATE TABLE `lab_memberships` (
+  `id` int(11) NOT NULL auto_increment,
+  `lab_group_id` int(11) default NULL,
+  `user_id` int(11) default NULL,
+  PRIMARY KEY  (`id`),
+  KEY `lab_memberships_ibfk_1` (`lab_group_id`),
+  KEY `lab_memberships_ibfk_2` (`user_id`),
+  CONSTRAINT `lab_memberships_ibfk_1` FOREIGN KEY (`lab_group_id`) REFERENCES `lab_groups` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `lab_memberships_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `lab_memberships`
+--
+
+
+/*!40000 ALTER TABLE `lab_memberships` DISABLE KEYS */;
+LOCK TABLES `lab_memberships` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `lab_memberships` ENABLE KEYS */;
+
+--
+-- Table structure for table `organisms`
+--
+
+DROP TABLE IF EXISTS `organisms`;
+CREATE TABLE `organisms` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(50) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `organisms`
+--
+
+
+/*!40000 ALTER TABLE `organisms` DISABLE KEYS */;
+LOCK TABLES `organisms` WRITE;
+INSERT INTO `organisms` VALUES (1,'banana');
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `organisms` ENABLE KEYS */;
+
+--
+-- Table structure for table `permissions`
+--
+
+DROP TABLE IF EXISTS `permissions`;
+CREATE TABLE `permissions` (
+  `id` int(11) NOT NULL auto_increment,
+  `controller` varchar(255) NOT NULL default '',
+  `action` varchar(255) NOT NULL default '',
+  `description` varchar(255) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `permissions`
+--
+
+
+/*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
+LOCK TABLES `permissions` WRITE;
+INSERT INTO `permissions` VALUES (1,'permission','new',NULL),(2,'permission','list',NULL),(3,'permission','edit',NULL),(4,'permission','destroy',NULL),(5,'permission','show',NULL),(6,'permission','index',NULL),(7,'role','new',NULL),(8,'role','list',NULL),(9,'role','edit',NULL),(10,'role','destroy',NULL),(11,'role','show',NULL),(12,'role','index',NULL),(13,'site_config','edit',NULL),(14,'site_config','update',NULL),(15,'chip_types','new',NULL),(16,'chip_types','list',NULL),(17,'chip_types','edit',NULL),(18,'chip_types','destroy',NULL),(19,'chip_types','create',NULL),(20,'chip_types','index',NULL),(21,'chip_types','update',NULL),(22,'charge_periods','new',NULL),(23,'charge_periods','edit',NULL),(24,'charge_periods','destroy',NULL),(25,'charge_periods','excel',NULL),(26,'charge_periods','create',NULL),(27,'charge_periods','pdf',NULL),(28,'charge_periods','update',NULL),(29,'inventory_checks','new',NULL),(30,'inventory_checks','list',NULL),(31,'inventory_checks','edit',NULL),(32,'inventory_checks','destroy',NULL),(33,'inventory_checks','create',NULL),(34,'inventory_checks','index',NULL),(35,'inventory_checks','update',NULL),(36,'lab_groups','new',NULL),(37,'lab_groups','list',NULL),(38,'lab_groups','edit',NULL),(39,'lab_groups','destroy',NULL),(40,'lab_groups','create',NULL),(41,'lab_groups','show',NULL),(42,'lab_groups','index',NULL),(43,'lab_groups','update',NULL),(44,'user','new',NULL),(45,'user','delete',NULL),(46,'user','list',NULL),(47,'user','restore_deleted',NULL),(48,'user','forgot_password',NULL),(49,'user','delete_user',NULL),(50,'user','logout',NULL),(51,'user','edit',NULL),(52,'user','change_password_for_user',NULL),(53,'user','edit_user',NULL),(54,'user','signup',NULL),(55,'user','show',NULL),(56,'user','edit_roles',NULL),(57,'user','login',NULL),(58,'user','home',NULL),(59,'user','edit_lab_groups',NULL),(60,'user','change_password',NULL),(61,'inventory','index',NULL),(62,'charge_sets','new',NULL),(63,'charge_sets','list',NULL),(64,'charge_sets','edit',NULL),(65,'charge_sets','destroy',NULL),(66,'charge_sets','create',NULL),(67,'charge_sets','index',NULL),(68,'charge_sets','update',NULL),(69,'chip_transactions','new',NULL),(70,'chip_transactions','list_subset',NULL),(71,'chip_transactions','edit',NULL),(72,'chip_transactions','destroy',NULL),(73,'chip_transactions','create',NULL),(74,'chip_transactions','index',NULL),(75,'chip_transactions','totals',NULL),(76,'chip_transactions','update',NULL),(77,'charge_templates','new',NULL),(78,'charge_templates','list',NULL),(79,'charge_templates','edit',NULL),(80,'charge_templates','destroy',NULL),(81,'charge_templates','create',NULL),(82,'charge_templates','index',NULL),(83,'charge_templates','update',NULL),(84,'hybridizations','new',NULL),(85,'hybridizations','list',NULL),(86,'hybridizations','add',NULL),(87,'hybridizations','clear',NULL),(88,'hybridizations','edit',NULL),(89,'hybridizations','destroy',NULL),(90,'hybridizations','create',NULL),(91,'hybridizations','show',NULL),(92,'hybridizations','index',NULL),(93,'hybridizations','update',NULL),(94,'charges','new',NULL),(95,'charges','edit',NULL),(96,'charges','destroy',NULL),(97,'charges','create',NULL),(98,'charges','update',NULL),(99,'charges','list_within_charge_set',NULL),(100,'organisms','new',NULL),(101,'organisms','list',NULL),(102,'organisms','edit',NULL),(103,'organisms','destroy',NULL),(104,'organisms','create',NULL),(105,'organisms','show',NULL),(106,'organisms','index',NULL),(107,'organisms','update',NULL);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
+
+--
+-- Table structure for table `permissions_roles`
+--
+
+DROP TABLE IF EXISTS `permissions_roles`;
+CREATE TABLE `permissions_roles` (
+  `permission_id` int(11) NOT NULL default '0',
+  `role_id` int(11) NOT NULL default '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `permissions_roles`
+--
+
+
+/*!40000 ALTER TABLE `permissions_roles` DISABLE KEYS */;
+LOCK TABLES `permissions_roles` WRITE;
+INSERT INTO `permissions_roles` VALUES (48,1),(57,1),(70,3),(61,3),(50,3),(51,3),(58,3),(60,3),(62,2),(63,2),(64,2),(65,2),(66,2),(67,2),(68,2),(29,2),(30,2),(31,2),(32,2),(33,2),(34,2),(35,2),(13,2),(14,2),(69,2),(70,2),(71,2),(72,2),(73,2),(74,2),(75,2),(76,2),(22,2),(23,2),(24,2),(25,2),(26,2),(27,2),(28,2),(94,2),(95,2),(96,2),(97,2),(98,2),(99,2),(36,2),(37,2),(38,2),(39,2),(40,2),(41,2),(42,2),(43,2),(61,2),(15,2),(16,2),(17,2),(18,2),(19,2),(20,2),(21,2),(7,2),(8,2),(9,2),(10,2),(11,2),(12,2),(44,2),(45,2),(46,2),(47,2),(48,2),(49,2),(50,2),(51,2),(52,2),(53,2),(54,2),(55,2),(56,2),(57,2),(58,2),(59,2),(60,2),(100,2),(101,2),(102,2),(103,2),(104,2),(105,2),(106,2),(107,2),(77,2),(78,2),(79,2),(80,2),(81,2),(82,2),(83,2),(1,2),(2,2),(3,2),(4,2),(5,2),(6,2),(84,2),(85,2),(86,2),(87,2),(88,2),(89,2),(90,2),(91,2),(92,2),(93,2),(62,4),(63,4),(64,4),(65,4),(66,4),(67,4),(68,4),(29,4),(30,4),(31,4),(32,4),(33,4),(34,4),(35,4),(69,4),(70,4),(71,4),(72,4),(73,4),(74,4),(75,4),(76,4),(22,4),(23,4),(24,4),(25,4),(26,4),(27,4),(28,4),(94,4),(95,4),(96,4),(97,4),(98,4),(99,4),(36,4),(37,4),(38,4),(39,4),(40,4),(41,4),(42,4),(43,4),(61,4),(15,4),(16,4),(17,4),(18,4),(19,4),(20,4),(21,4),(48,4),(50,4),(51,4),(52,4),(54,4),(57,4),(100,4),(101,4),(102,4),(103,4),(104,4),(105,4),(106,4),(107,4),(77,4),(78,4),(79,4),(80,4),(81,4),(82,4),(83,4),(84,4),(85,4),(86,4),(87,4),(88,4),(89,4),(90,4),(91,4),(92,4),(93,4);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `permissions_roles` ENABLE KEYS */;
+
+--
+-- Table structure for table `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE `roles` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL default '',
+  `description` varchar(255) default NULL,
+  `omnipotent` tinyint(1) NOT NULL default '0',
+  `system_role` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `roles`
+--
+
+
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+LOCK TABLES `roles` WRITE;
+INSERT INTO `roles` VALUES (1,'Guest','Implicit role for all accessors of the site',0,1),(2,'Admin','The system administrator.',1,1),(3,'User','The default role for all logged-in users',0,1),(4,'Facility','Members of microarray facility, with near-Admin permissions.',0,0);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
+
+--
+-- Table structure for table `schema_info`
+--
+
+DROP TABLE IF EXISTS `schema_info`;
+CREATE TABLE `schema_info` (
+  `version` int(11) default NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `schema_info`
+--
+
+
+/*!40000 ALTER TABLE `schema_info` DISABLE KEYS */;
+LOCK TABLES `schema_info` WRITE;
+INSERT INTO `schema_info` VALUES (6);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `schema_info` ENABLE KEYS */;
+
+--
+-- Table structure for table `site_config`
+--
+
+DROP TABLE IF EXISTS `site_config`;
+CREATE TABLE `site_config` (
+  `id` int(11) NOT NULL auto_increment,
+  `site_name` varchar(50) default NULL,
+  `organization_name` varchar(100) default NULL,
+  `facility_name` varchar(100) default NULL,
+  `array_platform` varchar(20) default NULL,
+  `track_inventory` tinyint(1) default NULL,
+  `track_hybridizations` tinyint(1) default NULL,
+  `track_charges` tinyint(1) default NULL,
+  `create_gcos_files` tinyint(1) default NULL,
+  `using_sbeams` tinyint(1) default NULL,
+  `gcos_output_path` varchar(250) default NULL,
+  `use_LDAP` tinyint(1) default NULL,
+  `LDAP_server` varchar(200) default NULL,
+  `LDAP_DN` varchar(200) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `site_config`
+--
+
+
+/*!40000 ALTER TABLE `site_config` DISABLE KEYS */;
+LOCK TABLES `site_config` WRITE;
+INSERT INTO `site_config` VALUES (1,'SLIMarray','Your Organization Name Here','Your Facility Name Here','both',1,1,1,1,1,'/tmp/',0,'localhost','cn=users,dc=localhost');
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `site_config` ENABLE KEYS */;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL auto_increment,
+  `login` varchar(80) NOT NULL default '',
+  `salted_password` varchar(40) NOT NULL default '',
+  `email` varchar(60) NOT NULL default '',
+  `firstname` varchar(40) default NULL,
+  `lastname` varchar(40) default NULL,
+  `salt` varchar(40) NOT NULL default '',
+  `verified` int(11) default '0',
+  `role` varchar(40) default NULL,
+  `security_token` varchar(40) default NULL,
+  `token_expiry` datetime default NULL,
+  `created_at` datetime default NULL,
+  `updated_at` datetime default NULL,
+  `logged_in_at` datetime default NULL,
+  `deleted` int(11) default '0',
+  `delete_after` datetime default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `users`
+--
+
+
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+LOCK TABLES `users` WRITE;
+INSERT INTO `users` VALUES (1,'admin','52b9d170fd229a8309acbe9bc18fc4f43149b2bf','admin@localhost','System','Administrator','41c71001c70dc033e7636c7288185da4f0299057',1,NULL,NULL,NULL,'2006-06-03 01:43:28','2006-06-04 02:40:09','2006-06-04 02:40:09',0,NULL);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+
+--
+-- Table structure for table `users_roles`
+--
+
+DROP TABLE IF EXISTS `users_roles`;
+CREATE TABLE `users_roles` (
+  `user_id` int(11) NOT NULL default '0',
+  `role_id` int(11) NOT NULL default '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `users_roles`
+--
+
+
+/*!40000 ALTER TABLE `users_roles` DISABLE KEYS */;
+LOCK TABLES `users_roles` WRITE;
+INSERT INTO `users_roles` VALUES (1,3),(1,2);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `users_roles` ENABLE KEYS */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+

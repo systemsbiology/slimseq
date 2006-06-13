@@ -1,0 +1,24 @@
+production:
+  adapter: mysql
+  database: slimarray_production
+  username: mysql_user_name
+  password: mysql_user_password
+  socket: /var/lib/mysql/mysql.sock
+  host: localhost
+
+development:
+  adapter: mysql
+  database: slimarray_development
+  username: mysql_user_name
+  password: mysql_user_password
+  socket: /var/lib/mysql/mysql.sock
+  host: localhost
+  
+test:
+  adapter: mysql
+  database: slimarray_test
+  username: mysql_user_name
+  password: mysql_user_password
+  socket: /var/lib/mysql/mysql.sock
+  host: localhost
+

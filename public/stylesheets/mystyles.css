@@ -1,0 +1,147 @@
+body {
+    font-family: "Trebuchet MS", Tahoma, Verdana, Arial, Helvetica, sans-serif;
+	font-size:80%;
+	color:#444; }
+
+#title_bar {
+    padding: 3ex 10ex 1ex 4ex;
+    background-color: #006;
+}
+
+#title_bar h1{
+    color: #fff;
+}
+
+#menu {
+    padding-left: 3ex;
+    padding-bottom: 4ex;
+    background-color: #006;
+    color: #fff;  
+}
+
+#menu a{
+    padding-left: 1ex;
+    padding-right: 1ex;
+    color: #fff;   
+}
+
+#main {
+    padding-left: 3ex;
+    padding-bottom: 5ex;
+    border-bottom: solid 1px;
+}
+
+.fieldset {
+	width:300px; }
+.fieldset .label {
+	text-align:right;
+	width:70px;
+	float:left;
+	padding:0.2em;
+	margin:0;
+	margin-top:0.3em; }
+.fieldset .nobr {
+	display:none; }  
+.fieldset .textfield {
+	margin:3px;
+	height:20px;
+	width:200px; }
+.fieldset .textarea {
+	margin:3px;
+	height:165px;
+	width:200px; }
+.table{
+    padding: 2;
+	background-color: #ffffff;
+	border-color: #5d74a5;
+	border-width: 1px 1px 1px 1px;
+	border-style: solid;
+	border-collapse: collapse;
+	margin-bottom: 8px
+}
+.sortable{
+    padding: 2;
+	background-color: #ffffff;
+	border-color: #5d74a5;
+	border-width: 1px 1px 1px 1px;
+	border-style: solid;
+	border-collapse: collapse;
+	margin-bottom: 8px
+}
+/* Sortable tables */
+table.sortable a.sortheader {
+    color:#000;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+}
+table.sortable span.sortarrow {
+    color: black;
+    text-decoration: none;
+}
+
+td { 
+    border: inset 1pt;
+    padding: 2px 2px 2px 2px;
+}
+td    	{font-family: Helvetica, Arial, sans-serif; font-size: 9pt; color:#333333;}
+td.border     { background-color: #5d74a5; }
+td.titlebar   { background-color: #5d74a5; 
+                background-repeat: no-repeat; } 
+                
+th {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 9pt; 
+    font-weight: bold;
+    border: inset 1pt;
+    padding: 2px 2px 2px 2px;
+}
+
+.notice {
+	color: red;
+	background-color: white;
+}
+
+.fieldWithErrors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+
+#ErrorExplanation {
+  width: 400px;
+  border: 2px solid red;
+  padding: 7px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+}
+
+#ErrorExplanation h2 {
+  text-align: left;
+  font-weight: bold;
+  padding: 5px 5px 5px 15px;
+  font-size: 12px;
+  margin: -7px;
+  background-color: #c00;
+  color: #fff;
+}
+
+#ErrorExplanation p {
+  color: #333;
+  margin-bottom: 0;
+  padding: 5px;
+}
+
+#ErrorExplanation ul li {
+  font-size: 12px;
+  list-style: square;
+}
+
+#charge_periods {
+
+}
+
+#charge_sets {
+    margin-left: 5ex;
+}

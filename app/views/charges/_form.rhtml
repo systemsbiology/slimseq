@@ -1,0 +1,31 @@
+<%= error_messages_for 'charge' %>
+
+<!--[form:charge]-->
+<p><select id="charge_charge_set_id" name="charge[charge_set_id]">
+    <%= charge_set_options_for_select @charge.charge_set_id %></select></p>
+
+<p><label for="charge_date">Date</label><br/>
+<%= date_select 'charge', 'date'  %></p>
+
+<p><label for="charge_chips_used">Chips Used</label><br/>
+<%= text_field 'charge', 'chips_used'  %></p>
+
+<p><label for="charge_description">Description</label><br/>
+<%= text_field 'charge', 'description'  %></p>
+
+<p><label for="charge_chip_cost">Chip cost</label><br/>
+<%= text_field 'charge', 'chip_cost'  %></p>
+
+<p><label for="charge_labeling_cost">Labeling cost</label><br/>
+<%= text_field 'charge', 'labeling_cost'  %></p>
+
+<p><label for="charge_hybridization_cost">Hybridization cost</label><br/>
+<%= text_field 'charge', 'hybridization_cost'  %></p>
+
+<p><label for="charge_qc_cost">Qc cost</label><br/>
+<%= text_field 'charge', 'qc_cost'  %></p>
+
+<p><label for="charge_other_cost">Other cost</label><br/>
+<%= text_field 'charge', 'other_cost'  %></p>
+<!--[eoform:charge]-->
+

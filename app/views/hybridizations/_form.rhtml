@@ -1,0 +1,45 @@
+<!--[form:add_hybs]-->
+<p><label for="add_hybs_date">Date</label><br/>
+    <%= date_select 'add_hybs', 'date'  %></p>
+
+<p><label for="add_hybs_number">Number of Chips</label><br/>
+    <%= text_field 'add_hybs', 'number'  %></p>
+
+<p>Charge Type<br>
+    <select id="add_hybs_charge_template_id" name="add_hybs[charge_template_id]">
+    <%= options_from_collection_for_select @charge_templates, "id", "name" %></select>
+    (<%= link_to 'New Charge Template', :controller=> 'charge_templates', :action => 'new' %>)</p>
+
+<p>Lab Group<br>
+    <select id="add_hybs_lab_group_id" name="add_hybs[lab_group_id]">
+    <%= options_from_collection_for_select @lab_groups, "id", "name" %></select></p>
+
+<p>Chip Type<br>
+    <select id="add_hybs_chip_type_id" name="add_hybs[chip_type_id]">
+    <%= options_from_collection_for_select @chip_types, "id", "name" %></select></p>
+
+<% if SiteConfig.multi_platform? %>
+	<p><label for="add_hybs_array_platform">Array Platform</label><br/>
+	<%= radio_button 'add_hybs', 'array_platform', 'affy', { :checked => "checked" } %>Affymetrix<br>
+    <%= radio_button 'add_hybs', 'array_platform', 'nonaffy'  %>Non-Affymetrix</p>
+<% else %>
+    <%= hidden_field 'add_hybs', 'array_platform', { :value => SiteConfig.array_platform } %>
+<% end %>
+
+<% if SiteConfig.using_affy_arrays? && SiteConfig.create_gcos_files? && SiteConfig.using_sbeams? %>
+	<p><label for="add_hybs_sbeams_user">SBEAMS User (Affymetrix Only)</label><br/>
+	    <%= text_field 'add_hybs', 'sbeams_user'  %></p>
+	    
+	<p><label for="add_hybs_sbeams_project">SBEAMS Project (Affymetrix Only)</label><br/>
+	    <%= text_field 'add_hybs', 'sbeams_project'  %></p>
+<% elsif SiteConfig.using_affy_arrays? && SiteConfig.create_gcos_files? %>
+	<p><label for="add_hybs_sbeams_user">Array User Name (for GCOS)</label><br/>
+	    <%= text_field 'add_hybs', 'sbeams_user'  %></p>
+	    
+	<p><label for="add_hybs_sbeams_project">Sample Project (for GCOS)</label><br/>
+	    <%= text_field 'add_hybs', 'sbeams_project'  %></p>
+<% else %>
+   	    <%= hidden_field 'add_hybs', 'sbeams_user'  %>
+	    <%= hidden_field 'add_hybs', 'sbeams_project'  %>
+<% end %>
+<!--[eoform:add_hybs]-->

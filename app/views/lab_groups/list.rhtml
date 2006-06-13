@@ -1,0 +1,24 @@
+<h2>Listing Lab Groups</h2>
+
+<table class="sortable" id="lab_groups">
+  <tr>
+  <% for column in LabGroup.content_columns %>
+    <th><%= column.human_name %></th>
+  <% end %>
+    <th>Edit</th>
+    <th>Destroy</th>
+  </tr>
+  
+<% for lab_group in @lab_groups %>
+  <tr>
+  <% for column in LabGroup.content_columns %>
+    <td><%=h lab_group.send(column.name) %></td>
+  <% end %>
+    <td><%= link_to 'Edit', :action => 'edit', :id => lab_group %></td>
+    <td><%= link_to 'Destroy', { :action => 'destroy', :id => lab_group }, 
+                    :confirm => lab_group.destroy_warning %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'New lab_group', :action => 'new' %>

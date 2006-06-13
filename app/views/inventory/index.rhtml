@@ -1,0 +1,23 @@
+<h2>Chip Inventory</h2>
+
+<%= link_to 'New Chip Transaction', :controller=> 'chip_transactions', :action => 'new' %>
+
+<% for lab_group in @lab_groups %>
+    <%# Make sure someone is logged in, and show only stuff they're supposed to access%>
+    <% if session[:user] != nil &&
+	   ( current_user.admin? ||
+	     current_user.lab_groups.include?(lab_group) ) %>
+	    <p><%=h lab_group.name %>:
+	    <% for chip_type in @chip_types %>
+		    <% @chip_transactions = ChipTransaction.find_all_in_lab_group_chip_type(lab_group.id,chip_type.id) %>
+	      <% if @chip_transactions.length != 0 %>	           
+		      <%= link_to(h=chip_type.name, { :controller => "chip_transactions",
+		                                      :action => "list_subset",
+		                                      :lab_group_id => lab_group.id,
+		                                      :chip_type_id => chip_type.id}) %>
+		    <% end %>
+      <% end %>
+    <% end %>
+    </p>
+<% end %>
+

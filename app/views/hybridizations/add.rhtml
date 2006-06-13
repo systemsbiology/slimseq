@@ -1,0 +1,57 @@
+<%= error_messages_for 'add_hybs' %>
+<%= error_messages_for_hybridizations %>
+
+<h2>Enter Hybridizations</h2>
+
+<%= start_form_tag :action => 'add' %>
+    <%= render :partial => 'form' %>
+  <%= submit_tag "Add to Hybridization Table" %>
+<%= end_form_tag %>
+
+<h3>Don't enter any sample names until you've completed adding your hybridizations!</h3>
+
+<%= start_form_tag :action => 'create' %>
+<table class="table">
+  <th>Date</th>
+  <th>Chip Number</th>
+  <th>Short Name</th>
+  <th>Full Sample Name</th>
+  <th>Sample Group Name</th>
+  <th>Organism</th>
+  <th>Charge Template</th>
+  <th>Lab Group</th>
+  <th>Chip Type</th>
+  <% if SiteConfig.create_gcos_files? %>
+	  <th>SBEAMS User</th>
+	  <th>SBEAMS Project</th>
+  <% end %>
+  <% for n in 0..@hybridizations.size-1 %>
+  <tr>
+    <% hybridization = @hybridizations[n] %>
+    <td><%= hybridization.date %></td>
+    <td><%= hybridization.chip_number %></td>
+    <td><input id="hybridization-<%=n%>_short_sample_name" 
+        name="hybridization-<%=n%>[short_sample_name]" size="10" type="text"
+        value="<%= hybridization.short_sample_name %>" /></td>
+    <td><input id="hybridization-<%=n%>_sample_name" 
+        name="hybridization-<%=n%>[sample_name]" size="30" type="text"
+        value="<%= hybridization.sample_name %>" /></td>
+    <td><input id="hybridization-<%=n%>_sample_group_name" 
+        name="hybridization-<%=n%>[sample_group_name]" size="30" type="text"
+        value="<%= hybridization.sample_group_name %>" /></td>
+    <td><select id="hybridization-<%=n%>_organism_id" name="hybridization-<%=n%>[organism_id]">
+    <%= options_from_collection_for_select @organisms, "id", "name", selected_value=hybridization.organism_id %></select></td>
+    <td><%= ChargeTemplate.find(hybridization.charge_template_id).name %></td>
+    <td><%= LabGroup.find(hybridization.lab_group_id).name %></td>
+    <td><%= ChipType.find(hybridization.chip_type_id).name %></td>
+    <% if SiteConfig.create_gcos_files? %>
+        <td><%= hybridization.sbeams_user %></td>
+        <td><%= hybridization.sbeams_project %></td>
+    <% end %>
+  </tr>
+  <% end %>
+</table>
+  <p><%= submit_tag "Create Hybridization Records" %></p>
+<%= end_form_tag %>
+
+<%= link_to 'Clear Hybridizations', :action => 'clear' %> | <%= link_to 'Back to List of Hybridizations', :action => 'list' %>

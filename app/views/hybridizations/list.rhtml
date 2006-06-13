@@ -1,0 +1,24 @@
+<h2>Hybridizations</h2>
+
+<p><%= link_to 'New Hybridizations', :action => 'new' %></p>
+
+<table class="sortable" id="hybridizations">
+  <tr>
+  <% for column in Hybridization.content_columns %>
+    <th><%= column.human_name %></th>
+  <% end %>
+    <th>Edit</th>
+    <th>Destroy</th>
+  </tr>
+  
+<% for hybridization in @hybridizations %>
+  <tr>
+  <% for column in Hybridization.content_columns %>
+    <td><%=h hybridization.send(column.name) %></td>
+  <% end %>
+    <td><%= link_to 'Edit', :action => 'edit', :id => hybridization %></td>
+    <td><%= link_to 'Destroy', { :action => 'destroy', :id => hybridization }, :confirm => 'Are you sure?' %></td>
+  </tr>
+<% end %>
+</table>
+
