@@ -47,7 +47,7 @@ class ChipTypesControllerTest < Test::Unit::TestCase
     num_chip_types = ChipType.count
 
     post :create, :chip_type => {:name => "Chippy", :short_name => "chpy",
-         :default_organism_id => "1"}
+         :organism_id => "1"}
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
@@ -87,9 +87,11 @@ class ChipTypesControllerTest < Test::Unit::TestCase
     assert_not_nil ChipType.find(2)
 
     post :destroy, :id => 2
-    assert_template "list"
-    assert_flash_warning
+    assert_response :redirect
+    assert_redirected_to :action => 'list'
 
-    assert_not_nil ChipType.find(2)
+    assert_raise(ActiveRecord::RecordNotFound) {
+      ChipType.find(2)
+    }
   end
 end

@@ -1,7 +1,6 @@
 class ChipType < ActiveRecord::Base
   belongs_to :organism
   has_many :chip_transactions, :dependent => :destroy
-  has_many :charge_sets, :dependent => :destroy
   has_many :hybridizations, :dependent => :destroy
   has_many :inventory_checks, :dependent => :destroy
   

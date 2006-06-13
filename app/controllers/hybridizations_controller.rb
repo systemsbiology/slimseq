@@ -32,7 +32,7 @@ class HybridizationsController < ApplicationController
               :charge_template_id => @add_hybs.charge_template_id,
               :lab_group_id => @add_hybs.lab_group_id,
               :chip_type_id => @add_hybs.chip_type_id,
-              :organism_id => ChipType.find(@add_hybs.chip_type_id).default_organism_id,
+              :organism_id => ChipType.find(@add_hybs.chip_type_id).organism_id,
               :array_platform => @add_hybs.array_platform,
               :sbeams_user => @add_hybs.sbeams_user,                                              
               :sbeams_project => @add_hybs.sbeams_project)

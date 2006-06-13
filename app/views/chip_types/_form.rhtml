@@ -7,9 +7,9 @@
 <p><label for="chip_type_short_name">Short name</label><br/>
 <%= text_field 'chip_type', 'short_name'  %></p>
 
-<p><label for="chip_type_default_organism_id">Organism</label><br/>
-<select id="default_organism_id" name="chip_type[default_organism_id]">
-    <%= options_from_collection_for_select @organisms, "id", "name", selected_value=@chip_type.default_organism_id %></select>
+<p><label for="chip_type_organism_id">Organism</label><br/>
+<select id="organism_id" name="chip_type[organism_id]">
+    <%= options_from_collection_for_select @organisms, "id", "name", selected_value=@chip_type.organism_id %></select>
     If Other, name the organism:
     <input id="organism" 
         name="organism" size="15" type="text" /></p></p>

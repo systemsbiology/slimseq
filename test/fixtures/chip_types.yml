@@ -3,9 +3,9 @@ mouse:
   id: 1
   name: Mouse 430 2.0
   short_name: Mouse430_2
-  default_organism_id: 1
+  organism_id: 1
 alligator:
   id: 2
   name: Alligator 670 2.0
   short_name: Gator670_2
-  default_organism_id: 2
+  organism_id: 2

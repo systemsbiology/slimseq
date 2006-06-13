@@ -21,7 +21,7 @@ class ChipTypesController < ApplicationController
     if(params[:organism] != nil && params[:organism].size > 0)
       org = Organism.new(:name => params[:organism])
       org.save
-      @chip_type.update_attribute('default_organism_id', org.id)
+      @chip_type.update_attribute('organism_id', org.id)
     end
     
     if @chip_type.save
@@ -46,7 +46,7 @@ class ChipTypesController < ApplicationController
       if(params[:organism] != nil && params[:organism].size > 0)
         org = Organism.new(:name => params[:organism])
         org.save
-        @chip_type.update_attribute('default_organism_id', org.id)
+        @chip_type.update_attribute('organism_id', org.id)
       end
     
       flash[:notice] = 'ChipType was successfully updated.'

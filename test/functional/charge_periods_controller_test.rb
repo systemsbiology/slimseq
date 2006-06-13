@@ -92,6 +92,8 @@ class ChargePeriodsControllerTest < Test::Unit::TestCase
     assert_response :redirect
     assert_redirected_to :controller => 'charge_sets', :action => 'list'
 
-    assert_not_nil ChargePeriod.find(1)
+    assert_raise(ActiveRecord::RecordNotFound) {
+      ChargePeriod.find(1)
+    }
   end
 end

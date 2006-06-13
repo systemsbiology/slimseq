@@ -5,7 +5,7 @@ require 'organisms_controller'
 class OrganismsController; def rescue_action(e) raise e end; end
 
 class OrganismsControllerTest < Test::Unit::TestCase
-  fixtures :organisms
+  fixtures :organisms, :chip_types
 
   def setup
     @controller = OrganismsController.new
