@@ -1,0 +1,84 @@
+= Quickstart Notes for SLIMarray on Windows
+
+== Download and install Ruby
+
+- Go to http://rubyinstaller.rubyforge.org, click on [Download], and pick the 
+latest stable   release (at the time of writing, this was ruby182-15.exe), to 
+download it.
+- Run the .exe file wherever it was downloaded, and choose to install all 
+components.
+
+== Download and install MySQL
+
+- Go to http://dev.mysql.com/downloads/mysql/5.0.html. Under 'Windows 
+downloads', choose 'Pick a mirror' for Windows (x86). At the time of writing, 
+MySQL 5.0 was the most current release. Optionally fill out their questionaire, 
+and then click on one of the mirrors in the lower part of the page to start 
+downloading.
+- Open the .zip file you've downloaded, and run the Setup.exe file that's 
+inside. This will start the installation wizard. The default selections should 
+be okay, so click [Next>] to go through the steps, and finally [Install].
+- During the installation, you'll be presented with a sign-up wizard, where you 
+can elect to create a MySQL.com account, or skip that step.
+- Once installation is complete, make sure the 'Configure the MySQL Server now' 
+box is checked, and click [Finish]
+- In the MySQL Server Instance Configuration Wizard, choose 'Standard 
+Configuration', then on the next page make sure that the 'Install As Windows 
+Service' is checked, as well as 'Launch the MySQL Server automatically'. Check 
+the box to 'Include Bin Directory in Windows PATH'.
+- On the next page, make sure 'Modify Security Settings' is checked, and enter a 
+root password. Remember this--you'll need it later. Leave 'Enable root access 
+from remote machines' unchecked, as well as 'Create An Anonymous Account'
+- On the next, final page, choose [Execute] to apply the settings you chose.
+
+== Configure MySQL
+
+1. Click Start -> All Programs -> MySQL -> MySQL Server 5.0 -> MySQL Command 
+Line Client
+2. Enter the password you chose in the previous secion.
+3. You should now have a 'mysql>' command line. Enter the following command 
+   to create the databases:
+
+	mysql> CREATE DATABASE slimarray_production;
+	mysql> CREATE DATABASE slimarray_development;
+	mysql> CREATE DATABASE slimarray_test;
+	mysql> quit
+
+== Download SLIMarray and install
+
+- Go to http://slimarray.systemsbiology.net/download and download 
+slimarray-0.1.0.zip
+- Extract the contents of the zip file into C:\Program Files
+
+== Configuring SLIMarray
+
+SLIMarray needs to be configured to connect with the MySQL databases you 
+created. In the directory where you extracted SLIMarray (C:\Program 
+Files\slimarray), make a copy of the file config/database.example file as 
+config/database.yml. Edit slimarray/config/database.yml so that it 
+contains the username and password that you've created for the production, 
+development and test databases.
+
+== Check out code and populate database
+
+Open a command line window: Click Start -> Run, then enter 'cmd' in the dialog 
+box that comes up. Enter the following:
+
+	C:
+	cd \Program Files\slimarray
+	mysql -u root -p slimarray_development < db/default.mysql
+	mysql -u root -p slimarray_production < db/default.mysql
+
+== Start the web server
+
+In the same windows as used in the previous step, enter:
+
+	ruby script/server
+
+== Conclusion
+
+At this point, you should be able to open a web browser and have things work 
+when you navigate to http://localhost:3000. The default username is 'admin' with 
+a password (that should be changed to something less obvious) of 'admin'. Other 
+installation options such as LDAP support, support for 'rake' tasks and Apache 
+server support are described in the main SLIMarray_install.notes.

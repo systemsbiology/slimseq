@@ -1,0 +1,70 @@
+= Quickstart Notes for SLIMarray on Linux (generic)
+
+This describes installation of SLIMarray on Linux without LDAP or development 
+support, running on the WEBrick server. For other options, please refer to the 
+more detailed SLIMarrayFullInstallNotes.
+
+Configure your firewall to have port 3000 open
+
+Install prerequisite sofware:
+
+	wget
+	mysql
+	mysql-server
+	ruby
+	ruby-rdoc
+	ruby-irb
+	ruby-devel
+	subversion
+
+Install RubyGems:
+
+	wget http://rubyforge.org/frs/download.php/5207/rubygems-0.8.11.tgz
+	tar zxf rubygems-0.8.11.tgz
+	cd rubygems-0.8.11
+	sudo ruby setup.rb
+
+MySQL Configuration:
+
+Open up /etc/my.cnf and change the line that reads 'old_passwords=1' to 
+'old_passwords=0'. Start mysqld with:
+
+# usually this will do it (must be root)
+sudo /sbin/service mysqld start
+
+Configure mysql server databases and users:
+
+	mysql -u root
+	mysql> CREATE DATABASE slimarray_production;
+	mysql> CREATE DATABASE slimarray_development;
+	mysql> CREATE DATABASE slimarray_test;
+	mysql> DELETE FROM mysql.user WHERE User = '';
+	mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY 
+	'password_you_choose' WITH GRANT OPTION;
+	mysql> FLUSH PRIVILEGES;
+	mysql> quit
+
+Configuring SLIMarray:
+
+Copy chip_accounting/config/database.example to 
+chip_accounting/config/database.yml. Edit chip_accounting/config/database.yml to 
+make username: root and password: <password_you_chose_earlier> for all 3 
+environments
+
+Check out code and populate database:
+
+	cd /path/where/you/want/slimarray
+	svn co http://slimarray.systemsbiology.net/svn/trunk
+	mysql -u root -p slimarray_development < db/default.mysql
+	mysql -u root -p slimarray_production < db/default.mysql
+
+Set permissions on scripts and run web server:
+
+	chmod -R a+x script
+	script/server
+
+At this point, you should be able to open a web browser and have things work 
+when you navigate to http://localhost:3000. The default username is 'admin' with 
+a password (that should be changed to something less obvious) of 'admin'. Other 
+installation options such as LDAP support, support for 'rake' tasks and Apache 
+server support are described in the main SLIMarray_install.notes.
