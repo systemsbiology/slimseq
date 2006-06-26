@@ -9,13 +9,18 @@ There are several ways to install SLIMarray, depending upon your level of
 expertise, available time to install the software and desired features. Here 
 are the options, listed from easiest to more involved:
 
-* SLIMarray Lite (Easiest): Software is packaged into a single executable. This uses a SQLite database and an all-ruby web server (WEBrick). The downsides are that it is relatively slow and lacks LDAP support for user authentication. See SLIMarrayLiteInstallNotes[link:files/doc/SLIMarrayLiteInstallNotes.html]
+===SLIMarray Lite (Easiest):
+Software is packaged into a single executable. This uses a SQLite database and an all-ruby web server (WEBrick). The downsides are that it is relatively slow and lacks LDAP support for user authentication. See SLIMarrayLiteInstallNotes[link:files/doc/SLIMarrayLiteInstallNotes.html]
 
-* SLIMarray Windows Quickstart: Quick guide to installing on Windows using MySQL database and WEBrick web server, without LDAP authentication support. See SLIMarrayWindowsQuickstart[link:files/doc/SLIMarrayWindowsQuickstart.html]
+===SLIMarray Windows Quickstart:
+Quick guide to installing on Windows using MySQL database and WEBrick web server, without LDAP authentication support. See SLIMarrayWindowsQuickstart[link:files/doc/SLIMarrayWindowsQuickstart.html]
 
-* SLIMarray Linux(Generic) Quickstart: Quick guide to installing on a generic Linux system using MySQL database and WEBrick web server, without LDAP authentication support. See SLIMarrayLinuxQuickstart[link:files/doc/SLIMarrayLinuxQuickstart.html]
+===SLIMarray Linux(Generic) Quickstart:
+Quick guide to installing on a generic Linux system using MySQL database and WEBrick web server, without LDAP authentication support. See SLIMarrayLinuxQuickstart[link:files/doc/SLIMarrayLinuxQuickstart.html]
 
-* SLIMarray Fedora Core 5 Quickstart: Quick guide to installation specifically on Fedora Core 5 using MySQL database and WEBrick web server, without LDAP authentication support. See SLIMarrayFC5Quickstart[link:files/doc/SLIMarrayFC5Quickstart.html]
+===SLIMarray Fedora Core 5 Quickstart:
+Quick guide to installation specifically on Fedora Core 5 using MySQL database and WEBrick web server, without LDAP authentication support. See SLIMarrayFC5Quickstart[link:files/doc/SLIMarrayFC5Quickstart.html]
 
-* SLIMarray full installation notes (Most involved): Full notes for installating the software and building the database from scratch. This will be most useful for those who want to understand what's going on during installation and customize their installation. It also describes how to provide LDAP authentication support (on Linux). See SLIMarrayFullInstallNotes[link:files/doc/SLIMarrayFullInstallNotes.html]
+===SLIMarray full installation notes (Most involved):
+Full notes for installating the software and building the database from scratch. This will be most useful for those who want to understand what's going on during installation and customize their installation. It also describes how to provide LDAP authentication support (on Linux). See SLIMarrayFullInstallNotes[link:files/doc/SLIMarrayFullInstallNotes.html]
 

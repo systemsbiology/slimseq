@@ -14,8 +14,7 @@ The following external software should be installed, following the
 instructions provided with each of them for your specific operating 
 system:
 
-* Ruby >= 1.8.4	- http://www.ruby-lang.org or 
-http://rubyinstaller.rubyforge.org (Windows)
+* Ruby >= 1.8.4	- http://www.ruby-lang.org or http://rubyinstaller.rubyforge.org (Windows)
 * MySQL Server >= 4.2 - http://www.mysql.com/
 * OPTIONAL: OpenLDAP - http://www.openldap.org
 * OPTIONAL: LightTPD - http://www.lighttpd.net
@@ -195,24 +194,26 @@ your operating system). There's a template named
 slimarray/config/lighttpd.conf.template that you can start with. The following 
 sections should be modidifed to relfect your particular installation:
 
-server.document-root        = "/srv/rails/chip_accounting/public/"
+	server.document-root        = "/srv/rails/chip_accounting/public/"
+	
+	server.errorlog          = "/srv/rails/chip_accounting/log/lighttpd.error.log"
+	accesslog.filename       = "/srv/rails/chip_accounting/log/lighttpd.access.log"
+	
+	url.rewrite              = ( "^/$" => "index.html", "^([^.]+)$" => "$1.html" )
+	
+	fastcgi.server      = ( ".fcgi" => ( "localhost" => (
+	  "min-procs"       => 1,
+	  "max-procs"       => 1,
+	  "socket"          => "/srv/rails/chip_accounting/tmp/sockets/fcgi.socket",
+	  "bin-path"        => "/srv/rails/chip_accounting/public/dispatch.fcgi",
+	  "bin-environment" => ( "RAILS_ENV" => "production" )
+	) ) )
 
-server.errorlog          = "/srv/rails/chip_accounting/log/lighttpd.error.log"
-accesslog.filename       = "/srv/rails/chip_accounting/log/lighttpd.access.log"
-
-url.rewrite              = ( "^/$" => "index.html", "^([^.]+)$" => "$1.html" )
-
-fastcgi.server      = ( ".fcgi" => ( "localhost" => (
-  "min-procs"       => 1,
-  "max-procs"       => 1,
-  "socket"          => "/srv/rails/chip_accounting/tmp/sockets/fcgi.socket",
-  "bin-path"        => "/srv/rails/chip_accounting/public/dispatch.fcgi",
-  "bin-environment" => ( "RAILS_ENV" => "production" )
-) ) )
-
-3. Make sure the 'shebang' line in slimarray/public/dispatch.fcgi is correct. 
-If you're a linux user, you can try 'which ruby' at the command line, and 
-make sure what you get matches the first line of the dispatch.fcgi file.
+3. Make sure the 'shebang' line in slimarray/public/dispatch.fcgi is pointed 
+in the correct place to find ruby (it may need to be '#!/usr/bin/ruby' 
+instead of '#!/usr/local/bin/ruby'. If you're a linux user, you can try 
+'which ruby' at the command line, and make sure what you get matches the 
+first line of the dispatch.fcgi file.
 
 4. This primarily applies to linux installations. Set permissions properly by 
 changing the group on your slimarray directory and everything under it to 
