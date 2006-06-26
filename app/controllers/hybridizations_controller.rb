@@ -108,10 +108,17 @@ class HybridizationsController < ApplicationController
   def update
     populate_arrays_from_tables
     hybridization = Hybridization.find(params[:id])
-    if hybridization.update_attributes(params[:hybridization])
-      flash[:notice] = 'Hybridization was successfully updated.'
-      redirect_to :action => 'list'
-    else
+
+    begin
+      if hybridization.update_attributes(params[:hybridization])
+        flash[:notice] = 'Hybridization was successfully updated.'
+        redirect_to :action => 'list'
+      else
+        render :action => 'edit'
+      end
+    rescue ActiveRecord::StaleObjectError
+      flash[:warning] = "Unable to update information. Another user has modified this hybridization."
+      @hybridization = Hybridization.find(params[:id])
       render :action => 'edit'
     end
   end

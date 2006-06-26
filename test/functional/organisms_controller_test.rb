@@ -78,6 +78,28 @@ class OrganismsControllerTest < Test::Unit::TestCase
     assert_redirected_to :action => 'show', :id => 1
   end
 
+  def test_update_locked
+    get :edit, :id => 1
+
+    # grab the organism we're going to use twice
+    organism1 = Organism.find(1)
+    organism2 = Organism.find(1)
+    
+    # update it once, which should sucess
+    post :update, :id => 1, :organism => { :name => "org1", 
+                                            :lock_version => organism1.lock_version }
+
+    # and then update again with stale info, and it should fail
+    post :update, :id => 1, :organism => { :name => "org2", 
+                                            :lock_version => organism2.lock_version }                                               
+
+    assert_response :success                                                
+    assert_template 'edit'
+    assert_flash_warning
+    
+    assert_equal "org1", Organism.find(1).name
+  end
+
   def test_destroy
     assert_not_nil Organism.find(3)
 

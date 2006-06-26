@@ -107,6 +107,26 @@ class ChipTransactionsControllerTest < Test::Unit::TestCase
     assert_redirected_to :action => 'list_subset', :id => 1
   end
 
+  def test_update_locked
+    # grab the chip_transaction we're going to use twice
+    chip_transaction1 = ChipTransaction.find(1)
+    chip_transaction2 = ChipTransaction.find(1)
+    
+    # update it once, which should sucess
+    post :update, :id => 1, :chip_transaction => { :description => "chip_transaction1", 
+                                                :lock_version => chip_transaction1.lock_version }
+
+    # and then update again with stale info, and it should fail
+    post :update, :id => 1, :chip_transaction => { :description => "chip_transaction2", 
+                                                :lock_version => chip_transaction2.lock_version }                                            
+
+    assert_response :success                                                
+    assert_template 'edit'
+    assert_flash_warning
+    
+    assert_equal "chip_transaction1", ChipTransaction.find(1).description
+  end
+
   def test_destroy
     assert_not_nil ChipTransaction.find(1)
 

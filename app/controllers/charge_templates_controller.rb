@@ -28,10 +28,17 @@ class ChargeTemplatesController < ApplicationController
 
   def update
     @charge_template = ChargeTemplate.find(params[:id])
-    if @charge_template.update_attributes(params[:charge_template])
-      flash[:notice] = 'ChargeTemplate was successfully updated.'
-      redirect_to :action => 'list'
-    else
+
+    begin
+      if @charge_template.update_attributes(params[:charge_template])
+        flash[:notice] = 'ChargeTemplate was successfully updated.'
+        redirect_to :action => 'list'
+      else
+        render :action => 'edit'
+      end
+    rescue ActiveRecord::StaleObjectError
+      flash[:warning] = "Unable to update information. Another user has modified this charge template."
+      @charge_template = ChargeTemplate.find(params[:id])
       render :action => 'edit'
     end
   end

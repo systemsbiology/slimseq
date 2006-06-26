@@ -32,10 +32,17 @@ class LabGroupsController < ApplicationController
 
   def update
     @lab_group = LabGroup.find(params[:id])
-    if @lab_group.update_attributes(params[:lab_group])
-      flash[:notice] = 'LabGroup was successfully updated.'
-      redirect_to :action => 'list', :id => @lab_group
-    else
+
+    begin
+      if @lab_group.update_attributes(params[:lab_group])
+        flash[:notice] = 'LabGroup was successfully updated.'
+        redirect_to :action => 'list', :id => @lab_group
+      else
+        render :action => 'edit'
+      end
+    rescue ActiveRecord::StaleObjectError
+      flash[:warning] = "Unable to update information. Another user has modified this lab group."
+      @lab_group = LabGroup.find(params[:id])
       render :action => 'edit'
     end
   end

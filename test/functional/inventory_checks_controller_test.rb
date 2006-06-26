@@ -74,6 +74,26 @@ class InventoryChecksControllerTest < Test::Unit::TestCase
     assert_redirected_to :action => 'list', :id => 1
   end
 
+  def test_update_locked
+    # grab the inventory_check we're going to use twice
+    inventory_check1 = InventoryCheck.find(1)
+    inventory_check2 = InventoryCheck.find(1)
+    
+    # update it once, which should sucess
+    post :update, :id => 1, :inventory_check => { :number_expected => 50, 
+                                                :lock_version => inventory_check1.lock_version }
+
+    # and then update again with stale info, and it should fail
+    post :update, :id => 1, :inventory_check => { :number_expected => 40, 
+                                                :lock_version => inventory_check2.lock_version }                                               
+
+    assert_response :success                                                
+    assert_template 'edit'
+    assert_flash_warning
+    
+    assert_equal 50, InventoryCheck.find(1).number_expected
+  end
+
   def test_destroy
     assert_not_nil InventoryCheck.find(1)
 

@@ -80,10 +80,17 @@ class ChargesController < ApplicationController
   def update
     @charge_set = session[:charge_set]
     @charge = Charge.find(params[:id])
-    if @charge.update_attributes(params[:charge])
-      flash[:notice] = 'Charge was successfully updated.'
-      redirect_to :action => 'list_within_charge_set'
-    else
+
+    begin
+      if @charge.update_attributes(params[:charge])
+        flash[:notice] = 'Charge was successfully updated.'
+        redirect_to :action => 'list_within_charge_set'
+      else
+        render :action => 'edit'
+      end
+    rescue ActiveRecord::StaleObjectError
+      flash[:warning] = "Unable to update information. Another user has modified this charge."
+      @charge = Charge.find(params[:id])
       render :action => 'edit'
     end
   end

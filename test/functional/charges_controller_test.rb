@@ -5,7 +5,7 @@ require 'charges_controller'
 class ChargesController; def rescue_action(e) raise e end; end
 
 class ChargesControllerTest < Test::Unit::TestCase
-  fixtures :charges
+  fixtures :charges, :charge_sets, :charge_templates
 
   def setup
     @controller = ChargesController.new
@@ -78,6 +78,26 @@ class ChargesControllerTest < Test::Unit::TestCase
     post :update, :id => 1
     assert_response :redirect
     assert_redirected_to :action => 'list_within_charge_set'
+  end
+
+  def test_update_locked
+    # grab the charge we're going to use twice
+    charge1 = Charge.find(1)
+    charge2 = Charge.find(1)
+    
+    # update it once, which should sucess
+    post :update, :id => 1, :charge => { :description => "charge1", 
+                                                :lock_version => charge1.lock_version }
+
+    # and then update again with stale info, and it should fail
+    post :update, :id => 1, :charge => { :description => "charge2", 
+                                                :lock_version => charge2.lock_version }                                               
+
+    assert_response :success                                                
+    assert_template 'edit'
+    assert_flash_warning
+    
+    assert_equal "charge1", Charge.find(1).description
   end
 
   def test_move

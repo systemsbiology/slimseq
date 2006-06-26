@@ -32,10 +32,17 @@ class OrganismsController < ApplicationController
 
   def update
     @organism = Organism.find(params[:id])
-    if @organism.update_attributes(params[:organism])
-      flash[:notice] = 'Organism was successfully updated.'
-      redirect_to :action => 'show', :id => @organism
-    else
+    
+    begin
+      if @organism.update_attributes(params[:organism])
+        flash[:notice] = 'Organism was successfully updated.'
+        redirect_to :action => 'show', :id => @organism
+      else
+        render :action => 'edit'
+      end
+    rescue ActiveRecord::StaleObjectError
+      flash[:warning] = "Unable to update information. Another user has modified this organism."
+      @organism = Organism.find(params[:id])
       render :action => 'edit'
     end
   end

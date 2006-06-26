@@ -2,18 +2,16 @@
 
 <table class="sortable" id="chip_types">
   <tr>
-  <% for column in ChipType.content_columns %>
-    <th><%= column.human_name %></th>
-  <% end %>
+    <th>Name</th>
+    <th>Short Name</th>    
     <th>Edit</th>
     <th>Destroy</th>
   </tr>
   
 <% for chip_type in @chip_types %>
   <tr>
-  <% for column in ChipType.content_columns %>
-    <td><%=h chip_type.send(column.name) %></td>
-  <% end %>
+    <td><%=h chip_type.name %></td>
+    <td><%=h chip_type.short_name %></td>
     <td><%= link_to 'Edit', :action => 'edit', :id => chip_type %></td>
     <td><%= link_to 'Destroy', { :action => 'destroy', :id => chip_type },
                     :confirm => chip_type.destroy_warning %></td>

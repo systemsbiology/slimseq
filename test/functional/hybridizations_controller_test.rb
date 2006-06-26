@@ -6,7 +6,7 @@ class HybridizationsController; def rescue_action(e) raise e end; end
 
 class HybridizationsControllerTest < Test::Unit::TestCase
   fixtures :hybridizations, 
-           :lab_groups, :chip_types, :organisms
+           :lab_groups, :chip_types, :organisms, :charge_templates
 
   def setup
     @controller = HybridizationsController.new
@@ -422,6 +422,26 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     
     assert_response :redirect
     assert_redirected_to :action => 'list'
+  end
+
+  def test_update_locked
+    # grab the hybridization we're going to use twice
+    hybridization1 = Hybridization.find(1)
+    hybridization2 = Hybridization.find(1)
+    
+    # update it once, which should sucess
+    post :update, :id => 1, :hybridization => { :sample_name => "hybridization1", 
+                                                :lock_version => hybridization1.lock_version }
+
+    # and then update again with stale info, and it should fail
+    post :update, :id => 1, :hybridization => { :sample_name => "hybridization2", 
+                                                :lock_version => hybridization2.lock_version }                                               
+
+    assert_response :success                                                
+    assert_template 'edit'
+    assert_flash_warning
+    
+    assert_equal "hybridization1", Hybridization.find(1).sample_name
   end
 
   def test_destroy

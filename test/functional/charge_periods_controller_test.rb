@@ -73,6 +73,26 @@ class ChargePeriodsControllerTest < Test::Unit::TestCase
     assert_equal "2005-12-25 to 2006-01-24", ChargePeriod.find(1).name
   end
 
+  def test_update_locked
+    # grab the charge period we're going to use twice
+    period1 = ChargePeriod.find(1)
+    period2 = ChargePeriod.find(1)
+    
+    # update it once, which should sucess
+    post :update, :id => 1, :charge_period => { :name => "2006-03-25 to 2006-04-24", 
+                                                :lock_version => period1.lock_version }
+
+    # and then update again with stale info, and it should fail
+    post :update, :id => 1, :charge_period => { :name => "name that shouldn't get updated", 
+                                                :lock_version => period2.lock_version }                                               
+
+    assert_response :success                                                
+    assert_template 'edit'
+    assert_flash_warning
+    
+    assert_equal "2006-03-25 to 2006-04-24", ChargePeriod.find(1).name
+  end
+
   def test_destroy
     assert_not_nil ChargePeriod.find(2)
 

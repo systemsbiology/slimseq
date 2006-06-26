@@ -103,10 +103,19 @@ class ChipTransactionsController < ApplicationController
 
   def update
     @chip_transaction = ChipTransaction.find(params[:id])
-    if @chip_transaction.update_attributes(params[:chip_transaction])
-      flash[:notice] = 'ChipTransaction was successfully updated.'
-      redirect_to :action => 'list_subset', :id => @chip_transaction
-    else
+    @chip_types = ChipType.find_all
+    @lab_groups = LabGroup.find_all
+
+    begin
+      if @chip_transaction.update_attributes(params[:chip_transaction])
+        flash[:notice] = 'Chip transaction was successfully updated.'
+        redirect_to :action => 'list_subset', :id => @chip_transaction
+      else
+        render :action => 'edit'
+      end
+    rescue ActiveRecord::StaleObjectError
+      flash[:warning] = "Unable to update information. Another user has modified this chip transaction."
+      @chip_transaction = ChipTransaction.find(params[:id])
       render :action => 'edit'
     end
   end

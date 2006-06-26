@@ -12,6 +12,8 @@
     <%= options_from_collection_for_select @organisms, "id", "name", selected_value=@chip_type.organism_id %></select>
     If Other, name the organism:
     <input id="organism" 
-        name="organism" size="15" type="text" /></p></p>
+        name="organism" size="15" type="text" /></p>
+
+<%= hidden_field 'chip_type', 'lock_version' %>
 <!--[eoform:chip_type]-->
 

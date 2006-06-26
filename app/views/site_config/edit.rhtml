@@ -42,5 +42,7 @@
     <p><label for="site_config_LDAP_DN">LDAP DN(distinguished name) string (Only needed if LDAP is enabled)</label><br/>
 	<%= text_field 'site_config', 'LDAP_DN'  %></p>
 	
+	<%= hidden_field 'site_config', 'lock_version' %>
+	
   <%= submit_tag 'Update Site Configuration' %>
 <%= end_form_tag %>

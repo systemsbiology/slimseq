@@ -24,6 +24,8 @@
     <p><label for="hybridization_chip_type_id">Chip Type</label><br>
     <select id="chip_type_id" name="hybridization[chip_type_id]">
     <%= options_from_collection_for_select @chip_types, "id", "name", selected_value=@hybridization.chip_type_id %></select></p>
+
+    <%= hidden_field 'hybridization', 'lock_version' %>
 	
   <%= submit_tag 'Edit' %>
 <%= end_form_tag %>

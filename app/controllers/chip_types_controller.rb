@@ -41,17 +41,24 @@ class ChipTypesController < ApplicationController
     populate_arrays_from_tables
     @chip_type = ChipType.find(params[:id])
     
-    if @chip_type.update_attributes(params[:chip_type])
-      # if a new organism was specified, use that name
-      if(params[:organism] != nil && params[:organism].size > 0)
-        org = Organism.new(:name => params[:organism])
-        org.save
-        @chip_type.update_attribute('organism_id', org.id)
+    # catch StaleObjectErrors
+    begin
+      if @chip_type.update_attributes(params[:chip_type])
+        # if a new organism was specified, use that name
+        if(params[:organism] != nil && params[:organism].size > 0)
+          org = Organism.new(:name => params[:organism])
+          org.save
+          @chip_type.update_attribute('organism_id', org.id)
+        end
+      
+        flash[:notice] = 'ChipType was successfully updated.'
+        redirect_to :action => 'list', :id => @chip_type
+      else
+        render :action => 'edit'
       end
-    
-      flash[:notice] = 'ChipType was successfully updated.'
-      redirect_to :action => 'list', :id => @chip_type
-    else
+    rescue ActiveRecord::StaleObjectError
+      flash[:warning] = "Unable to update information. Another user has modified this chip type."
+      @chip_type = ChipType.find(params[:id])
       render :action => 'edit'
     end
   end

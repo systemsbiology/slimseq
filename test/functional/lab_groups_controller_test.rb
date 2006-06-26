@@ -69,6 +69,26 @@ class LabGroupsControllerTest < Test::Unit::TestCase
     assert_redirected_to :action => 'list', :id => 1
   end
 
+  def test_update_locked
+    # grab the lab_group we're going to use twice
+    lab_group1 = LabGroup.find(1)
+    lab_group2 = LabGroup.find(1)
+    
+    # update it once, which should sucess
+    post :update, :id => 1, :lab_group => { :name => "lab1", 
+                                            :lock_version => lab_group1.lock_version }
+
+    # and then update again with stale info, and it should fail
+    post :update, :id => 1, :lab_group => { :name => "lab2", 
+                                            :lock_version => lab_group2.lock_version }                                               
+
+    assert_response :success                                                
+    assert_template 'edit'
+    assert_flash_warning
+    
+    assert_equal "lab1", LabGroup.find(1).name
+  end
+
   def test_destroy_no_associated_transactions
     assert_not_nil LabGroup.find(2)
 

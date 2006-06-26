@@ -71,6 +71,26 @@ class ChargeSetsControllerTest < Test::Unit::TestCase
     assert_redirected_to :action => 'list'
   end
 
+  def test_update_locked
+    # grab the charge set we're going to use twice
+    set1 = ChargeSet.find(1)
+    set2 = ChargeSet.find(1)
+    
+    # update it once, which should sucess
+    post :update, :id => 1, :charge_set => { :name => "set1", 
+                                                :lock_version => set1.lock_version }
+
+    # and then update again with stale info, and it should fail
+    post :update, :id => 1, :charge_set => { :name => "set2", 
+                                                :lock_version => set2.lock_version }                                               
+
+    assert_response :success                                                
+    assert_template 'edit'
+    assert_flash_warning
+    
+    assert_equal "set1", ChargeSet.find(1).name
+  end
+
   def test_destroy
     assert_not_nil ChargeSet.find(2)
 

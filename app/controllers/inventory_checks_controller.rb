@@ -42,11 +42,20 @@ class InventoryChecksController < ApplicationController
   end
 
   def update
+    @lab_groups = LabGroup.find(:all, :order => "name ASC")
+    @chip_types = ChipType.find(:all, :order => "name ASC")
     @inventory_check = InventoryCheck.find(params[:id])
-    if @inventory_check.update_attributes(params[:inventory_check])
-      flash[:notice] = 'InventoryCheck was successfully updated.'
-      redirect_to :action => 'list', :id => @inventory_check
-    else
+
+    begin
+      if @inventory_check.update_attributes(params[:inventory_check])
+        flash[:notice] = 'InventoryCheck was successfully updated.'
+        redirect_to :action => 'list', :id => @inventory_check
+      else
+        render :action => 'edit'
+      end
+    rescue ActiveRecord::StaleObjectError
+      flash[:warning] = "Unable to update information. Another user has modified this inventory check."
+      @inventory_check = InventoryCheck.find(params[:id])
       render :action => 'edit'
     end
   end

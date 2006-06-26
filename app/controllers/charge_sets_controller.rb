@@ -32,10 +32,17 @@ class ChargeSetsController < ApplicationController
   def update
     @charge_set = ChargeSet.find(params[:id])
     populate_for_dropdown
-    if @charge_set.update_attributes(params[:charge_set])
-      flash[:notice] = 'ChargeSet was successfully updated.'
-      redirect_to :action => 'list'
-    else
+
+    begin
+      if @charge_set.update_attributes(params[:charge_set])
+        flash[:notice] = 'ChargeSet was successfully updated.'
+        redirect_to :action => 'list'
+      else
+        render :action => 'edit'
+      end
+    rescue ActiveRecord::StaleObjectError
+      flash[:warning] = "Unable to update information. Another user has modified this charge set."
+      @charge_set = ChargeSet.find(params[:id])
       render :action => 'edit'
     end
   end

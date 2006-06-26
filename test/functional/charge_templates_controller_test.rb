@@ -73,6 +73,26 @@ class ChargeTemplatesControllerTest < Test::Unit::TestCase
     assert_redirected_to :action => 'list'
   end
 
+  def test_update_locked
+    # grab the charge template we're going to use twice
+    template1 = ChargeTemplate.find(1)
+    template2 = ChargeTemplate.find(1)
+    
+    # update it once, which should sucess
+    post :update, :id => 1, :charge_template => { :name => "template1", 
+                                                :lock_version => template1.lock_version }
+
+    # and then update again with stale info, and it should fail
+    post :update, :id => 1, :charge_template => { :name => "template2", 
+                                                :lock_version => template2.lock_version }                                               
+
+    assert_response :success                                                
+    assert_template 'edit'
+    assert_flash_warning
+    
+    assert_equal "template1", ChargeTemplate.find(1).name
+  end
+
   def test_destroy
     assert_not_nil ChargeTemplate.find(1)
 
