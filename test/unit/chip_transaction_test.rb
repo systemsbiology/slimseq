@@ -3,8 +3,9 @@ require File.dirname(__FILE__) + '/../test_helper'
 class ChipTransactionTest < Test::Unit::TestCase
   fixtures :chip_types, :lab_groups, :chip_transactions
 
-  # Replace this with your real tests.
-  def test_truth
-    assert_kind_of ChipTransaction, chip_transactions(:acquired)
+  def test_find_all_in_lab_group_chip_type
+    transactions = ChipTransaction.find_all_in_lab_group_chip_type(1,2)
+    
+    assert_equal 2, transactions.size
   end
 end

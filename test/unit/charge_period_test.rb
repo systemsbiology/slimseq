@@ -1,10 +1,14 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class ChargePeriodTest < Test::Unit::TestCase
-  fixtures :charge_periods
+  fixtures :charge_periods, :charge_sets
 
-  # Replace this with your real tests.
-  def test_truth
-    assert_kind_of ChargePeriod, charge_periods(:first)
+  def test_destroy_warning
+    expected_warning = "Destroying this charge period will also destroy:\n" + 
+                       "2 charge set(s)\n" +
+                       "Are you sure you want to destroy it?"
+  
+    period = ChargePeriod.find(1)   
+    assert_equal expected_warning, period.destroy_warning
   end
 end

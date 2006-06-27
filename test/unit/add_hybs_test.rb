@@ -5,6 +5,6 @@ class AddHybsTest < Test::Unit::TestCase
 
   # Replace this with your real tests.
   def test_truth
-    assert_kind_of AddHybs, add_hybs(:first)
+    assert true
   end
 end

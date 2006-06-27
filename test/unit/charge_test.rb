@@ -5,6 +5,6 @@ class ChargeTest < Test::Unit::TestCase
 
   # Replace this with your real tests.
   def test_truth
-    assert_kind_of Charge, charges(:first)
+    assert true
   end
 end

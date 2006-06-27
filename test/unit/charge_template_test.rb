@@ -5,6 +5,6 @@ class ChargeTemplateTest < Test::Unit::TestCase
 
   # Replace this with your real tests.
   def test_truth
-    assert_kind_of ChargeTemplate, charge_templates(:first)
+    assert true
   end
 end

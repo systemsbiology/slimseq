@@ -1,10 +1,10 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class SiteConfigTest < Test::Unit::TestCase
-  fixtures :site_configs
+  fixtures :site_config
 
   # Replace this with your real tests.
   def test_truth
-    assert_kind_of SiteConfig, site_configs(:first)
+    assert true
   end
 end
