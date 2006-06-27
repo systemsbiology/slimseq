@@ -28,10 +28,4 @@ class Hybridization < ActiveRecord::Base
       errors.add("Sample name must contain only letters, numbers, underscores and dashes or it")
     end
   end
-
-# don't need this?
-#  def find_by_date_and_chip_number(date, chip_number)
-#    Hybridization.find(:first, :conditions => [ "date = ?", date, 
-#                       "chip_number = ?", chip_number])
-#  end
 end
