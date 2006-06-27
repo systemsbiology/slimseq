@@ -1,6 +1,6 @@
 -- MySQL dump 10.9
 --
--- Host: localhost    Database: chip_accounting_dev
+-- Host: localhost    Database: default_slimarray
 -- ------------------------------------------------------
 -- Server version	4.1.12
 
@@ -49,6 +49,7 @@ DROP TABLE IF EXISTS `charge_periods`;
 CREATE TABLE `charge_periods` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(50) default NULL,
+  `lock_version` int(11) default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -75,6 +76,7 @@ CREATE TABLE `charge_sets` (
   `budget_manager` varchar(50) default NULL,
   `budget` varchar(8) default NULL,
   `charge_method` varchar(20) default NULL,
+  `lock_version` int(11) default '0',
   PRIMARY KEY  (`id`),
   KEY `lab_group_id` (`lab_group_id`),
   KEY `charge_period_id` (`charge_period_id`)
@@ -105,6 +107,7 @@ CREATE TABLE `charge_templates` (
   `hybridization_cost` float default NULL,
   `qc_cost` float default NULL,
   `other_cost` float default NULL,
+  `lock_version` int(11) default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -134,6 +137,7 @@ CREATE TABLE `charges` (
   `hybridization_cost` float default NULL,
   `qc_cost` float default NULL,
   `other_cost` float default NULL,
+  `lock_version` int(11) default '0',
   PRIMARY KEY  (`id`),
   KEY `charge_set_id` (`charge_set_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -166,6 +170,7 @@ CREATE TABLE `chip_transactions` (
   `returned_out` int(5) default NULL,
   `borrowed_out` int(5) default NULL,
   `returned_in` int(5) default NULL,
+  `lock_version` int(11) default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -189,6 +194,7 @@ CREATE TABLE `chip_types` (
   `name` varchar(20) NOT NULL default '',
   `short_name` varchar(20) NOT NULL default '',
   `organism_id` int(11) default NULL,
+  `lock_version` int(11) default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -241,6 +247,7 @@ CREATE TABLE `hybridizations` (
   `sbeams_project` varchar(50) default NULL,
   `charge_template_id` int(11) default NULL,
   `array_platform` varchar(20) default NULL,
+  `lock_version` int(11) default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -266,6 +273,7 @@ CREATE TABLE `inventory_checks` (
   `chip_type_id` int(11) default NULL,
   `number_expected` int(11) default NULL,
   `number_counted` int(11) default NULL,
+  `lock_version` int(11) default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -287,6 +295,7 @@ DROP TABLE IF EXISTS `lab_groups`;
 CREATE TABLE `lab_groups` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(20) NOT NULL default '',
+  `lock_version` int(11) default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -330,6 +339,7 @@ DROP TABLE IF EXISTS `organisms`;
 CREATE TABLE `organisms` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(50) default NULL,
+  `lock_version` int(11) default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -429,7 +439,7 @@ CREATE TABLE `schema_info` (
 
 /*!40000 ALTER TABLE `schema_info` DISABLE KEYS */;
 LOCK TABLES `schema_info` WRITE;
-INSERT INTO `schema_info` VALUES (7);
+INSERT INTO `schema_info` VALUES (8);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `schema_info` ENABLE KEYS */;
 
@@ -453,6 +463,7 @@ CREATE TABLE `site_config` (
   `use_LDAP` tinyint(1) default NULL,
   `LDAP_server` varchar(200) default NULL,
   `LDAP_DN` varchar(200) default NULL,
+  `lock_version` int(11) default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -463,7 +474,7 @@ CREATE TABLE `site_config` (
 
 /*!40000 ALTER TABLE `site_config` DISABLE KEYS */;
 LOCK TABLES `site_config` WRITE;
-INSERT INTO `site_config` VALUES (1,'SLIMarray','Name of Your Organization Here','Your Facility Name Here','both',1,1,1,1,1,'/tmp/',NULL,NULL,NULL);
+INSERT INTO `site_config` VALUES (1,'SLIMarray','Name of Your Organization Here','Your Facility Name Here','both',1,1,1,1,1,'/tmp/',NULL,NULL,NULL,0);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `site_config` ENABLE KEYS */;
 
@@ -499,7 +510,7 @@ CREATE TABLE `users` (
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 LOCK TABLES `users` WRITE;
-INSERT INTO `users` VALUES (1,'admin','29f00dba5303bf91b84bfa773677d489fad2f800','admin@localhost','System','Administrator','c3c4da4744a18c515a90675d5dc23ca66bafcf6b',1,NULL,NULL,NULL,'2006-06-13 15:58:54','2006-06-13 15:59:26',NULL,0,NULL);
+INSERT INTO `users` VALUES (1,'admin','29f00dba5303bf91b84bfa773677d489fad2f800','admin@localhost','System','Administrator','c3c4da4744a18c515a90675d5dc23ca66bafcf6b',1,NULL,NULL,NULL,'2006-06-13 15:58:54','2006-06-27 15:26:16','2006-06-27 15:26:16',0,NULL);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
