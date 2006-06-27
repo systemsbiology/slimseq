@@ -48,16 +48,18 @@ Line Client
 
 - Go to http://slimarray.systemsbiology.net/download and download 
 slimarray-0.1.0.zip
-- Extract the contents of the zip file into C:\Program Files
+- Open the zip file and extract its contents into C:\Program Files, so that 
+the software resides in the directory C:\Program Files\slimarray-0.1.0
 
 == Configuring SLIMarray
 
 SLIMarray needs to be configured to connect with the MySQL databases you 
 created. In the directory where you extracted SLIMarray (C:\Program 
-Files\slimarray), make a copy of the file config/database.example file as 
-config/database.yml. Edit slimarray/config/database.yml so that it 
-contains the username and password that you've created for the production, 
-development and test databases.
+Files\slimarray-0.1.0), make a copy of the file config/database.example file as 
+config/database.yml. Edit slimarray-0.1.0/config/database.yml, changing the 
+username to 'root' and password to whatever password you chose during 
+MySQL installation. Do this for all three sections: production, development 
+and test.
 
 == Check out code and populate database
 
@@ -65,7 +67,7 @@ Open a command line window: Click Start -> Run, then enter 'cmd' in the dialog
 box that comes up. Enter the following:
 
 	C:
-	cd \Program Files\slimarray
+	cd \Program Files\slimarray-0.1.0
 	mysql -u root -p slimarray_development < db/default.mysql
 	mysql -u root -p slimarray_production < db/default.mysql
 
