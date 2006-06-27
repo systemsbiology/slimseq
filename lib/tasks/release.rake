@@ -6,13 +6,14 @@ PKG_NAME = "slimarray"
 spec = Gem::Specification.new do |s|
   s.name = PKG_NAME
   s.version = PKG_VERSION
-  s.summary = "Modern weblog engine."
+  s.summary = "SLIMarray microarray facility management software."
   s.has_rdoc = false
   s.files  = Dir.glob('**/*', File::FNM_DOTMATCH).reject do |f|
-     [ /\.$/, /sqlite$/, /\.log$/, /^pkg/, /\.svn/, /^vendor\/rails/,
+     [ /\.$/, /\.log$/, /^pkg/, /\.svn/,
      /^public\/(files|xml|articles|pages|index.html)/,
      /^public\/(stylesheets|javascripts|images)\/theme/, /\~$/,
-     /\/\._/, /\/#/ ].any? {|regex| f =~ regex }
+     /\/\._/, /\/#/, /^db\/schema.rb/, /^config\/database\.yml/,
+     /^tmp/, /^log/ ].any? {|regex| f =~ regex }
   end
   s.require_path = '.'
   s.author = "Bruz Marzolf"
