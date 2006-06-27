@@ -202,7 +202,7 @@ class ChargePeriodsController < ApplicationController
   
     puts "VERSION: " + Excel::VERSION
     
-    workbook_name = "tmp/charges_" + @period.name + ".xls"
+    workbook_name = "#{RAILS_ROOT}/tmp/excel/charges_" + @period.name + ".xls"
     workbook = Excel.new(workbook_name)
     # doing each side individually, since :border => 1 is giving an error
     bordered = Format.new( :bottom => 1,
