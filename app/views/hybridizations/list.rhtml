@@ -4,8 +4,14 @@
 
 <table class="sortable" id="hybridizations">
   <tr>
-  <% for column in Hybridization.content_columns %>
-    <th><%= column.human_name %></th>
+    <th>Date</th>
+    <th>Chip Number</th>
+    <th>Short Sample Name</th>
+    <th>Sample Name</th>
+    <th>Sample Group Name</th>
+  <% if SiteConfig.using_sbeams? %>
+    <th>SBEAMS User</th>
+    <th>SBEAMS Project</th>
   <% end %>
     <th>Edit</th>
     <th>Destroy</th>
@@ -13,8 +19,14 @@
   
 <% for hybridization in @hybridizations %>
   <tr>
-  <% for column in Hybridization.content_columns %>
-    <td><%=h hybridization.send(column.name) %></td>
+    <td><%=h hybridization.date %></td>
+    <td><%=h hybridization.chip_number %></td>
+    <td><%=h hybridization.short_sample_name %></td>
+    <td><%=h hybridization.sample_name %></td>
+    <td><%=h hybridization.sample_group_name %></td>
+  <% if SiteConfig.using_sbeams? %>
+    <td><%=h hybridization.sbeams_user %></td>
+    <td><%=h hybridization.sbeams_project %></td>
   <% end %>
     <td><%= link_to 'Edit', :action => 'edit', :id => hybridization %></td>
     <td><%= link_to 'Destroy', { :action => 'destroy', :id => hybridization }, :confirm => 'Are you sure?' %></td>

@@ -27,18 +27,30 @@
 <h2>Individual Transactions</h2>
 <table class="sortable" id="individual_chip_transactions">
   <tr>
-  <% for column in ChipTransaction.content_columns %>
-    <th class="table"><%= column.human_name %></th>
-  <% end %>
+    <td class="table">Date</td>
+    <td class="table">Description</td>
+    <td class="table">Acquired</td>
+    <td class="table">Used</td>
+    <td class="table">Traded or Sold</td>
+    <td class="table">Borrowed(In)</td>
+    <td class="table">Returned(Out)</td>
+    <td class="table">Borrowed(Out)</td>
+    <td class="table">Returned(In)</td>
     <% authorized?(:action => 'edit'){ %><th>Edit</th><% } %>
     <% authorized?(:action => 'destroy'){ %><th>Destroy</th><% } %>
   </tr>  
 
     <% for chip_transaction in @chip_transactions %>
   <tr>
-        <% for column in ChipTransaction.content_columns %>
-    <td class="table"><%=h chip_transaction.send(column.name) %></td>
-        <% end %>
+    <td class="table"><%=h chip_transaction.date %></td>
+    <td class="table"><%=h chip_transaction.description %></td>
+    <td class="table"><%=h chip_transaction.acquired %></td>
+    <td class="table"><%=h chip_transaction.used %></td>
+    <td class="table"><%=h chip_transaction.traded_sold %></td>
+    <td class="table"><%=h chip_transaction.borrowed_in %></td>
+    <td class="table"><%=h chip_transaction.returned_out %></td>
+    <td class="table"><%=h chip_transaction.borrowed_out %></td>
+    <td class="table"><%=h chip_transaction.returned_in %></td>  
     <% authorized?(:action => 'edit'){ %><td class="table"><%= link_to 'Edit', :action => 'edit', :id => chip_transaction %></td><% } %>
     <% authorized?(:action => 'edit'){ %><td class="table"><%= link_to 'Destroy', { :action => 'destroy', :id => chip_transaction }, :confirm => 'Are you sure?' %></td><% } %>
   </tr>

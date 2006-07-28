@@ -2,8 +2,8 @@
 
 <table class="sortable" id="lab_groups">
   <tr>
-  <% for column in LabGroup.content_columns %>
-    <th><%= column.human_name %></th>
+  <% for name in ['Name'] %>
+    <th><%=h name %></th>
   <% end %>
     <th>Edit</th>
     <th>Destroy</th>
@@ -11,8 +11,8 @@
   
 <% for lab_group in @lab_groups %>
   <tr>
-  <% for column in LabGroup.content_columns %>
-    <td><%=h lab_group.send(column.name) %></td>
+  <% for column in ['name'] %>
+    <td><%=h lab_group.send(column) %></td>
   <% end %>
     <td><%= link_to 'Edit', :action => 'edit', :id => lab_group %></td>
     <td><%= link_to 'Destroy', { :action => 'destroy', :id => lab_group }, 
