@@ -58,8 +58,8 @@ class AddSiteConfiguration < ActiveRecord::Migration
                         :track_inventory => true,
                         :track_hybridizations => true,
                         :track_charges => true,
-                        :create_gcos_files => true,
-                        :using_sbeams => true,
+                        :create_gcos_files => false,
+                        :using_sbeams => false,
                         :gcos_output_path => "/tmp/"
                         
       add_column :add_hybs, :array_platform, :string, :limit => 20
