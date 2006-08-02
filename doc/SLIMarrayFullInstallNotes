@@ -14,14 +14,13 @@ The following external software should be installed, following the
 instructions provided with each of them for your specific operating 
 system:
 
-* Ruby >= 1.8.4	- http://www.ruby-lang.org or http://rubyinstaller.rubyforge.org (Windows)
+* Ruby >= 1.8.4	- http://www.ruby-lang.org (Linux) or http://rubyinstaller.rubyforge.org (Windows)
 * MySQL Server >= 4.2 - http://www.mysql.com/
 * OPTIONAL: OpenLDAP - http://www.openldap.org
 * OPTIONAL: LightTPD - http://www.lighttpd.net
 * OPTIONAL: Subversion - http://subversion.tigris.org
 
-* For difficulties installing any of these, please see the abundant 
-documentation, forums and mailing lists for each of them on the internet.
+* For difficulties installing any of these, please see the abundant documentation, forums and mailing lists for each of them on the internet.
 
 == Install Ruby Extras
 
@@ -65,7 +64,7 @@ Create the following database(s) as well as a user to access them:
 
 * slimarray_production (required): the production instance of your database
 * slimarray_development	(required): you'll need this to see if the software is working
-* slimarray_test (optional): you'll need this for unit testing if you do further development of the software
+* slimarray_test (optional): you'll need this for unit and functional testing if you do further development of the software
 
 Option 2 - If you've just installed MySQL and haven't set up users and 
 databases in MySQL before:
@@ -73,7 +72,7 @@ databases in MySQL before:
 1. Go to the command line (see OS-Specific Notes at the end of this file)
 2. Make sure mysql daemon / service is running (see OS-Specific Notes at 
    the end of this file)
-2. Enter 'mysql -u root'
+2. Start the MySQL command-line client (see OS-Specific Notes at the end of this file).
 3. You should now have a 'mysql>' command line. Enter the following command 
    to create the databases, as well as a user that can access them, and 
    tighten security (substitute in your password of choice where it 
@@ -101,7 +100,7 @@ the advantage of being easier to update as improvements are made to the
 software, but may be less stable than the release distribution.
 
 ===Option 1 - Install from a release:
-Download a release .zip file from http://slimarray.systemsbiology.net/download.
+Download a release .zip file from http://slimarray.systemsbiology.net/downloads.
 Unzip the file wherever you want the software to reside.
 
 ===Option 2 - Install from Subversion repository (requires installation of Subversion):
@@ -235,4 +234,9 @@ application.
 
 === Making sure MySQL service / daemon is running:
 * Windows - Right-click on 'My Computer' and choose 'Manage' (this requires administrator privileges). Under 'Services and Applications', click on 'Services'. Make sure the 'MySQL' service shows a status of 'Started' and startup type of 'Automatic'.
-* Linx - As root, run 'service mysqld start'
+* Linux - As root, run 'service mysqld start' or the equivalent command to start MySQL Server for your Linux distribution
+
+=== Starting the MySQL client for the first time:
+* Windows - Click Start -> All Programs -> MySQL -> MySQL Server 5.0 -> MySQL Command 
+Line Client
+* Linux - At the command-line, enter 'mysql -u root'
