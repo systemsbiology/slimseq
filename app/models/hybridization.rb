@@ -10,7 +10,7 @@ class Hybridization < ActiveRecord::Base
   def validate_on_create
     # make sure date/chip number combo is unique
     if Hybridization.find_by_date_and_chip_number(date, chip_number)
-      errors.add("Can't create due to duplicate date/chip number")
+      errors.add("Duplicate date/chip number")
     end
     
     # look for all the things that infuriate GCOS or SBEAMS:

@@ -8,17 +8,17 @@
 <p>Charge Type<br>
     <select id="add_hybs_charge_template_id" name="add_hybs[charge_template_id]">
     <%= options_from_collection_for_select @charge_templates, "id", "name" %></select>
-    (<%= link_to 'New Charge Template', :controller=> 'charge_templates', :action => 'new' %>)</p>
+    (<%= link_to 'Add Charge Template', :controller=> 'charge_templates', :action => 'new' %>)</p>
 
 <p>Lab Group<br>
     <select id="add_hybs_lab_group_id" name="add_hybs[lab_group_id]">
     <%= options_from_collection_for_select @lab_groups, "id", "name" %></select>
-    (<%= link_to 'New Lab Group', :controller=> 'lab_groups', :action => 'new' %>)</p>
+    (<%= link_to 'Add Lab Group', :controller=> 'lab_groups', :action => 'new' %>)</p>
 
 <p>Chip Type<br>
     <select id="add_hybs_chip_type_id" name="add_hybs[chip_type_id]">
     <%= options_from_collection_for_select @chip_types, "id", "name" %></select>
-    (<%= link_to 'New Chip Type', :controller=> 'chip_types', :action => 'new' %>)</p>
+    (<%= link_to 'Add Chip Type', :controller=> 'chip_types', :action => 'new' %>)</p>
 
 <% if SiteConfig.multi_platform? %>
 	<p><label for="add_hybs_array_platform">Array Platform</label><br/>

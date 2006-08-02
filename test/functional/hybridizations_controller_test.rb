@@ -210,6 +210,61 @@ class HybridizationsControllerTest < Test::Unit::TestCase
                  Charge.count    
   end
 
+  def test_create_bad_gcos_output_path
+    # set a nonsensical gcos path
+    @site_config = SiteConfig.find(1)
+    @site_config.update_attributes(:create_gcos_files => '/path/that/should/not/work')
+
+    num_hybridizations = Hybridization.count
+    num_transactions = ChipTransaction.count
+    num_charges = Charge.count
+
+    # use test_add to populate session[:hybridizations] and session[:hybridization_number]
+    test_add_sbeams_on_in_site_config
+
+    hyb1 = {:date => '2006-02-12',
+            :chip_number => '1',
+            :charge_template_id => '1',
+            :short_sample_name => 'HlthySmpl',
+            :sample_name => 'Healthy_Sample',
+            :sample_group_name => 'Healthy',
+            :lab_group_id => '2',
+            :chip_type_id => '1',
+            :organism_id => '1',
+            :array_platform => 'affy'
+            }
+    hyb2 = {:date => '2006-02-12',
+            :chip_number => '2',
+            :charge_template_id => '1',
+            :short_sample_name => 'DisSmpl',
+            :sample_name => 'Disease_Sample',
+            :sample_group_name => 'Disease',
+            :lab_group_id => '2',
+            :chip_type_id => '1',
+            :organism_id => '1',
+            :array_platform => 'affy'
+            }  
+                  
+    post :create, :'hybridization-0' => hyb1, :'hybridization-1' => hyb2
+
+    assert_response :redirect
+    assert_redirected_to :action => 'show'
+    follow_redirect
+    assert_flash_warning
+
+    # make sure the records made it into the hybridizations table
+    assert_equal num_hybridizations + 2,
+                 Hybridization.count
+                 
+    # make sure a chip transaction was recorded
+    assert_equal num_transactions + 1,
+                 ChipTransaction.count
+                 
+    # make sure a charge was recorded
+    assert_equal num_charges + 2,
+                 Charge.count    
+  end
+
   def test_create_track_inventory_off
     # turn off inventory tracking
     config = SiteConfig.find(1)

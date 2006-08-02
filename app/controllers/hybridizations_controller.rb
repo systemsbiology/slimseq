@@ -69,19 +69,31 @@ class HybridizationsController < ApplicationController
       for n in 0..hyb_number-1
         @hybridizations[n].save
       end
+      flash[:notice] = "Hybridization records"
       if SiteConfig.track_inventory?
         # add chip transactions for these hybridizations
         record_as_chip_transactions(@hybridizations)
+        flash[:notice] += ", inventory changes"
       end
       if SiteConfig.create_gcos_files?
-        # output files for automated sample/experiment loading into GCOS
-        create_gcos_import_files(@hybridizations)
+        begin    
+          # output files for automated sample/experiment loading into GCOS
+          create_gcos_import_files(@hybridizations)
+          flash[:notice] += ", GCOS files"
+        rescue Errno::EACCES, Errno::ENOENT
+          flash[:warning] = "Couldn't write GCOS file(s) to " + SiteConfig.gcos_output_path + ". " + 
+                            "Change permissions on that folder, or choose a new output " +
+                            "directory in the Site Config."
+        end      
       end
       if SiteConfig.track_charges?
         # record charges incurred from these hybridizations
         record_charges(@hybridizations)
+        flash[:notice] += ", charges"
       end
-      flash[:notice] = 'Hybridizations were successfully created.'
+      if(flash[:notice] != nil)
+        flash[:notice] += ' created successfully.'
+      end
       redirect_to :action => 'show'
     end
   end
