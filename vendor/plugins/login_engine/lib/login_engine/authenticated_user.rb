@@ -87,6 +87,15 @@ module LoginEngine
         return user
       end
       
+      def authenticate_by_token(id, token)
+        # Allow logins for deleted accounts, but only via this method (and
+        # not the regular authenticate call)
+        u = find(:first, :conditions => ["#{User.primary_key} = ? AND security_token = ?", id, token])
+        return nil if u.nil? or u.token_expired?
+        return nil if false == u.update_expiry
+        u
+      end
+      
     end
   
 
