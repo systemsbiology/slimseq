@@ -41,6 +41,9 @@
 
     <p><label for="site_config_LDAP_DN">LDAP DN(distinguished name) string (Only needed if LDAP is enabled)</label><br/>
 	<%= text_field 'site_config', 'LDAP_DN'  %></p>
+
+    <p><label for="site_config_administrator_email">Administrator email</label><br/>
+	<%= text_field 'site_config', 'administrator_email'  %></p>
 	
 	<%= hidden_field 'site_config', 'lock_version' %>
 	

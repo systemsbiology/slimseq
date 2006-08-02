@@ -3,14 +3,14 @@ class UserNotify < ActionMailer::Base
     setup_email(user)
 
     # Email header info
-    @subject += "Welcome to #{LoginEngine.config(:app_name)}!"
+    @subject += "Welcome to #{SiteConfig.site_name}!"
 
     # Email body substitutions
     @body["name"] = "#{user.firstname} #{user.lastname}"
     @body["login"] = user.login
     @body["password"] = password
     @body["url"] = url || LoginEngine.config(:app_url).to_s
-    @body["app_name"] = LoginEngine.config(:app_name).to_s
+    @body["app_name"] = SiteConfig.site_name.to_s
   end
 
   def forgot_password(user, url=nil)
@@ -23,7 +23,7 @@ class UserNotify < ActionMailer::Base
     @body["name"] = "#{user.firstname} #{user.lastname}"
     @body["login"] = user.login
     @body["url"] = url || LoginEngine.config(:app_url).to_s
-    @body["app_name"] = LoginEngine.config(:app_name).to_s
+    @body["app_name"] = SiteConfig.site_name.to_s
   end
 
   def change_password(user, password, url=nil)
@@ -37,7 +37,7 @@ class UserNotify < ActionMailer::Base
     @body["login"] = user.login
     @body["password"] = password
     @body["url"] = url || LoginEngine.config(:app_url).to_s
-    @body["app_name"] = LoginEngine.config(:app_name).to_s
+    @body["app_name"] = SiteConfig.site_name.to_s
   end
 
   def pending_delete(user, url=nil)
@@ -49,7 +49,7 @@ class UserNotify < ActionMailer::Base
     # Email body substitutions
     @body["name"] = "#{user.firstname} #{user.lastname}"
     @body["url"] = url || LoginEngine.config(:app_url).to_s
-    @body["app_name"] = LoginEngine.config(:app_name).to_s
+    @body["app_name"] = SiteConfig.site_name.to_s
     @body["days"] = LoginEngine.config(:delayed_delete_days).to_s
   end
 
@@ -62,13 +62,13 @@ class UserNotify < ActionMailer::Base
     # Email body substitutions
     @body["name"] = "#{user.firstname} #{user.lastname}"
     @body["url"] = url || LoginEngine.config(:app_url).to_s
-    @body["app_name"] = LoginEngine.config(:app_name).to_s
+    @body["app_name"] = SiteConfig.site_name.to_s
   end
 
   def setup_email(user)
     @recipients = "#{user.email}"
-    @from       = LoginEngine.config(:email_from).to_s
-    @subject    = "[#{LoginEngine.config(:app_name)}] "
+    @from       = SiteConfig.administrator_email.to_s
+    @subject    = "[#{SiteConfig.site_name}] "
     @sent_on    = Time.now
     @headers['Content-Type'] = "text/plain; charset=#{LoginEngine.config(:mail_charset)}; format=flowed"
   end

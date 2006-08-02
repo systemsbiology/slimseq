@@ -34,6 +34,10 @@ class SiteConfig < ActiveRecord::Base
     return SiteConfig.find(1).using_sbeams
   end
   
+  def SiteConfig.site_name
+    return SiteConfig.find(1).site_name
+  end
+  
   def SiteConfig.organization_name
     return SiteConfig.find(1).organization_name
   end
@@ -60,5 +64,9 @@ class SiteConfig < ActiveRecord::Base
   
   def SiteConfig.LDAP_DN
     return SiteConfig.find(1).LDAP_DN
+  end
+
+  def SiteConfig.administrator_email
+    return SiteConfig.find(1).administrator_email
   end
 end
