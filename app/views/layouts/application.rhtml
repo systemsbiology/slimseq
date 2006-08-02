@@ -9,28 +9,58 @@
         <div id="title_bar">
             <h1><%= SiteConfig.find(1).site_name %></h1>
         </div>
-        <div id="menu">
-            <% if SiteConfig.track_inventory? %>
-	            <%= link_if_authorized 'Chip Inventory', :controller => 'inventory', :action => 'index'%> 
-	            <%= link_if_authorized 'Inventory Checks', :controller => 'inventory_checks', :action => 'list'%>
-	        <% end %>
-	        <% if SiteConfig.track_hybridizations? %>
-                <%= link_if_authorized 'Hybridizations', :controller => 'hybridizations', :action => 'list'%> 
-            <% end %>
-            <% if SiteConfig.track_charges? %>
-	            <%= link_if_authorized 'Charges', :controller => 'charge_sets', :action => 'list'%>
-	            <%= link_if_authorized 'Charge Templates', :controller => 'charge_templates', :action => 'list'%>
-	        <% end %>
-            <%= link_if_authorized 'Chip Types', :controller => 'chip_types', :action => 'list'%>
-            <%= link_if_authorized 'Lab Groups', :controller => 'lab_groups', :action => 'list'%>
-            <%= link_if_authorized 'Users', :controller => 'user', :action => 'list'%>
-            <%= link_if_authorized 'Site Config', :controller => 'site_config', :action => 'edit'%>
-            <%= link_if_authorized 'Log Out', :controller => 'user', :action => 'logout'%>
-        </div>
-        <div id="main">
-            <p style="color: green"><%= flash[:notice] %></p>
-            <p style="color: red"><%= flash[:warning] %></p>
-            <%= @content_for_layout %>
-        </div>
+        <div id="wrap">
+	        <div id="menu">
+	            <% if SiteConfig.track_inventory? %>
+	                <% if authorized?(:controller => 'inventory', :action => 'index') || 
+	                      authorized?(:controller => 'inventory_checks', :action => 'list') ||
+	                      authorized?(:controller => 'chip_types', :action => 'list') %>
+		                <li class="category">Chips</li>
+		                <% end %>
+		            <%= link_if_authorized 'Chip Inventory', {:controller => 'inventory', :action => 'index'}, 
+		                :wrap_in => 'li' %>
+		            <%= link_if_authorized 'Inventory Checks', {:controller => 'inventory_checks', :action => 'list'}, 
+		                :wrap_in => 'li'%>
+    	            <%= link_if_authorized 'Chip Types', {:controller => 'chip_types', :action => 'list'}, 
+    	                :wrap_in => 'li'%>
+		        <% end %>
+		        <% if SiteConfig.track_hybridizations? %>
+	                <% if authorized?(:controller => 'hybridizations', :action => 'list') %>
+		                <li class="category">Samples</li>
+	                <% end %>
+	                <%= link_if_authorized 'Hybridizations', {:controller => 'hybridizations', :action => 'list'}, 
+	                    :wrap_in => 'li'%>
+	            <% end %>
+	            <% if SiteConfig.track_charges? %>
+	                <% if authorized?(:controller => 'charge_sets', :action => 'list') || 
+	                      authorized?(:controller => 'charge_templates', :action => 'list') %>
+	                   <li class="category">Charges</li>
+	                <% end %>
+		            <%= link_if_authorized 'Charges', {:controller => 'charge_sets', :action => 'list'}, 
+		                :wrap_in => 'li'%>
+		            <%= link_if_authorized 'Charge Templates', {:controller => 'charge_templates', :action => 'list'}, 
+		                :wrap_in => 'li'%>
+		        <% end %>
+                <% if authorized?(:controller => 'lab_groups', :action => 'list') || 
+                      authorized?(:controller => 'user', :action => 'list') ||
+                      authorized?(:controller => 'site_config', :action => 'edit') ||
+                      authorized?(:controller => 'user', :action => 'logout') %>
+                    <li class="category">Administration</li>
+                <% end %>
+	            <%= link_if_authorized 'Lab Groups', {:controller => 'lab_groups', :action => 'list'}, 
+	                :wrap_in => 'li'%>
+	            <%= link_if_authorized 'Users', {:controller => 'user', :action => 'list'}, 
+	                :wrap_in => 'li'%>
+	            <%= link_if_authorized 'Site Config', {:controller => 'site_config', :action => 'edit'}, 
+	                :wrap_in => 'li'%>
+	            <%= link_if_authorized 'Log Out', {:controller => 'user', :action => 'logout'}, 
+	                :wrap_in => 'li'%>
+	        </div>
+	        <div id="main">
+	            <p style="color: green"><%= flash[:notice] %></p>
+	            <p style="color: red"><%= flash[:warning] %></p>
+	            <%= @content_for_layout %>
+	        </div>
+	    </div>
     </body>
 </html>
