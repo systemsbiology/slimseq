@@ -45,6 +45,8 @@ body {
 }
 #main {
     float:left;
+    margin-left: -3px;
+    border-left: 1px solid;
     padding-top: 2ex;
 	padding-left: 3ex;
 }
