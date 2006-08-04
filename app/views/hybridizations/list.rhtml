@@ -1,10 +1,10 @@
 <h2>Hybridizations</h2>
 
-<p><%= link_to 'New Hybridizations', :action => 'new' %></p>
+<p><%= link_if_authorized 'New Hybridizations', :action => 'new' %></p>
 
-<table class="sortable" id="hybridizations">
+<table class="sortable" id="hybridized_samples">
   <tr>
-    <th>Date</th>
+    <th>Date Hybridized</th>
     <th>Chip Number</th>
     <th>Short Sample Name</th>
     <th>Sample Name</th>
@@ -17,20 +17,20 @@
     <th>Destroy</th>
   </tr>
   
-<% for hybridization in @hybridizations %>
+<% for hybridization in @hybridizations 
+    sample = Sample.find(hybridization.sample_id) %>
   <tr>
     <td><%=h hybridization.date %></td>
     <td><%=h hybridization.chip_number %></td>
-    <td><%=h hybridization.short_sample_name %></td>
-    <td><%=h hybridization.sample_name %></td>
-    <td><%=h hybridization.sample_group_name %></td>
+    <td><%=h sample.short_sample_name %></td>
+    <td><%=h sample.sample_name %></td>
+    <td><%=h sample.sample_group_name %></td>
   <% if SiteConfig.using_sbeams? %>
-    <td><%=h hybridization.sbeams_user %></td>
-    <td><%=h hybridization.sbeams_project %></td>
+    <td><%=h sample.sbeams_user %></td>
+    <td><%=h sample.sbeams_project %></td>
   <% end %>
     <td><%= link_to 'Edit', :action => 'edit', :id => hybridization %></td>
     <td><%= link_to 'Destroy', { :action => 'destroy', :id => hybridization }, :confirm => 'Are you sure?' %></td>
   </tr>
 <% end %>
 </table>
-

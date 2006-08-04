@@ -1,19 +1,15 @@
-<h2>Hybridizations Recorded:</h2>
+<h2>Samples Recorded:</h2>
 
 <table class="table">
   <th>Date</th>
-  <th>Chip Number</th>
   <th>Short Name</th>
   <th>Full Sample Name</th>
   <th>Lab Group</th>
   <th>Chip Type</th>
-  <% for n in 0..@hybridizations.size-1 %>
+  <% for n in 0..@samples.size-1 %>
   <tr>
-    <% hybridization = @hybridizations[n]
-    #breakpoint
-       sample = Sample.find(hybridization.sample_id) %>
-    <td><%= hybridization.date %></td>
-    <td><%= hybridization.chip_number %></td>    
+    <% sample = @samples[n] %>
+    <td><%= sample.date %></td>
     <td><%= sample.short_sample_name %></td>
     <td><%= sample.sample_name %></td>
     <td><%= LabGroup.find(sample.lab_group_id).name %></td>
@@ -22,4 +18,4 @@
   <% end %>
 </table>
 
-<%= link_to 'Hybridization List', :action => 'list' %>
+<%= link_to 'Sample List', :action => 'list' %>

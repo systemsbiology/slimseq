@@ -1,0 +1,36 @@
+<!--[form:add_samples]-->
+<p><label for="add_samples_date">Date Samples will be submitted</label><br/>
+    <%= date_select 'add_samples', 'date'  %></p>
+
+<p><label for="add_samples_number">Number of Samples</label><br/>
+    <%= text_field 'add_samples', 'number', :size => 5  %></p>
+	
+<p>Lab Group<br>
+    <select id="add_samples_lab_group_id" name="add_samples[lab_group_id]">
+    <%= options_from_collection_for_select @lab_groups, "id", "name" %></select>
+    <% authorized?(:controller => 'lab_groups', :action => 'new'){ %>
+        (<%= link_to 'Add Lab Group', :controller=> 'lab_groups', :action => 'new' %>) <% } %></p>
+
+<p>Chip Type<br>
+    <select id="add_samples_chip_type_id" name="add_samples[chip_type_id]">
+    <%= options_from_collection_for_select @chip_types, "id", "name" %></select>
+    <% authorized?(:controller => 'chip_types', :action => 'new'){ %>
+        (<%= link_to 'Add Chip Type', :controller=> 'chip_types', :action => 'new' %>) <% } %></p>
+
+<% if SiteConfig.using_affy_arrays? && SiteConfig.create_gcos_files? && SiteConfig.using_sbeams? %>
+	<p><label for="add_samples_sbeams_user">SBEAMS User (Affymetrix Only)</label><br/>
+	    <%= text_field 'add_samples', 'sbeams_user'  %></p>
+	    
+	<p><label for="add_samples_sbeams_project">SBEAMS Project (Affymetrix Only)</label><br/>
+	    <%= text_field 'add_samples', 'sbeams_project'  %></p>
+<% elsif SiteConfig.using_affy_arrays? && SiteConfig.create_gcos_files? %>
+	<p><label for="add_samples_sbeams_user">Array User Name (for GCOS)</label><br/>
+	    <%= text_field 'add_samples', 'sbeams_user'  %></p>
+	    
+	<p><label for="add_samples_sbeams_project">Sample Project (for GCOS)</label><br/>
+	    <%= text_field 'add_samples', 'sbeams_project'  %></p>
+<% else %>
+   	    <%= hidden_field 'add_samples', 'sbeams_user'  %>
+	    <%= hidden_field 'add_samples', 'sbeams_project'  %>
+<% end %>
+<!--[eoform:add_samples]-->

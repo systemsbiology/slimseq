@@ -1,0 +1,35 @@
+<h2>Samples</h2>
+
+<p><%= link_to 'Submit New Samples', :action => 'new' %></p>
+
+<table class="sortable" id="samples">
+  <tr>
+    <th>Date</th>
+    <th>Short Sample Name</th>
+    <th>Sample Name</th>
+    <th>Sample Group Name</th>
+  <% if SiteConfig.using_sbeams? %>
+    <th>SBEAMS User</th>
+    <th>SBEAMS Project</th>
+  <% end %>
+    <th>Status</th>
+    <th>Edit</th>
+    <th>Destroy</th>
+  </tr>
+  
+<% for sample in @samples %>
+  <tr>
+    <td><%=h sample.date %></td>
+    <td><%=h sample.short_sample_name %></td>
+    <td><%=h sample.sample_name %></td>
+    <td><%=h sample.sample_group_name %></td>
+  <% if SiteConfig.using_sbeams? %>
+    <td><%=h sample.sbeams_user %></td>
+    <td><%=h sample.sbeams_project %></td>
+  <% end %>
+    <td><%=h sample.status %></td>
+    <td><%= link_to 'Edit', :action => 'edit', :id => sample %></td>
+    <td><%= link_to 'Destroy', { :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
+  </tr>
+<% end %>
+</table>

@@ -25,9 +25,12 @@
     	                :wrap_in => 'li'%>
 		        <% end %>
 		        <% if SiteConfig.track_hybridizations? %>
-	                <% if authorized?(:controller => 'hybridizations', :action => 'list') %>
+	                <% if authorized?(:controller => 'samples', :action => 'new') ||
+	                      authorized?(:controller => 'hybridizations', :action => 'list') %>
 		                <li class="category">Samples</li>
 	                <% end %>
+   	                <%= link_if_authorized 'Samples', {:controller => 'samples', :action => 'list'}, 
+	                    :wrap_in => 'li'%>
 	                <%= link_if_authorized 'Hybridizations', {:controller => 'hybridizations', :action => 'list'}, 
 	                    :wrap_in => 'li'%>
 	            <% end %>

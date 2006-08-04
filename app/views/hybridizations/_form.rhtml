@@ -1,47 +1,47 @@
-<!--[form:add_hybs]-->
-<p><label for="add_hybs_date">Date</label><br/>
-    <%= date_select 'add_hybs', 'date'  %></p>
-
-<p><label for="add_hybs_number">Number of Chips</label><br/>
-    <%= text_field 'add_hybs', 'number'  %></p>
-
-<p>Charge Type<br>
-    <select id="add_hybs_charge_template_id" name="add_hybs[charge_template_id]">
-    <%= options_from_collection_for_select @charge_templates, "id", "name" %></select>
-    (<%= link_to 'Add Charge Template', :controller=> 'charge_templates', :action => 'new' %>)</p>
-
-<p>Lab Group<br>
-    <select id="add_hybs_lab_group_id" name="add_hybs[lab_group_id]">
-    <%= options_from_collection_for_select @lab_groups, "id", "name" %></select>
-    (<%= link_to 'Add Lab Group', :controller=> 'lab_groups', :action => 'new' %>)</p>
-
-<p>Chip Type<br>
-    <select id="add_hybs_chip_type_id" name="add_hybs[chip_type_id]">
-    <%= options_from_collection_for_select @chip_types, "id", "name" %></select>
-    (<%= link_to 'Add Chip Type', :controller=> 'chip_types', :action => 'new' %>)</p>
-
-<% if SiteConfig.multi_platform? %>
-	<p><label for="add_hybs_array_platform">Array Platform</label><br/>
-	<%= radio_button 'add_hybs', 'array_platform', 'affy', { :checked => "checked" } %>Affymetrix<br>
-    <%= radio_button 'add_hybs', 'array_platform', 'nonaffy'  %>Non-Affymetrix</p>
-<% else %>
-    <%= hidden_field 'add_hybs', 'array_platform', { :value => SiteConfig.array_platform } %>
+<!--[form:submit_hybridizations]-->
+<h3>Submitted Samples</h3>
+<table class="sortable" id="available_samples">
+  <tr>
+    <th>Select</th>
+    <th>Date Submitted</th>
+    <th>Short Sample Name</th>
+    <th>Sample Name</th>
+    <th>Sample Group Name</th>
+  <% if SiteConfig.using_sbeams? %>
+    <th>SBEAMS User</th>
+    <th>SBEAMS Project</th>
+  <% end %>
+    <th>Edit</th>
+    <th>Destroy</th>
+  </tr>
+  
+<% for sample in @available_samples %>
+  <tr>
+    <td><%= check_box 'selected_samples', sample.id %></td>
+    <td><%=h sample.date %></td>
+    <td><%=h sample.short_sample_name %></td>
+    <td><%=h sample.sample_name %></td>
+    <td><%=h sample.sample_group_name %></td>
+  <% if SiteConfig.using_sbeams? %>
+    <td><%=h sample.sbeams_user %></td>
+    <td><%=h sample.sbeams_project %></td>
+  <% end %>
+    <td><%= link_to 'Edit', :action => 'edit', :id => sample %></td>
+    <td><%= link_to 'Destroy', { :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
+  </tr>
 <% end %>
+</table>
 
-<% if SiteConfig.using_affy_arrays? && SiteConfig.create_gcos_files? && SiteConfig.using_sbeams? %>
-	<p><label for="add_hybs_sbeams_user">SBEAMS User (Affymetrix Only)</label><br/>
-	    <%= text_field 'add_hybs', 'sbeams_user'  %></p>
-	    
-	<p><label for="add_hybs_sbeams_project">SBEAMS Project (Affymetrix Only)</label><br/>
-	    <%= text_field 'add_hybs', 'sbeams_project'  %></p>
-<% elsif SiteConfig.using_affy_arrays? && SiteConfig.create_gcos_files? %>
-	<p><label for="add_hybs_sbeams_user">Array User Name (for GCOS)</label><br/>
-	    <%= text_field 'add_hybs', 'sbeams_user'  %></p>
-	    
-	<p><label for="add_hybs_sbeams_project">Sample Project (for GCOS)</label><br/>
-	    <%= text_field 'add_hybs', 'sbeams_project'  %></p>
-<% else %>
-   	    <%= hidden_field 'add_hybs', 'sbeams_user'  %>
-	    <%= hidden_field 'add_hybs', 'sbeams_project'  %>
-<% end %>
-<!--[eoform:add_hybs]-->
+
+<p><label for="submit_hybridizations_date">Hybridization Date</label><br/>
+    <%= date_select 'submit_hybridizations', 'date'  %></p>
+
+<p><label for="submit_hybridizations_charge_set_id">Charge Set</label><br/>
+    <select id="submit_hybridizations_charge_set_id" name="submit_hybridizations[charge_set_id]">
+    <%= options_from_collection_for_select @charge_sets, "id", "name" %></select></p>
+
+<p><label for="submit_hybridizations_charge_template_id">Charge Template</label><br>
+    <select id="submit_hybridizations_charge_template_id" name="submit_hybridizations[charge_template_id]">
+    <%= options_from_collection_for_select @charge_templates, "id", "name" %></select></p>
+
+<!--[eoform:submit_hybridizations]-->

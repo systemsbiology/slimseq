@@ -9,21 +9,21 @@
 	<%= text_field 'hybridization', 'chip_number'  %></p>
 	
 	<p><label for="hybridization_short_sample_name">Short Sample Name</label><br/>
-	<%= text_field 'hybridization', 'short_sample_name'  %></p>
+	<%= text_field 'sample', 'short_sample_name'  %></p>
 	
 	<p><label for="hybridization_sample_name">Sample Name</label><br/>
-	<%= text_field 'hybridization', 'sample_name', :size => 50  %></p>
+	<%= text_field 'sample', 'sample_name', :size => 50  %></p>
 	
 	<p><label for="hybridization_sample_group_name">Sample Group Name</label><br/>
-	<%= text_field 'hybridization', 'sample_group_name', :size => 50  %></p>
+	<%= text_field 'sample', 'sample_group_name', :size => 50  %></p>
 		
 	<p><label for="hybridization_lab_group_id">Lab Group</label><br>
 	<select id="lab_group_id" name="hybridization[lab_group_id]">
-    <%= options_from_collection_for_select @lab_groups, "id", "name", selected_value=@hybridization.lab_group_id %></select></p>
+    <%= options_from_collection_for_select @lab_groups, "id", "name", selected_value=@sample.lab_group_id %></select></p>
     
     <p><label for="hybridization_chip_type_id">Chip Type</label><br>
     <select id="chip_type_id" name="hybridization[chip_type_id]">
-    <%= options_from_collection_for_select @chip_types, "id", "name", selected_value=@hybridization.chip_type_id %></select></p>
+    <%= options_from_collection_for_select @chip_types, "id", "name", selected_value=@sample.chip_type_id %></select></p>
 
     <%= hidden_field 'hybridization', 'lock_version' %>
 	

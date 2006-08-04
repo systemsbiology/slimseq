@@ -6,91 +6,113 @@ class HybridizationsController < ApplicationController
   end
 
   def list
-    populate_arrays_from_tables
     @hybridizations = Hybridization.find(:all, :order => "date DESC, chip_number ASC")
   end
 
   def new
     populate_arrays_from_tables
+
+    @available_samples = Sample.find(:all, :conditions => [ "status = 'submitted'" ],
+                                     :order => "date DESC")
+  
     # clear out hybridization record since this is a 'new' set
     session[:hybridizations] = Array.new
     session[:hybridization_number] = 0
+  
+    @submit_hybridizations = SubmitHybridizations.new
   end
 
   def add
     populate_arrays_from_tables
+  
+    @submit_hybridizations = SubmitHybridizations.new
+
+    # build Array of Sample objects from the checkboxes
+    # in the sample list
+    selected_samples = params[:selected_samples]
+    @samples = Array.new
+    for sample_id in selected_samples.keys
+      if selected_samples[sample_id] == '1'
+        @samples << Sample.find(sample_id)
+      end
+    end
     
     @hybridizations = session[:hybridizations]
-    previous_hybs = session[:hybridization_number]
-    @add_hybs = AddHybs.new(params[:add_hybs])
+    current_hyb_number = session[:hybridization_number]
+    @submit_hybridizations = SubmitHybridizations.new(params[:submit_hybridizations])
 
     # only add more hyb slots if that's what was asked
-    if(@add_hybs.valid?) 
-      for hyb_number in previous_hybs+1..previous_hybs+@add_hybs.number
-        @hybridizations << Hybridization.new(:date => @add_hybs.date,      
-              :chip_number => hyb_number,
-              :charge_template_id => @add_hybs.charge_template_id,
-              :lab_group_id => @add_hybs.lab_group_id,
-              :chip_type_id => @add_hybs.chip_type_id,
-              :organism_id => ChipType.find(@add_hybs.chip_type_id).organism_id,
-              :array_platform => @add_hybs.array_platform,
-              :sbeams_user => @add_hybs.sbeams_user,                                              
-              :sbeams_project => @add_hybs.sbeams_project)
+    if(@submit_hybridizations.valid?) 
+      for sample in @samples
+        current_hyb_number += 1
+        @hybridizations << Hybridization.new(:date => @submit_hybridizations.date,      
+              :chip_number => current_hyb_number,
+              :charge_set_id => @submit_hybridizations.charge_set_id,
+              :charge_template_id => @submit_hybridizations.charge_template_id,
+              :sample_id => sample.id)
       end
-      session[:hybridization_number] = previous_hybs + @add_hybs.number 
+      session[:hybridizations] = @hybridizations
+      session[:hybridization_number] = current_hyb_number
+    end
+    
+    # get list of available samples, and removed ones currently in hybridization table
+    @available_samples = Sample.find(:all, :conditions => [ "status = 'submitted'" ],
+                                     :order => "date DESC")
+    for hybridization in @hybridizations
+      sample = hybridization.sample
+      if( @available_samples.include?(sample) )
+        @available_samples.delete(sample)
+      end
     end
   end
   
   def create
     populate_arrays_from_tables  
     @hybridizations = session[:hybridizations]
-    hyb_number = session[:hybridization_number]
 
     failed = false 
-    for n in 0..hyb_number-1
-      form_entries = params['hybridization-'+n.to_s]
-      # add the user info from the forms
-      @hybridizations[n].short_sample_name = form_entries['short_sample_name']
-      @hybridizations[n].sample_name = form_entries['sample_name']
-      @hybridizations[n].sample_group_name = form_entries['sample_group_name']
-      @hybridizations[n].organism_id = form_entries['organism_id']
-      
+    for hybridization in @hybridizations
       # if any one hybridization record isn't valid,
       # we don't want to save any
-      if !@hybridizations[n].valid?
+      if !hybridization.valid?
         failed = true
       end
     end
     if failed
-      @add_hybs = AddHybs.new(:number => 0)
+      @submit_hybridizations = SubmitHybridizations.new
+      @available_samples = Sample.find(:all, :conditions => [ "status = 'submitted'" ],
+                                       :order => "date DESC")
       render :action => 'add'
     else
       # save now that all hybridizations have been tested as valid
-      for n in 0..hyb_number-1
-        @hybridizations[n].save
+      for hybridization in @hybridizations
+        hybridization.save
+        
+        # mark sample as hybridized
+        hybridization.sample.update_attributes(:status => 'hybridized')
       end
       flash[:notice] = "Hybridization records"
-      if SiteConfig.track_inventory?
-        # add chip transactions for these hybridizations
-        record_as_chip_transactions(@hybridizations)
-        flash[:notice] += ", inventory changes"
-      end
-      if SiteConfig.create_gcos_files?
-        begin    
-          # output files for automated sample/experiment loading into GCOS
-          create_gcos_import_files(@hybridizations)
-          flash[:notice] += ", GCOS files"
-        rescue Errno::EACCES, Errno::ENOENT
-          flash[:warning] = "Couldn't write GCOS file(s) to " + SiteConfig.gcos_output_path + ". " + 
-                            "Change permissions on that folder, or choose a new output " +
-                            "directory in the Site Config."
-        end      
-      end
-      if SiteConfig.track_charges?
-        # record charges incurred from these hybridizations
-        record_charges(@hybridizations)
-        flash[:notice] += ", charges"
-      end
+#      if SiteConfig.track_inventory?
+#        # add chip transactions for these hybridizations
+#        record_as_chip_transactions(@hybridizations)
+#        flash[:notice] += ", inventory changes"
+#      end
+#      if SiteConfig.create_gcos_files?
+#        begin    
+#          # output files for automated sample/experiment loading into GCOS
+#          create_gcos_import_files(@hybridizations)
+#          flash[:notice] += ", GCOS files"
+#        rescue Errno::EACCES, Errno::ENOENT
+#          flash[:warning] = "Couldn't write GCOS file(s) to " + SiteConfig.gcos_output_path + ". " + 
+#                            "Change permissions on that folder, or choose a new output " +
+#                            "directory in the Site Config."
+#        end      
+#      end
+#      if SiteConfig.track_charges?
+#        # record charges incurred from these hybridizations
+#        record_charges(@hybridizations)
+#        flash[:notice] += ", charges"
+#      end
       if(flash[:notice] != nil)
         flash[:notice] += ' created successfully.'
       end
@@ -107,14 +129,20 @@ class HybridizationsController < ApplicationController
   end
 
   def clear
-    session[:hybridizations] = Array.new
-    session[:hybridization_number] = 0
+#    session[:hybridizations] = Array.new
+#    session[:hybridization_number] = 0
+#    
+#    @submit_hybridizations = SubmitHybridizations.new
+#    @available_samples = Sample.find(:all, :conditions => [ "status = 'submitted'" ],
+#                                     :order => "date DESC")
+    new
     redirect_to :action => 'new'
   end
 
   def edit
     populate_arrays_from_tables
     @hybridization = Hybridization.find(params[:id])
+    @sample = Sample.find(@hybridization.sample_id)
   end
 
   def update
@@ -145,6 +173,9 @@ class HybridizationsController < ApplicationController
     @lab_groups = LabGroup.find(:all, :order => "name ASC")
     @chip_types = ChipType.find(:all, :order => "name ASC")
     @organisms = Organism.find(:all, :order => "name ASC")
+    latest_charge_period = ChargePeriod.find(:first, :order => "id DESC")
+    @charge_sets = ChargeSet.find(:all, :conditions => [ "charge_period_id = ?", latest_charge_period.id ],
+                                  :order => "name ASC")
     
     # only show templates where a chip is hybridized, so chips_used > 0
     @charge_templates = ChargeTemplate.find(:all, :order => "name ASC",

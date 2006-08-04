@@ -1,0 +1,53 @@
+<%= error_messages_for 'add_samples' %>
+<%= error_messages_for_samples %>
+
+<h2>Enter Samples</h2>
+
+<%= start_form_tag :action => 'add' %>
+    <%= render :partial => 'form' %>
+  <%= submit_tag "Add to Sample Table" %>
+<%= end_form_tag %>
+
+<h3>Don't enter any sample names until you've completed adding your samples!</h3>
+
+<%= start_form_tag :action => 'create' %>
+<table class="table">
+  <th>Date</th>
+  <th>Short Name</th>
+  <th>Full Sample Name</th>
+  <th>Sample Group Name</th>
+  <th>Organism</th>
+  <th>Lab Group</th>
+  <th>Chip Type</th>
+  <% if SiteConfig.create_gcos_files? %>
+	  <th>SBEAMS User</th>
+	  <th>SBEAMS Project</th>
+  <% end %>
+  <% for n in 0..@samples.size-1 %>
+  <tr>
+    <% sample = @samples[n] %>
+    <td><%= sample.date %></td>
+    <td><input id="sample-<%=n%>_short_sample_name" 
+        name="sample-<%=n%>[short_sample_name]" size="10" type="text"
+        value="<%= sample.short_sample_name %>" /></td>
+    <td><input id="sample-<%=n%>_sample_name" 
+        name="sample-<%=n%>[sample_name]" size="30" type="text"
+        value="<%= sample.sample_name %>" /></td>
+    <td><input id="sample-<%=n%>_sample_group_name" 
+        name="sample-<%=n%>[sample_group_name]" size="30" type="text"
+        value="<%= sample.sample_group_name %>" /></td>
+    <td><select id="sample-<%=n%>_organism_id" name="sample-<%=n%>[organism_id]">
+    <%= options_from_collection_for_select @organisms, "id", "name", selected_value=sample.organism_id %></select></td>
+    <td><%= LabGroup.find(sample.lab_group_id).name %></td>
+    <td><%= ChipType.find(sample.chip_type_id).name %></td>
+    <% if SiteConfig.create_gcos_files? %>
+        <td><%= sample.sbeams_user %></td>
+        <td><%= sample.sbeams_project %></td>
+    <% end %>
+  </tr>
+  <% end %>
+</table>
+  <p><%= submit_tag "Create Sample Records" %></p>
+<%= end_form_tag %>
+
+<%= link_to 'Clear Samples', :action => 'clear' %> | <%= link_to 'Back to List of Samples', :action => 'list' %>

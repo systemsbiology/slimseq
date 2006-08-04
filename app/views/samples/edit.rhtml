@@ -1,0 +1,34 @@
+<h2>Editing Sample</h2>
+
+<%= start_form_tag :action => 'update', :id => @sample %>
+
+	<p><label for="sample_date">Date</label><br/>
+	<%= date_select 'sample', 'date'  %></p>
+	
+	<p><label for="sample_short_sample_name">Short Sample Name</label><br/>
+	<%= text_field 'sample', 'short_sample_name'  %></p>
+	
+	<p><label for="sample_sample_name">Sample Name</label><br/>
+	<%= text_field 'sample', 'sample_name', :size => 50  %></p>
+	
+	<p><label for="sample_sample_group_name">Sample Group Name</label><br/>
+	<%= text_field 'sample', 'sample_group_name', :size => 50  %></p>
+		
+	<p><label for="sample_lab_group_id">Lab Group</label><br>
+	<select id="lab_group_id" name="sample[lab_group_id]">
+    <%= options_from_collection_for_select @lab_groups, "id", "name", selected_value=@sample.lab_group_id %></select></p>
+    
+    <p><label for="sample_chip_type_id">Chip Type</label><br>
+    <select id="chip_type_id" name="sample[chip_type_id]">
+    <%= options_from_collection_for_select @chip_types, "id", "name", selected_value=@sample.chip_type_id %></select></p>
+
+    <p><label for="sample_organism_id">Organism</label><br>
+    <select id="organism_id" name="sample[organism_id]">
+    <%= options_from_collection_for_select @organisms, "id", "name", selected_value=@sample.organism_id %></select></p>
+
+    <%= hidden_field 'sample', 'lock_version' %>
+	
+  <%= submit_tag 'Edit' %>
+<%= end_form_tag %>
+
+<%= link_to 'Back to List', :action => 'list' %>

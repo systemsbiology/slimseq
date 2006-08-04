@@ -10,7 +10,7 @@ module ApplicationHelper
   def charge_set_options_for_select(selected_value = nil)
     charge_set_choices = Array.new
 
-    charge_periods = ChargePeriod.find(:all, :order => "name ASC")
+    charge_periods = ChargePeriod.find(:all, :order => "name DESC")
     for period in charge_periods
       charge_sets = ChargeSet.find(:all, :conditions => ["charge_period_id = ?", period.id],
                                    :order => "name ASC")
