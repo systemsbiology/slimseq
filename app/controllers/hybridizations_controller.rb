@@ -247,32 +247,9 @@ class HybridizationsController < ApplicationController
     end
   end
   
-  def record_charges(hybridizations)
-    # find the latest charge period
-#    current_period = ChargePeriod.find(:first, :order => "name DESC")
-    
-    # if a charge period doesn't exist, create one
-#    if(current_period == nil)
-#      current_period = ChargePeriod.new(:name => 'Default Charge Period')
-#      current_period.save
-#    end
-    
+  def record_charges(hybridizations)  
     for hybridization in hybridizations
       sample = hybridization.sample
-#      # try to find an existing charge set
-#      charge_set = ChargeSet.find(:first, 
-#        :conditions => ["charge_period_id = ? AND lab_group_id = ?", current_period.id, hybridization.lab_group_id] )
-#      
-#      # if no existing charge set is found, create one
-#      if(charge_set == nil)
-#        lab_group = LabGroup.find(hybridization.lab_group_id)
-#        charge_set = ChargeSet.new(:lab_group_id => lab_group.id,
-#                                   :charge_period_id => current_period.id,
-#                                   :name => lab_group.name,
-#                                   :budget_manager => "To Be Entered",
-#                                   :budget => "To Be Entered")
-#        charge_set.save
-#      end
       
       template = ChargeTemplate.find(hybridization.charge_template_id)
       charge = Charge.new(:charge_set_id => hybridization.charge_set_id,
