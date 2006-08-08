@@ -7,13 +7,15 @@ class SamplesController < ApplicationController
 
   def list
     populate_arrays_from_tables
-    @samples = Array.new
+
+    # make an array of the accessible lab group ids, and use this
+    # to find the current user's accessible samples in a nice sorted list
+    lab_group_ids = Array.new
     for lab_group in @lab_groups
-      @samples << Sample.find(:all, :conditions => [ "lab_group_id = ?", lab_group.id ],
-                              :order => "date DESC, sample_name ASC")
+      lab_group_ids << lab_group.id
     end
-    # put everything into a one-dimensional array
-    @samples.flatten!
+    @samples = Sample.find(:all, :conditions => [ "lab_group_id IN (?)", lab_group_ids ],
+                              :order => "submission_date DESC, sample_name ASC")
   end
 
   def new
@@ -35,7 +37,7 @@ class SamplesController < ApplicationController
     # only add more sample slots if that's what was asked
     if(@add_samples.valid?) 
       for sample_number in previous_samples+1..previous_samples+@add_samples.number
-        @samples << Sample.new(:date => @add_samples.date,      
+        @samples << Sample.new(:submission_date => @add_samples.submission_date,      
               :lab_group_id => @add_samples.lab_group_id,
               :chip_type_id => @add_samples.chip_type_id,
               :sbeams_user => @add_samples.sbeams_user,                                              
@@ -124,6 +126,10 @@ class SamplesController < ApplicationController
   
   private
   def populate_arrays_from_tables
+    # grab SBEAMS configuration parameter here, rather than
+    # grabbing it in the list view for every element displayed
+    @using_sbeams = SiteConfig.find(1).using_sbeams?
+    
     # Administrators can see all lab groups, otherwise users
     # are restricted to seeing only lab groups they belong to
     if(current_user.admin?)

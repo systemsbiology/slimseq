@@ -9,7 +9,7 @@
   <% for n in 0..@samples.size-1 %>
   <tr>
     <% sample = @samples[n] %>
-    <td><%= sample.date %></td>
+    <td><%= sample.submission_date %></td>
     <td><%= sample.short_sample_name %></td>
     <td><%= sample.sample_name %></td>
     <td><%= LabGroup.find(sample.lab_group_id).name %></td>

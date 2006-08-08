@@ -5,8 +5,8 @@ require 'hybridizations_controller'
 class HybridizationsController; def rescue_action(e) raise e end; end
 
 class HybridizationsControllerTest < Test::Unit::TestCase
-  fixtures :hybridizations, 
-           :lab_groups, :chip_types, :organisms, :charge_templates
+  fixtures :hybridizations, :samples,
+           :lab_groups, :chip_types, :organisms, :charge_templates, :charge_sets
 
   def setup
     @controller = HybridizationsController.new
@@ -32,133 +32,59 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:hybridizations)
   end
 
-  def test_new_gcos_on_sbeams_on_in_site_config
+  def test_new
     get :new
 
     assert_response :success
     assert_template 'new'
-    
-    assert_text_field_visible "add_hybs_sbeams_user"
-    assert_text_field_visible "add_hybs_sbeams_project"
   end
 
-  def test_new_affy_platform_gcos_on_sbeams_off_in_site_config
-    # turn off GCOS support
-    config = SiteConfig.find(1)
-    config.update_attributes(:create_gcos_files => 1,
-                             :using_sbeams => 0)
-  
-    get :new
-
-    assert_response :success
-    assert_template 'new'
-    
-    assert_text_field_visible "add_hybs_sbeams_user"
-    assert_text_field_visible "add_hybs_sbeams_project"
-  end
-
-  def test_new_non_affy_platform_gcos_off_in_site_config
-    # turn off GCOS support and turn to non-affy mode
-    config = SiteConfig.find(1)
-    config.update_attributes(:create_gcos_files => 0,
-                             :array_platform => "nonaffy")
-  
-    get :new
-
-    assert_response :success
-    assert_template 'new'
-    
-    assert_text_field_hidden "add_hybs_sbeams_user"
-    assert_text_field_hidden "add_hybs_sbeams_project"
-  end
-
-  def test_add_sbeams_on_in_site_config
+  def test_add
     # use test_new to populate session variables
     get :new
   
-    get :add, :add_hybs => {:date => "2006-02-12", :number => 2,
-                            :lab_group_id => 1, :chip_type_id => 2,
-                            :sbeams_user => "Bob", :sbeams_project => "Bob's Stuff",
+    get :add, :selected_samples => { '1' => '1', '2'=>'0', '3' => '0' },
+              :submit_hybridizations => {:hybridization_date => "2006-02-13", 
+                            :charge_set_id => 1,
                             :charge_template_id => 1}
+
+    assert_response :success
+    assert_template 'add'
     
     # this should have populated the session[:hybridizations] array
     # with two Hybridization objects containing appropriate info
     @hybridizations = session[:hybridizations]
-    assert_equal 2, @hybridizations.size
-    assert_equal Date.new(2006, 2, 12), @hybridizations[0].date
+    assert_equal 1, @hybridizations.size
+    assert_equal Date.new(2006, 2, 13), @hybridizations[0].hybridization_date
     assert_equal 1, @hybridizations[0].chip_number
-    assert_equal 1, @hybridizations[0].lab_group_id
-    assert_equal 2, @hybridizations[0].chip_type_id
-    assert_equal 2, @hybridizations[0].organism_id
-    assert_equal "Bob", @hybridizations[0].sbeams_user
-    assert_equal "Bob's Stuff", @hybridizations[0].sbeams_project
+    assert_equal 1, @hybridizations[0].sample_id
+    assert_equal 1, @hybridizations[0].charge_set_id
     assert_equal 1, @hybridizations[0].charge_template_id
-    assert_equal Date.new(2006, 2, 12), @hybridizations[1].date
-    assert_equal 2, @hybridizations[1].chip_number
-    assert_equal 1, @hybridizations[1].lab_group_id
-    assert_equal 2, @hybridizations[1].chip_type_id   
-    assert_equal 2, @hybridizations[1].organism_id
-    assert_equal "Bob", @hybridizations[1].sbeams_user
-    assert_equal "Bob's Stuff", @hybridizations[1].sbeams_project
-    assert_equal 1, @hybridizations[1].charge_template_id
-    
-    assert_response :success
-    assert_template 'add'
-    
-    @hybridizations = session[:hybridizations]
-    assert_equal 2, @hybridizations.size
+
+    # make sure that only only non-selected samples remain in selection list
+    # should have 2 rows (header + 1 samples)
+    assert_select "table#available_samples>tr", 2
   end
 
-  def test_add_gcos_off_in_site_config
-    # turn off GCOS support
-    config = SiteConfig.find(1)
-    config.update_attributes(:create_gcos_files => 0)
-
+  def test_add_nothing_selected
     # use test_new to populate session variables
     get :new
   
-    get :add, :add_hybs => {:date => "2006-02-12", :number => 2,
-                            :lab_group_id => 1, :chip_type_id => 2,
+    get :add, :selected_samples => { '1' => '0', '2'=>'0', '3' => '0' },
+              :submit_hybridizations => {:hybridization_date => "2006-02-13", 
+                            :charge_set_id => 1,
                             :charge_template_id => 1}
+
+    assert_response :success
+    assert_template 'add'
     
     # this should have populated the session[:hybridizations] array
     # with two Hybridization objects containing appropriate info
     @hybridizations = session[:hybridizations]
-    assert_equal 2, @hybridizations.size
-    assert_equal Date.new(2006, 2, 12), @hybridizations[0].date
-    assert_equal 1, @hybridizations[0].chip_number
-    assert_equal 1, @hybridizations[0].lab_group_id
-    assert_equal 2, @hybridizations[0].chip_type_id
-    assert_equal 2, @hybridizations[0].organism_id
-    assert_equal 1, @hybridizations[0].charge_template_id
-    assert_equal Date.new(2006, 2, 12), @hybridizations[1].date
-    assert_equal 2, @hybridizations[1].chip_number
-    assert_equal 1, @hybridizations[1].lab_group_id
-    assert_equal 2, @hybridizations[1].chip_type_id   
-    assert_equal 2, @hybridizations[1].organism_id
-    assert_equal 1, @hybridizations[1].charge_template_id
-    
-    assert_response :success
-    assert_template 'add'
-    
-    @hybridizations = session[:hybridizations]
-    assert_equal 2, @hybridizations.size
-  end
+    assert_equal 0, @hybridizations.size
 
-  def test_add_incomplete_form
-    get :new
-  
-    get :add, :date => '2006-02-12', :lab_group_id => 1,
-        :chip_type_id => 2
-    
-    # no hybridizations should have been added
-    @hybridizations = session[:hybridizations]
-    assert_equal @hybridizations.size, 0  
-    
-    # make sure it complained
-    assert_errors
-    assert_response :success
-    assert_template 'add'
+    # should have 3 rows (header + 2 samples)
+    assert_select "table#available_samples>tr", 3
   end
 
   def test_create_all_tracking_on
@@ -167,38 +93,15 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     num_charges = Charge.count
 
     # use test_add to populate session[:hybridizations] and session[:hybridization_number]
-    test_add_sbeams_on_in_site_config
-
-    hyb1 = {:date => '2006-02-12',
-            :chip_number => '1',
-            :charge_template_id => '1',
-            :short_sample_name => 'HlthySmpl',
-            :sample_name => 'Healthy_Sample',
-            :sample_group_name => 'Healthy',
-            :lab_group_id => '2',
-            :chip_type_id => '1',
-            :organism_id => '1',
-            :array_platform => 'affy'
-            }
-    hyb2 = {:date => '2006-02-12',
-            :chip_number => '2',
-            :charge_template_id => '1',
-            :short_sample_name => 'DisSmpl',
-            :sample_name => 'Disease_Sample',
-            :sample_group_name => 'Disease',
-            :lab_group_id => '2',
-            :chip_type_id => '1',
-            :organism_id => '1',
-            :array_platform => 'affy'
-            }  
+    test_add
                   
-    post :create, :'hybridization-0' => hyb1, :'hybridization-1' => hyb2
+    post :create
 
     assert_response :redirect
     assert_redirected_to :action => 'show'
 
     # make sure the records made it into the hybridizations table
-    assert_equal num_hybridizations + 2,
+    assert_equal num_hybridizations + 1,
                  Hybridization.count
                  
     # make sure a chip transaction was recorded
@@ -206,7 +109,7 @@ class HybridizationsControllerTest < Test::Unit::TestCase
                  ChipTransaction.count
                  
     # make sure a charge was recorded
-    assert_equal num_charges + 2,
+    assert_equal num_charges + 1,
                  Charge.count    
   end
 
@@ -220,32 +123,9 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     num_charges = Charge.count
 
     # use test_add to populate session[:hybridizations] and session[:hybridization_number]
-    test_add_sbeams_on_in_site_config
-
-    hyb1 = {:date => '2006-02-12',
-            :chip_number => '1',
-            :charge_template_id => '1',
-            :short_sample_name => 'HlthySmpl',
-            :sample_name => 'Healthy_Sample',
-            :sample_group_name => 'Healthy',
-            :lab_group_id => '2',
-            :chip_type_id => '1',
-            :organism_id => '1',
-            :array_platform => 'affy'
-            }
-    hyb2 = {:date => '2006-02-12',
-            :chip_number => '2',
-            :charge_template_id => '1',
-            :short_sample_name => 'DisSmpl',
-            :sample_name => 'Disease_Sample',
-            :sample_group_name => 'Disease',
-            :lab_group_id => '2',
-            :chip_type_id => '1',
-            :organism_id => '1',
-            :array_platform => 'affy'
-            }  
+    test_add
                   
-    post :create, :'hybridization-0' => hyb1, :'hybridization-1' => hyb2
+    post :create
 
     assert_response :redirect
     assert_redirected_to :action => 'show'
@@ -253,7 +133,7 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     assert_flash_warning
 
     # make sure the records made it into the hybridizations table
-    assert_equal num_hybridizations + 2,
+    assert_equal num_hybridizations + 1,
                  Hybridization.count
                  
     # make sure a chip transaction was recorded
@@ -261,7 +141,7 @@ class HybridizationsControllerTest < Test::Unit::TestCase
                  ChipTransaction.count
                  
     # make sure a charge was recorded
-    assert_equal num_charges + 2,
+    assert_equal num_charges + 1,
                  Charge.count    
   end
 
@@ -275,45 +155,22 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     num_charges = Charge.count
 
     # use test_add to populate session[:hybridizations] and session[:hybridization_number]
-    test_add_sbeams_on_in_site_config
-
-    hyb1 = {:date => '2006-02-12',
-            :chip_number => '1',
-            :charge_template_id => '1',
-            :short_sample_name => 'HlthySmpl',
-            :sample_name => 'Healthy_Sample',
-            :sample_group_name => 'Healthy',
-            :lab_group_id => '2',
-            :chip_type_id => '1',
-            :organism_id => '1',
-            :array_platform => 'affy'
-            }
-    hyb2 = {:date => '2006-02-12',
-            :chip_number => '2',
-            :charge_template_id => '1',
-            :short_sample_name => 'DisSmpl',
-            :sample_name => 'Disease_Sample',
-            :sample_group_name => 'Disease',
-            :lab_group_id => '2',
-            :chip_type_id => '1',
-            :organism_id => '1',
-            :array_platform => 'affy'
-            }  
+    test_add
                   
-    post :create, :'hybridization-0' => hyb1, :'hybridization-1' => hyb2
+    post :create
 
     assert_response :redirect
     assert_redirected_to :action => 'show'
 
     # make sure the records made it into the hybridizations table
-    assert_equal num_hybridizations + 2,
+    assert_equal num_hybridizations + 1,
                  Hybridization.count
                  
     # make sure a chip transaction was recorded
     assert_equal num_transactions, ChipTransaction.count
 
     # make sure a charge was recorded
-    assert_equal num_charges + 2,
+    assert_equal num_charges + 1,
                  Charge.count   
   end
 
@@ -327,38 +184,15 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     num_charges = Charge.count
 
     # use test_add to populate session[:hybridizations] and session[:hybridization_number]
-    test_add_sbeams_on_in_site_config
-
-    hyb1 = {:date => '2006-02-12',
-            :chip_number => '1',
-            :charge_template_id => '1',
-            :short_sample_name => 'HlthySmpl',
-            :sample_name => 'Healthy_Sample',
-            :sample_group_name => 'Healthy',
-            :lab_group_id => '2',
-            :chip_type_id => '1',
-            :organism_id => '1',
-            :array_platform => 'affy'
-            }
-    hyb2 = {:date => '2006-02-12',
-            :chip_number => '2',
-            :charge_template_id => '1',
-            :short_sample_name => 'DisSmpl',
-            :sample_name => 'Disease_Sample',
-            :sample_group_name => 'Disease',
-            :lab_group_id => '2',
-            :chip_type_id => '1',
-            :organism_id => '1',
-            :array_platform => 'affy'
-            }  
+    test_add
                   
-    post :create, :'hybridization-0' => hyb1, :'hybridization-1' => hyb2
+    post :create
 
     assert_response :redirect
     assert_redirected_to :action => 'show'
 
     # make sure the records made it into the hybridizations table
-    assert_equal num_hybridizations + 2,
+    assert_equal num_hybridizations + 1,
                  Hybridization.count
                  
     # make sure a chip transaction was recorded
@@ -368,67 +202,25 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     # make sure a charge was recorded
     assert_equal num_charges, Charge.count   
   end
-  
-  def test_create_incomplete_form
-    num_hybridizations = Hybridization.count
 
-    # use test_add to populate session[:hybridizations] and session[:hybridization_number]
-    test_add_sbeams_on_in_site_config
-    
-    # leave out sample name
-    hyb1 = {:date => '2006-02-12',
-            :chip_number => '1',
-            :short_sample_name => 'HlthySmpl',
-            :lab_group_id => '2',
-            :chip_type_id => '1'
-            }
-    hyb2 = {:date => '2006-02-12',
-            :chip_number => '2',
-            :sample_name => 'Disease_Sample',
-            :short_sample_name => 'DisSmpl',
-            :lab_group_id => '2',
-            :chip_type_id => '1'
-            }  
-                       
-    post :create, :'hybridization-0' => hyb1, :'hybridization-1' => hyb2
-
-    # make sure it complained
-    assert_errors
-    assert_response :success
-    assert_template 'add'
-
-    # make sure records were not inserted
-    assert_equal num_hybridizations, Hybridization.count
-  end
-
-  def test_create_duplicate_date_number_combo
+  def test_create_duplicate_hybridization_date_number_combo
     num_hybridizations = Hybridization.count
 
     # enter a new set of hybs
     get :new
 
-    # add one hyb that will have a duplicate date/number  
-    get :add, :add_hybs => {:date => '2006-02-10', :number => 1,
-                            :lab_group_id => 1, :chip_type_id => 2,
-                            :charge_template_id => 1 }
-    # add another hyb with unique date/number
-    get :add, :add_hybs => {:date => '2006-02-12', :number => 1,
-                            :lab_group_id => 1, :chip_type_id => 2,
-                            :charge_template_id => 1 }
-    
-    # leave out sample name
-    hyb1 = {:short_sample_name => 'HlthySmpl',
-            :sample_name => 'Healthy_Sample',
-            :sample_group_name => 'Healthy',
-            :organism_id => '2'
-            }
-    hyb2 = {:short_sample_name => 'DisSmpl',
-            :sample_name => 'Disease_Sample',
-            :sample_group_name => 'Disease',
-            :organism_id => '2'
-            }  
+    # add one hyb that will have a duplicate hybridization_date/number  
+    get :add, :selected_samples => { '1' => '1', '2'=>'0', '3' => '0' },
+              :submit_hybridizations => {:hybridization_date => "2006-02-10", 
+                            :charge_set_id => 1,
+                            :charge_template_id => 1}
+    # add another hyb with unique hybridization_date/number
+    get :add, :selected_samples => { '2'=>'0', '3' => '1' },
+              :submit_hybridizations => {:hybridization_date => "2006-02-12", 
+                            :charge_set_id => 1,
+                            :charge_template_id => 1}
                        
-    post :create, :'hybridization-0' => hyb1, :'hybridization-1' => hyb2
+    post :create
 
     # make sure it complained
     assert_errors
@@ -441,7 +233,7 @@ class HybridizationsControllerTest < Test::Unit::TestCase
 
   def test_clear
     # use test_add to populate session[:hybridizations] and session[:hybridization_number]
-    test_add_sbeams_on_in_site_config
+    test_add
     
     post :clear
     
@@ -470,10 +262,10 @@ class HybridizationsControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => 1, :hybridization => { :date => '2006-02-09' }
+    post :update, :id => 1, :hybridization => { :hybridization_date => '2006-02-09' }
     
     hybridization = Hybridization.find(1)
-    assert_equal Date.new(2006,2,9), hybridization.date
+    assert_equal Date.new(2006,2,9), hybridization.hybridization_date
     
     assert_response :redirect
     assert_redirected_to :action => 'list'
@@ -485,18 +277,18 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     hybridization2 = Hybridization.find(1)
     
     # update it once, which should sucess
-    post :update, :id => 1, :hybridization => { :sample_name => "hybridization1", 
+    post :update, :id => 1, :hybridization => { :sample_id => 1, 
                                                 :lock_version => hybridization1.lock_version }
 
     # and then update again with stale info, and it should fail
-    post :update, :id => 1, :hybridization => { :sample_name => "hybridization2", 
+    post :update, :id => 1, :hybridization => { :sample_id => 3, 
                                                 :lock_version => hybridization2.lock_version }                                               
 
-    assert_response :success                                                
+    assert_response :success
     assert_template 'edit'
     assert_flash_warning
     
-    assert_equal "hybridization1", Hybridization.find(1).sample_name
+    assert_equal 1, Hybridization.find(1).sample_id
   end
 
   def test_destroy

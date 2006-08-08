@@ -76,7 +76,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     # use test_new to populate session variables
     get :new
   
-    get :add, :add_samples => {:date => "2006-02-12", :number => 2,
+    get :add, :add_samples => {:submission_date => "2006-02-12", :number => 2,
                             :lab_group_id => 1, :chip_type_id => 2,
                             :sbeams_user => "Bob", :sbeams_project => "Bob's Stuff"}
     
@@ -84,13 +84,13 @@ class SamplesControllerTest < Test::Unit::TestCase
     # with two Sample objects containing appropriate info
     @samples = session[:samples]
     assert_equal 2, @samples.size
-    assert_equal Date.new(2006, 2, 12), @samples[0].date
+    assert_equal Date.new(2006, 2, 12), @samples[0].submission_date
     assert_equal 1, @samples[0].lab_group_id
     assert_equal 2, @samples[0].chip_type_id
     assert_equal 2, @samples[0].organism_id
     assert_equal "Bob", @samples[0].sbeams_user
     assert_equal "Bob's Stuff", @samples[0].sbeams_project
-    assert_equal Date.new(2006, 2, 12), @samples[1].date
+    assert_equal Date.new(2006, 2, 12), @samples[1].submission_date
     assert_equal 1, @samples[1].lab_group_id
     assert_equal 2, @samples[1].chip_type_id   
     assert_equal 2, @samples[1].organism_id
@@ -112,18 +112,18 @@ class SamplesControllerTest < Test::Unit::TestCase
     # use test_new to populate session variables
     get :new
   
-    get :add, :add_samples => {:date => "2006-02-12", :number => 2,
+    get :add, :add_samples => {:submission_date => "2006-02-12", :number => 2,
                             :lab_group_id => 1, :chip_type_id => 2}
     
     # this should have populated the session[:samples] array
     # with two Sample objects containing appropriate info
     @samples = session[:samples]
     assert_equal 2, @samples.size
-    assert_equal Date.new(2006, 2, 12), @samples[0].date
+    assert_equal Date.new(2006, 2, 12), @samples[0].submission_date
     assert_equal 1, @samples[0].lab_group_id
     assert_equal 2, @samples[0].chip_type_id
     assert_equal 2, @samples[0].organism_id
-    assert_equal Date.new(2006, 2, 12), @samples[1].date
+    assert_equal Date.new(2006, 2, 12), @samples[1].submission_date
     assert_equal 1, @samples[1].lab_group_id
     assert_equal 2, @samples[1].chip_type_id   
     assert_equal 2, @samples[1].organism_id
@@ -138,7 +138,7 @@ class SamplesControllerTest < Test::Unit::TestCase
   def test_add_incomplete_form
     get :new
   
-    get :add, :date => '2006-02-12', :lab_group_id => 1,
+    get :add, :submission_date => '2006-02-12', :lab_group_id => 1,
         :chip_type_id => 2
     
     # no samples should have been added
@@ -159,7 +159,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     # use test_add to populate session[:samples] and session[:sample_number]
     test_add_sbeams_on_in_site_config
 
-    smpl1 = {:date => '2006-02-12',
+    smpl1 = {:submission_date => '2006-02-12',
             :short_sample_name => 'HlthySmp',
             :sample_name => 'Healthy_Sample',
             :sample_group_name => 'Healthy',
@@ -167,7 +167,7 @@ class SamplesControllerTest < Test::Unit::TestCase
 #            :chip_type_id => '1',
             :organism_id => '1',
             }
-    smpl2 = {:date => '2006-02-12',
+    smpl2 = {:submission_date => '2006-02-12',
             :short_sample_name => 'DisSmpl',
             :sample_name => 'Disease_Sample',
             :sample_group_name => 'Disease',
@@ -193,11 +193,11 @@ class SamplesControllerTest < Test::Unit::TestCase
     # enter a new set of samples
     get :new
 
-    # add one sample that will have a duplicate date/number  
-    get :add, :add_samples => {:date => '2006-02-10', :number => 1,
+    # add one sample that will have a duplicate submission_date/number  
+    get :add, :add_samples => {:submission_date => '2006-02-10', :number => 1,
                             :lab_group_id => 1, :chip_type_id => 2}
-    # add another sample with unique date/number
-    get :add, :add_samples => {:date => '2006-02-12', :number => 1,
+    # add another sample with unique submission_date/number
+    get :add, :add_samples => {:submission_date => '2006-02-12', :number => 1,
                             :lab_group_id => 1, :chip_type_id => 2}
     
     # leave out sample name
@@ -254,10 +254,10 @@ class SamplesControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => 1, :sample => { :date => '2006-02-09' }
+    post :update, :id => 1, :sample => { :submission_date => '2006-02-09' }
     
     sample = Sample.find(1)
-    assert_equal Date.new(2006,2,9), sample.date
+    assert_equal Date.new(2006,2,9), sample.submission_date
     
     assert_response :redirect
     assert_redirected_to :action => 'list'

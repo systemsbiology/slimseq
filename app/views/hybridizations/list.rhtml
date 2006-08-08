@@ -20,12 +20,12 @@
 <% for hybridization in @hybridizations 
     sample = Sample.find(hybridization.sample_id) %>
   <tr>
-    <td><%=h hybridization.date %></td>
+    <td><%=h hybridization.hybridization_date %></td>
     <td><%=h hybridization.chip_number %></td>
     <td><%=h sample.short_sample_name %></td>
     <td><%=h sample.sample_name %></td>
     <td><%=h sample.sample_group_name %></td>
-  <% if SiteConfig.using_sbeams? %>
+  <% if @using_sbeams %>
     <td><%=h sample.sbeams_user %></td>
     <td><%=h sample.sbeams_project %></td>
   <% end %>

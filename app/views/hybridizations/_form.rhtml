@@ -18,7 +18,7 @@
 <% for sample in @available_samples %>
   <tr>
     <td><%= check_box 'selected_samples', sample.id %></td>
-    <td><%=h sample.date %></td>
+    <td><%=h sample.submission_date %></td>
     <td><%=h sample.short_sample_name %></td>
     <td><%=h sample.sample_name %></td>
     <td><%=h sample.sample_group_name %></td>
@@ -33,8 +33,8 @@
 </table>
 
 
-<p><label for="submit_hybridizations_date">Hybridization Date</label><br/>
-    <%= date_select 'submit_hybridizations', 'date'  %></p>
+<p><label for="submit_hybridizations_hybridization_date">Hybridization Date</label><br/>
+    <%= date_select 'submit_hybridizations', 'hybridization_date'  %></p>
 
 <p><label for="submit_hybridizations_charge_set_id">Charge Set</label><br/>
     <select id="submit_hybridizations_charge_set_id" name="submit_hybridizations[charge_set_id]">

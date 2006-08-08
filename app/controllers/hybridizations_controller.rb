@@ -6,14 +6,16 @@ class HybridizationsController < ApplicationController
   end
 
   def list
-    @hybridizations = Hybridization.find(:all, :order => "date DESC, chip_number ASC")
+    populate_arrays_from_tables
+  
+    @hybridizations = Hybridization.find(:all, :order => "hybridization_date DESC, chip_number ASC", :include => 'sample')
   end
 
   def new
     populate_arrays_from_tables
 
     @available_samples = Sample.find(:all, :conditions => [ "status = 'submitted'" ],
-                                     :order => "date DESC")
+                                     :order => "submission_date DESC")
   
     # clear out hybridization record since this is a 'new' set
     session[:hybridizations] = Array.new
@@ -45,7 +47,7 @@ class HybridizationsController < ApplicationController
     if(@submit_hybridizations.valid?) 
       for sample in @samples
         current_hyb_number += 1
-        @hybridizations << Hybridization.new(:date => @submit_hybridizations.date,      
+        @hybridizations << Hybridization.new(:hybridization_date => @submit_hybridizations.hybridization_date,      
               :chip_number => current_hyb_number,
               :charge_set_id => @submit_hybridizations.charge_set_id,
               :charge_template_id => @submit_hybridizations.charge_template_id,
@@ -57,7 +59,7 @@ class HybridizationsController < ApplicationController
     
     # get list of available samples, and removed ones currently in hybridization table
     @available_samples = Sample.find(:all, :conditions => [ "status = 'submitted'" ],
-                                     :order => "date DESC")
+                                     :order => "submission_date DESC")
     for hybridization in @hybridizations
       sample = hybridization.sample
       if( @available_samples.include?(sample) )
@@ -81,7 +83,7 @@ class HybridizationsController < ApplicationController
     if failed
       @submit_hybridizations = SubmitHybridizations.new
       @available_samples = Sample.find(:all, :conditions => [ "status = 'submitted'" ],
-                                       :order => "date DESC")
+                                       :order => "submission_date DESC")
       render :action => 'add'
     else
       # save now that all hybridizations have been tested as valid
@@ -92,27 +94,27 @@ class HybridizationsController < ApplicationController
         hybridization.sample.update_attributes(:status => 'hybridized')
       end
       flash[:notice] = "Hybridization records"
-#      if SiteConfig.track_inventory?
-#        # add chip transactions for these hybridizations
-#        record_as_chip_transactions(@hybridizations)
-#        flash[:notice] += ", inventory changes"
-#      end
-#      if SiteConfig.create_gcos_files?
-#        begin    
-#          # output files for automated sample/experiment loading into GCOS
-#          create_gcos_import_files(@hybridizations)
-#          flash[:notice] += ", GCOS files"
-#        rescue Errno::EACCES, Errno::ENOENT
-#          flash[:warning] = "Couldn't write GCOS file(s) to " + SiteConfig.gcos_output_path + ". " + 
-#                            "Change permissions on that folder, or choose a new output " +
-#                            "directory in the Site Config."
-#        end      
-#      end
-#      if SiteConfig.track_charges?
-#        # record charges incurred from these hybridizations
-#        record_charges(@hybridizations)
-#        flash[:notice] += ", charges"
-#      end
+      if SiteConfig.track_inventory?
+        # add chip transactions for these hybridizations
+        record_as_chip_transactions(@hybridizations)
+        flash[:notice] += ", inventory changes"
+      end
+      if SiteConfig.create_gcos_files?
+        begin    
+          # output files for automated sample/experiment loading into GCOS
+          create_gcos_import_files(@hybridizations)
+          flash[:notice] += ", GCOS files"
+        rescue Errno::EACCES, Errno::ENOENT
+          flash[:warning] = "Couldn't write GCOS file(s) to " + SiteConfig.gcos_output_path + ". " + 
+                            "Change permissions on that folder, or choose a new output " +
+                            "directory in the Site Config."
+        end      
+      end
+      if SiteConfig.track_charges?
+        # record charges incurred from these hybridizations
+        record_charges(@hybridizations)
+        flash[:notice] += ", charges"
+      end
       if(flash[:notice] != nil)
         flash[:notice] += ' created successfully.'
       end
@@ -129,12 +131,6 @@ class HybridizationsController < ApplicationController
   end
 
   def clear
-#    session[:hybridizations] = Array.new
-#    session[:hybridization_number] = 0
-#    
-#    @submit_hybridizations = SubmitHybridizations.new
-#    @available_samples = Sample.find(:all, :conditions => [ "status = 'submitted'" ],
-#                                     :order => "date DESC")
     new
     redirect_to :action => 'new'
   end
@@ -143,6 +139,8 @@ class HybridizationsController < ApplicationController
     populate_arrays_from_tables
     @hybridization = Hybridization.find(params[:id])
     @sample = Sample.find(@hybridization.sample_id)
+
+    @samples = Sample.find(:all, :order => "sample_name ASC")
   end
 
   def update
@@ -154,11 +152,14 @@ class HybridizationsController < ApplicationController
         flash[:notice] = 'Hybridization was successfully updated.'
         redirect_to :action => 'list'
       else
+        @samples = Sample.find(:all, :order => "sample_name ASC")
         render :action => 'edit'
       end
     rescue ActiveRecord::StaleObjectError
       flash[:warning] = "Unable to update information. Another user has modified this hybridization."
       @hybridization = Hybridization.find(params[:id])
+      @sample = Sample.find(@hybridization.sample_id)
+      @samples = Sample.find(:all, :order => "sample_name ASC")
       render :action => 'edit'
     end
   end
@@ -170,10 +171,20 @@ class HybridizationsController < ApplicationController
   
   private
   def populate_arrays_from_tables
+    # grab SBEAMS configuration parameter here, rather than
+    # grabbing it in the list view for every element displayed
+    @using_sbeams = SiteConfig.find(1).using_sbeams?
+  
     @lab_groups = LabGroup.find(:all, :order => "name ASC")
     @chip_types = ChipType.find(:all, :order => "name ASC")
     @organisms = Organism.find(:all, :order => "name ASC")
+
+    # only show charge sets in the most recently entered charge period
     latest_charge_period = ChargePeriod.find(:first, :order => "id DESC")
+    if(latest_charge_period == nil)
+      latest_charge_period = ChargePeriod.new(:name => "Autogenerated Charge Period")
+      latest_charge_period.save
+    end
     @charge_sets = ChargeSet.find(:all, :conditions => [ "charge_period_id = ?", latest_charge_period.id ],
                                   :order => "name ASC")
     
@@ -186,47 +197,49 @@ class HybridizationsController < ApplicationController
     hybs_per_group_chip = Hash.new(0)
     
     for hybridization in hybridizations
-      date_group_chip_key = hybridization.date.to_s+"_"+hybridization.lab_group_id.to_s+"_"+hybridization.chip_type_id.to_s
-      # if this date/lab group/chip type combo hasn't been seen, create a new object to track
+      sample = hybridization.sample
+      hybridization_date_group_chip_key = hybridization.hybridization_date.to_s+"_"+sample.lab_group_id.to_s+"_"+sample.chip_type_id.to_s
+      # if this hybridization_date/lab group/chip type combo hasn't been seen, create a new object to track
       # number of chips of this combo
-      if hybs_per_group_chip[date_group_chip_key] == 0
-        hybs_per_group_chip[date_group_chip_key] = ChipTransaction.new(:lab_group_id => hybridization.lab_group_id,
-                              :chip_type_id => hybridization.chip_type_id,
-                              :date => hybridization.date,
-                              :description => 'Hybridized on ' + hybridization.date.to_s,
-                              :used => 1)                  
+      if hybs_per_group_chip[hybridization_date_group_chip_key] == 0
+        hybs_per_group_chip[hybridization_date_group_chip_key] = ChipTransaction.new(:lab_group_id => sample.lab_group_id,
+                              :chip_type_id => sample.chip_type_id,
+                              :date => hybridization.hybridization_date,
+                              :description => 'Hybridized on ' + hybridization.hybridization_date.to_s,
+                              :used => 1)
       else
-        hybs_per_group_chip[date_group_chip_key][:used] += 1
+        hybs_per_group_chip[hybridization_date_group_chip_key][:used] += 1
       end
     end
 
-    for date_group_chip_key in hybs_per_group_chip.keys
-      hybs_per_group_chip[date_group_chip_key].save
+    for hybridization_date_group_chip_key in hybs_per_group_chip.keys
+      hybs_per_group_chip[hybridization_date_group_chip_key].save
     end
   end
   
   def create_gcos_import_files(hybridizations)
     for hybridization in hybridizations
+      sample = hybridization.sample
       # only make hyb info record for GCOS if it's an affy array
-      if hybridization.array_platform == "affy"
-        date_number_string = hybridization.date.year.to_s + ("%02d" % hybridization.date.month) +
-                             ("%02d" % hybridization.date.day) + "_" + ("%02d" % hybridization.chip_number)
+      if sample.chip_type.array_platform == "affy"
+        hybridization_date_number_string = hybridization.hybridization_date.year.to_s + ("%02d" % hybridization.hybridization_date.month) +
+                             ("%02d" % hybridization.hybridization_date.day) + "_" + ("%02d" % hybridization.chip_number)
         # open an output file for writing
-        gcos_file = File.new(SiteConfig.gcos_output_path + "/" + date_number_string + 
-                    "_" + hybridization.sample_name + ".txt", "w")
+        gcos_file = File.new(SiteConfig.gcos_output_path + "/" + hybridization_date_number_string + 
+                    "_" + sample.sample_name + ".txt", "w")
         # write out information needed by GCOS Object Importer tool
         gcos_file << "[SAMPLE]\n"
-        gcos_file << "SampleName=" + hybridization.sample_group_name + "\n"
-        gcos_file << "SampleType=" + Organism.find(hybridization.organism_id).name + "\n"
-        gcos_file << "SampleProject=" + hybridization.sbeams_project + "\n"
+        gcos_file << "SampleName=" + sample.sample_group_name + "\n"
+        gcos_file << "SampleType=" + Organism.find(sample.chip_type.organism_id).name + "\n"
+        gcos_file << "SampleProject=" + sample.sbeams_project + "\n"
         gcos_file << "SampleUser=affybot\n"
         gcos_file << "SampleUpdate=1\n"
         gcos_file << "SampleTemplate=AffyCore\n"
-        gcos_file << "Array User Name=" + hybridization.sbeams_user + "\n"
+        gcos_file << "Array User Name=" + sample.sbeams_user + "\n"
         gcos_file << "\n"
         gcos_file << "[EXPERIMENT]\n"
-        gcos_file << "ExperimentName=" + date_number_string + "_" + hybridization.sample_name + "\n"
-        gcos_file << "ArrayType=" + ChipType.find(hybridization.chip_type_id).short_name + "\n"
+        gcos_file << "ExperimentName=" + hybridization_date_number_string + "_" + sample.sample_name + "\n"
+        gcos_file << "ArrayType=" + ChipType.find(sample.chip_type_id).short_name + "\n"
         gcos_file << "ExperimentUser=affybot\n"
         gcos_file << "ExperimentUpdate=0\n"
         gcos_file.close
@@ -236,33 +249,35 @@ class HybridizationsController < ApplicationController
   
   def record_charges(hybridizations)
     # find the latest charge period
-    current_period = ChargePeriod.find(:first, :order => "name DESC")
+#    current_period = ChargePeriod.find(:first, :order => "name DESC")
     
     # if a charge period doesn't exist, create one
-    if(current_period == nil)
-      current_period = ChargePeriod.new(:name => 'Default Charge Period')
-    end
+#    if(current_period == nil)
+#      current_period = ChargePeriod.new(:name => 'Default Charge Period')
+#      current_period.save
+#    end
     
     for hybridization in hybridizations
-      # try to find an existing charge set
-      charge_set = ChargeSet.find(:first, 
-        :conditions => ["charge_period_id = ? AND lab_group_id = ?", current_period.id, hybridization.lab_group_id] )
-      
-      # if no existing charge set is found, create one
-      if(charge_set == nil)
-        lab_group = LabGroup.find(hybridization.lab_group_id)
-        charge_set = ChargeSet.new(:lab_group_id => lab_group.id,
-                                   :charge_period_id => current_period.id,
-                                   :name => lab_group.name,
-                                   :budget_manager => "To Be Entered",
-                                   :budget => "To Be Entered")
-        charge_set.save
-      end
+      sample = hybridization.sample
+#      # try to find an existing charge set
+#      charge_set = ChargeSet.find(:first, 
+#        :conditions => ["charge_period_id = ? AND lab_group_id = ?", current_period.id, hybridization.lab_group_id] )
+#      
+#      # if no existing charge set is found, create one
+#      if(charge_set == nil)
+#        lab_group = LabGroup.find(hybridization.lab_group_id)
+#        charge_set = ChargeSet.new(:lab_group_id => lab_group.id,
+#                                   :charge_period_id => current_period.id,
+#                                   :name => lab_group.name,
+#                                   :budget_manager => "To Be Entered",
+#                                   :budget => "To Be Entered")
+#        charge_set.save
+#      end
       
       template = ChargeTemplate.find(hybridization.charge_template_id)
-      charge = Charge.new(:charge_set_id => charge_set.id,
-                          :date => hybridization.date,
-                          :description => hybridization.sample_name,
+      charge = Charge.new(:charge_set_id => hybridization.charge_set_id,
+                          :date => hybridization.hybridization_date,
+                          :description => sample.sample_name,
                           :chips_used => template.chips_used,
                           :chip_cost => template.chip_cost,
                           :labeling_cost => template.labeling_cost,

@@ -4,7 +4,7 @@ class SubmitHybridizations < ActiveRecord::Base
     columns << ActiveRecord::ConnectionAdapters::Column.new(name.to_s, default, sql_type.to_s, null)
   end
 
-  column :date, :date
+  column :hybridization_date, :date
   column :charge_set_id, :integer
   column :charge_template_id, :integer
 end

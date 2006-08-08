@@ -4,7 +4,7 @@ class AddSamples < ActiveRecord::Base
     columns << ActiveRecord::ConnectionAdapters::Column.new(name.to_s, default, sql_type.to_s, null)
   end
 
-  column :date, :date
+  column :submission_date, :date
   column :number, :integer
   column :lab_group_id, :integer
   column :chip_type_id, :integer

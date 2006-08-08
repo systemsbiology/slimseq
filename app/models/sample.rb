@@ -4,7 +4,7 @@ class Sample < ActiveRecord::Base
   belongs_to :lab_group
   belongs_to :chip_type
   validates_associated :lab_group, :chip_type
-  validates_presence_of :sample_name, :short_sample_name, :date
+  validates_presence_of :sample_name, :short_sample_name, :submission_date
 #  validates_uniqueness_of :sample_name
   validates_length_of :short_sample_name, :maximum => 20
   validates_length_of :sample_name, :maximum => 59
@@ -14,8 +14,9 @@ class Sample < ActiveRecord::Base
   
   def validate_on_create
     # make sure date/short_sample_name/sample_name combo is unique
-    if Sample.find_by_date_and_short_sample_name_and_sample_name(date, short_sample_name, sample_name)
-      errors.add("Duplicate date/short_sample_name/sample_name")
+    if Sample.find_by_submission_date_and_short_sample_name_and_sample_name(
+              submission_date, short_sample_name, sample_name)
+      errors.add("Duplicate submission date/short_sample_name/sample_name")
     end
     
     # look for all the things that infuriate GCOS or SBEAMS:

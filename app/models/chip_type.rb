@@ -10,9 +10,9 @@ class ChipType < ActiveRecord::Base
   validates_length_of :short_name, :within => 1..20
 
   def destroy_warning
-    samples = Sample.find(:all, :conditions => ["lab_group_id = ?", id])
-    inventory_checks = InventoryCheck.find(:all, :conditions => ["lab_group_id = ?", id])
-    chip_transactions = ChipTransaction.find(:all, :conditions => ["lab_group_id = ?", id])
+    samples = Sample.find(:all, :conditions => ["chip_type_id = ?", id])
+    inventory_checks = InventoryCheck.find(:all, :conditions => ["chip_type_id = ?", id])
+    chip_transactions = ChipTransaction.find(:all, :conditions => ["chip_type_id = ?", id])
     
     return "Destroying this chip type will also destroy:\n" + 
            samples.size.to_s + " sample(s)\n" +

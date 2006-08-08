@@ -27,7 +27,7 @@
   <tr>
     <% hybridization = @hybridizations[n]
        sample = Sample.find(hybridization.sample_id) %>
-    <td><%=h hybridization.date %></td>
+    <td><%=h hybridization.hybridization_date %></td>
     <td><%=h hybridization.chip_number %></td>
     <td><%=h sample.short_sample_name %></td>
     <td><%=h sample.sample_name %></td>

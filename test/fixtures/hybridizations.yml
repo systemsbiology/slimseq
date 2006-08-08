@@ -1,27 +1,8 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-first_chip:
+hyb1:
   id: 1
-  date: 2006-02-10
+  hybridization_date: 2006-02-10
   chip_number: 1
   charge_template_id: 1
-  short_sample_name: yng
-  sample_name: Young
-  sample_group_name: Young
-  lab_group_id: 1
-  chip_type_id: 2
-  organism_id: 1
-  sbeams_user: bob
-  sbeams_project: Bob's stuff
-another:
-  id: 2
-  date: 2006-02-10
-  chip_number: 2
-  charge_template_id: 1
-  short_sample_name: old
-  sample_name: Old
-  sample_group_name: Old
-  lab_group_id: 1
-  chip_type_id: 2
-  organism_id: 1
-  sbeams_user: bob
-  sbeams_project: Bob's stuff
+  charge_set_id: 1
+  sample_id: 2

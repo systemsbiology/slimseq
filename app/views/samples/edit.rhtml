@@ -2,8 +2,8 @@
 
 <%= start_form_tag :action => 'update', :id => @sample %>
 
-	<p><label for="sample_date">Date</label><br/>
-	<%= date_select 'sample', 'date'  %></p>
+	<p><label for="sample_submission_date">Date</label><br/>
+	<%= date_select 'sample', 'submission_date'  %></p>
 	
 	<p><label for="sample_short_sample_name">Short Sample Name</label><br/>
 	<%= text_field 'sample', 'short_sample_name'  %></p>

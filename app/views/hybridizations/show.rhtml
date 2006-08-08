@@ -12,7 +12,7 @@
     <% hybridization = @hybridizations[n]
     #breakpoint
        sample = Sample.find(hybridization.sample_id) %>
-    <td><%= hybridization.date %></td>
+    <td><%= hybridization.hybridization_date %></td>
     <td><%= hybridization.chip_number %></td>    
     <td><%= sample.short_sample_name %></td>
     <td><%= sample.sample_name %></td>

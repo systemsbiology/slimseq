@@ -12,7 +12,7 @@ class AddSamplesTable < ActiveRecord::Migration
     if(using_Mysql?)
       transaction do
         create_table "samples", :force => true do |t|
-          t.column "date", :date
+          t.column "submission_date", :date
           t.column "short_sample_name", :string, :limit => 20
           t.column "sample_name", :string, :limit => 48
           t.column "sample_group_name", :string, :limit => 50
@@ -25,15 +25,17 @@ class AddSamplesTable < ActiveRecord::Migration
           t.column "lock_version", :integer, :default => 0
         end
         
-        # add new fields for hybridizations
+        # add new fields for hybridizations, change 'date' to
+        # eliminate ambiguity with samples
         add_column :hybridizations, :sample_id, :integer
         add_column :hybridizations, :charge_set_id, :integer
+        rename_column :hybridizations, :date, :hybridization_date
         
         # copy information from hybridizations to samples and 
         # populate new fields in hybridizations
         Hybridization.reset_column_information
         Hybridization.find(:all).each do |h|
-          s = Sample.new( :date => h.date,
+          s = Sample.new( :submission_date => h.hybridization_date,
                           :short_sample_name => h.short_sample_name,
                           :sample_name => h.sample_name,
                           :sample_group_name => h.sample_group_name,
@@ -89,7 +91,6 @@ class AddSamplesTable < ActiveRecord::Migration
         add_column :hybridizations, :organism_id, :integer
         add_column :hybridizations, :sbeams_user, :string, :limit => 20
         add_column :hybridizations, :sbeams_project, :string, :limit => 50
-        add_column :hybridizations, :charge_template_id, :integer
         add_column :hybridizations, :array_platform, :string, :limit => 20
 
         # move information back from samples to hybridizations
@@ -111,6 +112,7 @@ class AddSamplesTable < ActiveRecord::Migration
         drop_table :samples
         remove_column :hybridizations, :sample_id
         remove_column :hybridizations, :charge_set_id
+        rename_column :hybridizations, :hybridization_date, :date
                 
         remove_column :chip_types, :array_platform
         

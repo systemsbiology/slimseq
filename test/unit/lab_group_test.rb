@@ -1,13 +1,13 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class LabGroupTest < Test::Unit::TestCase
-  fixtures :lab_groups, :charge_sets, :hybridizations, :inventory_checks,
+  fixtures :lab_groups, :samples, :charge_sets, :hybridizations, :inventory_checks,
            :chip_transactions
 
   def test_destroy_warning
     expected_warning = "Destroying this lab group will also destroy:\n" + 
                        "2 charge set(s)\n" +
-                       "2 hybridization(s)\n" +
+                       "3 sample(s)\n" +
                        "2 inventory check(s)\n" +
                        "2 chip transaction(s)\n" +
                        "Are you sure you want to destroy it?"

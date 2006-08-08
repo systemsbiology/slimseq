@@ -26,7 +26,7 @@
   <% for n in 0..@samples.size-1 %>
   <tr>
     <% sample = @samples[n] %>
-    <td><%= sample.date %></td>
+    <td><%= sample.submission_date %></td>
     <td><input id="sample-<%=n%>_short_sample_name" 
         name="sample-<%=n%>[short_sample_name]" size="10" type="text"
         value="<%= sample.short_sample_name %>" /></td>

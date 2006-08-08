@@ -2,28 +2,23 @@
 
 <%= start_form_tag :action => 'update', :id => @hybridization %>
 
-	<p><label for="hybridization_date">Date</label><br/>
-	<%= date_select 'hybridization', 'date'  %></p>
+	<p><label for="hybridization_sample_id">Sample</label><br/>
+	    <select id="hybridization_sample_id" name="hybridization[sample_id]">
+	    <%= options_from_collection_for_select @samples, "id", "sample_name", @sample.id %></select></p>
+
+	<p><label for="hybridization_hybridization_date">Date</label><br/>
+	<%= date_select 'hybridization', 'hybridization_date'  %></p>
 	
 	<p><label for="hybridization_chip_number">Chip Number</label><br/>
 	<%= text_field 'hybridization', 'chip_number'  %></p>
 	
-	<p><label for="hybridization_short_sample_name">Short Sample Name</label><br/>
-	<%= text_field 'sample', 'short_sample_name'  %></p>
-	
-	<p><label for="hybridization_sample_name">Sample Name</label><br/>
-	<%= text_field 'sample', 'sample_name', :size => 50  %></p>
-	
-	<p><label for="hybridization_sample_group_name">Sample Group Name</label><br/>
-	<%= text_field 'sample', 'sample_group_name', :size => 50  %></p>
+	<p><label for="hybridization_charge_set_id">Charge Set</label><br/>
+	    <select id="hybridization_charge_set_id" name="hybridization[charge_set_id]">
+	    <%= options_from_collection_for_select @charge_sets, "id", "name" %></select></p>
 		
-	<p><label for="hybridization_lab_group_id">Lab Group</label><br>
-	<select id="lab_group_id" name="hybridization[lab_group_id]">
-    <%= options_from_collection_for_select @lab_groups, "id", "name", selected_value=@sample.lab_group_id %></select></p>
-    
-    <p><label for="hybridization_chip_type_id">Chip Type</label><br>
-    <select id="chip_type_id" name="hybridization[chip_type_id]">
-    <%= options_from_collection_for_select @chip_types, "id", "name", selected_value=@sample.chip_type_id %></select></p>
+	<p><label for="hybridization_charge_template_id">Charge Template</label><br>
+	    <select id="hybridization_charge_template_id" name="hybridization[charge_template_id]">
+	    <%= options_from_collection_for_select @charge_templates, "id", "name" %></select></p>
 
     <%= hidden_field 'hybridization', 'lock_version' %>
 	
