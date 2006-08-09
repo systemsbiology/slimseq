@@ -181,7 +181,10 @@ class HybridizationsController < ApplicationController
   end
 
   def destroy
-    Hybridization.find(params[:id]).destroy
+    hybridization = Hybridization.find(params[:id])
+    sample = Sample.find(hybridization.sample_id)
+    hybridization.destroy
+    sample.update_attribute('status', 'submitted')
     redirect_to :action => 'list'
   end
   

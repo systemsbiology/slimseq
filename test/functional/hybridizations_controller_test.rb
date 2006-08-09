@@ -292,14 +292,20 @@ class HybridizationsControllerTest < Test::Unit::TestCase
   end
 
   def test_destroy
-    assert_not_nil Hybridization.find(1)
+    hybridization = Hybridization.find(1)
+    sample_id = hybridization.sample_id
+    assert_not_nil hybridization
 
     post :destroy, :id => 1
     assert_response :redirect
     assert_redirected_to :action => 'list'
-
+    
+    # make sure hybridization doesn't exist
     assert_raise(ActiveRecord::RecordNotFound) {
       Hybridization.find(1)
     }
+    
+    # sample should have been reset to 'submitted'
+    assert_equal 'submitted', Sample.find(sample_id).status
   end
 end

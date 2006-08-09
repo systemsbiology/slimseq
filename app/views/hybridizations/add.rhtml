@@ -7,7 +7,7 @@
 
 <h2>Enter Hybridizations</h2>
 
-<%= start_form_tag :action => 'add' %>
+<%= start_form_tag( { :action => 'add' }, { :name => 'add_samples' } )%>
     <%= render :partial => 'form' %>
   <%= submit_tag "Add to Hybridization Set" %>
 <%= end_form_tag %>
