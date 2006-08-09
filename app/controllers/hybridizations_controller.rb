@@ -33,9 +33,11 @@ class HybridizationsController < ApplicationController
     # in the sample list
     selected_samples = params[:selected_samples]
     @samples = Array.new
-    for sample_id in selected_samples.keys
-      if selected_samples[sample_id] == '1'
-        @samples << Sample.find(sample_id)
+    if selected_samples != nil
+      for sample_id in selected_samples.keys
+        if selected_samples[sample_id] == '1'
+          @samples << Sample.find(sample_id)
+        end
       end
     end
     
@@ -66,6 +68,20 @@ class HybridizationsController < ApplicationController
         @available_samples.delete(sample)
       end
     end
+  end
+  
+  def order_hybridizations
+    @order = params[:hybridization_list]
+    @hybridizations = session[:hybridizations]
+
+    # re-number hybridizations
+    for n in 0..@hybridizations.size-1
+      @hybridizations[@order[n].to_i-1].chip_number = n+1
+    end
+    @hybridizations.sort! {|x,y| x.chip_number <=> y.chip_number }
+
+    session[:hybridizations] = @hybridizations
+    render :partial => 'hybridization_list'
   end
   
   def create

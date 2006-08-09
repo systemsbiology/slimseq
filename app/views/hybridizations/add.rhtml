@@ -1,3 +1,7 @@
+<script src="/javascripts/prototype.js" type="text/javascript"></script>
+<script src="/javascripts/dragdrop.js" type="text/javascript"></script>
+<script src="/javascripts/effects.js" type="text/javascript"></script>
+
 <%= error_messages_for 'submit_hybridizations' %>
 <%= error_messages_for_hybridizations %>
 
@@ -5,49 +9,19 @@
 
 <%= start_form_tag :action => 'add' %>
     <%= render :partial => 'form' %>
-  <%= submit_tag "Add to Hybridization Table" %>
+  <%= submit_tag "Add to Hybridization Set" %>
 <%= end_form_tag %>
 
+<h3>Hybridizations</h3>
+<p>Drag and drop hybridizations to rearrange their order:</p>
 <%= start_form_tag :action => 'create' %>
-<table class="table">
-  <th>Date</th>
-  <th>Chip Number</th>
-  <th>Short Name</th>
-  <th>Full Sample Name</th>
-  <th>Sample Group Name</th>
-  <th>Charge Set</th>
-  <th>Charge Template</th>
-  <th>Lab Group</th>
-  <th>Chip Type</th>
-  <% if SiteConfig.create_gcos_files? %>
-	  <th>SBEAMS User</th>
-	  <th>SBEAMS Project</th>
-  <% end %>
-  <% for n in 0..@hybridizations.size-1 %>
-  <tr>
-    <% hybridization = @hybridizations[n]
-       sample = Sample.find(hybridization.sample_id) %>
-    <td><%=h hybridization.hybridization_date %></td>
-    <td><%=h hybridization.chip_number %></td>
-    <td><%=h sample.short_sample_name %></td>
-    <td><%=h sample.sample_name %></td>
-    <td><%=h sample.sample_group_name %></td>
-    <td><%= ChargeSet.find(hybridization.charge_set_id).name %></td>
-    <td><%= ChargeTemplate.find(hybridization.charge_template_id).name %></td>
-    <td><%= LabGroup.find(sample.lab_group_id).name %></td>
-    <td><%= ChipType.find(sample.chip_type_id).name %></td>
-    <% if SiteConfig.create_gcos_files? %>
-        <td><%= sample.sbeams_user %></td>
-        <td><%= sample.sbeams_project %></td>
-    <% end %>
-  </tr>
-  <% end %>
-</table>
+
+<ul id="hybridization_list">
+<%= render :partial => 'hybridization_list' %>
+</ul>
+
   <p><%= submit_tag "Create Hybridization Records" %></p>
 <%= end_form_tag %>
 
 <%= link_to 'Clear Hybridizations', :action => 'clear' %> | <%= link_to 'Back to List of Hybridizations', :action => 'list' %>
-
-
-
 
