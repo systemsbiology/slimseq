@@ -316,7 +316,6 @@ CREATE TABLE `organisms` (
 
 /*!40000 ALTER TABLE `organisms` DISABLE KEYS */;
 LOCK TABLES `organisms` WRITE;
-INSERT INTO `organisms` VALUES (1,'banana',0);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `organisms` ENABLE KEYS */;
 
