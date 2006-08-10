@@ -19,6 +19,6 @@ ActionController::Routing::Routes.draw do |map|
   
   # default home page
   map.connect   "",
-               :controller =>"inventory",
-               :action => "index"
+               :controller =>"user",
+               :action => "home"
 end

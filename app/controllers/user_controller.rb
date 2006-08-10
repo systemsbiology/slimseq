@@ -2,6 +2,43 @@
 # LoginEngine to give user management methods (list, edit_user, etc)
 class UserController < ApplicationController
 
+  def home
+    # Admins get their own home page
+    if(current_user.admin?)
+      redirect_to :action => 'admin'
+    end
+    
+    # grab SBEAMS configuration parameter here, rather than
+    # grabbing it in the list view for every element displayed
+    @using_sbeams = SiteConfig.find(1).using_sbeams?
+    
+    # Make an array of the accessible lab group ids, and use this
+    # to find the current user's accessible samples in a nice sorted list
+    @lab_groups = current_user.lab_groups
+    @chip_types = ChipType.find(:all, :order => "name ASC")
+    if(@lab_groups != nil && @lab_groups.size > 0)
+      lab_group_ids = Array.new
+      for lab_group in @lab_groups
+        lab_group_ids << lab_group.id
+      end
+      @samples = Sample.find(:all, :conditions => [ "lab_group_id IN (?) AND status = ?", lab_group_ids, 'submitted' ],
+                                :order => "submission_date DESC, sample_name ASC")
+    end
+  end
+
+  def admin
+    # grab SBEAMS configuration parameter here, rather than
+    # grabbing it in the list view for every element displayed
+    @using_sbeams = SiteConfig.find(1).using_sbeams?
+    
+    # Make an array of the accessible lab group ids, and use this
+    # to find the current user's accessible samples in a nice sorted list
+    @lab_groups = LabGroup.find(:all, :order => "name ASC")
+    @chip_types = ChipType.find(:all, :order => "name ASC")
+    @samples = Sample.find(:all, :conditions => [ "status = ?", 'submitted' ],
+                              :order => "submission_date DESC, sample_name ASC")
+  end
+
   # Edit the details of any user. The Role which can perform this will almost certainly also
   # need the following permissions: user/change_password, user/edit, user/edit_roles, user/delete
   def edit_user
