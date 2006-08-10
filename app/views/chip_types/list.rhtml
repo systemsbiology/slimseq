@@ -1,22 +1,26 @@
 <h2>Listing Chip Types</h2>
 
-<table class="sortable" id="chip_types">
-  <tr>
-    <th>Name</th>
-    <th>Short Name</th>    
-    <th>Edit</th>
-    <th>Destroy</th>
-  </tr>
-  
-<% for chip_type in @chip_types %>
-  <tr>
-    <td><%=h chip_type.name %></td>
-    <td><%=h chip_type.short_name %></td>
-    <td><%= link_to 'Edit', :action => 'edit', :id => chip_type %></td>
-    <td><%= link_to 'Destroy', { :action => 'destroy', :id => chip_type },
-                    :confirm => chip_type.destroy_warning %></td>
-  </tr>
+<% if @chip_types.size > 0 %>
+	<table class="sortable" id="chip_types">
+	  <tr>
+	    <th>Name</th>
+	    <th>Short Name</th>    
+	    <th>Edit</th>
+	    <th>Destroy</th>
+	  </tr>
+	  
+	<% for chip_type in @chip_types %>
+	  <tr>
+	    <td><%=h chip_type.name %></td>
+	    <td><%=h chip_type.short_name %></td>
+	    <td><%= link_to 'Edit', :action => 'edit', :id => chip_type %></td>
+	    <td><%= link_to 'Destroy', { :action => 'destroy', :id => chip_type },
+	                    :confirm => chip_type.destroy_warning %></td>
+	  </tr>
+	<% end %>
+	</table>
+<% else %>
+    <p>There are currently no chip types</p>
 <% end %>
-</table>
 
 <%= link_to 'New chip_type', :action => 'new' %>

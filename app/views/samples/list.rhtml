@@ -1,35 +1,47 @@
 <h2>Samples</h2>
 
-<p><%= link_to 'Submit New Samples', :action => 'new' %></p>
-
-<table class="sortable" id="samples">
-  <tr>
-    <th>Date</th>
-    <th>Short Sample Name</th>
-    <th>Sample Name</th>
-    <th>Sample Group Name</th>
-  <% if SiteConfig.using_sbeams? %>
-    <th>SBEAMS User</th>
-    <th>SBEAMS Project</th>
-  <% end %>
-    <th>Status</th>
-    <th>Edit</th>
-    <th>Destroy</th>
-  </tr>
-  
-<% for sample in @samples %>
-  <tr>
-    <td><%=h sample.submission_date %></td>
-    <td><%=h sample.short_sample_name %></td>
-    <td><%=h sample.sample_name %></td>
-    <td><%=h sample.sample_group_name %></td>
-  <% if @using_sbeams %>
-    <td><%=h sample.sbeams_user %></td>
-    <td><%=h sample.sbeams_project %></td>
-  <% end %>
-    <td><%=h sample.status %></td>
-    <td><%= link_to 'Edit', :action => 'edit', :id => sample %></td>
-    <td><%= link_to 'Destroy', { :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
-  </tr>
+<% if(@lab_groups.size > 0) %>
+	<p><%= link_to 'Submit New Samples', :action => 'new' %></p>
+	
+	<table class="sortable" id="samples">
+	  <tr>
+	    <th>Date</th>
+	    <th>Short Sample Name</th>
+	    <th>Sample Name</th>
+	    <th>Sample Group Name</th>
+	  <% if @using_sbeams %>
+	    <th>SBEAMS User</th>
+	    <th>SBEAMS Project</th>
+	  <% end %>
+	    <th>Status</th>
+	    <th>Edit</th>
+	    <th>Destroy</th>
+	  </tr>
+	  
+	<% for sample in @samples %>
+	  <tr>
+	    <td><%=h sample.submission_date %></td>
+	    <td><%=h sample.short_sample_name %></td>
+	    <td><%=h sample.sample_name %></td>
+	    <td><%=h sample.sample_group_name %></td>
+	  <% if @using_sbeams %>
+	    <td><%=h sample.sbeams_user %></td>
+	    <td><%=h sample.sbeams_project %></td>
+	  <% end %>
+	    <td><%=h sample.status %></td>
+	    <td><%= link_to 'Edit', :action => 'edit', :id => sample %></td>
+	    <td><%= link_to 'Destroy', { :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
+	  </tr>
+	<% end %>
+	</table>
+<% else %>
+    <% if current_user.admin? %>
+        <p>There are currently no samples.</p>
+        <p><%= link_to 'Submit New Samples', :action => 'new' %></p>
+    <% else %>
+	    <p>You need to belong to one or more lab groups before you can see or submit any samples.<br>
+	    Please contact your administrator at <a href="mailto:<%=h SiteConfig.administrator_email %>">
+	                                            <%=h SiteConfig.administrator_email %></a>
+	    if you need<br>to be added to any lab groups.</p>
+    <% end %>
 <% end %>
-</table>

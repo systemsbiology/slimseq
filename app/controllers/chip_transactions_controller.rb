@@ -34,37 +34,7 @@ class ChipTransactionsController < ApplicationController
     else
       @chip_transactions = 
         ChipTransaction.find_all_in_lab_group_chip_type(session[:lab_group_id],session[:chip_type_id])
-      @totals = Hash.new(0)
-      for transaction in @chip_transactions
-        if transaction.acquired != nil
-          @totals['acquired'] += transaction.acquired
-          @totals['chips'] += transaction.acquired
-        end
-        if transaction.used != nil
-          @totals['used'] += transaction.used
-          @totals['chips'] -= transaction.used
-        end
-        if transaction.traded_sold != nil
-          @totals['traded_sold'] += transaction.traded_sold
-          @totals['chips'] -= transaction.traded_sold
-        end
-        if transaction.borrowed_in != nil
-          @totals['borrowed_in'] += transaction.borrowed_in
-          @totals['chips'] += transaction.borrowed_in
-        end
-        if transaction.returned_out != nil
-          @totals['returned_out'] += transaction.returned_out
-          @totals['chips'] -= transaction.returned_out
-        end
-        if transaction.borrowed_out != nil
-          @totals['borrowed_out'] += transaction.borrowed_out
-          @totals['chips'] -= transaction.borrowed_out
-        end
-        if transaction.returned_in != nil
-          @totals['returned_in'] += transaction.returned_in
-          @totals['chips'] += transaction.returned_in
-        end
-      end
+      @totals = ChipTransaction.get_chip_totals(@chip_transactions)
       @lab_group_name = LabGroup.find(session[:lab_group_id]).name
       @chip_type_name = ChipType.find(session[:chip_type_id]).name
       render :action => 'list'
@@ -124,4 +94,5 @@ class ChipTransactionsController < ApplicationController
     ChipTransaction.find(params[:id]).destroy
     redirect_to :action => 'list_subset'
   end
+  
 end

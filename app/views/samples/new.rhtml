@@ -1,8 +1,15 @@
 <h2>Enter Samples</h2>
 
-<%= start_form_tag :action => 'add' %>
-    <%= render :partial => 'form' %>
-  <%= submit_tag "Add to Sample Table" %>
-<%= end_form_tag %>
-
-<%= link_to 'Back to List', :action => 'list' %>
+<% if(@lab_groups.size > 0 || current_user.admin?) %>
+	<%= start_form_tag :action => 'add' %>
+	    <%= render :partial => 'form' %>
+	  <%= submit_tag "Add to Sample Table" %>
+	<%= end_form_tag %>
+	
+	<%= link_to 'Back to List', :action => 'list' %>
+<% else %>
+    <p>You need to belong to one or more lab groups before you can see or submit any samples.<br>
+    Please contact your administrator at <a href="mailto:<%=h SiteConfig.administrator_email %>">
+                                            <%=h SiteConfig.administrator_email %></a>
+    if you need<br>to be added to any lab groups.</p>
+<% end %>

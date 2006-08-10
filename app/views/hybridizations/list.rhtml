@@ -2,35 +2,39 @@
 
 <p><%= link_if_authorized 'New Hybridizations', :action => 'new' %></p>
 
-<table class="sortable" id="hybridized_samples">
-  <tr>
-    <th>Date Hybridized</th>
-    <th>Chip Number</th>
-    <th>Short Sample Name</th>
-    <th>Sample Name</th>
-    <th>Sample Group Name</th>
-  <% if SiteConfig.using_sbeams? %>
-    <th>SBEAMS User</th>
-    <th>SBEAMS Project</th>
-  <% end %>
-    <th>Edit</th>
-    <th>Destroy</th>
-  </tr>
-  
-<% for hybridization in @hybridizations 
-    sample = Sample.find(hybridization.sample_id) %>
-  <tr>
-    <td><%=h hybridization.hybridization_date %></td>
-    <td><%=h hybridization.chip_number %></td>
-    <td><%=h sample.short_sample_name %></td>
-    <td><%=h sample.sample_name %></td>
-    <td><%=h sample.sample_group_name %></td>
-  <% if @using_sbeams %>
-    <td><%=h sample.sbeams_user %></td>
-    <td><%=h sample.sbeams_project %></td>
-  <% end %>
-    <td><%= link_to 'Edit', :action => 'edit', :id => hybridization %></td>
-    <td><%= link_to 'Destroy', { :action => 'destroy', :id => hybridization }, :confirm => 'Are you sure?' %></td>
-  </tr>
+<% if @hybridizations.size > 0 %>
+	<table class="sortable" id="hybridized_samples">
+	  <tr>
+	    <th>Date Hybridized</th>
+	    <th>Chip Number</th>
+	    <th>Short Sample Name</th>
+	    <th>Sample Name</th>
+	    <th>Sample Group Name</th>
+	  <% if SiteConfig.using_sbeams? %>
+	    <th>SBEAMS User</th>
+	    <th>SBEAMS Project</th>
+	  <% end %>
+	    <th>Edit</th>
+	    <th>Destroy</th>
+	  </tr>
+	  
+	<% for hybridization in @hybridizations 
+	    sample = Sample.find(hybridization.sample_id) %>
+	  <tr>
+	    <td><%=h hybridization.hybridization_date %></td>
+	    <td><%=h hybridization.chip_number %></td>
+	    <td><%=h sample.short_sample_name %></td>
+	    <td><%=h sample.sample_name %></td>
+	    <td><%=h sample.sample_group_name %></td>
+	  <% if @using_sbeams %>
+	    <td><%=h sample.sbeams_user %></td>
+	    <td><%=h sample.sbeams_project %></td>
+	  <% end %>
+	    <td><%= link_to 'Edit', :action => 'edit', :id => hybridization %></td>
+	    <td><%= link_to 'Destroy', { :action => 'destroy', :id => hybridization }, :confirm => 'Are you sure?' %></td>
+	  </tr>
+	<% end %>
+	</table>
+<% else %>
+    <p>There are currently no hybridizations.</p>
 <% end %>
-</table>

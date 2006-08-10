@@ -1,27 +1,30 @@
 <h2>Listing Inventory Check</h2>
 
-<table class="sortable" id="inventory_checks">
-  <tr>
-    <th>Date</th>
-    <th>Lab Group</th>
-    <th>Chip Type</th>
-    <th>Number Expected</th>
-    <th>Number Counted</th>
-    <th>Edit</th>
-    <th>Destroy</th>
-  </tr>
-  <% for inventory_check in @inventory_checks %>
-  <tr>
-    <td><%=h inventory_check.date %></td>
-    <td><%=h  LabGroup.find(inventory_check.lab_group_id).name %></td>
-    <td><%=h  ChipType.find(inventory_check.chip_type_id).name %></td>
-    <td><%=h inventory_check.number_expected %></td>
-    <td><%=h inventory_check.number_counted %></td>
-    <td><%= link_to 'Edit', :action => 'edit', :id => inventory_check %></td>
-    <td><%= link_to 'Destroy', { :action => 'destroy', :id => inventory_check }, :confirm => 'Are you sure?' %></td>
-  </tr>
-  <% end %>
-</table>
+<% if @inventory_checks.size > 0 %>
+	<table class="sortable" id="inventory_checks">
+	  <tr>
+	    <th>Date</th>
+	    <th>Lab Group</th>
+	    <th>Chip Type</th>
+	    <th>Number Expected</th>
+	    <th>Number Counted</th>
+	    <th>Edit</th>
+	    <th>Destroy</th>
+	  </tr>
+	  <% for inventory_check in @inventory_checks %>
+	  <tr>
+	    <td><%=h inventory_check.date %></td>
+	    <td><%=h  LabGroup.find(inventory_check.lab_group_id).name %></td>
+	    <td><%=h  ChipType.find(inventory_check.chip_type_id).name %></td>
+	    <td><%=h inventory_check.number_expected %></td>
+	    <td><%=h inventory_check.number_counted %></td>
+	    <td><%= link_to 'Edit', :action => 'edit', :id => inventory_check %></td>
+	    <td><%= link_to 'Destroy', { :action => 'destroy', :id => inventory_check }, :confirm => 'Are you sure?' %></td>
+	  </tr>
+	  <% end %>
+	</table>
+<% else %>
+    <p>There are currently no inventory checks</p>
+<% end %>
 
-<%= link_to 'Chip Accounting Home', :controller => 'inventory', :action=>'index'%> | 
 <%= link_to 'New inventory_check', :action => 'new' %>

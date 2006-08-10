@@ -8,18 +8,21 @@ class SamplesController < ApplicationController
   def list
     populate_arrays_from_tables
 
-    # make an array of the accessible lab group ids, and use this
-    # to find the current user's accessible samples in a nice sorted list
-    lab_group_ids = Array.new
-    for lab_group in @lab_groups
-      lab_group_ids << lab_group.id
+    if(@lab_groups != nil && @lab_groups.size > 0)
+      # make an array of the accessible lab group ids, and use this
+      # to find the current user's accessible samples in a nice sorted list
+      lab_group_ids = Array.new
+      for lab_group in @lab_groups
+        lab_group_ids << lab_group.id
+      end
+      @samples = Sample.find(:all, :conditions => [ "lab_group_id IN (?)", lab_group_ids ],
+                                :order => "submission_date DESC, sample_name ASC")
     end
-    @samples = Sample.find(:all, :conditions => [ "lab_group_id IN (?)", lab_group_ids ],
-                              :order => "submission_date DESC, sample_name ASC")
   end
 
   def new
     populate_arrays_from_tables
+
     # clear out sample table since this is a 'new' set
     session[:samples] = Array.new
     session[:sample_number] = 0
@@ -32,6 +35,7 @@ class SamplesController < ApplicationController
     
     @samples = session[:samples]
     previous_samples = session[:sample_number]
+
     @add_samples = AddSamples.new(params[:add_samples])
 
     # only add more sample slots if that's what was asked
@@ -135,8 +139,6 @@ class SamplesController < ApplicationController
     if(current_user.admin?)
       @lab_groups = LabGroup.find(:all, :order => "name ASC")
     else
-      # have to update current_user to get recently added lab groups
-      #@lab_groups = User.find(current_user.id).lab_groups
       @lab_groups = current_user.lab_groups
     end
     @chip_types = ChipType.find(:all, :order => "name ASC")

@@ -11,6 +11,7 @@
         </div>
         <div id="wrap">
 	        <div id="menu">
+	            <%= link_if_authorized 'Home', {:controller => 'user', :action => 'home'} %>
 	            <% if SiteConfig.track_inventory? %>
 	                <% if authorized?(:controller => 'inventory', :action => 'index') || 
 	                      authorized?(:controller => 'inventory_checks', :action => 'list') ||
