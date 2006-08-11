@@ -1,6 +1,6 @@
 <h2>Samples</h2>
 
-<% if(@lab_groups.size > 0) %>
+<% if(@samples != nil && @samples.size > 0) %>
 	<p><%= link_to 'Submit New Samples', :action => 'new' %></p>
 	
 	<table class="sortable" id="samples">

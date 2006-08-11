@@ -9,9 +9,8 @@ class InventoryChecksController < ApplicationController
   end
 
   def new
-    @lab_groups = LabGroup.find(:all, :order => "name ASC")
-    @chip_types = ChipType.find(:all, :order => "name ASC")
-  
+    populate_arrays_from_tables
+    
     @inventory_check = InventoryCheck.new
     if(params[:expected] != nil)
       @inventory_check.number_expected = params[:expected]
@@ -25,6 +24,8 @@ class InventoryChecksController < ApplicationController
   end
 
   def create
+    populate_arrays_from_tables
+  
     @inventory_check = InventoryCheck.new(params[:inventory_check])
     if @inventory_check.save
       flash[:notice] = 'InventoryCheck was successfully created.'
@@ -35,17 +36,15 @@ class InventoryChecksController < ApplicationController
   end
 
   def edit
-    @lab_groups = LabGroup.find(:all, :order => "name ASC")
-    @chip_types = ChipType.find(:all, :order => "name ASC")
+    populate_arrays_from_tables
   
     @inventory_check = InventoryCheck.find(params[:id])
   end
 
   def update
-    @lab_groups = LabGroup.find(:all, :order => "name ASC")
-    @chip_types = ChipType.find(:all, :order => "name ASC")
+    populate_arrays_from_tables
+    
     @inventory_check = InventoryCheck.find(params[:id])
-
     begin
       if @inventory_check.update_attributes(params[:inventory_check])
         flash[:notice] = 'InventoryCheck was successfully updated.'
@@ -63,5 +62,11 @@ class InventoryChecksController < ApplicationController
   def destroy
     InventoryCheck.find(params[:id]).destroy
     redirect_to :action => 'list'
+  end
+  
+  private
+  def populate_arrays_from_tables
+    @lab_groups = LabGroup.find(:all, :order => "name ASC")
+    @chip_types = ChipType.find(:all, :order => "name ASC")    
   end
 end
