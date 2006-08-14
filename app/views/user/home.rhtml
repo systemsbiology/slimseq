@@ -4,70 +4,74 @@
 software for <%= SiteConfig.organization_name %>.<br>Please visit the <a href="http://slimarray.systemsbiology.net">
 SLIMarray web site</a> for documentation and additional information.</p>
 
-<h3>Samples Submitted for Hybridization</h3>
-
-<% if @samples != nil && @samples.size > 0 %>
-	<table class="sortable" id="samples">
-	  <tr>
-	    <th>Date</th>
-	    <th>Short Sample Name</th>
-	    <th>Sample Name</th>
-	    <th>Sample Group Name</th>
-	  <% if @using_sbeams %>
-	    <th>SBEAMS User</th>
-	    <th>SBEAMS Project</th>
-	  <% end %>
-	    <th>Status</th>
-	    <th>Edit</th>
-	    <th>Destroy</th>
-	  </tr>
-	  
-	<% for sample in @samples %>
-	  <tr>
-	    <td><%=h sample.submission_date %></td>
-	    <td><%=h sample.short_sample_name %></td>
-	    <td><%=h sample.sample_name %></td>
-	    <td><%=h sample.sample_group_name %></td>
-	  <% if @using_sbeams %>
-	    <td><%=h sample.sbeams_user %></td>
-	    <td><%=h sample.sbeams_project %></td>
-	  <% end %>
-	    <td><%=h sample.status %></td>
-	    <td><%= link_to 'Edit', :controller => 'samples', :action => 'edit', :id => sample %></td>
-	    <td><%= link_to 'Destroy', { :controller => 'samples', :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
-	  </tr>
+<% if(SiteConfig.track_hybridizations?) %>
+	<h3>Samples Submitted for Hybridization</h3>
+	
+	<% if @samples != nil && @samples.size > 0 %>
+		<table class="sortable" id="samples">
+		  <tr>
+		    <th>Date</th>
+		    <th>Short Sample Name</th>
+		    <th>Sample Name</th>
+		    <th>Sample Group Name</th>
+		  <% if @using_sbeams %>
+		    <th>SBEAMS User</th>
+		    <th>SBEAMS Project</th>
+		  <% end %>
+		    <th>Status</th>
+		    <th>Edit</th>
+		    <th>Destroy</th>
+		  </tr>
+		  
+		<% for sample in @samples %>
+		  <tr>
+		    <td><%=h sample.submission_date %></td>
+		    <td><%=h sample.short_sample_name %></td>
+		    <td><%=h sample.sample_name %></td>
+		    <td><%=h sample.sample_group_name %></td>
+		  <% if @using_sbeams %>
+		    <td><%=h sample.sbeams_user %></td>
+		    <td><%=h sample.sbeams_project %></td>
+		  <% end %>
+		    <td><%=h sample.status %></td>
+		    <td><%= link_to 'Edit', :controller => 'samples', :action => 'edit', :id => sample %></td>
+		    <td><%= link_to 'Destroy', { :controller => 'samples', :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
+		  </tr>
+		<% end %>
+		</table>
+	<% else %>
+	    <p>Your lab groups have no submitted samples that have not been hybridized.</p>
 	<% end %>
-	</table>
-<% else %>
-    <p>Your lab groups have no submitted samples that have not been hybridized.</p>
+	
+	<%= link_to 'Submit New Samples', :controller => 'samples', :action => 'new' %>
 <% end %>
 
-<%= link_to 'Submit New Samples', :controller => 'samples', :action => 'new' %>
-
-<h3>Array Inventories</h3>
-
-<% if @lab_groups != nil && @lab_groups.size > 0 %>
-	<% for lab_group in @lab_groups %>
-		<%# Make sure someone is logged in, and show only stuff they're supposed to access%>
-		<b><%=h lab_group.name %>:</b>
-		<% for chip_type in @chip_types %>
-			<% chip_transactions = ChipTransaction.find_all_in_lab_group_chip_type(lab_group.id,chip_type.id) %>
-			<% if chip_transactions.length != 0 %>	           
-				<li>
-				<% totals = ChipTransaction.get_chip_totals(chip_transactions) %>
-				<%= link_to(h=chip_type.name, { :controller => "chip_transactions",
-				                  :action => "list_subset",
-				                  :lab_group_id => lab_group.id,
-				                  :chip_type_id => chip_type.id}) %>:
-				<%=h totals['chips'] %>
-				</li>
-			<% end %>
-	    <% end %>
-		<br>    
+<% if(SiteConfig.track_inventory?) %>
+	<h3>Array Inventories</h3>
+	
+	<% if @lab_groups != nil && @lab_groups.size > 0 %>
+		<% for lab_group in @lab_groups %>
+			<%# Make sure someone is logged in, and show only stuff they're supposed to access%>
+			<b><%=h lab_group.name %>:</b>
+			<% for chip_type in @chip_types %>
+				<% chip_transactions = ChipTransaction.find_all_in_lab_group_chip_type(lab_group.id,chip_type.id) %>
+				<% if chip_transactions.length != 0 %>	           
+					<li>
+					<% totals = ChipTransaction.get_chip_totals(chip_transactions) %>
+					<%= link_to(h=chip_type.name, { :controller => "chip_transactions",
+					                  :action => "list_subset",
+					                  :lab_group_id => lab_group.id,
+					                  :chip_type_id => chip_type.id}) %>:
+					<%=h totals['chips'] %>
+					</li>
+				<% end %>
+		    <% end %>
+			<br>    
+		<% end %>
+	<% else %>
+	    <p>You belong to no lab groups, and therefore cannot see any array inventories.<br>
+	    Please contact your administrator at <a href="mailto:<%=h SiteConfig.administrator_email %>">
+	                                            <%=h SiteConfig.administrator_email %></a>
+	    if you need<br>to be added to any lab groups.</p>
 	<% end %>
-<% else %>
-    <p>You belong to no lab groups, and therefore cannot see any array inventories.<br>
-    Please contact your administrator at <a href="mailto:<%=h SiteConfig.administrator_email %>">
-                                            <%=h SiteConfig.administrator_email %></a>
-    if you need<br>to be added to any lab groups.</p>
 <% end %>
