@@ -49,7 +49,6 @@ task :create_roles => :environment do
 
     guest.permissions << Permission.find_by_controller_and_action('user', 'login')
     guest.permissions << Permission.find_by_controller_and_action('user', 'forgot_password')
-    guest.permissions << Permission.find_by_controller_and_action('user', 'signup')
 
     raise "Couldn't save guest role after setting permissions!" if !guest.save
   end
@@ -91,6 +90,20 @@ task :create_roles => :environment do
     user.permissions << Permission.find_by_controller_and_action('user', 'change_password')
     user.permissions << Permission.find_by_controller_and_action('user', 'edit')
 
+    # SLIMarray-specific permissions
+    user.permissions << Permission.find_by_controller_and_action('chip_transactions', 'list_subset')
+    user.permissions << Permission.find_by_controller_and_action('inventory', 'index')
+    user.permissions << Permission.find_by_controller_and_action('samples', 'new')
+    user.permissions << Permission.find_by_controller_and_action('samples', 'list')
+    user.permissions << Permission.find_by_controller_and_action('samples', 'add')
+    user.permissions << Permission.find_by_controller_and_action('samples', 'clear')
+    user.permissions << Permission.find_by_controller_and_action('samples', 'edit')
+    user.permissions << Permission.find_by_controller_and_action('samples', 'destroy')
+    user.permissions << Permission.find_by_controller_and_action('samples', 'create')
+    user.permissions << Permission.find_by_controller_and_action('samples', 'show')
+    user.permissions << Permission.find_by_controller_and_action('samples', 'index')
+    user.permissions << Permission.find_by_controller_and_action('samples', 'update')
+        
     raise "Couldn't save default user role after assigning permissions!" if !user.save
   end
 end
