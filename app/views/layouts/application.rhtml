@@ -55,6 +55,8 @@
 	                :wrap_in => 'li'%>
 	            <%= link_if_authorized 'Users', {:controller => 'user', :action => 'list'}, 
 	                :wrap_in => 'li'%>
+	            <%= link_if_authorized 'Roles', {:controller => 'role', :action => 'list'}, 
+	                :wrap_in => 'li'%>
 	            <%= link_if_authorized 'Site Config', {:controller => 'site_config', :action => 'edit'}, 
 	                :wrap_in => 'li'%>
 	            <%= link_if_authorized 'Log Out', {:controller => 'user', :action => 'logout'}, 
