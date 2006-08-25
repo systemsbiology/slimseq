@@ -35,7 +35,7 @@
 	<% end %>
 	</table>
 <% else %>
-    <% if current_user.admin? %>
+    <% if current_user.staff? || current_user.admin? %>
         <p>There are currently no samples.</p>
         <p><%= link_to 'Submit New Samples', :action => 'new' %></p>
     <% else %>

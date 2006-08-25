@@ -50,7 +50,7 @@ module UserEngine
   # The Guest role is automatically assigned to any visitor who is not logged in
   config :guest_role_name, "Guest"
   # The User role is given to every user
-  config :user_role_name, "User"
+  config :user_role_name, "Customer"
 
   # The details for the Admin user and role
   config :admin_role_name, "Admin"

@@ -15,7 +15,7 @@
 		</p>
 	<% end %>
 <% else %>
-    <% if current_user.admin? %>
+    <% if current_user.staff? || current_user.admin? %>
     <p>There are currently no chip inventories</p>
     <% else %>
 	    <p>You belong to no lab groups, and therefore cannot see any array inventories<br>

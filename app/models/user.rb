@@ -37,4 +37,8 @@ class User < ActiveRecord::Base
     "#{self.firstname} #{self.lastname}"
   end
   
+  # Returns true if the user belongs to the Role "Facility"
+  def staff?
+    self.roles.include?(Role.find(:first, :conditions => ["name = ?", "Staff"]))
+  end
 end

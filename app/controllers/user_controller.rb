@@ -4,8 +4,8 @@ class UserController < ApplicationController
 
   def home
     # Admins get their own home page
-    if(current_user.admin?)
-      redirect_to :action => 'admin'
+    if(current_user.staff? || current_user.admin?)
+      redirect_to :action => 'staff'
     end
     
     # grab SBEAMS configuration parameter here, rather than
@@ -26,7 +26,7 @@ class UserController < ApplicationController
     end
   end
 
-  def admin
+  def staff
     # grab SBEAMS configuration parameter here, rather than
     # grabbing it in the list view for every element displayed
     @using_sbeams = SiteConfig.find(1).using_sbeams?

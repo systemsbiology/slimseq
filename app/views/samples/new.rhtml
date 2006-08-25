@@ -1,6 +1,6 @@
 <h2>Enter Samples</h2>
 
-<% if(@lab_groups.size > 0 || current_user.admin?) %>
+<% if(@lab_groups.size > 0 || current_user.staff? || current_user.admin?) %>
 	<%= start_form_tag :action => 'add' %>
 	    <%= render :partial => 'form' %>
 	  <%= submit_tag "Add to Sample Table" %>

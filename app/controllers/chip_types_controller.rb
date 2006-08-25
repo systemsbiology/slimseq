@@ -15,6 +15,7 @@ class ChipTypesController < ApplicationController
   end
 
   def create
+    populate_arrays_from_tables
     @chip_type = ChipType.new(params[:chip_type])
     
     # if a new organism was specified, use that name

@@ -13,7 +13,7 @@ class ChipTransactionsController < ApplicationController
     
     # allow admin user to look at any group, but
     # other users should only see their stuff
-    if(current_user.admin?)
+    if(current_user.staff? || current_user.admin?)
       # if a lab group was passed in, use it,
       # otherwise stick with the session lab group
       if(params[:lab_group_id] != nil)
