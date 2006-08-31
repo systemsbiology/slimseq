@@ -100,8 +100,9 @@ class ChargesControllerTest < Test::Unit::TestCase
     assert_equal "charge1", Charge.find(1).description
   end
 
-  def test_move
-    post :move, :charge_set_id => 2, :selected_charges => {'2' => '1'}
+  def test_bulk_move
+    post :bulk_move_or_destroy, :charge_set_id => 2, :selected_charges => {'2' => '1'},
+         :commit => "Move Charges To This Charge Set"
     
     assert_response :success
     assert_template 'list_within_charge_set'
@@ -110,6 +111,22 @@ class ChargesControllerTest < Test::Unit::TestCase
     assert_equal 1, Charge.find(1).charge_set_id
     # assert selected charge does move
     assert_equal 2, Charge.find(2).charge_set_id
+  end
+
+  def test_bulk_destroy
+        post :bulk_move_or_destroy, :charge_set_id => 2, :selected_charges => {'1' => '1', '2' => '1'},
+         :commit => "Delete Charges"
+    
+    assert_response :success
+    assert_template 'list_within_charge_set'
+
+    # assert that destroys have taken place
+    assert_raise(ActiveRecord::RecordNotFound) {
+      Charge.find(1)
+    }
+    assert_raise(ActiveRecord::RecordNotFound) {
+      Charge.find(2)
+    }
   end
 
   def test_destroy

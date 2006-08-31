@@ -5,7 +5,7 @@ class ChipTypeTest < Test::Unit::TestCase
 
   def test_destroy_warning
     expected_warning = "Destroying this chip type will also destroy:\n" + 
-                       "3 sample(s)\n" +
+                       "4 sample(s)\n" +
                        "2 inventory check(s)\n" +
                        "2 chip transaction(s)\n" +
                        "Are you sure you want to destroy it?"

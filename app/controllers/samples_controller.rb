@@ -128,6 +128,17 @@ class SamplesController < ApplicationController
     redirect_to :action => 'list'
   end
   
+  def bulk_destroy
+    selected_samples = params[:selected_samples]
+    for sample_id in selected_samples.keys
+      if selected_samples[sample_id] == '1'
+        sample = Sample.find(sample_id)
+        sample.destroy
+      end
+    end
+    redirect_to :action => 'list'
+  end
+  
   private
   def populate_arrays_from_tables
     # grab SBEAMS configuration parameter here, rather than

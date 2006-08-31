@@ -1,39 +1,43 @@
 <h2>Samples</h2>
 
 <% if(@samples != nil && @samples.size > 0) %>
-	<p><%= link_to 'Submit New Samples', :action => 'new' %></p>
-	
-	<table class="sortable" id="samples">
-	  <tr>
-	    <th>Date</th>
-	    <th>Short Sample Name</th>
-	    <th>Sample Name</th>
-	    <th>Sample Group Name</th>
-	  <% if @using_sbeams %>
-	    <th>SBEAMS User</th>
-	    <th>SBEAMS Project</th>
-	  <% end %>
-	    <th>Status</th>
-	    <th>Edit</th>
-	    <th>Destroy</th>
-	  </tr>
-	  
-	<% for sample in @samples %>
-	  <tr>
-	    <td><%=h sample.submission_date %></td>
-	    <td><%=h sample.short_sample_name %></td>
-	    <td><%=h sample.sample_name %></td>
-	    <td><%=h sample.sample_group_name %></td>
-	  <% if @using_sbeams %>
-	    <td><%=h sample.sbeams_user %></td>
-	    <td><%=h sample.sbeams_project %></td>
-	  <% end %>
-	    <td><%=h sample.status %></td>
-	    <td><%= link_to 'Edit', :action => 'edit', :id => sample %></td>
-	    <td><%= link_to 'Destroy', { :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
-	  </tr>
-	<% end %>
-	</table>
+    <%= start_form_tag :action => 'bulk_destroy' %>
+		<p><%= link_to 'Submit New Samples', :action => 'new' %></p>
+		
+		<table class="sortable" id="samples">
+		  <tr>
+		    <th>Select</th>
+		    <th>Date</th>
+		    <th>Short Sample Name</th>
+		    <th>Sample Name</th>
+		    <th>Sample Group Name</th>
+		  <% if @using_sbeams %>
+		    <th>SBEAMS User</th>
+		    <th>SBEAMS Project</th>
+		  <% end %>
+		    <th>Status</th>
+		    <th>Edit</th>
+		    <th>Destroy</th>
+		  </tr>
+		  
+		<% for sample in @samples %>
+		  <tr>
+		    <td><%= check_box 'selected_samples', sample.id %></td>
+		    <td><%=h sample.submission_date %></td>
+		    <td><%=h sample.short_sample_name %></td>
+		    <td><%=h sample.sample_name %></td>
+		    <td><%=h sample.sample_group_name %></td>
+		  <% if @using_sbeams %>
+		    <td><%=h sample.sbeams_user %></td>
+		    <td><%=h sample.sbeams_project %></td>
+		  <% end %>
+		    <td><%=h sample.status %></td>
+		    <td><%= link_to 'Edit', :action => 'edit', :id => sample %></td>
+		    <td><%= link_to 'Destroy', { :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
+		  </tr>
+		<% end %>
+		</table>
+	<p><%= submit_tag 'Delete Samples' %></p>
 <% else %>
     <% if current_user.staff? || current_user.admin? %>
         <p>There are currently no samples.</p>

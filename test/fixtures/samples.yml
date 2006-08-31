@@ -35,3 +35,15 @@ sample3:
   sbeams_user: bob
   sbeams_project: Bob stuff
   status: submitted
+sample4:
+  id: 4
+  submission_date: 2006-02-10
+  short_sample_name: vvold
+  sample_name: Very Very Old
+  sample_group_name: Old
+  lab_group_id: 1
+  chip_type_id: 2
+  organism_id: 1
+  sbeams_user: bob
+  sbeams_project: Bob stuff
+  status: hybridized

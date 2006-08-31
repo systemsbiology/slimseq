@@ -95,13 +95,25 @@ class ChargesController < ApplicationController
     end
   end
 
-  def move
-    charge_set_id = params[:charge_set_id]
-    selected_charges = params[:selected_charges]
-    for charge_id in selected_charges.keys
-      if selected_charges[charge_id] == '1'
-        charge = Charge.find(charge_id)
-        charge.update_attributes( { :charge_set_id => charge_set_id } )
+  def bulk_move_or_destroy
+    # move or destroy?
+    if(params[:commit] == "Move Charges To This Charge Set")
+      charge_set_id = params[:charge_set_id]
+      selected_charges = params[:selected_charges]
+      for charge_id in selected_charges.keys
+        if selected_charges[charge_id] == '1'
+          charge = Charge.find(charge_id)
+          charge.update_attributes( { :charge_set_id => charge_set_id } )
+        end
+      end
+    elsif(params[:commit] == "Delete Charges")
+      charge_set_id = params[:charge_set_id]
+      selected_charges = params[:selected_charges]
+      for charge_id in selected_charges.keys
+        if selected_charges[charge_id] == '1'
+          charge = Charge.find(charge_id)
+          charge.destroy
+        end
       end
     end
     

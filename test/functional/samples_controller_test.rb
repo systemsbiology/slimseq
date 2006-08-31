@@ -294,4 +294,20 @@ class SamplesControllerTest < Test::Unit::TestCase
       Sample.find(1)
     }
   end
+
+  def test_bulk_destroy
+    post :bulk_destroy, :selected_samples => {'1' => '1', '2' => '1'},
+         :commit => "Delete Samples"
+    
+    assert_response :redirect
+    assert_redirected_to :action => 'list'
+
+    # assert that destroys have taken place
+    assert_raise(ActiveRecord::RecordNotFound) {
+      Sample.find(1)
+    }
+    assert_raise(ActiveRecord::RecordNotFound) {
+      Sample.find(2)
+    }
+  end
 end

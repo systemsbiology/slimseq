@@ -308,4 +308,27 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     # sample should have been reset to 'submitted'
     assert_equal 'submitted', Sample.find(sample_id).status
   end
+
+  def test_bulk_destroy
+    sample1_id = Hybridization.find(1).sample_id
+    sample2_id = Hybridization.find(2).sample_id
+  
+    post :bulk_destroy, :selected_hybridizations => {'1' => '1', '2' => '1'},
+         :commit => "Delete Hybridizations"
+    
+    assert_response :redirect
+    assert_redirected_to :action => 'list'
+
+    # assert that destroys have taken place
+    assert_raise(ActiveRecord::RecordNotFound) {
+      Hybridization.find(1)
+    }
+    assert_raise(ActiveRecord::RecordNotFound) {
+      Hybridization.find(2)
+    }
+    
+    # assert Samples have been reverted to 'submitted' status
+    assert_equal 'submitted', Sample.find(sample1_id).status
+    assert_equal 'submitted', Sample.find(sample2_id).status
+  end
 end

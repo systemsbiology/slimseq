@@ -51,7 +51,7 @@ class ChipTransactionsControllerTest < Test::Unit::TestCase
     num_chip_transactions = ChipTransaction.count
 
     post :create, :chip_transaction => {  :lab_group_id => '1',
-                                          :chip_type_id => '1',
+                                          :chip_type_id => '2',
                                           :date => '2006-02-01',
                                           :description => 'Bought some chips',
                                           :acquired => '180',
@@ -65,6 +65,7 @@ class ChipTransactionsControllerTest < Test::Unit::TestCase
 
     assert_response :redirect
     assert_redirected_to :action => 'list_subset'
+    assert_no_flash_warning
 
     assert_equal num_chip_transactions + 1, ChipTransaction.count
   end

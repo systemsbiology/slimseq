@@ -187,7 +187,20 @@ class HybridizationsController < ApplicationController
     sample.update_attribute('status', 'submitted')
     redirect_to :action => 'list'
   end
-  
+
+  def bulk_destroy
+    selected_hybridizations = params[:selected_hybridizations]
+    for hybridization_id in selected_hybridizations.keys
+      if selected_hybridizations[hybridization_id] == '1'
+        hybridization = Hybridization.find(hybridization_id)
+        sample = Sample.find(hybridization.sample_id)
+        hybridization.destroy
+        sample.update_attribute('status', 'submitted')
+      end
+    end
+    redirect_to :action => 'list'
+  end
+
   private
   def populate_arrays_from_tables
     # grab SBEAMS configuration parameter here, rather than

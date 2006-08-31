@@ -6,3 +6,10 @@ hyb1:
   charge_template_id: 1
   charge_set_id: 1
   sample_id: 2
+hyb2:
+  id: 2
+  hybridization_date: 2006-02-10
+  chip_number: 2
+  charge_template_id: 1
+  charge_set_id: 1
+  sample_id: 4
