@@ -47,7 +47,7 @@ class ChipTypesControllerTest < Test::Unit::TestCase
     num_chip_types = ChipType.count
 
     post :create, :chip_type => {:name => "Chippy", :short_name => "chpy",
-         :organism_id => "1"}
+         :organism_id => "1", :array_platform => "affy"}
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
