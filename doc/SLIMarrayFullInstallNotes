@@ -20,7 +20,8 @@ system:
 * OPTIONAL: LightTPD - http://www.lighttpd.net
 * OPTIONAL: Subversion - http://subversion.tigris.org
 
-* For difficulties installing any of these, please see the abundant documentation, forums and mailing lists for each of them on the internet.
+* For difficulties installing any of these, please see the abundant 
+documentation, forums and mailing lists for each of them on the internet.
 
 == Install Ruby Extras
 
@@ -63,8 +64,10 @@ Option 1 - If you're using an existing MySQL server and are familiar with it:
 Create the following database(s) as well as a user to access them:
 
 * slimarray_production (required): the production instance of your database
-* slimarray_development	(required): you'll need this to see if the software is working
-* slimarray_test (optional): you'll need this for unit and functional testing if you do further development of the software
+* slimarray_development	(required): you'll need this to see if the software 
+is working
+* slimarray_test (optional): you'll need this for unit and functional testing 
+if you do further development of the software
 
 Option 2 - If you've just installed MySQL and haven't set up users and 
 databases in MySQL before:
@@ -72,7 +75,8 @@ databases in MySQL before:
 1. Go to the command line (see OS-Specific Notes at the end of this file)
 2. Make sure mysql daemon / service is running (see OS-Specific Notes at 
    the end of this file)
-2. Start the MySQL command-line client (see OS-Specific Notes at the end of this file).
+2. Start the MySQL command-line client (see OS-Specific Notes at the end of
+this file).
 3. You should now have a 'mysql>' command line. Enter the following command 
    to create the databases, as well as a user that can access them, and 
    tighten security (substitute in your password of choice where it 
@@ -108,7 +112,7 @@ Unzip the file wherever you want the software to reside.
 1. Go to the command line (see OS-Specific Notes at the end of this file)
 2. Change directories to where you want the software to reside (see 
    OS-Specific Notes at the end of this file)
-3. Enter 'svn co http://slimarray.systemsbiology.net/svn/trunk'
+3. Enter 'svn co http://slimarray.systemsbiology.net/svn/trunk slimarray'
 
 == Configuring SLIMarray
 
@@ -132,15 +136,11 @@ Option 1 - Default MySQL structure
    this file)
 3. Run 'rake migrate'. This sets up all the database tables for SLIMarray in 
    the development database (we'll do the production database next).
-4. Run 'rake boostrap'. This sets up some default Users and Roles (see the 
-   SLIMarray user guide to find out about these).
-5. Run 'rake sync_permissions'. This sets up some default permissions for 
-   the users and roles that were created with 'bootstrap'.
-   (see the SLIMarray user guide to find out about these).
+4. Run 'rake boostrap'. This sets up some default Users, Roles and 
+   Permissions (see the SLIMarray Administrator Guide to find out about these).
 6. Do the same thing for the production database with these commands:
 	rake RAILS_ENV=production migrate
 	rake RAILS_ENV=production bootstrap
-	rake sync_permissions
 
 == Test SLIMarray using WEBrick
 LightTPD is supposed to come with FastCGI by default in 
@@ -226,15 +226,20 @@ application.
 
 === Getting to a command line:
 * Windows - Click Start -> Run, then enter 'cmd' in the window that comes up
-* Linux - Find out where you launch the 'terminal' application for your distribution (you are probably already be very familiar with this if you installed the prerequisites of ruby, mysql and apache)
+* Linux - Find out where you launch the 'terminal' application for your 
+distribution (you are probably already be very familiar with this if you installed the prerequisites of ruby, mysql and apache)
 
 === Changing directory:
 * Windows - Enter 'cd <DRIVE>:\path\you\want', for instance 'cd C:\rails\slimarray'
 * Linux - Enter 'cd /path/you/want', for instance 'cd ~/slimarray'
 
 === Making sure MySQL service / daemon is running:
-* Windows - Right-click on 'My Computer' and choose 'Manage' (this requires administrator privileges). Under 'Services and Applications', click on 'Services'. Make sure the 'MySQL' service shows a status of 'Started' and startup type of 'Automatic'.
-* Linux - As root, run 'service mysqld start' or the equivalent command to start MySQL Server for your Linux distribution
+* Windows - Right-click on 'My Computer' and choose 'Manage' 
+(this requires administrator privileges). Under 'Services and Applications', 
+click on 'Services'. Make sure the 'MySQL' service shows a status of 'Started' 
+and startup type of 'Automatic'.
+* Linux - As root, run 'service mysqld start' or the equivalent command to 
+start MySQL Server for your Linux distribution
 
 === Starting the MySQL client for the first time:
 * Windows - Click Start -> All Programs -> MySQL -> MySQL Server 5.0 -> MySQL Command 
