@@ -23,6 +23,7 @@ class AddLdapConfig < ActiveRecord::Migration
       add_column :site_config, :LDAP_server, :string, :limit => 200
       add_column :site_config, :LDAP_DN, :string, :limit => 200
       
+      SiteConfig.reset_column_information
       SiteConfig.update 1, :use_LDAP => false,
                         :LDAP_server => 'localhost',
                         :LDAP_DN => 'cn=users,dc=localhost'      

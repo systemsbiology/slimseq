@@ -1,0 +1,11 @@
+production:
+  adapter: sqlite
+  database: slimarray_production.sqlite
+
+development:
+  adapter: sqlite
+  database: slimarray_development.sqlite
+  
+test:
+  adapter: sqlite
+  database: slimarray_test.sqlite

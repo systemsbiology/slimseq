@@ -26,14 +26,14 @@ class Test::Unit::TestCase
   # in MySQL.  Turn off transactional fixtures in this case; however, if you
   # don't care one way or the other, switching from MyISAM to InnoDB tables
   # is recommended.
-  self.use_transactional_fixtures = true
+  self.use_transactional_fixtures = false
 
   # Instantiated fixtures are slow, but give you @david where otherwise you
   # would need people(:david).  If you don't want to migrate your existing
   # test cases which use the @david style and don't mind the speed hit (each
   # instantiated fixtures translates to a database query per test method),
   # then set this back to true.
-  self.use_instantiated_fixtures  = false
+  self.use_instantiated_fixtures  = true
 
   # Add more helper methods to be used by all tests here...
   def assert_errors
@@ -88,19 +88,35 @@ class Test::Unit::TestCase
 
 end
 
+def using_Mysql?
+  if(ActiveRecord::Base.connection.adapter_name == "MySQL")
+    return true;
+  else
+    return false;
+  end
+end
+
 class Fixtures
     alias :original_delete_existing_fixtures :delete_existing_fixtures
     alias :original_insert_fixtures :insert_fixtures
 
     def delete_existing_fixtures
+      if using_Mysql?
         @connection.update "SET FOREIGN_KEY_CHECKS = 0", 'Fixtures deactivate foreign key checks.';
         original_delete_existing_fixtures
         @connection.update "SET FOREIGN_KEY_CHECKS = 1", 'Fixtures activate foreign key checks.';
+      else
+        original_delete_existing_fixtures
+      end
     end
 
     def insert_fixtures
+      if using_Mysql?
         @connection.update "SET FOREIGN_KEY_CHECKS = 0", 'Fixtures deactivate foreign key checks.';
         original_insert_fixtures
         @connection.update "SET FOREIGN_KEY_CHECKS = 1", 'Fixtures activate foreign key checks.';
+      else
+        original_insert_fixtures
+      end
     end
 end
