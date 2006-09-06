@@ -53,6 +53,10 @@ class Test::Unit::TestCase
     assert_tag flash_warning_field
   end
   
+  def assert_no_flash_warning
+    assert_no_tag flash_warning_field
+  end
+  
   def flash_warning_field
     {:tag => "p", :attributes => { :style => "color: red" }}
   end
