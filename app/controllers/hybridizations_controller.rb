@@ -120,7 +120,7 @@ class HybridizationsController < ApplicationController
           # output files for automated sample/experiment loading into GCOS
           create_gcos_import_files(@hybridizations)
           flash[:notice] += ", GCOS files"
-        rescue Errno::EACCES, Errno::ENOENT
+        rescue Errno::EACCES, Errno::ENOENT, Errno::EIO
           flash[:warning] = "Couldn't write GCOS file(s) to " + SiteConfig.gcos_output_path + ". " + 
                             "Change permissions on that folder, or choose a new output " +
                             "directory in the Site Config."
