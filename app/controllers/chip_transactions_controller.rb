@@ -54,7 +54,10 @@ class ChipTransactionsController < ApplicationController
       @lab_groups = LabGroup.find_all
       @chip_types = ChipType.find_all
       if @chip_transaction.save
-        flash[:notice] = 'ChipTransaction was successfully created.'
+        # grab lab group and chip type for display of subset
+        session[:lab_group_id] = @chip_transaction.lab_group_id
+        session[:chip_type_id] = @chip_transaction.chip_type_id
+        flash[:notice] = 'Chip transaction was successfully created.'
         redirect_to :action => 'list_subset'
       else
         render :action => 'new'
