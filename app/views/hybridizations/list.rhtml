@@ -25,12 +25,12 @@
 		    <td><%= check_box 'selected_hybridizations', hybridization.id %></td>
 		    <td><%=h hybridization.hybridization_date %></td>
 		    <td><%=h hybridization.chip_number %></td>
-		    <td><%=h hybridization.short_sample_name %></td>
-		    <td><%=h hybridization.sample_name %></td>
-		    <td><%=h hybridization.sample_group_name %></td>
+		    <td><%=h hybridization.sample.short_sample_name %></td>
+		    <td><%=h hybridization.sample.sample_name %></td>
+		    <td><%=h hybridization.sample.sample_group_name %></td>
 		  <% if @using_sbeams %>
-		    <td><%=h hybridization.sbeams_user %></td>
-		    <td><%=h hybridization.sbeams_project %></td>
+		    <td><%=h hybridization.sample.sbeams_user %></td>
+		    <td><%=h hybridization.sample.sbeams_project %></td>
 		  <% end %>
 		    <td><%= link_to 'Edit', :action => 'edit', :id => hybridization %></td>
 		    <td><%= link_to 'Destroy', { :action => 'destroy', :id => hybridization }, :confirm => 'Are you sure?' %></td>
