@@ -17,6 +17,7 @@ body {
 #wrap {
 	float: left;
     margin:0 auto;
+    width:1000px;
 }
 
 #menu {
@@ -49,6 +50,7 @@ body {
     border-left: 1px solid;
     padding-top: 2ex;
 	padding-left: 3ex;
+	width:800px;
 }
 
 .fieldset {
