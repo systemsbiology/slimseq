@@ -1,0 +1,51 @@
+<h1>Listing Users</h1>
+
+<table id="user_list" class="object_list">
+  <tr>
+<% for column_name in ["Login", "Email", "First Name", "Last Name", "Verified",
+   "Roles", "Lab Groups", "Created At", "Updated At", "Logged In At",
+   "Deleted", "Deleted After", "Actions"] %>
+    <th><%= column_name %></th>
+<% end %>
+  </tr>
+
+<% for user in @all_users %>
+  <tr>
+    <td><%=h user.login %></td>
+    <td><%=h user.email %></td>
+    <td><%=h user.firstname %></td>
+    <td><%=h user.lastname %></td>
+    <td><%=h user.verified %></td>
+    <td>
+        <% for role in user.roles %>
+             <%= role.name %><br>
+        <% end %>
+    </td>
+    <td>
+        <% for lab_group in user.lab_groups %>
+             <%= lab_group.name %><br>
+        <% end %>
+    </td>
+    <td><%=h user.created_at %></td>
+    <td><%=h user.updated_at %></td>
+    <td><%=h user.logged_in_at %></td>
+    <td><%=h user.deleted %></td>
+    <td><%=h user.delete_after %></td>
+    <td>
+      <ul class="actions">
+        <%= link_if_authorized 'Show', {:action => 'show', :id => user}, :wrap_in => "li" %>
+        <%= link_if_authorized 'Edit', {:action => 'edit_user', :id => user}, :wrap_in => "li" %>
+        <% if authorized?(:action => 'delete_user') && (user.login != UserEngine.config(:admin_login)) %><%= button_to 'Destroy', :action => 'delete_user', :id => user %><% end %>
+      </ul>
+    </td>  
+  </tr>
+<% end %>
+</table>
+
+<div class="pagination_links">
+  <%= pagination_links @user_pages %>
+</div>
+
+<div id="user_actions" class="actions">
+  <%= link_if_authorized 'New User', :controller => "user", :action => 'new' %>
+</div>
