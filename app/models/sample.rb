@@ -30,7 +30,9 @@ class Sample < ActiveRecord::Base
        sample_name[/\&/] != nil ||
        sample_name[/\#/] != nil ||
        sample_name[/\(/] != nil ||
-       sample_name[/\)/] != nil
+       sample_name[/\)/] != nil ||
+       sample_name[/\//] != nil ||
+       sample_name[/\\/] != nil
       errors.add("Sample name must contain only letters, numbers, underscores and dashes or it")
     end
   end
