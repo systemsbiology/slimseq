@@ -41,12 +41,15 @@ namespace :build do
     FileUtils.rm_rf "#{LITE_PKG_FOLDER}"  
     FileUtils.rm_f "#{PKG_NAME}_lite_#{PKG_VERSION}.tar.gz"
     
-    # put existing database config away, and put the lite build version in place
-    FileUtils.move "config/database.yml", "config/database.backup"
+    # if it exists, put existing database config away, and put the lite build 
+    # version in place
+    if( FileTest.exist?("config/database.yml") )
+      FileUtils.move "config/database.yml", "config/database.backup"
+    end
     FileUtils.copy "config/database.lite", "config/database.yml"
 
     # make a folder for the package files to live in
-    if( !File.stat("#{RAILS_ROOT}/pkg").directory? )
+    if( !FileTest.exist?("#{RAILS_ROOT}/pkg") )
       Dir.mkdir "#{RAILS_ROOT}/pkg"
     end
     Dir.mkdir "#{LITE_PKG_FOLDER}"
@@ -68,7 +71,11 @@ namespace :build do
                    "#{LITE_PKG_FOLDER}/#{LITE_PKG_NAME}#{EXECUTABLE_EXTENSION}"
     FileUtils.rm "#{LITE_PKG_FOLDER}/#{LITE_PKG_NAME}.rb"
     FileUtils.rm "config/database.yml"
-    FileUtils.move "config/database.backup", "config/database.yml"
+
+    # restore backed-up database config, if there was one
+    if( FileTest.exist?("config/database.backup") )
+      FileUtils.move "config/database.backup", "config/database.yml"
+    end
 
     if windows?
       puts "Now just create a zip file from #{LITE_PKG_FOLDER}"
