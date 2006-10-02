@@ -8,7 +8,8 @@ class HybridizationsController < ApplicationController
   def list
     populate_arrays_from_tables
   
-    @hybridizations = Hybridization.find(:all, :order => "hybridization_date DESC, chip_number ASC", :include => 'sample')
+    @hybridizations = Hybridization.find(:all, :order => "hybridization_date DESC, chip_number ASC", 
+                                         :include => 'sample')
   end
 
   def new
@@ -48,6 +49,26 @@ class HybridizationsController < ApplicationController
     # only add more hyb slots if that's what was asked
     if(@submit_hybridizations.valid?) 
       for sample in @samples
+        project = sample.project
+        # does user want charge set(s) created based on projects?
+        if(@submit_hybridizations.charge_set_id == -1)
+          @charge_set = ChargeSet.find(:first, :conditions => ["name = ? AND lab_group_id = ? AND budget = ?",
+                                       project.name, project.lab_group_id, project.budget])
+          # see if new charge set need to be created
+          if(@charge_set == nil)
+            # get latest charge period
+            charge_period = ChargePeriod.find(:first, :order => "id DESC")
+            
+            @charge_set = ChargeSet.new(:charge_period_id => charge_period.id,
+                                        :name => project.name,
+                                        :lab_group_id => project.lab_group_id,
+                                        :budget => project.budget
+                                        )
+            @charge_set.save
+          end
+          
+          @submit_hybridizations.charge_set_id = @charge_set.id
+        end
         current_hyb_number += 1
         @hybridizations << Hybridization.new(:hybridization_date => @submit_hybridizations.hybridization_date,      
               :chip_number => current_hyb_number,
@@ -230,11 +251,11 @@ class HybridizationsController < ApplicationController
     
     for hybridization in hybridizations
       sample = hybridization.sample
-      hybridization_date_group_chip_key = hybridization.hybridization_date.to_s+"_"+sample.lab_group_id.to_s+"_"+sample.chip_type_id.to_s
+      hybridization_date_group_chip_key = hybridization.hybridization_date.to_s+"_"+sample.project.lab_group_id.to_s+"_"+sample.chip_type_id.to_s
       # if this hybridization_date/lab group/chip type combo hasn't been seen, create a new object to track
       # number of chips of this combo
       if hybs_per_group_chip[hybridization_date_group_chip_key] == 0
-        hybs_per_group_chip[hybridization_date_group_chip_key] = ChipTransaction.new(:lab_group_id => sample.lab_group_id,
+        hybs_per_group_chip[hybridization_date_group_chip_key] = ChipTransaction.new(:lab_group_id => sample.project.lab_group_id,
                               :chip_type_id => sample.chip_type_id,
                               :date => hybridization.hybridization_date,
                               :description => 'Hybridized on ' + hybridization.hybridization_date.to_s,
@@ -263,7 +284,7 @@ class HybridizationsController < ApplicationController
         gcos_file << "[SAMPLE]\n"
         gcos_file << "SampleName=" + sample.sample_group_name + "\n"
         gcos_file << "SampleType=" + Organism.find(sample.chip_type.organism_id).name + "\n"
-        gcos_file << "SampleProject=" + sample.sbeams_project + "\n"
+        gcos_file << "SampleProject=" + sample.project.name + "\n"
         gcos_file << "SampleUser=affybot\n"
         gcos_file << "SampleUpdate=1\n"
         gcos_file << "SampleTemplate=AffyCore\n"

@@ -9,14 +9,14 @@ class SamplesController < ApplicationController
     populate_arrays_from_tables
 
     if(@lab_groups != nil && @lab_groups.size > 0)
-      # make an array of the accessible lab group ids, and use this
+      # make an array of the accessible project ids, and use this
       # to find the current user's accessible samples in a nice sorted list
-      lab_group_ids = Array.new
-      for lab_group in @lab_groups
-        lab_group_ids << lab_group.id
+      project_ids = Array.new
+      for project in @projects
+        project_ids << project.id
       end
-      @samples = Sample.find(:all, :conditions => [ "lab_group_id IN (?)", lab_group_ids ],
-                                :order => "submission_date DESC, sample_name ASC")
+      @samples = Sample.find(:all, :conditions => [ "project_id IN (?)", project_ids ],
+                                :order => "submission_date DESC, sample_name ASC", :include => 'project')
     end
   end
 
@@ -37,19 +37,27 @@ class SamplesController < ApplicationController
     previous_samples = session[:sample_number]
 
     @add_samples = AddSamples.new(params[:add_samples])
+    # should a new project be created?
+    if(@add_samples.project_id == -1)
+      @project = Project.new(params[:project])
+      if(@project.save)
+        @add_samples.project_id = @project.id
+      end
+    end
 
     # only add more sample slots if that's what was asked
-    if(@add_samples.valid?) 
+    if(@add_samples.project_id != -1 && @add_samples.valid?) 
       for sample_number in previous_samples+1..previous_samples+@add_samples.number
         @samples << Sample.new(:submission_date => @add_samples.submission_date,      
-              :lab_group_id => @add_samples.lab_group_id,
               :chip_type_id => @add_samples.chip_type_id,
               :sbeams_user => @add_samples.sbeams_user,                                              
-              :sbeams_project => @add_samples.sbeams_project,
+              :project_id => @add_samples.project_id,
               :organism_id => ChipType.find( @add_samples.chip_type_id).organism_id,
               :status => 'submitted')
       end
       session[:sample_number] = previous_samples + @add_samples.number 
+    else
+      render :action => 'add'
     end
   end
   
@@ -145,12 +153,16 @@ class SamplesController < ApplicationController
     # grabbing it in the list view for every element displayed
     @using_sbeams = SiteConfig.find(1).using_sbeams?
     
-    # Administrators and staff can see all lab groups, otherwise users
-    # are restricted to seeing only lab groups they belong to
+    # Administrators and staff can see all projects, otherwise users
+    # are restricted to seeing only projects for lab groups they belong to
     if(current_user.staff? || current_user.admin?)
       @lab_groups = LabGroup.find(:all, :order => "name ASC")
+      @projects = Project.find(:all, :order => "name ASC")
     else
       @lab_groups = current_user.lab_groups
+      @lab_groups.each do |g|
+        @projects << g.projects
+      end
     end
     @chip_types = ChipType.find(:all, :order => "name ASC")
     @organisms = Organism.find(:all, :order => "name ASC")

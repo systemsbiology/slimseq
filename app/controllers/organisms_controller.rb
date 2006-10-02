@@ -8,10 +8,6 @@ class OrganismsController < ApplicationController
     @organisms = Organism.find(:all, :order => "name ASC")
   end
 
-  def show
-    @organism = Organism.find(params[:id])
-  end
-
   def new
     @organism = Organism.new
   end
@@ -36,7 +32,7 @@ class OrganismsController < ApplicationController
     begin
       if @organism.update_attributes(params[:organism])
         flash[:notice] = 'Organism was successfully updated.'
-        redirect_to :action => 'show', :id => @organism
+        redirect_to :action => 'list', :id => @organism
       else
         render :action => 'edit'
       end

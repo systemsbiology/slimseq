@@ -36,7 +36,8 @@ class UserController < ApplicationController
     @lab_groups = LabGroup.find(:all, :order => "name ASC")
     @chip_types = ChipType.find(:all, :order => "name ASC")
     @samples = Sample.find(:all, :conditions => [ "status = ?", 'submitted' ],
-                              :order => "submission_date DESC, sample_name ASC")
+                              :order => "submission_date DESC, sample_name ASC",
+                              :include => 'project')
   end
 
   # Edit the details of any user. The Role which can perform this will almost certainly also

@@ -1,4 +1,5 @@
 <%= error_messages_for 'chip_type' %>
+<%= error_messages_for 'organism' %>
 
 <!--[form:chip_type]-->
 <p><label for="chip_type_name">Name</label><br/>
@@ -13,6 +14,7 @@
 
 <p><label for="chip_type_organism_id">Organism</label><br/>
 <select id="organism_id" name="chip_type[organism_id]">
+    <option value="-1">(Add New Organism)</option>
     <%= options_from_collection_for_select @organisms, "id", "name", selected_value=@chip_type.organism_id %></select>
     If not listed, name the organism:
     <input id="organism" 

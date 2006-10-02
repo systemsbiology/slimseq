@@ -57,6 +57,10 @@
                 <% end %>
 	            <%= link_if_authorized 'Lab Groups', {:controller => 'lab_groups', :action => 'list'}, 
 	                :wrap_in => 'li'%>
+                <%= link_if_authorized 'Projects', {:controller => 'projects', :action => 'list'}, 
+	                :wrap_in => 'li'%>
+	            <%= link_if_authorized 'Organisms', {:controller => 'organisms', :action => 'list'}, 
+	                :wrap_in => 'li'%>
 	            <%= link_if_authorized 'Users', {:controller => 'user', :action => 'list'}, 
 	                :wrap_in => 'li'%>
 	            <%= link_if_authorized 'Site Config', {:controller => 'site_config', :action => 'edit'}, 

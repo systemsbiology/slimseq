@@ -20,4 +20,10 @@ class ChipType < ActiveRecord::Base
            chip_transactions.size.to_s + " chip transaction(s)\n" +
            "Are you sure you want to destroy it?"
   end
+  
+  def validate_on_create
+    if organism_id <= 0
+      errors.add("Organism")
+    end
+  end
 end

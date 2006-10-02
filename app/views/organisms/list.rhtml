@@ -2,17 +2,14 @@
 
 <table class="sortable" id="organisms">
   <tr>
-  <% for column in Organism.content_columns %>
-    <th><%= column.human_name %></th>
+  <% for column in ["Name", "Edit", "Destroy"] %>
+    <th><%= column %></th>
   <% end %>
   </tr>
   
 <% for organism in @organisms %>
   <tr>
-  <% for column in Organism.content_columns %>
-    <td><%=h organism.send(column.name) %></td>
-  <% end %>
-    <td><%= link_to 'Show', :action => 'show', :id => organism %></td>
+    <td><%=h organism.name %></td>
     <td><%= link_to 'Edit', :action => 'edit', :id => organism %></td>
     <td><%= link_to 'Destroy', { :action => 'destroy', :id => organism }, :confirm => 'Are you sure?' %></td>
   </tr>

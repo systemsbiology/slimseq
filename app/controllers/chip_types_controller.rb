@@ -19,13 +19,15 @@ class ChipTypesController < ApplicationController
     @chip_type = ChipType.new(params[:chip_type])
     
     # if a new organism was specified, use that name
-    if(params[:organism] != nil && params[:organism].size > 0)
-      org = Organism.new(:name => params[:organism])
-      org.save
-      @chip_type.update_attribute('organism_id', org.id)
+    if(@chip_type.organism_id == -1)
+      @organism = Organism.new(:name => params[:organism])
+      if @organism.save
+        @chip_type.update_attribute('organism_id', @organism.id)
+      end
     end
     
-    if @chip_type.save
+    # try to save the new chip type
+    if(@chip_type.save)
       flash[:notice] = 'ChipType was successfully created.'
       redirect_to :action => 'list'
     else
@@ -47,9 +49,9 @@ class ChipTypesController < ApplicationController
       if @chip_type.update_attributes(params[:chip_type])
         # if a new organism was specified, use that name
         if(params[:organism] != nil && params[:organism].size > 0)
-          org = Organism.new(:name => params[:organism])
-          org.save
-          @chip_type.update_attribute('organism_id', org.id)
+          @organism = Organism.new(:name => params[:organism])
+          @organism.save
+          @chip_type.update_attribute('organism_id', @organism.id)
         end
       
         flash[:notice] = 'ChipType was successfully updated.'

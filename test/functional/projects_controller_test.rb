@@ -1,20 +1,18 @@
 require File.dirname(__FILE__) + '/../test_helper'
-require 'lab_groups_controller'
+require 'projects_controller'
 
 # Re-raise errors caught by the controller.
-class LabGroupsController; def rescue_action(e) raise e end; end
+class ProjectsController; def rescue_action(e) raise e end; end
 
-class LabGroupsControllerTest < Test::Unit::TestCase
-  fixtures :lab_groups, :hybridizations, :chip_transactions,
-    :users, :roles, :permissions, :users_roles, :permissions_roles
+class ProjectsControllerTest < Test::Unit::TestCase
+  fixtures :projects, :lab_groups
 
   def setup
-    @controller = LabGroupsController.new
+    @controller = ProjectsController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
     
-    # lab group management is only accessible to admins
-    # so use that login for all tests
+    # use admin login for all tests for the moment
     login_as_admin
   end
 
@@ -30,7 +28,7 @@ class LabGroupsControllerTest < Test::Unit::TestCase
     assert_response :success
     assert_template 'list'
 
-    assert_not_nil assigns(:lab_groups)
+    assert_not_nil assigns(:projects)
   end
 
   def test_new
@@ -39,18 +37,20 @@ class LabGroupsControllerTest < Test::Unit::TestCase
     assert_response :success
     assert_template 'new'
 
-    assert_not_nil assigns(:lab_group)
+    assert_not_nil assigns(:project)
   end
 
   def test_create
-    num_lab_groups = LabGroup.count
+    num_projects = Project.count
 
-    post :create, :lab_group => {:name => "The Best Group"}
+    post :create, :project => {:name => "The Best Project",
+                               :budget => "12345678",
+                               :lab_group_id => 1}
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
-    assert_equal num_lab_groups + 1, LabGroup.count
+    assert_equal num_projects + 1, Project.count
   end
 
   def test_edit
@@ -59,8 +59,8 @@ class LabGroupsControllerTest < Test::Unit::TestCase
     assert_response :success
     assert_template 'edit'
 
-    assert_not_nil assigns(:lab_group)
-    assert assigns(:lab_group).valid?
+    assert_not_nil assigns(:project)
+    assert assigns(:project).valid?
   end
 
   def test_update
@@ -70,45 +70,46 @@ class LabGroupsControllerTest < Test::Unit::TestCase
   end
 
   def test_update_locked
-    # grab the lab_group we're going to use twice
-    lab_group1 = LabGroup.find(1)
-    lab_group2 = LabGroup.find(1)
+    # grab the project we're going to use twice
+    project1 = Project.find(1)
+    project2 = Project.find(1)
     
     # update it once, which should sucess
-    post :update, :id => 1, :lab_group => { :name => "lab1", 
-                                            :lock_version => lab_group1.lock_version }
+    post :update, :id => 1, :project => { :name => "project1", 
+                                            :lock_version => project1.lock_version }
 
     # and then update again with stale info, and it should fail
-    post :update, :id => 1, :lab_group => { :name => "lab2", 
-                                            :lock_version => lab_group2.lock_version }                                               
+    post :update, :id => 1, :project => { :name => "project2", 
+                                            :lock_version => project2.lock_version }                                               
 
     assert_response :success                                                
     assert_template 'edit'
     assert_flash_warning
     
-    assert_equal "lab1", LabGroup.find(1).name
+    assert_equal "project1", Project.find(1).name
   end
 
   def test_destroy_no_associated_transactions
-    assert_not_nil LabGroup.find(2)
+    assert_not_nil Project.find(2)
+
     post :destroy, :id => 2
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      LabGroup.find(2)
+      Project.find(2)
     }
   end
   
   def test_destroy_with_associated_transactions
-    assert_not_nil LabGroup.find(1)
+    assert_not_nil Project.find(1)
 
     post :destroy, :id => 1
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      LabGroup.find(1)
+      Project.find(1)
     }
   end
 end

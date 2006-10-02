@@ -9,9 +9,9 @@
     <th>Short Sample Name</th>
     <th>Sample Name</th>
     <th>Sample Group Name</th>
+    <th>Project</th>
   <% if SiteConfig.using_sbeams? %>
     <th>SBEAMS User</th>
-    <th>SBEAMS Project</th>
   <% end %>
     <th>Edit</th>
     <th>Destroy</th>
@@ -24,9 +24,9 @@
     <td><%=h sample.short_sample_name %></td>
     <td><%=h sample.sample_name %></td>
     <td><%=h sample.sample_group_name %></td>
+    <td><%=h sample.project.name %></td>
   <% if SiteConfig.using_sbeams? %>
     <td><%=h sample.sbeams_user %></td>
-    <td><%=h sample.sbeams_project %></td>
   <% end %>
     <td><%= link_to 'Edit', :action => 'edit', :id => sample %></td>
     <td><%= link_to 'Destroy', { :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
@@ -44,6 +44,7 @@ onClick="uncheckAll(document.add_samples)">
 
 <p><label for="submit_hybridizations_charge_set_id">Charge Set</label><br/>
     <select id="submit_hybridizations_charge_set_id" name="submit_hybridizations[charge_set_id]">
+    <option value="-1">(Charge Set Based on Sample Project)</option>
     <%= options_from_collection_for_select @charge_sets, "id", "name" %></select>
     <% authorized?(:controller => 'charge_sets', :action => 'new'){ %>
         (<%= link_to 'Add Charge Set', :controller=> 'charge_sets', :action => 'new' %>) <% } %></p>

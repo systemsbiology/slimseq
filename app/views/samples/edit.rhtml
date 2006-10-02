@@ -14,9 +14,9 @@
 	<p><label for="sample_sample_group_name">Sample Group Name</label><br/>
 	<%= text_field 'sample', 'sample_group_name', :size => 50  %></p>
 		
-	<p><label for="sample_lab_group_id">Lab Group</label><br>
-	<select id="lab_group_id" name="sample[lab_group_id]">
-    <%= options_from_collection_for_select @lab_groups, "id", "name", selected_value=@sample.lab_group_id %></select></p>
+	<p><label for="sample_project_id">Lab Group</label><br>
+	<select id="project_id" name="sample[project_id]">
+    <%= options_from_collection_for_select @projects, "id", "name", selected_value=@sample.project_id %></select></p>
     
     <p><label for="sample_chip_type_id">Chip Type</label><br>
     <select id="chip_type_id" name="sample[chip_type_id]">

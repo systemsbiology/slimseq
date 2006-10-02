@@ -13,8 +13,8 @@
 		    <th>Sample Group Name</th>
 		  <% if @using_sbeams %>
 		    <th>SBEAMS User</th>
-		    <th>SBEAMS Project</th>
 		  <% end %>
+		    <th>Project</th>
 		    <th>Status</th>
 		    <th>Edit</th>
 		    <th>Destroy</th>
@@ -29,8 +29,8 @@
 		    <td><%=h sample.sample_group_name %></td>
 		  <% if @using_sbeams %>
 		    <td><%=h sample.sbeams_user %></td>
-		    <td><%=h sample.sbeams_project %></td>
 		  <% end %>
+		    <td><%=h sample.project.name %></td>
 		    <td><%=h sample.status %></td>
 		    <td><%= link_to 'Edit', :action => 'edit', :id => sample %></td>
 		    <td><%= link_to 'Destroy', { :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>

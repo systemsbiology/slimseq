@@ -5,7 +5,7 @@ require 'samples_controller'
 class SamplesController; def rescue_action(e) raise e end; end
 
 class SamplesControllerTest < Test::Unit::TestCase
-  fixtures :samples, 
+  fixtures :samples, :projects,
            :lab_groups, :chip_types, :organisms
 
   def setup
@@ -39,7 +39,6 @@ class SamplesControllerTest < Test::Unit::TestCase
     assert_template 'new'
     
     assert_text_field_visible "add_samples_sbeams_user"
-    assert_text_field_visible "add_samples_sbeams_project"
   end
 
   def test_new_affy_platform_gcos_on_sbeams_off_in_site_config
@@ -54,7 +53,6 @@ class SamplesControllerTest < Test::Unit::TestCase
     assert_template 'new'
     
     assert_text_field_visible "add_samples_sbeams_user"
-    assert_text_field_visible "add_samples_sbeams_project"
   end
 
   def test_new_non_affy_platform_gcos_off_in_site_config
@@ -69,33 +67,30 @@ class SamplesControllerTest < Test::Unit::TestCase
     assert_template 'new'
     
     assert_text_field_hidden "add_samples_sbeams_user"
-    assert_text_field_hidden "add_samples_sbeams_project"
   end
 
-  def test_add_sbeams_on_in_site_config
-    # use test_new to populate session variables
+  def test_add_sbeams_on_in_site_config_project_from_dropdown
+    # use new to populate session variables
     get :new
   
     get :add, :add_samples => {:submission_date => "2006-02-12", :number => 2,
-                            :lab_group_id => 1, :chip_type_id => 2,
-                            :sbeams_user => "Bob", :sbeams_project => "Bob's Stuff"}
+                            :project_id => 1, :chip_type_id => 2,
+                            :sbeams_user => "Bob"}
     
     # this should have populated the session[:samples] array
     # with two Sample objects containing appropriate info
     @samples = session[:samples]
     assert_equal 2, @samples.size
     assert_equal Date.new(2006, 2, 12), @samples[0].submission_date
-    assert_equal 1, @samples[0].lab_group_id
+    assert_equal 1, @samples[0].project_id
     assert_equal 2, @samples[0].chip_type_id
     assert_equal 2, @samples[0].organism_id
     assert_equal "Bob", @samples[0].sbeams_user
-    assert_equal "Bob's Stuff", @samples[0].sbeams_project
     assert_equal Date.new(2006, 2, 12), @samples[1].submission_date
-    assert_equal 1, @samples[1].lab_group_id
+    assert_equal 1, @samples[1].project_id
     assert_equal 2, @samples[1].chip_type_id   
     assert_equal 2, @samples[1].organism_id
     assert_equal "Bob", @samples[1].sbeams_user
-    assert_equal "Bob's Stuff", @samples[1].sbeams_project
     
     assert_response :success
     assert_template 'add'
@@ -104,7 +99,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     assert_equal 2, @samples.size
   end
 
-  def test_add_gcos_off_in_site_config
+  def test_add_gcos_off_in_site_config_project_from_dropdown
     # turn off GCOS support
     config = SiteConfig.find(1)
     config.update_attributes(:create_gcos_files => 0)
@@ -113,18 +108,18 @@ class SamplesControllerTest < Test::Unit::TestCase
     get :new
   
     get :add, :add_samples => {:submission_date => "2006-02-12", :number => 2,
-                            :lab_group_id => 1, :chip_type_id => 2}
+                            :project_id => 1, :chip_type_id => 2}
     
     # this should have populated the session[:samples] array
     # with two Sample objects containing appropriate info
     @samples = session[:samples]
     assert_equal 2, @samples.size
     assert_equal Date.new(2006, 2, 12), @samples[0].submission_date
-    assert_equal 1, @samples[0].lab_group_id
+    assert_equal 1, @samples[0].project_id
     assert_equal 2, @samples[0].chip_type_id
     assert_equal 2, @samples[0].organism_id
     assert_equal Date.new(2006, 2, 12), @samples[1].submission_date
-    assert_equal 1, @samples[1].lab_group_id
+    assert_equal 1, @samples[1].project_id
     assert_equal 2, @samples[1].chip_type_id   
     assert_equal 2, @samples[1].organism_id
     
@@ -135,10 +130,10 @@ class SamplesControllerTest < Test::Unit::TestCase
     assert_equal 2, @samples.size
   end
 
-  def test_add_incomplete_form
+  def test_add_incomplete_form_project_from_dropdown
     get :new
   
-    get :add, :submission_date => '2006-02-12', :lab_group_id => 1,
+    get :add, :submission_date => '2006-02-12', :project_id => 1,
         :chip_type_id => 2
     
     # no samples should have been added
@@ -151,28 +146,65 @@ class SamplesControllerTest < Test::Unit::TestCase
     assert_template 'add'
   end
 
+  def test_add_project_from_form
+    num_projects = Project.count
+
+    # use new to populate session variables
+    get :new
+  
+    get :add, :add_samples => {:submission_date => "2006-02-12", :number => 2,
+                               :project_id => -1, :chip_type_id => 2,
+                               :sbeams_user => "Bob"},
+              :project => {:name => "Test Project",
+                           :budget => "12340001", :lab_group_id => 2}
+    
+    # this should have populated the session[:samples] array
+    # with two Sample objects containing appropriate info
+    @samples = session[:samples]
+    assert_equal 2, @samples.size
+    assert_equal Date.new(2006, 2, 12), @samples[0].submission_date
+    assert_equal 2, @samples[0].chip_type_id
+    assert_equal 2, @samples[0].organism_id
+    assert_equal "Bob", @samples[0].sbeams_user
+    assert_equal Date.new(2006, 2, 12), @samples[1].submission_date
+    assert_equal 2, @samples[1].chip_type_id   
+    assert_equal 2, @samples[1].organism_id
+    assert_equal "Bob", @samples[1].sbeams_user
+
+    # there should also be a new project with the info
+    # provided
+    assert_equal num_projects + 1, Project.count
+    # here's the way to grab the most recently created Project
+    new_project = Project.find(:first, :order => "id DESC")
+    assert_equal "Test Project", new_project.name
+    assert_equal "12340001", new_project.budget
+    assert_equal 2, new_project.lab_group_id
+
+    assert_response :success
+    assert_template 'add'
+    
+    @samples = session[:samples]
+    assert_equal 2, @samples.size
+  end
+
   def test_create_all_tracking_on
     num_samples = Sample.count
     num_transactions = ChipTransaction.count
     num_charges = Charge.count
 
     # use test_add to populate session[:samples] and session[:sample_number]
-    test_add_sbeams_on_in_site_config
+    test_add_sbeams_on_in_site_config_project_from_dropdown
 
     smpl1 = {:submission_date => '2006-02-12',
             :short_sample_name => 'HlthySmp',
             :sample_name => 'Healthy_Sample',
             :sample_group_name => 'Healthy',
-#            :lab_group_id => '2',
-#            :chip_type_id => '1',
             :organism_id => '1',
             }
     smpl2 = {:submission_date => '2006-02-12',
             :short_sample_name => 'DisSmpl',
             :sample_name => 'Disease_Sample',
             :sample_group_name => 'Disease',
-#            :lab_group_id => '2',
-#            :chip_type_id => '1',
             :organism_id => '1',
             }  
 
@@ -195,10 +227,10 @@ class SamplesControllerTest < Test::Unit::TestCase
 
     # add one sample that will have a duplicate submission_date/number  
     get :add, :add_samples => {:submission_date => '2006-02-10', :number => 1,
-                            :lab_group_id => 1, :chip_type_id => 2}
+                            :project_id => 1, :chip_type_id => 2}
     # add another sample with unique submission_date/number
     get :add, :add_samples => {:submission_date => '2006-02-12', :number => 1,
-                            :lab_group_id => 1, :chip_type_id => 2}
+                            :project_id => 1, :chip_type_id => 2}
     
     # leave out sample name
     smpl1 = {:short_sample_name => 'HlthySmpl',
@@ -225,7 +257,7 @@ class SamplesControllerTest < Test::Unit::TestCase
 
   def test_clear
     # use test_add to populate session[:samples] and session[:sample_number]
-    test_add_sbeams_on_in_site_config
+    test_add_sbeams_on_in_site_config_project_from_dropdown
     
     post :clear
     

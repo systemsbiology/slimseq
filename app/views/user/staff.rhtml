@@ -19,9 +19,9 @@ and <%= link_to 'creating some chip types', :controller => 'chip_types', :action
 	    <th>Short Sample Name</th>
 	    <th>Sample Name</th>
 	    <th>Sample Group Name</th>
+	    <th>Project</th>
 	  <% if @using_sbeams %>
 	    <th>SBEAMS User</th>
-	    <th>SBEAMS Project</th>
 	  <% end %>
 	    <th>Status</th>
 	    <th>Edit</th>
@@ -34,9 +34,9 @@ and <%= link_to 'creating some chip types', :controller => 'chip_types', :action
 	    <td><%=h sample.short_sample_name %></td>
 	    <td><%=h sample.sample_name %></td>
 	    <td><%=h sample.sample_group_name %></td>
+	    <td><%=h sample.project.name %></td>
 	  <% if @using_sbeams %>
 	    <td><%=h sample.sbeams_user %></td>
-	    <td><%=h sample.sbeams_project %></td>
 	  <% end %>
 	    <td><%=h sample.status %></td>
 	    <td><%= link_to 'Edit', :controller => 'samples', :action => 'edit', :id => sample %></td>

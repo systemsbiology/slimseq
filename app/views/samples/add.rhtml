@@ -1,4 +1,5 @@
 <%= error_messages_for 'add_samples' %>
+<%= error_messages_for 'project' %>
 <%= error_messages_for_samples %>
 
 <h2>Enter Samples</h2>
@@ -19,11 +20,10 @@
 	  <th>Full Sample Name</th>
 	  <th>Sample Group Name</th>
 	  <th>Organism</th>
-	  <th>Lab Group</th>
 	  <th>Chip Type</th>
+	  <th>Project</th>
 	  <% if SiteConfig.create_gcos_files? %>
 		  <th>SBEAMS User</th>
-		  <th>SBEAMS Project</th>
 	  <% end %>
 	  <% for n in 0..@samples.size-1 %>
 	  <tr>
@@ -40,11 +40,10 @@
 	        value="<%= sample.sample_group_name %>" /></td>
 	    <td><select id="sample-<%=n%>_organism_id" name="sample-<%=n%>[organism_id]">
 	    <%= options_from_collection_for_select @organisms, "id", "name", selected_value=sample.organism_id %></select></td>
-	    <td><%= LabGroup.find(sample.lab_group_id).name %></td>
 	    <td><%= ChipType.find(sample.chip_type_id).name %></td>
+	    <td><%= sample.project.name %></td>
 	    <% if SiteConfig.create_gcos_files? %>
 	        <td><%= sample.sbeams_user %></td>
-	        <td><%= sample.sbeams_project %></td>
 	    <% end %>
 	  </tr>
 	  <% end %>

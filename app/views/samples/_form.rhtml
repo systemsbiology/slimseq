@@ -5,12 +5,6 @@
 <p><label for="add_samples_number">Number of Samples</label><br/>
     <%= text_field 'add_samples', 'number', :size => 5  %></p>
 	
-<p>Lab Group<br>
-    <select id="add_samples_lab_group_id" name="add_samples[lab_group_id]">
-    <%= options_from_collection_for_select @lab_groups, "id", "name" %></select>
-    <% authorized?(:controller => 'lab_groups', :action => 'new'){ %>
-        (<%= link_to 'Add Lab Group', :controller=> 'lab_groups', :action => 'new' %>) <% } %></p>
-
 <p>Chip Type<br>
     <select id="add_samples_chip_type_id" name="add_samples[chip_type_id]">
     <%= options_from_collection_for_select @chip_types, "id", "name" %></select>
@@ -20,17 +14,26 @@
 <% if SiteConfig.using_affy_arrays? && SiteConfig.create_gcos_files? && SiteConfig.using_sbeams? %>
 	<p><label for="add_samples_sbeams_user">SBEAMS User (Affymetrix Only)</label><br/>
 	    <%= text_field 'add_samples', 'sbeams_user'  %></p>
-	    
-	<p><label for="add_samples_sbeams_project">SBEAMS Project (Affymetrix Only)</label><br/>
-	    <%= text_field 'add_samples', 'sbeams_project'  %></p>
 <% elsif SiteConfig.using_affy_arrays? && SiteConfig.create_gcos_files? %>
 	<p><label for="add_samples_sbeams_user">Array User Name (for GCOS)</label><br/>
 	    <%= text_field 'add_samples', 'sbeams_user'  %></p>
-	    
-	<p><label for="add_samples_sbeams_project">Sample Project (for GCOS)</label><br/>
-	    <%= text_field 'add_samples', 'sbeams_project'  %></p>
 <% else %>
    	    <%= hidden_field 'add_samples', 'sbeams_user'  %>
-	    <%= hidden_field 'add_samples', 'sbeams_project'  %>
 <% end %>
+
+<p>Choose Project<br>
+    <select id="add_samples_project_id" name="add_samples[project_id]">
+    <option value="-1">Create New Project Below</option>
+    <%= options_from_collection_for_select @projects, "id", "name_and_budget" %></select></p>
+<% if authorized?(:controller => 'projects', :action => 'new') %>
+    <p>-- OR Enter A New Project --</p>
+    <p><label for="project_name">Project Name</label><br/>
+	    <%= text_field 'project', 'name' %></p>
+   	    <p><label for="project_name">Project Budget</label><br/>
+	    <%= text_field 'project', 'budget' %></p>
+   	    <p>Project Lab Group<br>
+   	    <select id="project_lab_group_id" name="project[lab_group_id]">
+        <%= options_from_collection_for_select @lab_groups, "id", "name" %></select></p>
+<% end %>
+
 <!--[eoform:add_samples]-->

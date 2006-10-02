@@ -32,16 +32,6 @@ class OrganismsControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:organisms)
   end
 
-  def test_show
-    get :show, :id => 1
-
-    assert_response :success
-    assert_template 'show'
-
-    assert_not_nil assigns(:organism)
-    assert assigns(:organism).valid?
-  end
-
   def test_new
     get :new
 
@@ -54,7 +44,7 @@ class OrganismsControllerTest < Test::Unit::TestCase
   def test_create
     num_organisms = Organism.count
 
-    post :create, :organism => {}
+    post :create, :organism => {:name => "Woolly Mammoth"}
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
@@ -75,7 +65,7 @@ class OrganismsControllerTest < Test::Unit::TestCase
   def test_update
     post :update, :id => 1
     assert_response :redirect
-    assert_redirected_to :action => 'show', :id => 1
+    assert_redirected_to :action => 'list', :id => 1
   end
 
   def test_update_locked

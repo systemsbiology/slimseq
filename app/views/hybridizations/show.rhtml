@@ -16,8 +16,8 @@
     <td><%= hybridization.chip_number %></td>    
     <td><%= sample.short_sample_name %></td>
     <td><%= sample.sample_name %></td>
-    <td><%= LabGroup.find(sample.lab_group_id).name %></td>
-    <td><%= ChipType.find(sample.chip_type_id).name %></td>
+    <td><%= sample.project.name %></td>
+    <td><%= sample.chip_type.name %></td>
   </tr>
   <% end %>
 </table>
