@@ -159,10 +159,13 @@ class SamplesController < ApplicationController
       @lab_groups = LabGroup.find(:all, :order => "name ASC")
       @projects = Project.find(:all, :order => "name ASC")
     else
+      @projects = Array.new
       @lab_groups = current_user.lab_groups
       @lab_groups.each do |g|
         @projects << g.projects
       end
+      # put it all down to a 1D Array
+      @projects = @projects.flatten
     end
     @chip_types = ChipType.find(:all, :order => "name ASC")
     @organisms = Organism.find(:all, :order => "name ASC")

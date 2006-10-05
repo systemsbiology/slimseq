@@ -21,7 +21,13 @@ class UserController < ApplicationController
       for lab_group in @lab_groups
         lab_group_ids << lab_group.id
       end
-      @samples = Sample.find(:all, :conditions => [ "lab_group_id IN (?) AND status = ?", lab_group_ids, 'submitted' ],
+      projects = Project.find(:all, :conditions => [ "lab_group_id IN (?)", lab_group_ids],
+                                :order => "name ASC")
+      project_ids = Array.new
+      for project in projects
+        project_ids << project.id
+      end
+      @samples = Sample.find(:all, :conditions => [ "project_id IN (?) AND status = ?", project_ids, 'submitted' ],
                                 :order => "submission_date DESC, sample_name ASC")
     end
   end
