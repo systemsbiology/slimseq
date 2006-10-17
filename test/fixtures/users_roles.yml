@@ -1,11 +1,10 @@
-normal_user_1:
-  role_id: 3
-  user_id: 2
-	
-normal_user_2:
-  role_id: 3
-  user_id: 3
-	
-admin_user:
-  role_id: 2
-  user_id: 1
+--- 
+admin_admin:
+  role_id: "2"
+  user_id: "1"
+customer_customer:
+  role_id: "4"
+  user_id: "2"
+another_customer:
+  role_id: "4"
+  user_id: "3"

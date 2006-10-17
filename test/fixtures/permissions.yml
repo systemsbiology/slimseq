@@ -1,29 +1,661 @@
-login:
-  id: 1
-  controller: user
-  action: login
-
-logout:
-  id: 2
-  controller: user
-  action: logout
-
-home:
-  id: 3
-  controller: user
-  action: home
-
-edit:
-  id: 4
-  controller: user
+--- 
+permission_00003: 
   action: edit
-
-edit_user:
+  id: 3
+  description: 
+  controller: role
+permission_00117: 
+  action: add
+  id: 117
+  description: 
+  controller: samples
+permission_00060: 
+  action: index
+  id: 60
+  description: 
+  controller: charge_templates
+permission_00032: 
+  action: destroy
+  id: 32
+  description: 
+  controller: lab_groups
+permission_00004: 
+  action: destroy
+  id: 4
+  description: 
+  controller: role
+permission_00118: 
+  action: clear
+  id: 118
+  description: 
+  controller: samples
+permission_00061: 
+  action: update
+  id: 61
+  description: 
+  controller: charge_templates
+permission_00005: 
+  action: index
   id: 5
-  controller: user
-  action: edit_user
-  
-stupid_permission:
+  description: 
+  controller: role
+permission_00090: 
+  action: edit
+  id: 90
+  description: 
+  controller: hybridizations
+permission_00119: 
+  action: edit
+  id: 119
+  description: 
+  controller: samples
+permission_00062: 
+  action: new
+  id: 62
+  description: 
+  controller: charge_sets
+permission_00033: 
+  action: create
+  id: 33
+  description: 
+  controller: lab_groups
+permission_00091: 
+  action: destroy
+  id: 91
+  description: 
+  controller: hybridizations
+permission_00063: 
+  action: list
+  id: 63
+  description: 
+  controller: charge_sets
+permission_00034: 
+  action: index
+  id: 34
+  description: 
+  controller: lab_groups
+permission_00006: 
+  action: show
   id: 6
-  controller: fake
-  action: fake
+  description: 
+  controller: role
+permission_00064: 
+  action: edit
+  id: 64
+  description: 
+  controller: charge_sets
+permission_00035: 
+  action: show
+  id: 35
+  description: 
+  controller: lab_groups
+permission_00007: 
+  action: new
+  id: 7
+  description: 
+  controller: permission
+permission_00092: 
+  action: create
+  id: 92
+  description: 
+  controller: hybridizations
+permission_00065: 
+  action: destroy
+  id: 65
+  description: 
+  controller: charge_sets
+permission_00120: 
+  action: destroy
+  id: 120
+  description: 
+  controller: samples
+permission_00036: 
+  action: update
+  id: 36
+  description: 
+  controller: lab_groups
+permission_00008: 
+  action: list
+  id: 8
+  description: 
+  controller: permission
+permission_00093: 
+  action: show
+  id: 93
+  description: 
+  controller: hybridizations
+permission_00037: 
+  action: new
+  id: 37
+  description: 
+  controller: chip_types
+permission_00009: 
+  action: edit
+  id: 9
+  description: 
+  controller: permission
+permission_00094: 
+  action: index
+  id: 94
+  description: 
+  controller: hybridizations
+permission_00066: 
+  action: create
+  id: 66
+  description: 
+  controller: charge_sets
+permission_00121: 
+  action: create
+  id: 121
+  description: 
+  controller: samples
+permission_00038: 
+  action: list
+  id: 38
+  description: 
+  controller: chip_types
+permission_00095: 
+  action: update
+  id: 95
+  description: 
+  controller: hybridizations
+permission_00067: 
+  action: index
+  id: 67
+  description: 
+  controller: charge_sets
+permission_00122: 
+  action: bulk_destroy
+  id: 122
+  description: 
+  controller: samples
+permission_00039: 
+  action: edit
+  id: 39
+  description: 
+  controller: chip_types
+permission_00096: 
+  action: new
+  id: 96
+  description: 
+  controller: inventory_checks
+permission_00068: 
+  action: update
+  id: 68
+  description: 
+  controller: charge_sets
+permission_00123: 
+  action: show
+  id: 123
+  description: 
+  controller: samples
+permission_00097: 
+  action: list
+  id: 97
+  description: 
+  controller: inventory_checks
+permission_00010: 
+  action: destroy
+  id: 10
+  description: 
+  controller: permission
+permission_00124: 
+  action: index
+  id: 124
+  description: 
+  controller: samples
+permission_00098: 
+  action: edit
+  id: 98
+  description: 
+  controller: inventory_checks
+permission_00069: 
+  action: new
+  id: 69
+  description: 
+  controller: charges
+permission_00125: 
+  action: update
+  id: 125
+  description: 
+  controller: samples
+permission_00040: 
+  action: destroy
+  id: 40
+  description: 
+  controller: chip_types
+permission_00011: 
+  action: index
+  id: 11
+  description: 
+  controller: permission
+permission_00041: 
+  action: create
+  id: 41
+  description: 
+  controller: chip_types
+permission_00099: 
+  action: destroy
+  id: 99
+  description: 
+  controller: inventory_checks
+permission_00012: 
+  action: show
+  id: 12
+  description: 
+  controller: permission
+permission_00126: 
+  action: new
+  id: 126
+  description: 
+  controller: projects
+permission_00070: 
+  action: edit
+  id: 70
+  description: 
+  controller: charges
+permission_00042: 
+  action: index
+  id: 42
+  description: 
+  controller: chip_types
+permission_00013: 
+  action: new
+  id: 13
+  description: 
+  controller: user
+permission_00127: 
+  action: list
+  id: 127
+  description: 
+  controller: projects
+permission_00043: 
+  action: show
+  id: 43
+  description: 
+  controller: chip_types
+permission_00014: 
+  action: delete
+  id: 14
+  description: 
+  controller: user
+permission_00128: 
+  action: edit
+  id: 128
+  description: 
+  controller: projects
+permission_00071: 
+  action: destroy
+  id: 71
+  description: 
+  controller: charges
+permission_00015: 
+  action: list
+  id: 15
+  description: 
+  controller: user
+permission_00129: 
+  action: destroy
+  id: 129
+  description: 
+  controller: projects
+permission_00072: 
+  action: create
+  id: 72
+  description: 
+  controller: charges
+permission_00044: 
+  action: update
+  id: 44
+  description: 
+  controller: chip_types
+permission_00016: 
+  action: restore_deleted
+  id: 16
+  description: 
+  controller: user
+permission_00073: 
+  action: update
+  id: 73
+  description: 
+  controller: charges
+permission_00045: 
+  action: new
+  id: 45
+  description: 
+  controller: chip_transactions
+permission_00100: 
+  action: create
+  id: 100
+  description: 
+  controller: inventory_checks
+permission_00017: 
+  action: forgot_password
+  id: 17
+  description: 
+  controller: user
+permission_00074: 
+  action: list_within_charge_set
+  id: 74
+  description: 
+  controller: charges
+permission_00046: 
+  action: list_subset
+  id: 46
+  description: 
+  controller: chip_transactions
+permission_00101: 
+  action: index
+  id: 101
+  description: 
+  controller: inventory_checks
+permission_00018: 
+  action: delete_user
+  id: 18
+  description: 
+  controller: user
+permission_00075: 
+  action: index
+  id: 75
+  description: 
+  controller: inventory
+permission_00130: 
+  action: create
+  id: 130
+  description: 
+  controller: projects
+permission_00047: 
+  action: edit
+  id: 47
+  description: 
+  controller: chip_transactions
+permission_00102: 
+  action: update
+  id: 102
+  description: 
+  controller: inventory_checks
+permission_00019: 
+  action: logout
+  id: 19
+  description: 
+  controller: user
+permission_00076: 
+  action: new
+  id: 76
+  description: 
+  controller: organisms
+permission_00131: 
+  action: index
+  id: 131
+  description: 
+  controller: projects
+permission_00103: 
+  action: new
+  id: 103
+  description: 
+  controller: charge_periods
+permission_00048: 
+  action: destroy
+  id: 48
+  description: 
+  controller: chip_transactions
+permission_00132: 
+  action: update
+  id: 132
+  description: 
+  controller: projects
+permission_00104: 
+  action: edit
+  id: 104
+  description: 
+  controller: charge_periods
+permission_00077: 
+  action: list
+  id: 77
+  description: 
+  controller: organisms
+permission_00049: 
+  action: create
+  id: 49
+  description: 
+  controller: chip_transactions
+permission_00020: 
+  action: edit
+  id: 20
+  description: 
+  controller: user
+permission_00078: 
+  action: edit
+  id: 78
+  description: 
+  controller: organisms
+permission_00105: 
+  action: destroy
+  id: 105
+  description: 
+  controller: charge_periods
+permission_00021: 
+  action: change_password_for_user
+  id: 21
+  description: 
+  controller: user
+permission_00079: 
+  action: destroy
+  id: 79
+  description: 
+  controller: organisms
+permission_00106: 
+  action: excel
+  id: 106
+  description: 
+  controller: charge_periods
+permission_00107: 
+  action: create
+  id: 107
+  description: 
+  controller: charge_periods
+permission_00050: 
+  action: index
+  id: 50
+  description: 
+  controller: chip_transactions
+permission_00022: 
+  action: edit_user
+  id: 22
+  description: 
+  controller: user
+permission_00108: 
+  action: pdf
+  id: 108
+  description: 
+  controller: charge_periods
+permission_00051: 
+  action: totals
+  id: 51
+  description: 
+  controller: chip_transactions
+permission_00023: 
+  action: signup
+  id: 23
+  description: 
+  controller: user
+permission_00080: 
+  action: create
+  id: 80
+  description: 
+  controller: organisms
+permission_00109: 
+  action: update
+  id: 109
+  description: 
+  controller: charge_periods
+permission_00052: 
+  action: update
+  id: 52
+  description: 
+  controller: chip_transactions
+permission_00024: 
+  action: show
+  id: 24
+  description: 
+  controller: user
+permission_00081: 
+  action: show
+  id: 81
+  description: 
+  controller: organisms
+permission_00053: 
+  action: index
+  id: 53
+  description: 
+  controller: admin
+permission_00025: 
+  action: edit_roles
+  id: 25
+  description: 
+  controller: user
+permission_00082: 
+  action: index
+  id: 82
+  description: 
+  controller: organisms
+permission_00054: 
+  action: index
+  id: 54
+  description: 
+  controller: admin
+permission_00026: 
+  action: home
+  id: 26
+  description: 
+  controller: user
+permission_00083: 
+  action: update
+  id: 83
+  description: 
+  controller: organisms
+permission_00084: 
+  action: edit
+  id: 84
+  description: 
+  controller: site_config
+permission_00055: 
+  action: new
+  id: 55
+  description: 
+  controller: charge_templates
+permission_00110: 
+  action: edit_lab_groups
+  id: 110
+  description: 
+  controller: user
+permission_00027: 
+  action: login
+  id: 27
+  description: 
+  controller: user
+permission_00085: 
+  action: update
+  id: 85
+  description: 
+  controller: site_config
+permission_00056: 
+  action: list
+  id: 56
+  description: 
+  controller: charge_templates
+permission_00111: 
+  action: bulk_move_or_destroy
+  id: 111
+  description: 
+  controller: charges
+permission_00028: 
+  action: change_password
+  id: 28
+  description: 
+  controller: user
+permission_00112: 
+  action: bulk_destroy
+  id: 112
+  description: 
+  controller: hybridizations
+permission_00057: 
+  action: edit
+  id: 57
+  description: 
+  controller: charge_templates
+permission_00086: 
+  action: new
+  id: 86
+  description: 
+  controller: hybridizations
+permission_00029: 
+  action: new
+  id: 29
+  description: 
+  controller: lab_groups
+permission_00113: 
+  action: order_hybridizations
+  id: 113
+  description: 
+  controller: hybridizations
+permission_00087: 
+  action: list
+  id: 87
+  description: 
+  controller: hybridizations
+permission_00058: 
+  action: destroy
+  id: 58
+  description: 
+  controller: charge_templates
+permission_00114: 
+  action: staff
+  id: 114
+  description: 
+  controller: user
+permission_00059: 
+  action: create
+  id: 59
+  description: 
+  controller: charge_templates
+permission_00030: 
+  action: list
+  id: 30
+  description: 
+  controller: lab_groups
+permission_00088: 
+  action: add
+  id: 88
+  description: 
+  controller: hybridizations
+permission_00001: 
+  action: new
+  id: 1
+  description: 
+  controller: role
+permission_00115: 
+  action: new
+  id: 115
+  description: 
+  controller: samples
+permission_00031: 
+  action: edit
+  id: 31
+  description: 
+  controller: lab_groups
+permission_00116: 
+  action: list
+  id: 116
+  description: 
+  controller: samples
+permission_00089: 
+  action: clear
+  id: 89
+  description: 
+  controller: hybridizations
+permission_00002: 
+  action: list
+  id: 2
+  description: 
+  controller: role

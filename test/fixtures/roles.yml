@@ -1,27 +1,25 @@
-guest_role:
+--- 
+role_00001: 
+  name: Guest
+  omnipotent: false
   id: 1
-  name: <%= UserEngine.config :guest_role_name %>
-  description: The role for non-logged-in people
-  omnipotent: false
+  description: Implicit role for all accessors of the site
   system_role: true
-
-admin_role:
-  id: 2
-  name: <%= UserEngine.config :admin_role_name %>
-  description: The role for administrators
+role_00002: 
+  name: Admin
   omnipotent: true
+  id: 2
+  description: The system administrator, with REAL ULTIMATE POWER.
   system_role: true
-
-user_role:
-  id: 3
-  name: <%= UserEngine.config :user_role_name %>
-  description: The role for regular users
+role_00004: 
+  name: Customer
   omnipotent: false
-  system_role: true
-  
-custom_role:
   id: 4
-  name: Custom Role
-  description: a non-system role
+  description: Customers, who can submit and check on samples, as well as look at their array inventories.
+  system_role: true
+role_00005: 
+  name: Staff
   omnipotent: false
-  system_role: false
+  id: 5
+  description: Members of the facility staff, who can do just about anything except manage users and site configuration.
+  system_role: true

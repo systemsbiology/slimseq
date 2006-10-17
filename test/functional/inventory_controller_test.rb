@@ -11,13 +11,27 @@ class InventoryControllerTest < Test::Unit::TestCase
     @controller = InventoryController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
-    
-    # use admin login for all tests for the moment
-    login_as_admin
   end
 
-  # Replace this with your real tests.
-  def test_truth
-    assert true
+  def test_index_as_admin
+    login_as_admin
+    
+    get :index
+    
+    assert_response :success
+    assert_template 'index'
+    
+    assert_not_nil assigns(:lab_groups)
+  end
+
+  def test_index_as_customer
+    login_as_admin
+    
+    get :index
+    
+    assert_response :success
+    assert_template 'index'
+    
+    assert_not_nil assigns(:lab_groups)
   end
 end

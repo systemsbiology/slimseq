@@ -1,5 +1,5 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-first:
+customer_alligator:
   id: 1
-another:
-  id: 2
+  user_id: 2
+  lab_group_id: 1
