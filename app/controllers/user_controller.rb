@@ -2,6 +2,14 @@
 # LoginEngine to give user management methods (list, edit_user, etc)
 class UserController < ApplicationController
 
+  def index
+    if(current_user.staff? || current_user.admin?)
+      redirect_to :action => 'staff'
+    else
+      redirect_to :action => 'home'
+    end
+  end
+
   def home
     # Admins get their own home page
     if(current_user.staff? || current_user.admin?)
