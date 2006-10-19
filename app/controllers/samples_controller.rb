@@ -132,8 +132,15 @@ class SamplesController < ApplicationController
   end
 
   def destroy
-    Sample.find(params[:id]).destroy
-    redirect_to :action => 'list'
+    sample = Sample.find(params[:id])
+    if(current_user.staff? || current_user.admin? || sample.status == "submitted")
+      sample.destroy
+      redirect_to :back
+    else
+      flash[:warning] = "Unable to destroy samples that have already been hybridized."
+      list
+      render :action => 'list'
+    end
   end
   
   def bulk_destroy

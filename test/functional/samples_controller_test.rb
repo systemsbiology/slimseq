@@ -336,16 +336,31 @@ class SamplesControllerTest < Test::Unit::TestCase
     assert_equal "sample1", Sample.find(1).sample_name
   end
 
-  def test_destroy
+  def test_destroy_submitted_sample_as_admin
     login_as_admin
     assert_not_nil Sample.find(1)
 
+    @request.env["HTTP_REFERER"] = "/samples/list"
     post :destroy, :id => 1
     assert_response :redirect
-    assert_redirected_to :action => 'list'
+    assert_redirected_to "samples/list"
 
     assert_raise(ActiveRecord::RecordNotFound) {
       Sample.find(1)
+    }
+  end
+
+  def test_destroy_hybridized_sample_as_admin
+    login_as_admin
+    assert_not_nil Sample.find(2)
+
+    @request.env["HTTP_REFERER"] = "/samples/list"
+    post :destroy, :id => 2
+    assert_response :redirect
+    assert_redirected_to "samples/list"
+
+    assert_raise(ActiveRecord::RecordNotFound) {
+      Sample.find(2)
     }
   end
 
@@ -688,17 +703,30 @@ class SamplesControllerTest < Test::Unit::TestCase
     assert_equal "sample1", Sample.find(1).sample_name
   end
 
-  def test_destroy_as_customer
+  def test_destroy_submitted_sample_as_customer
     login_as_customer
     assert_not_nil Sample.find(1)
 
+    @request.env["HTTP_REFERER"] = "/samples/list"
     post :destroy, :id => 1
     assert_response :redirect
-    assert_redirected_to :action => 'list'
+    assert_redirected_to "samples/list"
 
     assert_raise(ActiveRecord::RecordNotFound) {
       Sample.find(1)
     }
+  end
+
+  # Customers should not be able to delete hybridized sample records
+  def test_destroy_hybridized_sample_as_customer
+    login_as_customer
+    assert_not_nil Sample.find(2)
+
+    @request.env["HTTP_REFERER"] = "/samples/list"
+    post :destroy, :id => 2
+    assert_response :success
+
+    assert_not_nil Sample.find(2)
   end
 
 end
