@@ -132,7 +132,6 @@ task :create_roles => :environment do
     staff.permissions << Permission.find_by_controller_and_action('organisms', 'edit')
     staff.permissions << Permission.find_by_controller_and_action('organisms', 'destroy')
     staff.permissions << Permission.find_by_controller_and_action('organisms', 'create')
-    staff.permissions << Permission.find_by_controller_and_action('organisms', 'show')
     staff.permissions << Permission.find_by_controller_and_action('organisms', 'index')
     staff.permissions << Permission.find_by_controller_and_action('organisms', 'update')
     

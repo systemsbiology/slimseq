@@ -2,23 +2,26 @@ class AddStaffCustomerRoles < ActiveRecord::Migration
   def self.up
     # The easiest way to create the new Customer and Staff roles is by using
     # the rake boostrap task
+#    Rake::Task[:sync_permissions].invoke
     Rake::Task[:bootstrap].invoke
-    
-    # Change existing Users to Customers
+#    Rake::Task[:create_roles].invoke
+    # If the User role still exists, change existing Users to Customers
     user_role = Role.find(:first, :conditions => "name = 'User'")
-    customer_role = Role.find(:first, :conditions => "name = 'Customer'")
-    User.find(:all).each do |u|
-      if( u.roles.include?(user_role) )
-        u.roles.delete(user_role)
-        u.roles << customer_role if !u.roles.include?(customer_role)
+    if(user_role != nil)
+      customer_role = Role.find(:first, :conditions => "name = 'Customer'")
+      User.find(:all).each do |u|
+        if( u.roles.include?(user_role) )
+          u.roles.delete(user_role)
+          u.roles << customer_role if !u.roles.include?(customer_role)
+        end
+        u.save
       end
-      u.save
+      
+      # Then destroy the User role, which requires first making it a
+      # non-system role
+      user_role.system_role = 0
+      user_role.destroy
     end
-    
-    # Then destroy the User role, which requires first making it a
-    # non-system role
-    user_role.system_role = 0
-    user_role.destroy
   end
 
   def self.down
