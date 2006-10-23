@@ -21,7 +21,34 @@ namespace :build do
   task :all => [:full, :lite]
 
   desc "Alias for 'rake package'"
-  task :full => [:package]
+  task :full => [:create_default_mysql, :package]
+
+  desc "Create default.mysql on-the-fly"
+  task :create_default_mysql => :environment do
+    if(ActiveRecord::Base.connection.adapter_name == "MySQL")
+      puts "Generating default MySQL database..."
+      
+      # save current database
+      abcs = ActiveRecord::Base.configurations
+      `mysqldump -h #{abcs["development"]["host"]} -u #{abcs["development"]["username"]} -p#{abcs["development"]["password"]} #{abcs["development"]["database"]} > tmp.mysql`
+    
+      # trash current database
+      ActiveRecord::Base.establish_connection(:development)
+      ActiveRecord::Base.connection.recreate_database(abcs["development"]["database"])
+    
+      # create the default.mysql file on-the-fly
+      ActiveRecord::Base.establish_connection(:development)
+      Rake::Task[:migrate].invoke
+      Rake::Task[:bootstrap].invoke
+      `mysqldump -h #{abcs["development"]["host"]} -u #{abcs["development"]["username"]} -p#{abcs["development"]["password"]} #{abcs["development"]["database"]} > db/default.mysql`
+    
+      # restore temporarily saved database
+      ActiveRecord::Base.establish_connection(:development)
+      ActiveRecord::Base.connection.recreate_database(abcs["development"]["database"])
+      `mysql -h #{abcs["development"]["host"]} -u #{abcs["development"]["username"]} -p#{abcs["development"]["password"]} #{abcs["development"]["database"]} < tmp.mysql`
+      FileUtils.rm "tmp.mysql"
+    end
+  end
 
   desc "Build a single executable Lite version"
   task :lite do
@@ -57,6 +84,12 @@ namespace :build do
     puts "Packaging all ruby into one file with tar2rubyscript..."
     cmd = "#{CMD_PREFIX}tar2rubyscript #{RAILS_ROOT} #{LITE_PKG_NAME}.rb"
     system cmd
+
+    puts "Generating default SQLite database..."
+    # create the default.sqlite file on-the-fly
+    Rake::Task[:migrate].invoke
+    Rake::Task[:bootstrap].invoke
+    FileUtils.copy "slimarray_development.sqlite","db/default.sqlite"
 
     puts "Organizing files..."
     FileUtils.move "#{LITE_PKG_NAME}.rb", "#{LITE_PKG_FOLDER}"
