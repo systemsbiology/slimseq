@@ -226,6 +226,8 @@ For example, the following might appear at the bottom of /config/environment.rb:
 +confirm_account+:: An overriding flag to control whether or not user accounts must be
                     verified by email. This overrides the +user_email_notification+ flag.
                     Defaults to true.
++password_minimum+:: Set your minimum password length.
+                     Defaults to 5.
 
 == Overriding controllers and views
 
@@ -240,11 +242,11 @@ How do I...
 
   A: You can get the user object from the session using session[:user]
      Example: 
-       Welcome <%= session[:user].name %>
+       Welcome <%= session[:user].full_name %>
 
     You can also use the 'current_user' method provided by UserHelper:
     Example:
-      Welcome <%= current_user.name %>
+      Welcome <%= current_user.full_name %>
 
 
   ... restrict access to only a few methods? 

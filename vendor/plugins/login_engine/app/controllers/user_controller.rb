@@ -65,6 +65,7 @@ class UserController < ApplicationController
 
   def logout
     session[:user] = nil
+    reset_session
     redirect_to :action => 'login'
   end
 

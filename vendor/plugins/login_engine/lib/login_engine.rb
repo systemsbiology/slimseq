@@ -44,6 +44,9 @@ module LoginEngine
 
   # Default is one week
   config :delayed_delete_days, 7
+
+  # Default minimum password length
+  config :password_minimum, 5
   
   # the table to store user information in
   if ActiveRecord::Base.pluralize_table_names

@@ -54,6 +54,9 @@ module LoginEngine
   
       # call overwriteable reaction to unauthorized access
       access_denied
+      
+      # Return false to halt the filter chain
+      return false
     end
 
     # overwrite if you want to have special behavior in case the user is not authorized

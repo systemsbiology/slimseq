@@ -60,6 +60,7 @@ class UserControllerTest < Test::Unit::TestCase
 
     get :logout
     assert_session_has_no :user
+    assert_equal Hash.new, session
 
   end
 

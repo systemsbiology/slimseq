@@ -110,5 +110,26 @@ class UserTest < Test::Unit::TestCase
     u.email = "valid@email.com"
     assert u.save
   end
+  
+  def test_should_respond_to_full_name
+    assert_equal 'bob roberts', users(:bob).full_name
+  end
+
+  def test_password_too_short
+    assert LoginEngine::config(:password_minimum), "Password minimum not defined"
+    u = User.new
+    u.login = 'password_test'
+    u.email = 'bobs@email.com'
+    u.change_password('a'*(LoginEngine::config(:password_minimum)-1))
+    assert !u.save
+  end
+
+  def test_password_minimum_length
+    u = User.new
+    u.login = 'password_test'
+    u.email = 'bobs@email.com'
+    u.change_password('a'*(LoginEngine::config(:password_minimum)))
+    assert u.save
+  end
 
 end

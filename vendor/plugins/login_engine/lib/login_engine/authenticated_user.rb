@@ -160,6 +160,10 @@ module LoginEngine
       @new_password = true
     end
     
+    def full_name
+      "#{self.firstname} #{self.lastname}"
+    end
+    
     protected
 
     def validate_password?

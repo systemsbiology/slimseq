@@ -15,9 +15,7 @@
     <%= start_form_tag :action => 'delete' %>
       <div class="user_delete">
         <%= hidden_field 'user', 'form', :value => 'delete' %>
-
-        <%= form_input :submit_button, 'Delete Account' %>
+        <%= submit_tag "Delete Account", :name => 'submit' %>
       </div>
     <%= end_form_tag %>
-  </div>
 </div>
