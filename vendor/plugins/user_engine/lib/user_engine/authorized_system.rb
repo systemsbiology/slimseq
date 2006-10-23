@@ -109,7 +109,7 @@ module UserEngine
             flash[:message] = "Permission warning: You are not authorized for the action '#{required_permission}'." 
           
             # Here we are distinguishing between unauthorized actions and actions which do
-            # not exist. It *might* be better to employ a 'steath' technique and simple
+            # not exist. It *might* be better to employ a 'stealth' technique and simple
             # claim that all nonsense actions are unauthorized too... but that can make it
             # difficult to debug.
             if !UserEngine.config(:stealth)
@@ -152,7 +152,7 @@ module UserEngine
         # for guest users, or the user is logged in and the action is permitted by
         # one or more of their associated roles. Let them pass..
 
-        @session["prev_uri"] = @request.request_uri
+        session["prev_uri"] = request.request_uri
         return true        
       end
   end

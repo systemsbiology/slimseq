@@ -34,14 +34,14 @@ class UserController < ApplicationController
   # Displays a paginated list of Users
   def list
     @content_columns = user_content_columns_to_display    
-    @user_pages, @all_users = paginate :user, :per_page => 10        
+    @user_pages, @all_users = paginate :user, :per_page => 10, :order => 'firstname, lastname'
   end
 
   # Edit the details of any user. The Role which can perform this will almost certainly also
   # need the following permissions: user/change_password, user/edit, user/edit_roles, user/delete
   def edit_user
     if (@user = find_user(params[:id]))
-      @all_roles = Role.find_all.select { |r| r.name != UserEngine.config(:guest_role_name) }
+      @all_roles = Role.find(:all, :order => "system_role desc, name").select { |r| r.name != UserEngine.config(:guest_role_name) }
       case request.method
         when :get
         when :post

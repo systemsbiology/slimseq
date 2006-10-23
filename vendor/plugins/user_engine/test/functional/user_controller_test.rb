@@ -229,9 +229,10 @@ class UserControllerTest < Test::Unit::TestCase
          :user => { :password => "changed_password", :password_confirmation => "changed_password" }
     assert_equal 0, ActionMailer::Base.deliveries.size
     assert_match /Password could not be changed/, flash[:warning]
+    #get :logout
     
-    # ensure we can log in with our original password
-    post :login, :user => { :login => "normal_user", :password => "atest" }
+    # ensure we can log in with new password
+    post :login, :user => { :login => "normal_user", :password => "changed_password" }
     assert_session_has :user
   end  
 end

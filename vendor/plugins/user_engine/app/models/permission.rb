@@ -44,7 +44,7 @@ class Permission < ActiveRecord::Base
     def synchronize_with_controllers
       # weird hack. otherwise ActiveRecord has no idea about the superclass of any
       # ActionController stuff...
-      require RAILS_ROOT + "/app/controllers/application"
+      require_dependency RAILS_ROOT + "/app/controllers/application"
     
       # Load all the controller files
       controller_files = Dir[RAILS_ROOT + "/app/controllers/**/*_controller.rb"]
@@ -55,7 +55,7 @@ class Permission < ActiveRecord::Base
     
       # we need to load all the controllers...
       controller_files.each do |file_name|
-        require file_name #if /_controller.rb$/ =~ file_name
+        require_dependency file_name #if /_controller.rb$/ =~ file_name
       end
 
       # Find the actions in each of the controllers, 

@@ -59,11 +59,11 @@ I'll make this point at the beginning, so there can be no doubt - this is *not* 
 
 7. Initialize the database tables. You must ensure that the tables for the LoginEngine are present since this engine builds on top of them. You will probably get a warning if this is your first installation of the User Engine, indicating that you don't have an Admin role - that's fine, we'll be creating it later. You can either use the engine migrations by calling:
 
-    rake engine_migrate
+    rake db:engines:migrate
 
   to move all engines to their latest versions, or
 
-    rake engine_migrate ENGINE=user
+    rake db:engines:migrate ENGINE=user
 
   to migrate only this engine. Alternatively, if you just want to load the full schema information for the User and LoginEngines, run
 
@@ -86,7 +86,9 @@ I'll make this point at the beginning, so there can be no doubt - this is *not* 
 
 12. Since the UserEngine overrides some of the default behaviour in the LoginEngine, if you have made your own modifications within your app directory, you'll probably want to examine these changes to make sure that your own customisations will still operate as expected. You'll need to look at the following:
 
-* The UserEngine's models/user.rb model will override the default given in LoginEngine. If you have your own app/models/user.rb file, you'll need to include UserEngine::AuthorizedUser in your file.
+* The UserEngine's models/user.rb model will override the default given in LoginEngine. If you have your own app/models/user.rb file, you'll need to:
+  include LoginEngine::AuthenticatedUser
+  include UserEngine::AuthorizedUser
 * The UserController#edit action has been overriden to know about Roles. See user_engine/app/user_controller.rb for details.
 * Many new methods for administrating users, roles and permissions have been provided - again, see user_engine/app/user_controller.rb.
 * If you have overridden any User views, look at the corresponding views in the UserEngine to see if there are any changes you wish to include in your own versions.
@@ -132,7 +134,7 @@ value in your environment.rb file, i.e.:
                 "admin@your.company".
 +login_page+:: a Hash describing where the login page. Defaults to
                {:controller => 'user', :action => 'login'}
-+steath+:: a boolean flag to indicate whether or not the system should
++stealth+:: a boolean flag to indicate whether or not the system should
            display helpful messages about authorized roles when they are
            denied access to an action, or if it should simply deny the
            user access without revealing which roles can access that action.

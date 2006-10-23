@@ -29,8 +29,4 @@ class User < ActiveRecord::Base
   include LoginEngine::AuthenticatedUser
   include UserEngine::AuthorizedUser
   
-  # Returns the full name of this user.
-  def fullname
-    "#{self.firstname} #{self.lastname}"
-  end
 end

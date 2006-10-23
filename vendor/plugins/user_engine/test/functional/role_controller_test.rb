@@ -30,7 +30,7 @@ class RoleControllerTest < Test::Unit::TestCase
   #
   #==========================================================================
 
-  def assert_new_role
+  def test_assert_new_role
     get :new
     assert_response :success
     
@@ -50,6 +50,12 @@ class RoleControllerTest < Test::Unit::TestCase
     assert_template 'new'
     assert_errors
     assert_invalid_column_on_record 'role', 'name'    
+  end
+
+  # PostgreSQL does not assume NULL = 0
+  def test_creating_a_new_role_on_postgresql
+    post :new, :role => {:name => 'postgres_name', :description => 'description'}
+    assert_not_nil Role.find_by_name('postgres_name')
   end
   
   #==========================================================================

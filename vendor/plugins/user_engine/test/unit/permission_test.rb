@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 class UserTest < Test::Unit::TestCase
   
   def test_table_name
-    assert_equal UserEngine.config(:permission_table_name), Permission.table_name
+    assert_equal UserEngine.config(:permission_table), Permission.table_name
   end
 
   def test_path

@@ -23,9 +23,9 @@ class InitialSchema < ActiveRecord::Migration
   end
 
   def self.down
-    remove_table UserEngine.config(:permission_table)
-    remove_table UserEngine.config(:permission_role_table)
-    remove_table UserEngine.config(:user_role_table)
-    remove_table UserEngine.config(:role_table)
+    drop_table UserEngine.config(:permission_table)
+    drop_table UserEngine.config(:permission_role_table)
+    drop_table UserEngine.config(:user_role_table)
+    drop_table UserEngine.config(:role_table)
   end
 end

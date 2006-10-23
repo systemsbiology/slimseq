@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../../../../test/test_helper' # the default rails helper
 
 # ensure that the Engines testing enhancements are loaded.
-require File.join(Engines.config(:root), "engines", "lib", "testing_extensions")
+require File.join(Engines.config(:root), "engines", "lib", "engines", "testing_extensions")
 
 
 # force these config values
@@ -27,7 +27,7 @@ module LoginEngine
 end
 
 # Load the LoginEngine schema & mocks
-load(File.join(Engines.get(:login).root, "db", "schema.rb"))
+#load(File.join(Engines.get(:login).root, "db", "schema.rb"))
 require File.join(Engines.get(:login).root, 'test', 'mocks', 'time')
 require File.join(Engines.get(:login).root, 'test', 'mocks', 'mail')
 

@@ -1,0 +1,17 @@
+= v1.0.2 (2006-08-22)
+* Added Changelog (snowblink@gmail.com)
+* Ticket #81 (anonymous) link_if_authorized let 'wrap_in' option into link attributes
+* Ticket #92 (Jason Sypher, Corey Jewett) To allow to migrate down, drop_table instead of remove_column
+* Ticket #102 (ziggy@ignition-project.com, François Beausoleil) Typo in README: 'steath' instead of 'stealth'
+* Ticket #109 (morris@wolfman.com, snowblink@gmail.com) User and roles controllers updated to paginate properly, and match headers to columns in views
+* Ticket #127 (lazyatom) Add install.rb to allow for "auto install" of engines plugin via script/install
+* Ticket #139 (sross@calicowebdev.com) Updated README to show new rake task syntax, and how to override the User model
+* Ticket #147 (lazyatom) Engines loading mechanism is side-stepped when running Permission.sync. Now using require_dependency instead of require
+* Ticket #151 (Surendra Singhi) Tests updated to work
+* Ticket #160 (me@casperfabricius.com) Removed puts warning from check_system_roles, as it can cause problems for Apache/FastCGI
+* Ticket #198 (fastjames@gmail.com) Fixed deprecated reference to @session in user engine
+* Ticket #202 (snowblink@gmail.com) Tidied up views to generate valid HTML 4.0.1 Transition
+* Ticket #204 (snowblink@gmail.com) Test password changed even if email delivery fails
+* Ticket #206 (snowblink@gmail.com) Fixed Permission test
+
+= v1.0.1 (2006-01-12) r223

@@ -51,6 +51,11 @@ module UserEngine
       }
     end
   
+    # Returns the full name of this user.
+    def fullname
+      "#{self.firstname} #{self.lastname}"
+    end
+
     # This module defines methods to be attached to the User class itself.
     module ClassMethods
   

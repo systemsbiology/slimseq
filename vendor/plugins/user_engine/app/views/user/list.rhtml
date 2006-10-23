@@ -17,7 +17,7 @@
       <ul class="actions">
         <%= link_if_authorized 'Show', {:action => 'show', :id => user}, :wrap_in => "li" %>
         <%= link_if_authorized 'Edit', {:action => 'edit_user', :id => user}, :wrap_in => "li" %>
-        <% if authorized?(:action => 'delete_user') && (user.login != UserEngine.config(:admin_login)) %><%= button_to 'Destroy', :action => 'delete_user', :id => user %><% end %>
+        <% if authorized?(:action => 'delete_user') && (user.login != UserEngine.config(:admin_login)) %><li><%= button_to 'Destroy', :action => 'delete_user', :id => user %></li><% end %>
       </ul>
     </td>  
   </tr>

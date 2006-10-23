@@ -39,7 +39,7 @@ class RoleController < ApplicationController
   # Displays a paginated list of Role objects
   def list
     @content_columns = Role.content_columns
-    @role_pages, @roles = paginate :role, :per_page => 10
+    @role_pages, @roles = paginate :role, :per_page => 10, :order => 'system_role desc, name'
   end
 
   # Displays a single Role object by given id.

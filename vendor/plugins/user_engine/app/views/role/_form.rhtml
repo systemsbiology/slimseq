@@ -15,7 +15,7 @@
   <table id="role_permission_table">
     <thead><tr>
 
-    <% @all_actions.each_key do |controller_name|
+    <% @all_actions.sort.each do |controller_name, permissions|
         controller_id = controller_name.gsub("/", "_") 
         #perms_id = controller_id + "_perms"
      %>
@@ -28,14 +28,15 @@
   <% end %>
     </tr></thead>
     <tbody><tr>
-  <% @all_actions.each_key do |controller_name|
+        <% @all_actions.sort.each do |controller_name, permissions|
         controller_id = controller_name.gsub("/", "_") %>
-        <td><ul>
-  <%      @all_actions[controller_name].each do |permission| %>
-        <li><input type="checkbox" id="<%= controller_id + "_" + permission.action %>" name="permissions_<%= controller_id %>[]" value="<%= permission.id %>" <% if @role.permissions.include?(permission) %>checked="checked"<% end %>/><%= link_if_authorized(permission.action.capitalize, {:controller => "permission", :action => "show", :id => permission}, {:title => permission.description, :show_text => true}) %></li>
-  <%  end %>
-      </ul></td>
-  <% end %>
+        <td>
+          <ul>
+            <% permissions.sort_by{|p| p.action}.each do |permission| %>
+            <li><input type="checkbox" id="<%= controller_id + "_" + permission.action %>" name="permissions_<%= controller_id %>[]" value="<%= permission.id %>" <% if @role.permissions.include?(permission) %>checked="checked"<% end %>/><%= link_if_authorized(permission.action.capitalize, {:controller => "permission", :action => "show", :id => permission}, {:title => permission.description, :show_text => true}) %></li>
+            <% end %>
+        </ul></td>
+        <% end %>
     </tr></tbody>
   </table>
 </div>

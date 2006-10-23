@@ -102,7 +102,7 @@ module UserEngine
     
     if @warning != nil
       RAILS_DEFAULT_LOGGER.warn @warning
-      puts @warning
+      #puts @warning
     end
   end
 
@@ -156,12 +156,12 @@ module UserEngine
     end
     
     (block.nil? || (yield block)) && authorized?(auth_options) {
+      wrap_tag = html_options.delete(:wrap_in)
       #result = link_to_with_current_styling(name, options, html_options, *params)
       result = link_to(name, options, html_options, *params)
       
       # TODO: won't this pass other things like html_options[:id], which is EVIL since two
       # things shouldn't share the same ID.
-      wrap_tag = html_options.delete(:wrap_in)
       result = content_tag(wrap_tag, result, html_options) if wrap_tag != nil
     }
     result
