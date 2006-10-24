@@ -1,3 +1,10 @@
+*0.2.4*
+
+* Added projects as a means for users to specify charge information for submitted samples
+* Tests for Customer roles to make them more robust
+* Automated creation of default MySQL and SQLite database statements as part of build:all task
+* Using Ruby on Rails 1.1.6 and the latest releases of all Engines
+
 *0.2.2*
 
 * Using slightly newer Rails (1.1.3)
