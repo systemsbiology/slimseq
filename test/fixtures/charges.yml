@@ -20,5 +20,5 @@ mouse2:
   labeling_cost: 0
   hybridization_cost: 0
   qc_cost: 25
-  other_cost: 0	
+  other_cost: 0
 
