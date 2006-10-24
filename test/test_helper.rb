@@ -75,24 +75,12 @@ class Test::Unit::TestCase
 
   # login as admin, necessary to reach pages for testing
   def login_as_admin
-    controller_bak = @controller
-    @controller = UserController.new
-    post :login, :user => {:login => 'admin', :password => 'atest'}
-    #assert_not_nil(session[:user])
-    #user = User.find(session[:user].id)
-    #assert_equal user.login, "admin", "Login name should match session name"
-    
-    @controller = controller_bak
+    @request.session[:user] = users(:admin_user)
   end
 
   # login as a customer to test customer-specific code
   def login_as_customer
-    controller_bak = @controller
-    @controller = UserController.new
-    
-    post :login, :user => {:login => 'customer', :password => 'atest'}
-    
-    @controller = controller_bak
+    @request.session[:user] = users(:customer_user)
   end
 
 end
