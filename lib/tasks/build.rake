@@ -17,8 +17,11 @@
  end
 
 namespace :build do
-  desc "Build both the full and lite packages"
-  task :all => [:full, :lite]
+  # Can't get both full and lite to build happily together (probably due to
+  # change in database configuration between tasks), so instead only allow
+  # the full and lite to be built separately
+  #desc "Build both the full and lite packages"
+  #task :all => [:full, :lite]
 
   desc "Alias for 'rake package'"
   task :full => [:create_default_mysql, :package]
@@ -51,7 +54,7 @@ namespace :build do
   end
 
   desc "Build a single executable Lite version"
-  task :lite do
+  task :lite  do
     LITE_PKG_NAME = "#{PKG_NAME}_lite_#{PKG_VERSION}"
     LITE_PKG_FOLDER = "#{RAILS_ROOT}/pkg/#{LITE_PKG_NAME}"
 
@@ -70,6 +73,7 @@ namespace :build do
     
     # if it exists, put existing database config away, and put the lite build 
     # version in place
+    puts "Backing up database configuration and putting SQLite configuration in place..."
     if( FileTest.exist?("config/database.yml") )
       FileUtils.move "config/database.yml", "config/database.backup"
     end
@@ -86,7 +90,7 @@ namespace :build do
     system cmd
 
     puts "Generating default SQLite database..."
-    # create the default.sqlite file on-the-fly
+    # create the default.sqlite file on-the-fly 
     Rake::Task[:migrate].invoke
     Rake::Task[:bootstrap].invoke
     FileUtils.copy "slimarray_development.sqlite","db/default.sqlite"
@@ -105,7 +109,9 @@ namespace :build do
     FileUtils.rm "#{LITE_PKG_FOLDER}/#{LITE_PKG_NAME}.rb"
     FileUtils.rm "config/database.yml"
 
+
     # restore backed-up database config, if there was one
+    puts "Restoring database configuration backup..."
     if( FileTest.exist?("config/database.backup") )
       FileUtils.move "config/database.backup", "config/database.yml"
     end
