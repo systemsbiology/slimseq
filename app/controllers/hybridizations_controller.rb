@@ -9,7 +9,7 @@ class HybridizationsController < ApplicationController
     populate_arrays_from_tables
   
     @hybridizations = Hybridization.find(:all, :order => "hybridization_date DESC, chip_number ASC", 
-                                         :include => 'sample')
+                                         :include => { :sample => :project } )
   end
 
   def new
