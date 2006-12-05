@@ -34,6 +34,8 @@
 	                      authorized?(:controller => 'hybridizations', :action => 'list') %>
 		                <li class="category">Samples</li>
 	                <% end %>
+		            <%= link_if_authorized 'Bioanalyzer Results', {:controller => 'bioanalyzer_runs', :action => 'list'}, 
+	                    :wrap_in => 'li'%>
    	                <%= link_if_authorized 'Samples', {:controller => 'samples', :action => 'list'}, 
 	                    :wrap_in => 'li'%>
 	                <%= link_if_authorized 'Hybridizations', {:controller => 'hybridizations', :action => 'list'}, 

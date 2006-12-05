@@ -7,4 +7,6 @@ class SubmitHybridizations < ActiveRecord::Base
   column :hybridization_date, :date
   column :charge_set_id, :integer
   column :charge_template_id, :integer
+
+  validates_presence_of :charge_template_id
 end

@@ -10,6 +10,9 @@ sample1:
   organism_id: 1
   sbeams_user: bob
   status: submitted
+  starting_quality_trace_id: 6
+  amplified_quality_trace_id: 10
+  fragmented_quality_trace_id: 14
 sample2:
   id: 2
   submission_date: 2006-02-10

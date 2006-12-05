@@ -6,10 +6,6 @@ module LoginEngine
   config :salt, "test-salt", :force
 end
 
-module ChipAccounting
-
-end
-
 class Test::Unit::TestCase
   fixtures :users, :roles, :permissions, :users_roles, :permissions_roles,
            :site_config
@@ -49,16 +45,16 @@ class Test::Unit::TestCase
     {:tag => "div", :attributes => { :class => "errorExplanation" }}
   end
 
-  def assert_flash_warning
-    assert_tag flash_warning_field
+  def assert_flash_warning(message = "")
+    assert_tag flash_warning_field(message)
   end
   
-  def assert_no_flash_warning
-    assert_no_tag flash_warning_field
+  def assert_no_flash_warning(message = "")
+    assert_no_tag flash_warning_field(message)
   end
   
-  def flash_warning_field
-    {:tag => "p", :attributes => { :style => "color: red" }}
+  def flash_warning_field(message)
+    {:tag => "p", :attributes => { :style => "color: red" }, :child => /#{message}/}
   end
   
   def assert_text_field_hidden(field_id)
@@ -91,6 +87,12 @@ def using_Mysql?
   else
     return false;
   end
+end
+
+def set_bioanalyzer_pickup_directory
+  site_config = SiteConfig.find(1)
+  site_config.bioanalyzer_pickup = "#{RAILS_ROOT}/test/fixtures/bioanalyzer_files"
+  site_config.save
 end
 
 class Fixtures

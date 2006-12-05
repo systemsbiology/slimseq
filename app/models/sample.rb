@@ -3,6 +3,10 @@ class Sample < ActiveRecord::Base
 
   belongs_to :chip_type
   belongs_to :project
+  belongs_to :starting_quality_trace, :class_name => "QualityTrace", :foreign_key => "starting_quality_trace_id"
+  belongs_to :amplified_quality_trace, :class_name => "QualityTrace", :foreign_key => "amplified_quality_trace_id"
+  belongs_to :fragmented_quality_trace, :class_name => "QualityTrace", :foreign_key => "fragmented_quality_trace_id"
+  
   validates_associated :chip_type, :project
   validates_presence_of :sample_name, :short_sample_name, :submission_date, :project_id
 #  validates_uniqueness_of :sample_name

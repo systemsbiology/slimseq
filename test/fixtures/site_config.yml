@@ -8,5 +8,9 @@ first:
   track_inventory: 1
   track_hybridizations: 1
   track_charges: 1
-  create_gcos_files: 1
+  create_gcos_files: 0
+  using_sbeams: 0
   gcos_output_path: /tmp/
+  bioanalyzer_pickup: /tmp/
+  bioanalyzer_pickup: /tmp/
+  quality_trace_dropoff: /tmp/

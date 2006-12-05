@@ -41,4 +41,24 @@ class User < ActiveRecord::Base
   def staff?
     self.roles.include?(Role.find(:first, :conditions => ["name = ?", "Staff"]))
   end
+  
+  # Returns an Array of the ids of quality traces the user has access to
+  def get_lab_group_ids
+    # Administrators and staff can see all bioanalyzer runs, customers
+    # are restricted to seeing bioanalyzer runs for lab groups they belong to
+    if(self.staff? || self.admin?)
+      @lab_groups = LabGroup.find(:all, :order => "name ASC")
+    else
+      @lab_groups = self.lab_groups
+    end
+    
+    # gather ids of user's lab groups
+    lab_group_ids = Array.new
+    for lab_group in @lab_groups
+      lab_group_ids << lab_group.id
+    end
+    lab_group_ids.flatten
+    
+    return lab_group_ids
+  end
 end

@@ -11,6 +11,9 @@
 		    <th>Short Sample Name</th>
 		    <th>Sample Name</th>
 		    <th>Sample Group Name</th>
+		    <th>Starting</th>
+		    <th>Amplified</th>
+		    <th>Fragmented</th>
 		  <% if @using_sbeams %>
 		    <th>SBEAMS User</th>
 		  <% end %>
@@ -27,6 +30,24 @@
 		    <td><%=h sample.short_sample_name %></td>
 		    <td><%=h sample.sample_name %></td>
 		    <td><%=h sample.sample_group_name %></td>
+		    <td>
+    		    <% if sample.starting_quality_trace_id != nil %>
+        		    <%= link_to 'trace', :controller => 'quality_traces', :action => 'show', 
+        		                         :id => sample.starting_quality_trace_id %>
+    		    <% end %>
+		    </td>
+		    <td>
+    		    <% if sample.amplified_quality_trace_id != nil %>
+        		    <%= link_to 'trace', :controller => 'quality_traces', :action => 'show', 
+        		                         :id => sample.amplified_quality_trace_id %>
+    		    <% end %>
+    		</td>
+		    <td>
+		      <% if sample.fragmented_quality_trace_id != nil %>
+        		    <%= link_to 'trace', :controller => 'quality_traces', :action => 'show', 
+        		                         :id => sample.fragmented_quality_trace_id %>
+    		    <% end %>
+		    </td>
 		  <% if @using_sbeams %>
 		    <td><%=h sample.sbeams_user %></td>
 		  <% end %>
@@ -38,6 +59,7 @@
 		<% end %>
 		</table>
 	<p><%= submit_tag 'Delete Samples' %></p>
+    <%= end_form_tag %>	
 <% else %>
     <% if current_user.staff? || current_user.admin? %>
         <p>There are currently no samples.</p>

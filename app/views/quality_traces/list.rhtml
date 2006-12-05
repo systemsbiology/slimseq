@@ -1,0 +1,27 @@
+<h1>Listing quality_traces</h1>
+
+<table>
+  <tr>
+  <% for column in QualityTrace.content_columns %>
+    <th><%= column.human_name %></th>
+  <% end %>
+  </tr>
+  
+<% for quality_trace in @quality_traces %>
+  <tr>
+  <% for column in QualityTrace.content_columns %>
+    <td><%=h quality_trace.send(column.name) %></td>
+  <% end %>
+    <td><%= link_to 'Show', :action => 'show', :id => quality_trace %></td>
+    <td><%= link_to 'Edit', :action => 'edit', :id => quality_trace %></td>
+    <td><%= link_to 'Destroy', { :action => 'destroy', :id => quality_trace }, :confirm => 'Are you sure?', :post => true %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'Previous page', { :page => @quality_trace_pages.current.previous } if @quality_trace_pages.current.previous %>
+<%= link_to 'Next page', { :page => @quality_trace_pages.current.next } if @quality_trace_pages.current.next %> 
+
+<br />
+
+<%= link_to 'New quality_trace', :action => 'new' %>

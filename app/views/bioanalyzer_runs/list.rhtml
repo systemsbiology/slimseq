@@ -1,0 +1,24 @@
+<h2>Listing Bioanalyzer Runs</h2>
+
+<table class="sortable">
+  <tr>
+    <th>Date</th>
+    <th>Run Name</th>
+    <th>Show</th>
+    <th>Destroy</th>
+  </tr>
+  
+<% for bioanalyzer_run in @bioanalyzer_runs %>
+  <tr>
+    <td><%=h bioanalyzer_run.date %></td>
+    <td><%= link_to bioanalyzer_run.name, :action => 'show', :id => bioanalyzer_run %></td>
+    <td><%= link_to 'Show', :action => 'show', :id => bioanalyzer_run %></td>
+    <td><%= link_to 'Destroy', { :action => 'destroy', :id => bioanalyzer_run }, 
+                                 :confirm => bioanalyzer_run.destroy_warning, :post => true %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'Previous page', { :page => @bioanalyzer_run_pages.current.previous } if @bioanalyzer_run_pages.current.previous %>
+<%= link_to 'Next page', { :page => @bioanalyzer_run_pages.current.next } if @bioanalyzer_run_pages.current.next %> 
+

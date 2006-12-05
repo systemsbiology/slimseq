@@ -1,7 +1,7 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-admin_group:
+gorilla_group:
   id: 1
-  name: admin
+  name: Gorillaz
 alligator_group:
   id: 2
   name: AlligatorGroup

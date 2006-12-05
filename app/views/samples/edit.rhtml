@@ -14,6 +14,11 @@
 	<p><label for="sample_sample_group_name">Sample Group Name</label><br/>
 	<%= text_field 'sample', 'sample_group_name', :size => 50  %></p>
 		
+    <% if( SiteConfig.using_sbeams? ) %>
+    	<p><label for="sample_sample_sbeams_user">SBEAMS User</label><br/>
+    	<%= text_field 'sample', 'sbeams_user', :size => 50  %></p>
+    <% end %>
+    
 	<p><label for="sample_project_id">Project</label><br>
 	<select id="project_id" name="sample[project_id]">
     <%= options_from_collection_for_select @projects, "id", "name", selected_value=@sample.project_id %></select></p>

@@ -16,7 +16,7 @@ class HybridizationsController < ApplicationController
     populate_arrays_from_tables
 
     @available_samples = Sample.find(:all, :conditions => [ "status = 'submitted'" ],
-                                     :order => "submission_date DESC")
+                                     :order => "submission_date DESC, id ASC")
   
     # clear out hybridization record since this is a 'new' set
     session[:hybridizations] = Array.new
@@ -82,7 +82,7 @@ class HybridizationsController < ApplicationController
     
     # get list of available samples, and removed ones currently in hybridization table
     @available_samples = Sample.find(:all, :conditions => [ "status = 'submitted'" ],
-                                     :order => "submission_date DESC")
+                                     :order => "submission_date DESC, id ASC")
     for hybridization in @hybridizations
       sample = hybridization.sample
       if( @available_samples.include?(sample) )
@@ -151,6 +151,11 @@ class HybridizationsController < ApplicationController
         # record charges incurred from these hybridizations
         record_charges(@hybridizations)
         flash[:notice] += ", charges"
+      end
+      if SiteConfig.using_sbeams?
+        # save Bioanalyzer trace images for SBEAMS
+        output_trace_images(@hybridizations)
+        flash[:notice] += ", bioanalyzer images"
       end
       if(flash[:notice] != nil)
         flash[:notice] += ' created successfully.'
@@ -316,5 +321,32 @@ class HybridizationsController < ApplicationController
                           :other_cost => template.other_cost)
       charge.save
     end
+  end
+
+  def output_trace_images(hybridizations)
+    for hybridization in hybridizations
+      sample = hybridization.sample
+      hybridization_year_month = hybridization.hybridization_date.year.to_s + ("%02d" % hybridization.hybridization_date.month)
+      hybridization_date_number_string =  hybridization_year_month + ("%02d" % hybridization.hybridization_date.day) + 
+                                          "_" + ("%02d" % hybridization.chip_number)
+      chip_name = hybridization_date_number_string + "_" + sample.sample_name
+
+      output_path = SiteConfig.quality_trace_dropoff + "/" + hybridization_year_month
+      
+      # output each quality trace image if it exists
+      if( sample.starting_quality_trace != nil )
+        copy_image_based_on_chip_name( sample.starting_quality_trace, output_path, chip_name + ".EGRAM_T.jpg" )
+      end
+      if( sample.amplified_quality_trace != nil )
+        copy_image_based_on_chip_name( sample.amplified_quality_trace, output_path, chip_name + ".EGRAM_PF.jpg" )
+      end
+      if( sample.fragmented_quality_trace != nil )
+        copy_image_based_on_chip_name( sample.fragmented_quality_trace, output_path, chip_name + ".EGRAM_F.jpg" )
+      end
+    end
+  end
+  
+  def copy_image_based_on_chip_name(quality_trace, output_path, image_name)
+    FileUtils.cp( "#{RAILS_ROOT}/public/" + quality_trace.image_path, output_path + "/" + image_name )
   end
 end

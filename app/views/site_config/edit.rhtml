@@ -45,6 +45,12 @@
     <p><label for="site_config_administrator_email">Administrator email</label><br/>
 	<%= text_field 'site_config', 'administrator_email'  %></p>
 	
+	<p><label for="site_config_bioanalyzer_pickup">Bioanalyzer Data Pickup Directory</label><br/>
+	<%= text_field 'site_config', 'bioanalyzer_pickup'  %></p>
+
+	<p><label for="site_config_quality_trace_dropoff">Dropoff Directory for Quality Traces for Hybridized Samples</label><br/>
+	<%= text_field 'site_config', 'quality_trace_dropoff'  %></p>
+	
 	<%= hidden_field 'site_config', 'lock_version' %>
 	
   <%= submit_tag 'Update Site Configuration' %>

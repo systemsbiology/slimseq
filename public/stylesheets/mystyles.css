@@ -178,3 +178,18 @@ th {
 	border:1px solid #888;
 	cursor:move;
 }
+/* Bioanalyzer Trace table */
+table#quality_traces {
+    text-align: center;
+    padding: 2;
+	background-color: #ffffff;
+	border-color: #5d74a5;
+	border-width: 1px;
+	border-style: solid;
+	border-collapse: collapse;
+	margin-bottom: 8px
+}
+
+table#quality_traces td {
+    padding: 15px;
+}

@@ -14,12 +14,12 @@ role_00002:
 role_00004: 
   name: Customer
   omnipotent: false
-  id: 4
+  id: 3
   description: Customers, who can submit and check on samples, as well as look at their array inventories.
   system_role: true
 role_00005: 
   name: Staff
   omnipotent: false
-  id: 5
+  id: 4
   description: Members of the facility staff, who can do just about anything except manage users and site configuration.
   system_role: true

@@ -69,4 +69,13 @@ class SiteConfig < ActiveRecord::Base
   def SiteConfig.administrator_email
     return SiteConfig.find(1).administrator_email
   end
+  
+  def SiteConfig.bioanalyzer_pickup
+    return SiteConfig.find(1).bioanalyzer_pickup
+  end
+
+  def SiteConfig.quality_trace_dropoff
+    return SiteConfig.find(1).quality_trace_dropoff
+  end
+
 end

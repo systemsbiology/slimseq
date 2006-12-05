@@ -1,5 +1,8 @@
 require File.dirname(__FILE__) + '/../test_helper'
 require 'hybridizations_controller'
+require 'assert_select'
+require 'html_selector'
+Test::Unit::TestCase.send :include, Test::Unit::AssertSelect
 
 # Re-raise errors caught by the controller.
 class HybridizationsController; def rescue_action(e) raise e end; end
@@ -125,6 +128,25 @@ class HybridizationsControllerTest < Test::Unit::TestCase
   end
 
   def test_create_all_tracking_on
+    # copy images into place for use with this test
+    FileUtils.cp("#{RAILS_ROOT}/test/fixtures/bioanalyzer_files/2100 expert_EukaryoteTotal RNA Nano_DE02000308_2004-07-29_11-23-22_EGRAM_Sample1.jpg",
+                 "#{RAILS_ROOT}/public/quality_traces/2100expert_EukaryoteTotalRNANano_DE02000308_2004-07-29_11-23-22-Control_1-total.jpg")
+    FileUtils.cp("#{RAILS_ROOT}/test/fixtures/bioanalyzer_files/2100 expert_EukaryoteTotal RNA Nano_DE02000308_2004-07-29_11-23-22_EGRAM_Sample5.jpg",
+                 "#{RAILS_ROOT}/public/quality_traces/2100expert_EukaryoteTotalRNANano_DE02000308_2004-07-29_11-23-22-Control_1-cRNA.jpg")
+    FileUtils.cp("#{RAILS_ROOT}/test/fixtures/bioanalyzer_files/2100 expert_EukaryoteTotal RNA Nano_DE02000308_2004-07-29_11-23-22_EGRAM_Sample9.jpg",
+                 "#{RAILS_ROOT}/public/quality_traces/2100expert_EukaryoteTotalRNANano_DE02000308_2004-07-29_11-23-22-Control_1-fragmented.jpg")
+
+    # set output directories to the rails root (we'll delete any test files when done)
+    @site_config = SiteConfig.find(1)
+    @site_config.update_attributes(:create_gcos_files => 1)
+    @site_config.update_attributes(:using_sbeams => 1)
+    @site_config.update_attributes(:gcos_output_path => "#{RAILS_ROOT}")
+    @site_config.update_attributes(:quality_trace_dropoff => "#{RAILS_ROOT}")
+    @site_config.save
+
+    # temporarily make a folder for output traces
+    FileUtils.mkdir("#{RAILS_ROOT}/200602")
+
     num_hybridizations = Hybridization.count
     num_transactions = ChipTransaction.count
     num_charges = Charge.count
@@ -148,12 +170,29 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     # make sure a charge was recorded
     assert_equal num_charges + 1,
                  Charge.count    
+
+    # make sure gcos file was created, then delete it
+    assert File.exists?("#{RAILS_ROOT}/20060213_01_Young.txt")
+    FileUtils.rm("#{RAILS_ROOT}/20060213_01_Young.txt")
+    
+    # make sure bioanalyzer trace files created, then delete them
+    assert File.exists?("#{RAILS_ROOT}/200602/20060213_01_Young.EGRAM_T.jpg")
+    assert File.exists?("#{RAILS_ROOT}/200602/20060213_01_Young.EGRAM_PF.jpg")
+    assert File.exists?("#{RAILS_ROOT}/200602/20060213_01_Young.EGRAM_F.jpg")
+    FileUtils.rm_rf("#{RAILS_ROOT}/200602")
+    
+    # remove files put into place during test
+    FileUtils.rm("#{RAILS_ROOT}/public/quality_traces/2100expert_EukaryoteTotalRNANano_DE02000308_2004-07-29_11-23-22-Control_1-total.jpg")
+    FileUtils.rm("#{RAILS_ROOT}/public/quality_traces/2100expert_EukaryoteTotalRNANano_DE02000308_2004-07-29_11-23-22-Control_1-cRNA.jpg")
+    FileUtils.rm("#{RAILS_ROOT}/public/quality_traces/2100expert_EukaryoteTotalRNANano_DE02000308_2004-07-29_11-23-22-Control_1-fragmented.jpg")    
   end
 
   def test_create_bad_gcos_output_path
     # set a nonsensical gcos path
     @site_config = SiteConfig.find(1)
-    @site_config.update_attributes(:create_gcos_files => '/path/that/should/not/work')
+    @site_config.update_attributes(:create_gcos_files => true)
+    @site_config.update_attributes(:gcos_output_path => '/path/that/should/not/work')
+    @site_config.save
 
     num_hybridizations = Hybridization.count
     num_transactions = ChipTransaction.count
@@ -161,7 +200,7 @@ class HybridizationsControllerTest < Test::Unit::TestCase
 
     # use test_add to populate session[:hybridizations] and session[:hybridization_number]
     test_add
-                  
+
     post :create
 
     assert_response :redirect

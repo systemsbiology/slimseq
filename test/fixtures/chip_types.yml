@@ -4,8 +4,10 @@ mouse:
   name: Mouse 430 2.0
   short_name: Mouse430_2
   organism_id: 1
+  array_platform: affy
 alligator:
   id: 2
   name: Alligator 670 2.0
   short_name: Gator670_2
   organism_id: 2
+  array_platform: affy
