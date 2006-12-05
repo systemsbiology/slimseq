@@ -3,7 +3,7 @@ class AddBioanalyzerData < ActiveRecord::Migration
     # table to hold information about bioanalyzer runs,
     # which are comprised of any number of quality_traces
     create_table "bioanalyzer_runs", :force => true do |t|
-      t.column "name", :string, :limit => 50
+      t.column "name", :string, :limit => 100
       t.column "date", :date
       t.column "lock_version", :integer, :default => 0
     end
