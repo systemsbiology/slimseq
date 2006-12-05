@@ -42,6 +42,9 @@ class AddBioanalyzerData < ActiveRecord::Migration
     site_config.quality_trace_dropoff = "/tmp/"
     site_config.save
     
+    # create new permissions
+    Rake::Task[:sync_permissions].invoke
+    
     # If customer role exists, give access to new bioanalyzer-related interfaces
     customer_role = Role.find(:first, :conditions => "name = 'Customer'")
     if(customer_role != nil)
