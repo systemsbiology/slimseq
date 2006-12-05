@@ -12,7 +12,7 @@
     <tr>
 <% for i in 0..@quality_traces.size-1 %>
         <td>
-            <img src=<%=h @quality_traces[i].image_path %>
+            <%= image_tag(@quality_traces[i].image_path) %>
             <br>
             <%#=h @quality_traces[i].sample_type + ": " + @quality_traces[i].name %>
             <% if @quality_traces[i].sample_type == "total" %>
