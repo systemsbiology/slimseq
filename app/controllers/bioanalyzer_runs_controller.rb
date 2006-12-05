@@ -23,9 +23,11 @@ class BioanalyzerRunsController < ApplicationController
     end
     bioanalyzer_run_ids.flatten
 
-    @bioanalyzer_run_pages, @bioanalyzer_runs = paginate :bioanalyzer_runs, 
-                                                :per_page => 10, :order => "date DESC",
-                                                :conditions => ["id IN (?)", bioanalyzer_run_ids]
+    if(bioanalyzer_run_ids.size > 0)
+      @bioanalyzer_run_pages, @bioanalyzer_runs = paginate :bioanalyzer_runs, 
+                                                  :per_page => 10, :order => "date DESC",
+                                                  :conditions => ["id IN (?)", bioanalyzer_run_ids]
+    end      
   end
 
   def show
