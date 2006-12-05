@@ -26,7 +26,7 @@ class BioanalyzerRun < ActiveRecord::Base
     for xml_file in xml_files
       # name of run is filename minus extension
       run_name = xml_file.scan(/.*\/(.*?)\.xml/i).to_s
-      
+
       # only process xml files that haven't been loaded yet
       if( !existing_run_names.include?(run_name) )
         # get chip name
@@ -37,6 +37,8 @@ class BioanalyzerRun < ActiveRecord::Base
         
         # find the chip-wide lab group
         chip_lab_name = doc.elements["Chipset/Chips/Chip/Files/File/FileInformation/Comment"].text
+        # get rid of trailing whitespace
+        chip_lab_name = chip_lab_name.scan(/(.*)\n*/)[0]
         chip_lab_group = LabGroup.find(:first, :conditions => [ "name = ?", chip_lab_name])
         
         # create an array to hold traces
