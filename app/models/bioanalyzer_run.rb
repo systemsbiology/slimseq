@@ -37,10 +37,13 @@ class BioanalyzerRun < ActiveRecord::Base
         
         # find the chip-wide lab group
         chip_lab_name = doc.elements["Chipset/Chips/Chip/Files/File/FileInformation/Comment"].text
-        # get rid of trailing whitespace
-        chip_lab_name = chip_lab_name.scan(/(.*)\n*/)[0]
-        chip_lab_group = LabGroup.find(:first, :conditions => [ "name = ?", chip_lab_name])
-        
+
+		if( chip_lab_name != nil )
+	        # get rid of trailing whitespace
+	        chip_lab_name = chip_lab_name.scan(/(.*)\n*/)[0]
+	        chip_lab_group = LabGroup.find(:first, :conditions => [ "name = ?", chip_lab_name])
+    	end
+    
         # create an array to hold traces
         traces = Array.new
         
