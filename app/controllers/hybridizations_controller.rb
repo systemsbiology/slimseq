@@ -227,30 +227,6 @@ class HybridizationsController < ApplicationController
     redirect_to :action => 'list'
   end
 
-  private
-  def populate_arrays_from_tables
-    # grab SBEAMS configuration parameter here, rather than
-    # grabbing it in the list view for every element displayed
-    @using_sbeams = SiteConfig.find(1).using_sbeams?
-  
-    @lab_groups = LabGroup.find(:all, :order => "name ASC")
-    @chip_types = ChipType.find(:all, :order => "name ASC")
-    @organisms = Organism.find(:all, :order => "name ASC")
-
-    # only show charge sets in the most recently entered charge period
-    latest_charge_period = ChargePeriod.find(:first, :order => "id DESC")
-    if(latest_charge_period == nil)
-      @charge_sets = Array.new
-    else
-      @charge_sets = ChargeSet.find(:all, :conditions => [ "charge_period_id = ?", latest_charge_period.id ],
-                                    :order => "name ASC")
-    end
-    
-    # only show templates where a chip is hybridized, so chips_used > 0
-    @charge_templates = ChargeTemplate.find(:all, :order => "name ASC",
-                        :conditions => ["chips_used > ?", 0])
-  end
-  
   def record_as_chip_transactions(hybridizations)
     hybs_per_group_chip = Hash.new(0)
     
@@ -348,5 +324,29 @@ class HybridizationsController < ApplicationController
   
   def copy_image_based_on_chip_name(quality_trace, output_path, image_name)
     FileUtils.cp( "#{RAILS_ROOT}/public/" + quality_trace.image_path, output_path + "/" + image_name )
+  end
+
+  private
+  def populate_arrays_from_tables
+    # grab SBEAMS configuration parameter here, rather than
+    # grabbing it in the list view for every element displayed
+    @using_sbeams = SiteConfig.find(1).using_sbeams?
+  
+    @lab_groups = LabGroup.find(:all, :order => "name ASC")
+    @chip_types = ChipType.find(:all, :order => "name ASC")
+    @organisms = Organism.find(:all, :order => "name ASC")
+
+    # only show charge sets in the most recently entered charge period
+    latest_charge_period = ChargePeriod.find(:first, :order => "id DESC")
+    if(latest_charge_period == nil)
+      @charge_sets = Array.new
+    else
+      @charge_sets = ChargeSet.find(:all, :conditions => [ "charge_period_id = ?", latest_charge_period.id ],
+                                    :order => "name ASC")
+    end
+    
+    # only show templates where a chip is hybridized, so chips_used > 0
+    @charge_templates = ChargeTemplate.find(:all, :order => "name ASC",
+                        :conditions => ["chips_used > ?", 0])
   end
 end
