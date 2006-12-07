@@ -28,6 +28,7 @@ class SamplesController < ApplicationController
     session[:sample_number] = 0
     
     @add_samples = AddSamples.new
+    @project = Project.new
   end
 
   def add
@@ -178,8 +179,9 @@ class SamplesController < ApplicationController
   # labeling submission, from total RNA traces
   def new_from_traces(traces)
     populate_arrays_from_tables
-    
-    #@samples = samples
+    @add_samples = AddSamples.new
+    @project = Project.new
+        
     @samples = Array.new
     for trace in traces
       if( trace.sample_type == "total" )
@@ -297,11 +299,6 @@ class SamplesController < ApplicationController
 
     # generate a list of unique names among available samples and selected traces
     @unique_names = Array.new
-#    for sample in @available_samples
-#      if( !@unique_names.include?(sample.sample_name) )
-#        @unique_names << sample.sample_name
-#      end
-#    end
     for trace in traces
       if( !@unique_names.include?(trace.name) && trace.name != "Ladder"  )
         @unique_names << trace.name
@@ -401,6 +398,7 @@ class SamplesController < ApplicationController
       flash[:notice] = "Samples created successfully"
       redirect_to :action => 'show'
     else
+      @add_samples = AddSamples.new
       render :action => 'new_from_traces'
     end
   end
