@@ -384,7 +384,11 @@ class SamplesController < ApplicationController
         sample.fragmented_quality_trace_id = matched_set['fragmented_quality_trace_id']
       end
       
-      @samples << sample
+      # only add the sample to our set if there's at least one trace associated with it
+      if( sample.starting_quality_trace_id != nil || sample.amplified_quality_trace_id != nil ||
+          sample.fragmented_quality_trace_id != nil )
+        @samples << sample
+      end
     end
 
     # If all samples already exist in database, just save them with their new trace
