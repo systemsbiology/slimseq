@@ -58,6 +58,12 @@ class HybridizationsController < ApplicationController
           if(@charge_set == nil)
             # get latest charge period
             charge_period = ChargePeriod.find(:first, :order => "id DESC")
+
+            # if no charge periods exist, make a default one
+            if( charge_period == nil )
+              charge_period = ChargePeriod.new(:name => "Default Charge Period")
+              charge_period.save
+            end
             
             @charge_set = ChargeSet.new(:charge_period_id => charge_period.id,
                                         :name => project.name,
@@ -153,9 +159,15 @@ class HybridizationsController < ApplicationController
         flash[:notice] += ", charges"
       end
       if SiteConfig.using_sbeams?
-        # save Bioanalyzer trace images for SBEAMS
-        output_trace_images(@hybridizations)
-        flash[:notice] += ", bioanalyzer images"
+        begin
+          # save Bioanalyzer trace images for SBEAMS
+          output_trace_images(@hybridizations)
+          flash[:notice] += ", bioanalyzer images"
+        rescue Errno::EACCES, Errno::ENOENT, Errno::EIO
+          flash[:warning] = "Couldn't write Bioanalyzer images to " + SiteConfig.quality_trace_dropoff + ". " + 
+                            "Change permissions on that folder, or choose a new output " +
+                            "directory in the Site Config."
+        end
       end
       if(flash[:notice] != nil)
         flash[:notice] += ' created successfully.'
@@ -214,16 +226,50 @@ class HybridizationsController < ApplicationController
     redirect_to :action => 'list'
   end
 
-  def bulk_destroy
+  def bulk_handler
     selected_hybridizations = params[:selected_hybridizations]
+
+    # make an array of the hybridizations
+    hybridizations = Array.new
     for hybridization_id in selected_hybridizations.keys
       if selected_hybridizations[hybridization_id] == '1'
         hybridization = Hybridization.find(hybridization_id)
-        sample = Sample.find(hybridization.sample_id)
-        hybridization.destroy
-        sample.update_attribute('status', 'submitted')
+        hybridizations << hybridization
       end
     end
+
+    # make sure some hybridizations were selected--if not, complain
+    if( hybridizations.size > 0 )
+      # destroy, export GCOS files, or export Bioanalyzer files?
+      if( params[:commit] == "Delete Hybridizations" )
+        for hybridization in hybridizations
+          sample = Sample.find(hybridization.sample_id)
+          hybridization.destroy
+          sample.update_attribute('status', 'submitted')
+        end
+      elsif( params[:commit] == "Export GCOS Files" )
+        begin
+          create_gcos_import_files(hybridizations)
+          flash[:notice] = "GCOS files successfully created"
+        rescue Errno::EACCES, Errno::ENOENT, Errno::EIO
+          flash[:warning] = "Couldn't write GCOS file(s) to " + SiteConfig.gcos_output_path + ". " + 
+                            "Change permissions on that folder, or choose a new output " +
+                            "directory in the Site Config."
+        end 
+      elsif( params[:commit] == "Export Bioanalyzer Images" )
+        begin
+          output_trace_images(hybridizations)
+          flash[:notice] = "Bioanalyzer Images output successfully"
+        rescue Errno::EACCES, Errno::ENOENT, Errno::EIO
+          flash[:warning] = "Couldn't write Bioanalyzer images to " + SiteConfig.quality_trace_dropoff + ". " + 
+                            "Change permissions on that folder, or choose a new output " +
+                            "directory in the Site Config."
+        end
+      end
+    else
+      flash[:warning] = "No hybridizations were selected"
+    end
+
     redirect_to :action => 'list'
   end
 

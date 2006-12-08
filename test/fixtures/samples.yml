@@ -24,6 +24,9 @@ sample2:
   organism_id: 1
   sbeams_user: bob
   status: hybridized
+  starting_quality_trace_id: 7
+  amplified_quality_trace_id: 11
+  fragmented_quality_trace_id: 15
 sample3:
   id: 3
   submission_date: 2006-02-10

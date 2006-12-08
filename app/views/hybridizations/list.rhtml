@@ -3,7 +3,7 @@
 <p><%= link_if_authorized 'New Hybridizations', :action => 'new' %></p>
 
 <% if @hybridizations.size > 0 %>
-    <%= start_form_tag :action => 'bulk_destroy' %>
+    <%= start_form_tag :action => 'bulk_handler' %>
 		<table class="sortable" id="hybridized_samples">
 		  <tr>
 		    <th>Select</th>
@@ -38,6 +38,10 @@
 		<% end %>
 		</table>
     <p><%= submit_tag 'Delete Hybridizations' %></p>
+    <% if SiteConfig.create_gcos_files? %>
+        <p><%= submit_tag 'Export GCOS Files' %></p>
+    <% end %>
+    <p><%= submit_tag 'Export Bioanalyzer Images' %></p>
 <% else %>
     <p>There are currently no hybridizations.</p>
 <% end %>

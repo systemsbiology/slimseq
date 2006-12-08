@@ -389,7 +389,7 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     sample1_id = Hybridization.find(1).sample_id
     sample2_id = Hybridization.find(2).sample_id
   
-    post :bulk_destroy, :selected_hybridizations => {'1' => '1', '2' => '1'},
+    post :bulk_handler, :selected_hybridizations => {'1' => '1', '2' => '1'},
          :commit => "Delete Hybridizations"
     
     assert_response :redirect
@@ -406,5 +406,60 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     # assert Samples have been reverted to 'submitted' status
     assert_equal 'submitted', Sample.find(sample1_id).status
     assert_equal 'submitted', Sample.find(sample2_id).status
+  end
+
+  def test_bulk_gcos_file_export
+    # set output directory to the rails root (we'll delete any test files when done)
+    @site_config = SiteConfig.find(1)
+    @site_config.update_attributes(:create_gcos_files => 1)
+    @site_config.update_attributes(:using_sbeams => 1)
+    @site_config.update_attributes(:gcos_output_path => "#{RAILS_ROOT}")
+    @site_config.save
+  
+    post :bulk_handler, :selected_hybridizations => {'1' => '1', '2' => '0'},
+         :commit => "Export GCOS Files"
+    
+    assert_response :redirect
+    assert_redirected_to :action => 'list'
+
+    # make sure gcos files was created, then delete it
+    assert File.exists?("#{RAILS_ROOT}/20060210_01_Old.txt")
+    FileUtils.rm("#{RAILS_ROOT}/20060210_01_Old.txt")
+  end
+  
+  def test_bulk_bioanalyzer_trace_export
+    # copy images into place for use with this test
+    FileUtils.cp("#{RAILS_ROOT}/test/fixtures/bioanalyzer_files/2100 expert_EukaryoteTotal RNA Nano_DE02000308_2004-07-29_11-23-22_EGRAM_Sample2.jpg",
+                 "#{RAILS_ROOT}/public/quality_traces/2100expert_EukaryoteTotalRNANano_DE02000308_2004-07-29_11-23-22-Control_2-total.jpg")
+    FileUtils.cp("#{RAILS_ROOT}/test/fixtures/bioanalyzer_files/2100 expert_EukaryoteTotal RNA Nano_DE02000308_2004-07-29_11-23-22_EGRAM_Sample6.jpg",
+                 "#{RAILS_ROOT}/public/quality_traces/2100expert_EukaryoteTotalRNANano_DE02000308_2004-07-29_11-23-22-Control_2-cRNA.jpg")
+    FileUtils.cp("#{RAILS_ROOT}/test/fixtures/bioanalyzer_files/2100 expert_EukaryoteTotal RNA Nano_DE02000308_2004-07-29_11-23-22_EGRAM_Sample10.jpg",
+                 "#{RAILS_ROOT}/public/quality_traces/2100expert_EukaryoteTotalRNANano_DE02000308_2004-07-29_11-23-22-Control_2-fragmented.jpg")
+
+    # set output directories to the rails root (we'll delete any test files when done)
+    @site_config = SiteConfig.find(1)
+    @site_config.update_attributes(:using_sbeams => 1)
+    @site_config.update_attributes(:quality_trace_dropoff => "#{RAILS_ROOT}")
+    @site_config.save    
+
+    # temporarily make a folder for output traces
+    FileUtils.mkdir("#{RAILS_ROOT}/200602")
+
+    post :bulk_handler, :selected_hybridizations => {'1' => '1', '2' => '0'},
+         :commit => "Export Bioanalyzer Images"
+    
+    assert_response :redirect
+    assert_redirected_to :action => 'list'
+    
+    # make sure bioanalyzer trace files created, then delete them
+    assert File.exists?("#{RAILS_ROOT}/200602/20060210_01_Old.EGRAM_T.jpg")
+    assert File.exists?("#{RAILS_ROOT}/200602/20060210_01_Old.EGRAM_PF.jpg")
+    assert File.exists?("#{RAILS_ROOT}/200602/20060210_01_Old.EGRAM_F.jpg")
+    FileUtils.rm_rf("#{RAILS_ROOT}/200602")
+    
+    # remove files put into place during test
+    FileUtils.rm("#{RAILS_ROOT}/public/quality_traces/2100expert_EukaryoteTotalRNANano_DE02000308_2004-07-29_11-23-22-Control_2-total.jpg")
+    FileUtils.rm("#{RAILS_ROOT}/public/quality_traces/2100expert_EukaryoteTotalRNANano_DE02000308_2004-07-29_11-23-22-Control_2-cRNA.jpg")
+    FileUtils.rm("#{RAILS_ROOT}/public/quality_traces/2100expert_EukaryoteTotalRNANano_DE02000308_2004-07-29_11-23-22-Control_2-fragmented.jpg")    
   end
 end
