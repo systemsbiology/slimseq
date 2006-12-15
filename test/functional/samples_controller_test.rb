@@ -570,6 +570,25 @@ class SamplesControllerTest < Test::Unit::TestCase
                  Sample.count
   end
 
+  # choose a set of traces (total RNA/cRNA/fragmented),
+  # all with the same name, and choose to match to
+  # hybridized samples
+  def test_submit_traces_match_to_hybridized_samples_as_admin
+    login_as_admin
+    
+    post :submit_traces, :commit => 'Match to Hybridized Samples',
+                         :selected_traces => {'6' => '1', '10' => '1', '14' => '1'}
+
+    assert_response :success
+    assert_template 'match_traces'
+    
+    # should have fields for one sample
+    assert_tag :tag => 'select', :attributes => { :id => 'sample-0_starting_quality_trace_id' }
+
+    # but not two samples
+    assert_no_tag :tag => 'select', :attributes => { :id => 'sample-1_starting_quality_trace_id' }
+  end
+
 ###########################################
 #
 # Test all functionality available to customer

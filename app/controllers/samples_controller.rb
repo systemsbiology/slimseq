@@ -171,7 +171,12 @@ class SamplesController < ApplicationController
       new_from_traces(traces)
       render :action => 'new_from_traces'
     elsif(params[:commit] == "Request Hybridization")
-      match_traces(traces)
+      # match traces to submitted (non-hybridized) arrays
+      match_traces(traces, "submitted")
+      render :action => 'match_traces'
+    elsif(params[:commit] == "Match to Hybridized Samples")
+      # match only to hybridized arrays
+      match_traces(traces, "hybridized")
       render :action => 'match_traces'
     end
   end
@@ -247,7 +252,7 @@ class SamplesController < ApplicationController
   end
 
   # interface to match up traces and Samples
-  def match_traces(traces)
+  def match_traces(traces, sample_status)
     populate_arrays_from_tables
     
     lab_group_ids = current_user.get_lab_group_ids
@@ -260,7 +265,7 @@ class SamplesController < ApplicationController
     end
     
     # get samples for user's projects
-    @available_samples = Sample.find(:all, :conditions => [ "project_id IN (?) AND status = 'submitted'", project_ids ],
+    @available_samples = Sample.find(:all, :conditions => [ "project_id IN (?) AND status = '#{sample_status}'", project_ids ],
                            :order => "sample_name ASC", :include => 'project')
     
     available_traces = QualityTrace.find(:all, :conditions => [ "lab_group_id IN (?)", lab_group_ids ],
