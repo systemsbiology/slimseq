@@ -7,7 +7,10 @@
 <p><%= link_to 'Download PDF File', :action => 'pdf', :id => @bioanalyzer_run.id %></p>
 
 <p><b>Select Arrays For Labeling/Hybridization:</b></p>
-<%= start_form_tag :controller => 'samples', :action => 'submit_traces' %>
+<%= start_form_tag( {:controller => 'samples', :action => 'submit_traces'}, {:name => 'traces'} ) %>
+
+<script src="/javascripts/checkall.js" type="text/javascript"></script>
+
 <table id="quality_traces">
     <tr>
 <% for i in 0..@quality_traces.size-1 %>
@@ -32,6 +35,14 @@
 <% end %>
     </tr>
 </table>
+
+<p>
+<input type="button" name="CheckAll" value="Check All"
+onClick="checkAll(document.traces)">
+<input type="button" name="UnCheckAll" value="Uncheck All"
+onClick="uncheckAll(document.traces)">
+</p>
+
   <%= submit_tag "Request Labeling" %> |
   <%= submit_tag "Request Hybridization" %> |
   <%= submit_tag "Match to Hybridized Samples" %>
