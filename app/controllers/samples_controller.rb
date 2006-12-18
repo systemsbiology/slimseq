@@ -315,37 +315,63 @@ class SamplesController < ApplicationController
     for name in @unique_names
       # see if there's already a sample for this name
       sample = Sample.find(:first, 
-                           :conditions => [ "project_id IN (?) AND status = 'submitted' AND sample_name LIKE ?", project_ids, name ],
+                           :conditions => [ "project_id IN (?) AND status = '#{sample_status}' AND sample_name LIKE ?", project_ids, name ],
                            :order => "sample_name ASC", :include => 'project')
-      
-      # if no sample is found, create one
-      if( sample == nil )
-        sample = Sample.new
-      end
-      
+           
       # find any traces with the same name, and associate them
       # put these into an array that holds the samples that'll be shown on the form
       starting_trace = QualityTrace.find(:first,
                                          :conditions => [ "name = ? AND sample_type LIKE ?", name, "total" ],
                                          :order => "name ASC")
-      if(starting_trace != nil)
-        sample.starting_quality_trace_id = starting_trace.id
-      end
-      
       amplified_trace = QualityTrace.find(:first,
                                           :conditions => [ "name = ? AND sample_type LIKE ?", name, "cRNA" ],
                                           :order => "name ASC")
-      if(amplified_trace != nil)
-        sample.amplified_quality_trace_id = amplified_trace.id
-      end
-      
       fragmented_trace = QualityTrace.find(:first,
                                            :conditions => [ "name = ? AND sample_type LIKE ?", name, "frag" ],
                                            :order => "name ASC")
-      if(fragmented_trace != nil)
-        sample.fragmented_quality_trace_id = fragmented_trace.id
+
+
+      # if a sample hasn't been found yet, see if starting trace is tied to a sample
+      if( sample == nil && starting_trace != nil )
+        sample = Sample.find(:first, 
+                             :conditions => [ "starting_quality_trace_id = ?", starting_trace.id ])
       end
-      
+      # if a sample hasn't been found yet, see if amplified trace is tied to a sample
+      if( sample == nil && amplified_trace != nil )
+        sample = Sample.find(:first, 
+                             :conditions => [ "amplified_quality_trace_id = ?", amplified_trace.id ])
+      end      
+      # if a sample hasn't been found yet, see if fragmented trace is tied to a sample
+      if( sample == nil && fragmented_trace != nil )
+        sample = Sample.find(:first, 
+                             :conditions => [ "fragmented_quality_trace_id = ?", fragmented_trace.id ])
+      end
+
+      # if no sample is found has been found yet, create one
+      if( sample == nil )
+        sample = Sample.new
+      end
+
+      # tie all the traces specified to the sample, and make sure
+      # they're in drop-down choices
+      if( starting_trace != nil )
+        sample.starting_quality_trace_id = starting_trace.id
+        if( !@total_traces.include?(starting_trace) )
+          @total_traces << starting_trace
+        end
+      end
+      if( amplified_trace != nil )
+        sample.amplified_quality_trace_id = amplified_trace.id
+        if( !@cRNA_traces.include?(amplified_trace) )
+          @cRNA_traces << amplified_trace
+        end
+      end
+      if( fragmented_trace != nil )
+        sample.fragmented_quality_trace_id = fragmented_trace.id
+        if( !@frag_traces.include?(fragmented_trace) )
+          @frag_traces << fragmented_trace
+        end
+      end
       @samples << sample
     end
     
