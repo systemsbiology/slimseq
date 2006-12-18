@@ -396,8 +396,13 @@ class SamplesController < ApplicationController
       if( matched_set['id'].to_i > 0 )
         sample = Sample.find(matched_set['id'])    
       else
-        # if any one sample doesn't yet exist in the database, take note
-        all_samples_exist = false
+        # if any one sample doesn't yet exist in the database AND the trace drop-downs
+        # haven't been all blanked out, will need to collect further sample info
+        if( matched_set['starting_quality_trace_id'].to_i > 0 ||
+            matched_set['amplified_quality_trace_id'].to_i > 0 ||
+            matched_set['fragmented_quality_trace_id'].to_i > 0)
+          all_samples_exist = false
+        end
         
         # set status to submitted and give a default sample name
         sample.status = 'submitted'
@@ -427,7 +432,7 @@ class SamplesController < ApplicationController
     session[:samples] = @samples
     if( all_samples_exist )
       # save now that all samples have been tested as valid
-      for n in 0..num_samples-1
+      for n in 0..@samples.size-1
         @samples[n].save
       end
       flash[:notice] = "Samples created successfully"
