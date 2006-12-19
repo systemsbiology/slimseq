@@ -112,12 +112,14 @@ class SamplesController < ApplicationController
   def edit
     populate_arrays_from_tables
     @sample = Sample.find(params[:id])
+    populate_arrays_for_edit(@sample)
   end
 
   def update
     populate_arrays_from_tables
     @sample = Sample.find(params[:id])
-
+    populate_arrays_for_edit(@sample)
+    
     begin
       if @sample.update_attributes(params[:sample])
         flash[:notice] = 'Sample was successfully updated.'
@@ -271,13 +273,13 @@ class SamplesController < ApplicationController
     available_traces = QualityTrace.find(:all, :conditions => [ "lab_group_id IN (?)", lab_group_ids ],
                                    :order => "name ASC")
     
-    # remove all traces associated with a hybridized sample from list of available traces
-    hybridized_samples = Sample.find(:all, :conditions => [ "project_id IN (?) AND status = 'hybridized'", project_ids ],
+    # remove all traces associated with a sample from list of available traces
+    existing_samples = Sample.find(:all, :conditions => [ "project_id IN (?)", project_ids ],
                            :order => "sample_name ASC", :include => 'project')
 
     # remove traces that are associated with hybridized samples
     # there'd be less looping, but a lot more SQL queries if this was by Sample.find
-    for sample in hybridized_samples
+    for sample in existing_samples
       for trace in available_traces
         if( sample.starting_quality_trace_id == trace.id ||
             sample.amplified_quality_trace_id == trace.id ||
@@ -317,7 +319,7 @@ class SamplesController < ApplicationController
       sample = Sample.find(:first, 
                            :conditions => [ "project_id IN (?) AND status = '#{sample_status}' AND sample_name LIKE ?", project_ids, name ],
                            :order => "sample_name ASC", :include => 'project')
-           
+      
       # find any traces with the same name, and associate them
       # put these into an array that holds the samples that'll be shown on the form
       starting_trace = QualityTrace.find(:first,
@@ -334,17 +336,31 @@ class SamplesController < ApplicationController
       # if a sample hasn't been found yet, see if starting trace is tied to a sample
       if( sample == nil && starting_trace != nil )
         sample = Sample.find(:first, 
-                             :conditions => [ "starting_quality_trace_id = ?", starting_trace.id ])
+                             :conditions => [ "starting_quality_trace_id = ? AND status = '#{sample_status}'", starting_trace.id ])
       end
       # if a sample hasn't been found yet, see if amplified trace is tied to a sample
       if( sample == nil && amplified_trace != nil )
         sample = Sample.find(:first, 
-                             :conditions => [ "amplified_quality_trace_id = ?", amplified_trace.id ])
+                             :conditions => [ "amplified_quality_trace_id = ? AND status = '#{sample_status}'", amplified_trace.id ])
       end      
       # if a sample hasn't been found yet, see if fragmented trace is tied to a sample
       if( sample == nil && fragmented_trace != nil )
         sample = Sample.find(:first, 
-                             :conditions => [ "fragmented_quality_trace_id = ?", fragmented_trace.id ])
+                             :conditions => [ "fragmented_quality_trace_id = ? AND status = '#{sample_status}'", fragmented_trace.id ])
+      end
+
+      # make use of any traces already tied to the sample, if a sample
+      # has been identified
+      if( sample != nil )
+        if( sample.starting_quality_trace_id != nil )
+          starting_trace = QualityTrace.find(sample.starting_quality_trace_id)
+        end
+        if( sample.amplified_quality_trace_id != nil )
+          amplified_trace = QualityTrace.find(sample.amplified_quality_trace_id)
+        end
+        if( sample.fragmented_quality_trace_id != nil )
+          fragmented_trace = QualityTrace.find(sample.fragmented_quality_trace_id)
+        end
       end
 
       # if no sample is found has been found yet, create one
@@ -467,4 +483,52 @@ class SamplesController < ApplicationController
     @organisms = Organism.find(:all, :order => "name ASC")
   end
 
+  def populate_arrays_for_edit(selected_sample)
+    lab_group_ids = current_user.get_lab_group_ids
+    
+    # make an array of the accessible project ids, and use this
+    # to find the current user's accessible samples in a nice sorted list
+    project_ids = Array.new
+    for project in @projects
+      project_ids << project.id
+    end
+    
+    available_traces = QualityTrace.find(:all, :conditions => [ "lab_group_id IN (?)", lab_group_ids ],
+                                   :order => "name ASC")
+    
+    # remove all traces associated with a sample from list of available traces
+    existing_samples = Sample.find(:all, :conditions => [ "project_id IN (?)", project_ids ],
+                           :order => "sample_name ASC", :include => 'project')
+
+    # remove traces that are associated with hybridized samples, unless
+    # they're associated with the sample that'll be edited
+    # there'd be less looping, but a lot more SQL queries if this was by Sample.find
+    for sample in existing_samples
+      for trace in available_traces
+        if( (sample.starting_quality_trace_id == trace.id ||
+            sample.amplified_quality_trace_id == trace.id ||
+            sample.fragmented_quality_trace_id == trace.id) &&
+            (selected_sample.starting_quality_trace_id != trace.id &&
+            selected_sample.amplified_quality_trace_id != trace.id &&
+            selected_sample.fragmented_quality_trace_id != trace.id) )
+          available_traces.delete(trace) 
+        end
+      end
+    end
+
+    # check each trace to see if it belongs in one of the sets
+    @total_traces = Array.new
+    @cRNA_traces = Array.new
+    @frag_traces = Array.new
+    for trace in available_traces
+      # put the trace in the appropriate Array
+      if( trace.sample_type.downcase.match(/total/) != nil )
+        @total_traces << trace
+      elsif( trace.sample_type.downcase.match(/crna/) != nil )
+        @cRNA_traces << trace
+      elsif( trace.sample_type.downcase.match(/frag/) != nil ) 
+        @frag_traces << trace
+      end
+    end  
+  end
 end
