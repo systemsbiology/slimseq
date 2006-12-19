@@ -15,7 +15,22 @@
 	
 	<p><label for="sample_sample_group_name">Sample Group Name</label><br/>
 	<%= text_field 'sample', 'sample_group_name', :size => 50  %></p>
-		
+
+	<p><label for="sample_starting_quality_trace_id">Total RNA Trace</label><br/>
+    	<select id="sample_starting_quality_trace_id" name="sample[starting_quality_trace_id]">
+    	<option value="0">---</option>
+        <%= options_from_collection_for_select @total_traces, "id", "name", selected_value=@sample.starting_quality_trace_id %></select></p>
+
+	<p><label for="sample_amplified_quality_trace_id">cRNA Trace</label><br/>
+    	<select id="sample_amplified_quality_trace_id" name="sample[amplified_quality_trace_id]">
+    	<option value="0">---</option>
+        <%= options_from_collection_for_select @cRNA_traces, "id", "name", selected_value=@sample.amplified_quality_trace_id %></select></p>
+
+	<p><label for="sample_fragmented_quality_trace_id">Fragmented cRNA Trace</label><br/>
+    	<select id="sample_fragmented_quality_trace_id" name="sample[fragmented_quality_trace_id]">
+    	<option value="0">---</option>
+        <%= options_from_collection_for_select @frag_traces, "id", "name", selected_value=@sample.fragmented_quality_trace_id %></select></p>
+
     <% if( SiteConfig.using_sbeams? ) %>
     	<p><label for="sample_sample_sbeams_user">SBEAMS User</label><br/>
     	<%= text_field 'sample', 'sbeams_user', :size => 50  %></p>
