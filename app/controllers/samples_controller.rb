@@ -230,6 +230,7 @@ class SamplesController < ApplicationController
       if( @samples[n].new_record? )
         @samples[n].submission_date = @add_samples.submission_date
         @samples[n].chip_type_id = @add_samples.chip_type_id
+        @samples[n].organism_id = ChipType.find(@add_samples.chip_type_id).organism_id
         @samples[n].sbeams_user = @add_samples.sbeams_user
         @samples[n].project_id = @add_samples.project_id
       end
