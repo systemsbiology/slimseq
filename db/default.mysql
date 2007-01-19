@@ -14,6 +14,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `bioanalyzer_runs`
+--
+
+DROP TABLE IF EXISTS `bioanalyzer_runs`;
+CREATE TABLE `bioanalyzer_runs` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(100) default NULL,
+  `date` date default NULL,
+  `lock_version` int(11) default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `bioanalyzer_runs`
+--
+
+
+/*!40000 ALTER TABLE `bioanalyzer_runs` DISABLE KEYS */;
+LOCK TABLES `bioanalyzer_runs` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `bioanalyzer_runs` ENABLE KEYS */;
+
+--
 -- Table structure for table `charge_periods`
 --
 
@@ -339,7 +362,7 @@ CREATE TABLE `permissions` (
 
 /*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
 LOCK TABLES `permissions` WRITE;
-INSERT INTO `permissions` VALUES (1,'permission','new',NULL),(2,'permission','list',NULL),(3,'permission','edit',NULL),(4,'permission','destroy',NULL),(5,'permission','show',NULL),(6,'permission','index',NULL),(7,'chip_transactions','new',NULL),(8,'chip_transactions','list_subset',NULL),(9,'chip_transactions','edit',NULL),(10,'chip_transactions','destroy',NULL),(11,'chip_transactions','create',NULL),(12,'chip_transactions','index',NULL),(13,'chip_transactions','totals',NULL),(14,'chip_transactions','update',NULL),(15,'inventory_checks','new',NULL),(16,'inventory_checks','list',NULL),(17,'inventory_checks','edit',NULL),(18,'inventory_checks','destroy',NULL),(19,'inventory_checks','create',NULL),(20,'inventory_checks','index',NULL),(21,'inventory_checks','update',NULL),(22,'user','new',NULL),(23,'user','delete',NULL),(24,'user','list',NULL),(25,'user','restore_deleted',NULL),(26,'user','forgot_password',NULL),(27,'user','delete_user',NULL),(28,'user','edit',NULL),(29,'user','logout',NULL),(30,'user','staff',NULL),(31,'user','change_password_for_user',NULL),(32,'user','edit_user',NULL),(33,'user','signup',NULL),(34,'user','show',NULL),(35,'user','index',NULL),(36,'user','edit_roles',NULL),(37,'user','login',NULL),(38,'user','home',NULL),(39,'user','edit_lab_groups',NULL),(40,'user','change_password',NULL),(41,'inventory','index',NULL),(42,'projects','new',NULL),(43,'projects','list',NULL),(44,'projects','edit',NULL),(45,'projects','destroy',NULL),(46,'projects','create',NULL),(47,'projects','index',NULL),(48,'projects','update',NULL),(49,'chip_types','new',NULL),(50,'chip_types','list',NULL),(51,'chip_types','edit',NULL),(52,'chip_types','destroy',NULL),(53,'chip_types','create',NULL),(54,'chip_types','index',NULL),(55,'chip_types','update',NULL),(56,'charge_templates','new',NULL),(57,'charge_templates','list',NULL),(58,'charge_templates','edit',NULL),(59,'charge_templates','destroy',NULL),(60,'charge_templates','create',NULL),(61,'charge_templates','index',NULL),(62,'charge_templates','update',NULL),(63,'charge_sets','new',NULL),(64,'charge_sets','list',NULL),(65,'charge_sets','edit',NULL),(66,'charge_sets','destroy',NULL),(67,'charge_sets','create',NULL),(68,'charge_sets','index',NULL),(69,'charge_sets','update',NULL),(70,'charges','new',NULL),(71,'charges','bulk_move_or_destroy',NULL),(72,'charges','edit',NULL),(73,'charges','destroy',NULL),(74,'charges','create',NULL),(75,'charges','update',NULL),(76,'charges','list_within_charge_set',NULL),(77,'lab_groups','new',NULL),(78,'lab_groups','list',NULL),(79,'lab_groups','edit',NULL),(80,'lab_groups','destroy',NULL),(81,'lab_groups','create',NULL),(82,'lab_groups','show',NULL),(83,'lab_groups','index',NULL),(84,'lab_groups','update',NULL),(85,'samples','new',NULL),(86,'samples','list',NULL),(87,'samples','add',NULL),(88,'samples','clear',NULL),(89,'samples','edit',NULL),(90,'samples','destroy',NULL),(91,'samples','create',NULL),(92,'samples','bulk_destroy',NULL),(93,'samples','show',NULL),(94,'samples','index',NULL),(95,'samples','update',NULL),(96,'organisms','new',NULL),(97,'organisms','list',NULL),(98,'organisms','edit',NULL),(99,'organisms','destroy',NULL),(100,'organisms','create',NULL),(101,'organisms','index',NULL),(102,'organisms','update',NULL),(103,'site_config','edit',NULL),(104,'site_config','update',NULL),(105,'hybridizations','new',NULL),(106,'hybridizations','list',NULL),(107,'hybridizations','add',NULL),(108,'hybridizations','clear',NULL),(109,'hybridizations','edit',NULL),(110,'hybridizations','destroy',NULL),(111,'hybridizations','create',NULL),(112,'hybridizations','bulk_destroy',NULL),(113,'hybridizations','show',NULL),(114,'hybridizations','index',NULL),(115,'hybridizations','update',NULL),(116,'hybridizations','order_hybridizations',NULL),(117,'charge_periods','new',NULL),(118,'charge_periods','edit',NULL),(119,'charge_periods','destroy',NULL),(120,'charge_periods','excel',NULL),(121,'charge_periods','create',NULL),(122,'charge_periods','pdf',NULL),(123,'charge_periods','update',NULL),(124,'role','new',NULL),(125,'role','list',NULL),(126,'role','edit',NULL),(127,'role','destroy',NULL),(128,'role','show',NULL),(129,'role','index',NULL);
+INSERT INTO `permissions` VALUES (1,'inventory_checks','new',NULL),(2,'inventory_checks','list',NULL),(3,'inventory_checks','edit',NULL),(4,'inventory_checks','destroy',NULL),(5,'inventory_checks','create',NULL),(6,'inventory_checks','index',NULL),(7,'inventory_checks','update',NULL),(8,'bioanalyzer_runs','list',NULL),(9,'bioanalyzer_runs','destroy',NULL),(10,'bioanalyzer_runs','show',NULL),(11,'bioanalyzer_runs','pdf',NULL),(12,'bioanalyzer_runs','index',NULL),(13,'projects','new',NULL),(14,'projects','list',NULL),(15,'projects','edit',NULL),(16,'projects','destroy',NULL),(17,'projects','create',NULL),(18,'projects','index',NULL),(19,'projects','update',NULL),(20,'charge_templates','new',NULL),(21,'charge_templates','list',NULL),(22,'charge_templates','edit',NULL),(23,'charge_templates','destroy',NULL),(24,'charge_templates','create',NULL),(25,'charge_templates','index',NULL),(26,'charge_templates','update',NULL),(27,'quality_traces','new',NULL),(28,'quality_traces','list',NULL),(29,'quality_traces','edit',NULL),(30,'quality_traces','destroy',NULL),(31,'quality_traces','create',NULL),(32,'quality_traces','show',NULL),(33,'quality_traces','index',NULL),(34,'quality_traces','update',NULL),(35,'charge_sets','new',NULL),(36,'charge_sets','list',NULL),(37,'charge_sets','edit',NULL),(38,'charge_sets','destroy',NULL),(39,'charge_sets','create',NULL),(40,'charge_sets','index',NULL),(41,'charge_sets','update',NULL),(42,'user','new',NULL),(43,'user','delete',NULL),(44,'user','list',NULL),(45,'user','forgot_password',NULL),(46,'user','restore_deleted',NULL),(47,'user','delete_user',NULL),(48,'user','edit',NULL),(49,'user','logout',NULL),(50,'user','change_password_for_user',NULL),(51,'user','staff',NULL),(52,'user','edit_user',NULL),(53,'user','signup',NULL),(54,'user','show',NULL),(55,'user','index',NULL),(56,'user','edit_roles',NULL),(57,'user','edit_lab_groups',NULL),(58,'user','home',NULL),(59,'user','login',NULL),(60,'user','change_password',NULL),(61,'charges','new',NULL),(62,'charges','bulk_move_or_destroy',NULL),(63,'charges','edit',NULL),(64,'charges','destroy',NULL),(65,'charges','create',NULL),(66,'charges','update',NULL),(67,'charges','list_within_charge_set',NULL),(68,'chip_types','new',NULL),(69,'chip_types','list',NULL),(70,'chip_types','edit',NULL),(71,'chip_types','destroy',NULL),(72,'chip_types','create',NULL),(73,'chip_types','index',NULL),(74,'chip_types','update',NULL),(75,'charge_periods','new',NULL),(76,'charge_periods','edit',NULL),(77,'charge_periods','destroy',NULL),(78,'charge_periods','excel',NULL),(79,'charge_periods','create',NULL),(80,'charge_periods','pdf',NULL),(81,'charge_periods','update',NULL),(82,'samples','new',NULL),(83,'samples','list',NULL),(84,'samples','add',NULL),(85,'samples','clear',NULL),(86,'samples','edit',NULL),(87,'samples','submit_traces',NULL),(88,'samples','destroy',NULL),(89,'samples','create_from_traces',NULL),(90,'samples','new_from_traces',NULL),(91,'samples','submit_matched_traces',NULL),(92,'samples','bulk_destroy',NULL),(93,'samples','create',NULL),(94,'samples','show',NULL),(95,'samples','index',NULL),(96,'samples','match_traces',NULL),(97,'samples','update',NULL),(98,'role','new',NULL),(99,'role','list',NULL),(100,'role','edit',NULL),(101,'role','destroy',NULL),(102,'role','show',NULL),(103,'role','index',NULL),(104,'permission','new',NULL),(105,'permission','list',NULL),(106,'permission','edit',NULL),(107,'permission','destroy',NULL),(108,'permission','show',NULL),(109,'permission','index',NULL),(110,'inventory','index',NULL),(111,'lab_groups','new',NULL),(112,'lab_groups','list',NULL),(113,'lab_groups','edit',NULL),(114,'lab_groups','destroy',NULL),(115,'lab_groups','create',NULL),(116,'lab_groups','show',NULL),(117,'lab_groups','index',NULL),(118,'lab_groups','update',NULL),(119,'organisms','new',NULL),(120,'organisms','list',NULL),(121,'organisms','edit',NULL),(122,'organisms','destroy',NULL),(123,'organisms','create',NULL),(124,'organisms','index',NULL),(125,'organisms','update',NULL),(126,'site_config','edit',NULL),(127,'site_config','update',NULL),(128,'hybridizations','new',NULL),(129,'hybridizations','list',NULL),(130,'hybridizations','add',NULL),(131,'hybridizations','clear',NULL),(132,'hybridizations','create_gcos_import_files',NULL),(133,'hybridizations','edit',NULL),(134,'hybridizations','destroy',NULL),(135,'hybridizations','copy_image_based_on_chip_name',NULL),(136,'hybridizations','create',NULL),(137,'hybridizations','show',NULL),(138,'hybridizations','bulk_handler',NULL),(139,'hybridizations','index',NULL),(140,'hybridizations','output_trace_images',NULL),(141,'hybridizations','record_as_chip_transactions',NULL),(142,'hybridizations','update',NULL),(143,'hybridizations','record_charges',NULL),(144,'hybridizations','order_hybridizations',NULL),(145,'chip_transactions','new',NULL),(146,'chip_transactions','edit',NULL),(147,'chip_transactions','list_subset',NULL),(148,'chip_transactions','destroy',NULL),(149,'chip_transactions','create',NULL),(150,'chip_transactions','index',NULL),(151,'chip_transactions','totals',NULL),(152,'chip_transactions','update',NULL);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
 
@@ -360,7 +383,7 @@ CREATE TABLE `permissions_roles` (
 
 /*!40000 ALTER TABLE `permissions_roles` DISABLE KEYS */;
 LOCK TABLES `permissions_roles` WRITE;
-INSERT INTO `permissions_roles` VALUES (37,1),(26,1),(1,2),(2,2),(3,2),(4,2),(5,2),(6,2),(7,2),(8,2),(9,2),(10,2),(11,2),(12,2),(13,2),(14,2),(15,2),(16,2),(17,2),(18,2),(19,2),(20,2),(21,2),(22,2),(23,2),(24,2),(25,2),(26,2),(27,2),(28,2),(29,2),(30,2),(31,2),(32,2),(33,2),(34,2),(35,2),(36,2),(37,2),(38,2),(39,2),(40,2),(41,2),(42,2),(43,2),(44,2),(45,2),(46,2),(47,2),(48,2),(49,2),(50,2),(51,2),(52,2),(53,2),(54,2),(55,2),(56,2),(57,2),(58,2),(59,2),(60,2),(61,2),(62,2),(63,2),(64,2),(65,2),(66,2),(67,2),(68,2),(69,2),(70,2),(71,2),(72,2),(73,2),(74,2),(75,2),(76,2),(77,2),(78,2),(79,2),(80,2),(81,2),(82,2),(83,2),(84,2),(85,2),(86,2),(87,2),(88,2),(89,2),(90,2),(91,2),(92,2),(93,2),(94,2),(95,2),(96,2),(97,2),(98,2),(99,2),(100,2),(101,2),(102,2),(103,2),(104,2),(105,2),(106,2),(107,2),(108,2),(109,2),(110,2),(111,2),(112,2),(113,2),(114,2),(115,2),(116,2),(117,2),(118,2),(119,2),(120,2),(121,2),(122,2),(123,2),(124,2),(125,2),(126,2),(127,2),(128,2),(129,2),(29,3),(38,3),(40,3),(28,3),(8,3),(41,3),(85,3),(86,3),(87,3),(88,3),(89,3),(90,3),(91,3),(93,3),(94,3),(95,3),(29,4),(38,4),(30,4),(40,4),(28,4),(96,4),(97,4),(98,4),(99,4),(100,4);
+INSERT INTO `permissions_roles` VALUES (59,1),(45,1),(1,2),(2,2),(3,2),(4,2),(5,2),(6,2),(7,2),(8,2),(9,2),(10,2),(11,2),(12,2),(13,2),(14,2),(15,2),(16,2),(17,2),(18,2),(19,2),(20,2),(21,2),(22,2),(23,2),(24,2),(25,2),(26,2),(27,2),(28,2),(29,2),(30,2),(31,2),(32,2),(33,2),(34,2),(35,2),(36,2),(37,2),(38,2),(39,2),(40,2),(41,2),(42,2),(43,2),(44,2),(45,2),(46,2),(47,2),(48,2),(49,2),(50,2),(51,2),(52,2),(53,2),(54,2),(55,2),(56,2),(57,2),(58,2),(59,2),(60,2),(61,2),(62,2),(63,2),(64,2),(65,2),(66,2),(67,2),(68,2),(69,2),(70,2),(71,2),(72,2),(73,2),(74,2),(75,2),(76,2),(77,2),(78,2),(79,2),(80,2),(81,2),(82,2),(83,2),(84,2),(85,2),(86,2),(87,2),(88,2),(89,2),(90,2),(91,2),(92,2),(93,2),(94,2),(95,2),(96,2),(97,2),(98,2),(99,2),(100,2),(101,2),(102,2),(103,2),(104,2),(105,2),(106,2),(107,2),(108,2),(109,2),(110,2),(111,2),(112,2),(113,2),(114,2),(115,2),(116,2),(117,2),(118,2),(119,2),(120,2),(121,2),(122,2),(123,2),(124,2),(125,2),(126,2),(127,2),(128,2),(129,2),(130,2),(131,2),(132,2),(133,2),(134,2),(135,2),(136,2),(137,2),(138,2),(139,2),(140,2),(141,2),(142,2),(143,2),(144,2),(145,2),(146,2),(147,2),(148,2),(149,2),(150,2),(151,2),(152,2),(49,3),(58,3),(60,3),(48,3),(147,3),(110,3),(82,3),(83,3),(84,3),(85,3),(86,3),(88,3),(93,3),(94,3),(95,3),(97,3),(49,4),(58,4),(51,4),(60,4),(48,4),(119,4),(120,4),(121,4),(122,4),(123,4),(124,4),(125,4),(145,4),(146,4),(147,4),(148,4),(149,4),(150,4),(151,4),(152,4),(20,4),(21,4),(22,4),(23,4),(24,4),(25,4),(26,4),(128,4),(129,4),(130,4),(131,4),(133,4),(134,4),(136,4),(137,4),(139,4),(142,4),(144,4),(68,4),(69,4),(70,4),(71,4),(72,4),(73,4),(74,4),(111,4),(112,4),(113,4),(114,4),(115,4),(116,4),(117,4),(118,4),(75,4),(76,4),(77,4),(78,4),(79,4),(80,4),(81,4),(1,4),(2,4),(3,4),(4,4),(5,4),(6,4),(7,4),(61,4),(63,4),(64,4),(65,4),(66,4),(67,4),(82,4),(83,4),(84,4),(85,4),(86,4),(88,4),(93,4),(94,4),(95,4),(97,4),(110,4),(35,4),(36,4),(37,4),(38,4),(39,4),(40,4),(41,4),(8,3),(10,3),(12,3),(11,3),(32,3),(87,3),(90,3),(89,3),(96,3),(91,3),(12,4),(8,4),(10,4),(9,4),(32,4),(87,4),(90,4),(89,4),(96,4),(91,4);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `permissions_roles` ENABLE KEYS */;
 
@@ -387,6 +410,36 @@ CREATE TABLE `projects` (
 LOCK TABLES `projects` WRITE;
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
+
+--
+-- Table structure for table `quality_traces`
+--
+
+DROP TABLE IF EXISTS `quality_traces`;
+CREATE TABLE `quality_traces` (
+  `id` int(11) NOT NULL auto_increment,
+  `image_path` varchar(200) default NULL,
+  `quality_rating` varchar(20) default NULL,
+  `name` varchar(100) default NULL,
+  `number` int(11) default NULL,
+  `sample_type` varchar(20) default NULL,
+  `concentration` varchar(20) default NULL,
+  `ribosomal_ratio` varchar(20) default NULL,
+  `bioanalyzer_run_id` int(11) default NULL,
+  `lab_group_id` int(11) default NULL,
+  `lock_version` int(11) default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `quality_traces`
+--
+
+
+/*!40000 ALTER TABLE `quality_traces` DISABLE KEYS */;
+LOCK TABLES `quality_traces` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `quality_traces` ENABLE KEYS */;
 
 --
 -- Table structure for table `roles`
@@ -430,6 +483,9 @@ CREATE TABLE `samples` (
   `status` varchar(50) default NULL,
   `lock_version` int(11) default '0',
   `project_id` int(11) default NULL,
+  `starting_quality_trace_id` int(11) default NULL,
+  `amplified_quality_trace_id` int(11) default NULL,
+  `fragmented_quality_trace_id` int(11) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -459,7 +515,7 @@ CREATE TABLE `schema_info` (
 
 /*!40000 ALTER TABLE `schema_info` DISABLE KEYS */;
 LOCK TABLES `schema_info` WRITE;
-INSERT INTO `schema_info` VALUES (12);
+INSERT INTO `schema_info` VALUES (13);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `schema_info` ENABLE KEYS */;
 
@@ -485,6 +541,8 @@ CREATE TABLE `site_config` (
   `LDAP_DN` varchar(200) default NULL,
   `lock_version` int(11) default '0',
   `administrator_email` varchar(100) default NULL,
+  `bioanalyzer_pickup` varchar(250) default NULL,
+  `quality_trace_dropoff` varchar(250) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -495,7 +553,7 @@ CREATE TABLE `site_config` (
 
 /*!40000 ALTER TABLE `site_config` DISABLE KEYS */;
 LOCK TABLES `site_config` WRITE;
-INSERT INTO `site_config` VALUES (1,'SLIMarray','Name of Your Organization Here','Your Facility Name Here','both',1,1,1,0,0,'/tmp/',NULL,NULL,NULL,1,'webmaster@your.site.com');
+INSERT INTO `site_config` VALUES (1,'SLIMarray','Name of Your Organization Here','Your Facility Name Here','both',1,1,1,0,0,'/tmp/',NULL,NULL,NULL,2,'webmaster@your.site.com','/tmp/','/tmp/');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `site_config` ENABLE KEYS */;
 
@@ -531,7 +589,7 @@ CREATE TABLE `users` (
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 LOCK TABLES `users` WRITE;
-INSERT INTO `users` VALUES (1,'admin','7662306c4bae61f4dbaec84f149665becfb11dec','admin@localhost','System','Administrator','483ea17d8de81b470733b788b0319fe4b0b3c417',1,NULL,NULL,NULL,'2006-10-20 10:39:13','2006-10-20 10:41:35','2006-10-20 10:41:35',0,NULL);
+INSERT INTO `users` VALUES (1,'admin','5712addde4da6918bcc93ab9dfc28ee97ad6b9d9','admin@localhost','System','Administrator','5d57793070dbb5183fe987a01a433c0d9851743a',1,NULL,NULL,NULL,'2007-01-19 09:22:15','2007-01-19 09:22:15',NULL,0,NULL);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
