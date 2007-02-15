@@ -2,7 +2,7 @@ body {
     font-family: "Trebuchet MS", Tahoma, Verdana, Arial, Helvetica, sans-serif;
 	font-size:80%;
 	color:#444;
-	min-width: 750px;
+	//min-width: 1500px;
 }
 
 #title_bar {
@@ -17,7 +17,7 @@ body {
 #wrap {
 	float: left;
     margin:0 auto;
-    width:1000px;
+    width:2200px;
 }
 
 #menu {
@@ -27,6 +27,15 @@ body {
     color: #004;
 	width:13em;
 	margin:2px;
+}
+
+#main {
+    float:left;
+    margin-left: -3px;
+    border-left: 1px solid;
+    padding-top: 2ex;
+	padding-left: 3ex;
+	width:2000px;
 }
 
 #menu a{
@@ -43,14 +52,6 @@ body {
 	padding-top: 0.5ex;
     font-weight: bold;
     font-size: 110%;
-}
-#main {
-    float:left;
-    margin-left: -3px;
-    border-left: 1px solid;
-    padding-top: 2ex;
-	padding-left: 3ex;
-	width:800px;
 }
 
 .fieldset {
