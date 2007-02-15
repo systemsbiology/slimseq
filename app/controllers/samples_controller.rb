@@ -210,35 +210,41 @@ class SamplesController < ApplicationController
 
     @add_samples = AddSamples.new(params[:add_samples])
 
+    failed = false
+
     # should a new project be created?
     if(@add_samples.project_id == -1)
       @project = Project.new(params[:project])
       if(@project.save)
         @add_samples.project_id = @project.id
+      else
+        failed = true
       end
     end
 
-    failed = false 
-    for n in 0..@samples.size-1
-      form_entries = params['sample-'+n.to_s]
-      # add sample info from forms
-      @samples[n].short_sample_name = form_entries['short_sample_name']
-      @samples[n].sample_name = form_entries['sample_name']
-      @samples[n].sample_group_name = form_entries['sample_group_name']
-      
-      # add meta info from forms, for newly-created samples only
-      if( @samples[n].new_record? )
-        @samples[n].submission_date = @add_samples.submission_date
-        @samples[n].chip_type_id = @add_samples.chip_type_id
-        @samples[n].organism_id = ChipType.find(@add_samples.chip_type_id).organism_id
-        @samples[n].sbeams_user = @add_samples.sbeams_user
-        @samples[n].project_id = @add_samples.project_id
-      end
-      
-      # if any one sample record isn't valid,
-      # we don't want to save any
-      if !@samples[n].valid?
-        failed = true
+    # only proceed if project creation succeeded or wasn't necessary
+    if !failed
+      for n in 0..@samples.size-1
+        form_entries = params['sample-'+n.to_s]
+        # add sample info from forms
+        @samples[n].short_sample_name = form_entries['short_sample_name']
+        @samples[n].sample_name = form_entries['sample_name']
+        @samples[n].sample_group_name = form_entries['sample_group_name']
+        
+        # add meta info from forms, for newly-created samples only
+        if( @samples[n].new_record? )
+          @samples[n].submission_date = @add_samples.submission_date
+          @samples[n].chip_type_id = @add_samples.chip_type_id
+          @samples[n].organism_id = ChipType.find(@add_samples.chip_type_id).organism_id
+          @samples[n].sbeams_user = @add_samples.sbeams_user
+          @samples[n].project_id = @add_samples.project_id
+        end
+        
+        # if any one sample record isn't valid,
+        # we don't want to save any
+        if !@samples[n].valid?
+          failed = true
+        end
       end
     end
 
