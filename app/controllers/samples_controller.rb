@@ -26,14 +26,15 @@ class SamplesController < ApplicationController
     # clear out sample table since this is a 'new' set
     session[:samples] = Array.new
     session[:sample_number] = 0
-    
+
     @add_samples = AddSamples.new
     @project = Project.new
   end
 
   def add
     populate_arrays_from_tables
-    
+    populate_sample_naming_scheme_choices
+
     @samples = session[:samples]
     previous_samples = session[:sample_number]
 
@@ -49,12 +50,29 @@ class SamplesController < ApplicationController
     # only add more sample slots if that's what was asked
     if(@add_samples.project_id != -1 && @add_samples.valid?) 
       for sample_number in previous_samples+1..previous_samples+@add_samples.number
+        
+        # deal with initial visibility for schemed names
+        if( current_user.current_naming_scheme_id == nil )
+          visibility = nil
+        else
+          # set initial visibilities
+          visibility = Array.new
+          for element in @naming_elements
+            if( element.dependent_element_id > 0 )
+              visibility << false
+            else
+              visibility << true
+            end
+          end
+        end
+        
         @samples << Sample.new(:submission_date => @add_samples.submission_date,      
               :chip_type_id => @add_samples.chip_type_id,
               :sbeams_user => @add_samples.sbeams_user,                                              
               :project_id => @add_samples.project_id,
               :organism_id => ChipType.find( @add_samples.chip_type_id).organism_id,
-              :status => 'submitted')
+              :status => 'submitted',
+              :naming_element_visibility => visibility)
       end
       session[:sample_number] = previous_samples + @add_samples.number 
     else
@@ -62,18 +80,86 @@ class SamplesController < ApplicationController
     end
   end
   
+  def update_add_form
+    # find the number of the sample on the page (this is not the sample id)
+    @n = params['sample_number'].to_i
+
+    # the sample
+    @sample = session[:samples][@n]
+
+    # the element that is depended upon
+    @dependent_element_id = params['dependent_id'].to_i
+
+    # find the elements that are depending upon the altered field
+    @dependent_elements = NamingElement.find(:all, :conditions => ["dependent_element_id = ?", @dependent_element_id])# iterate through naming elements in form
+
+    @choice = params['choice'].to_i
+
+
+    populate_sample_naming_scheme_choices
+  end
+  
   def create
-    populate_arrays_from_tables  
+    populate_arrays_from_tables
+    populate_sample_naming_scheme_choices
+
     @samples = session[:samples]
     sample_number = session[:sample_number]
 
-    failed = false 
+    # array of arrays terms per each sample
+    sample_terms = Array.new
+
+    failed = false
     for n in 0..sample_number-1
       form_entries = params['sample-'+n.to_s]
       # add the user info from the forms
       @samples[n].short_sample_name = form_entries['short_sample_name']
-      @samples[n].sample_name = form_entries['sample_name']
-      @samples[n].sample_group_name = form_entries['sample_group_name']
+      
+      # see if a naming scheme was used
+      schemed_name = params['sample-'+n.to_s+'_schemed_name']
+      if(schemed_name != nil)
+        naming_scheme = current_user.naming_scheme  
+        @samples[n].naming_scheme_id = current_user.current_naming_scheme_id
+        @samples[n].sample_name = ""
+        @samples[n].sample_group_name = ""
+        @samples[n].naming_element_selections = Array.new
+        sample_terms[n] = Array.new
+        term_count = 0
+        for element in @naming_elements
+          # put underscores between terms
+          if(@samples[n].sample_name.length > 0)
+            @samples[n].sample_name << "_"
+            
+            # add an underscore between group terms
+            if(element.group_element == true)
+              @samples[n].sample_group_name << "_"
+            end
+          end
+
+          # save user's selections in case page needs to be re-rendered
+          @samples[n].naming_element_selections << schemed_name[element.name]
+          
+          if( schemed_name[element.name].to_i > 0 )
+            naming_term = NamingTerm.find(schemed_name[element.name])
+            naming_element = naming_term.naming_element
+            sample_term = SampleTerm.new( :term_order => naming_element.element_order,
+                                          :naming_term_id => naming_term.id )
+            sample_terms[n] << sample_term
+            @samples[n].sample_name << naming_term.abbreviated_term
+
+            # add to group name if this is a group element
+            if(element.group_element == true)
+              @samples[n].sample_group_name << naming_term.abbreviated_term
+            end
+            
+            term_count += 1
+          end
+        end
+      else
+        # if a schemed name was not used, just use the plain text name and group
+        @samples[n].sample_name = form_entries['sample_name']
+        @samples[n].sample_group_name = form_entries['sample_group_name']
+      end
       @samples[n].organism_id = form_entries['organism_id']
       
       # if any one sample record isn't valid,
@@ -82,13 +168,24 @@ class SamplesController < ApplicationController
         failed = true
       end
     end
+    
     if failed
       @add_samples = AddSamples.new(:number => 0)
+      populate_sample_naming_scheme_choices
       render :action => 'add'
     else
       # save now that all samples have been tested as valid
       for n in 0..sample_number-1
         @samples[n].save
+
+        # if there are sample terms, save them
+        if(sample_terms[n] != nil && sample_terms[n].size > 0)
+          for sample_term in sample_terms[n]
+            # grab the newly-generated sample id
+            sample_term.sample_id = @samples[n].id
+            sample_term.save
+          end
+        end
       end
       flash[:notice] = "Samples created successfully"
       redirect_to :action => 'show'
@@ -112,6 +209,13 @@ class SamplesController < ApplicationController
   def edit
     populate_arrays_from_tables
     @sample = Sample.find(params[:id])
+
+    # if a naming scheme was used, find the relevant terms
+    if( @sample.naming_scheme_id != nil )
+      @sample_terms = SampleTerm.find(:all, :conditions => ["sample_id = ?", @sample.id],
+                                      :order => "term_order ASC")
+    end
+    
     populate_arrays_for_edit(@sample)
   end
 
@@ -186,6 +290,8 @@ class SamplesController < ApplicationController
   # labeling submission, from total RNA traces
   def new_from_traces(traces)
     populate_arrays_from_tables
+    populate_sample_naming_scheme_choices
+    
     @add_samples = AddSamples.new
     @project = Project.new
         
@@ -205,7 +311,9 @@ class SamplesController < ApplicationController
   
   # create samples from total RNA traces
   def create_from_traces
-    populate_arrays_from_tables  
+    populate_arrays_from_tables
+    populate_sample_naming_scheme_choices
+    
     @samples = session[:samples]
 
     @add_samples = AddSamples.new(params[:add_samples])
@@ -462,6 +570,7 @@ class SamplesController < ApplicationController
       redirect_to :action => 'show'
     else
       @add_samples = AddSamples.new
+      populate_sample_naming_scheme_choices
       render :action => 'new_from_traces'
     end
   end
@@ -500,28 +609,38 @@ class SamplesController < ApplicationController
       project_ids << project.id
     end
     
-    available_traces = QualityTrace.find(:all, :conditions => [ "lab_group_id IN (?)", lab_group_ids ],
-                                   :order => "name ASC")
-    
     # remove all traces associated with a sample from list of available traces
     existing_samples = Sample.find(:all, :conditions => [ "project_id IN (?)", project_ids ],
                            :order => "sample_name ASC", :include => 'project')
 
-    # remove traces that are associated with hybridized samples, unless
-    # they're associated with the sample that'll be edited
-    # there'd be less looping, but a lot more SQL queries if this was by Sample.find
+    # remove traces that are associated with hybridized samples
+    used_trace_ids = Array.new
     for sample in existing_samples
-      for trace in available_traces
-        if( (sample.starting_quality_trace_id == trace.id ||
-            sample.amplified_quality_trace_id == trace.id ||
-            sample.fragmented_quality_trace_id == trace.id) &&
-            (selected_sample.starting_quality_trace_id != trace.id &&
-            selected_sample.amplified_quality_trace_id != trace.id &&
-            selected_sample.fragmented_quality_trace_id != trace.id) )
-          available_traces.delete(trace) 
-        end
+      if(sample.starting_quality_trace_id != nil)
+        used_trace_ids << sample.starting_quality_trace_id
+      end
+      if(sample.amplified_quality_trace_id != nil)
+        used_trace_ids << sample.amplified_quality_trace_id
+      end
+      if(sample.fragmented_quality_trace_id != nil)
+        used_trace_ids << sample.fragmented_quality_trace_id
       end
     end
+
+    # don't count traces for current sample, if it has any, since
+    # we want this sample's traces to be in the list
+    if(selected_sample.starting_quality_trace_id != nil)
+      used_trace_ids.delete(selected_sample.starting_quality_trace_id)
+    end
+    if(selected_sample.amplified_quality_trace_id != nil)
+      used_trace_ids.delete(selected_sample.amplified_quality_trace_id)
+    end
+    if(selected_sample.fragmented_quality_trace_id != nil)
+      used_trace_ids.delete(selected_sample.fragmented_quality_trace_id)
+    end
+
+    available_traces = QualityTrace.find(:all, :conditions => [ "id NOT IN (?)", used_trace_ids ],
+                                   :order => "name ASC")
 
     # check each trace to see if it belongs in one of the sets
     @total_traces = Array.new
@@ -537,5 +656,17 @@ class SamplesController < ApplicationController
         @frag_traces << trace
       end
     end  
+  end
+  
+  def populate_sample_naming_scheme_choices
+    # get the user's current naming scheme choice
+#breakpoint
+    scheme = current_user.naming_scheme
+
+    # only if the user has a specified scheme, find out what elements we need
+    if( scheme != nil )
+      @naming_elements = NamingElement.find(:all, :conditions => ["naming_scheme_id = ?", scheme.id],
+                                            :order => "element_order ASC" )
+    end
   end
 end

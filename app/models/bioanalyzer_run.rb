@@ -109,7 +109,26 @@ class BioanalyzerRun < ActiveRecord::Base
               image_path = "/quality_traces/#{new_image_name}"
               
               FileUtils.cp( current_jpg_file, "#{RAILS_ROOT}/public#{image_path}")
-            
+              
+              # find any existing trace with this name
+              existing_traces = QualityTrace.find(:all, :conditions => ["name = ?", name])
+              
+              # if there are traces with the same root name, look for repeats
+              if( existing_traces.size > 0 )
+                repeat_traces = QualityTrace.find(:all, :conditions => ["name LIKE ?", "%#{name}%_r%"])
+                
+                highest_repeat = 0
+                # find highest repeat number and store it
+                for repeat in repeat_traces
+                  repeat_number = repeat.scan( /.*_r(.)/ )
+                  if( repeat_number != nil && repeat_number > highest_repeat )
+                    highest_repeat = repeat_number
+                  end
+                end
+                
+                name = name + "_r" + (highest_repeat + 1).to_s
+              end
+
               trace = QualityTrace.new(:image_path => image_path,
                                        :quality_rating => quality_rating,
                                        :name => name,

@@ -208,6 +208,47 @@ class SamplesControllerTest < Test::Unit::TestCase
     assert_equal 2, @samples.size
   end
 
+  def test_add_naming_scheme_selected_as_admin
+    login_as_admin
+
+    # select a naming scheme for current user
+    current_user = User.find(@request.session[:user].id)
+    current_user.current_naming_scheme_id = 1
+    current_user.save
+
+    # use new to populate session variables
+    get :new
+  
+    get :add, :add_samples => {:submission_date => "2006-02-12", :number => 2,
+                            :project_id => 1, :chip_type_id => 2,
+                            :sbeams_user => "Bob"}
+    
+    # this should have populated the session[:samples] array
+    # with two Sample objects containing appropriate info
+    @samples = session[:samples]
+    assert_equal 2, @samples.size
+    assert_equal Date.new(2006, 2, 12), @samples[0].submission_date
+    assert_equal 1, @samples[0].project_id
+    assert_equal 2, @samples[0].chip_type_id
+    assert_equal 2, @samples[0].organism_id
+    assert_equal "Bob", @samples[0].sbeams_user
+    assert_equal Date.new(2006, 2, 12), @samples[1].submission_date
+    assert_equal 1, @samples[1].project_id
+    assert_equal 2, @samples[1].chip_type_id   
+    assert_equal 2, @samples[1].organism_id
+    assert_equal "Bob", @samples[1].sbeams_user
+    
+    assert_response :success
+    assert_template 'add'
+    
+    @samples = session[:samples]
+    assert_equal 2, @samples.size
+
+    # go back to no naming scheme
+    current_user.current_naming_scheme_id = nil
+    current_user.save
+  end
+
   def test_create_all_tracking_on_as_admin
     login_as_admin
     num_samples = Sample.count
@@ -231,6 +272,52 @@ class SamplesControllerTest < Test::Unit::TestCase
             }  
 
     post :create, :'sample-0' => smpl1, :'sample-1' => smpl2
+
+    assert_response :redirect
+    assert_redirected_to :action => 'show'
+
+    # make sure the records made it into the samples table
+    assert_equal num_samples + 2,
+                 Sample.count
+                 
+  end
+
+  def test_create_naming_scheme_selected_as_admin
+    login_as_admin
+    num_samples = Sample.count
+    num_transactions = ChipTransaction.count
+    num_charges = Charge.count
+
+    # use test_add to populate session[:samples] and session[:sample_number]
+    test_add_naming_scheme_selected_as_admin
+
+    smpl1 = {:submission_date => '2006-02-12',
+            :short_sample_name => 'HlthySmp',
+            :organism_id => '1',
+            }
+    smpl1_schemed = {:'Strain' => 1,
+                    :'Perturbation' => 1,
+                    :'Perturbation Time' => 2,
+                    }
+    smpl2 = {:submission_date => '2006-02-12',
+            :short_sample_name => 'DisSmpl',
+            :organism_id => '1',
+            }  
+    smpl2_schemed = {:'Strain' => 2,
+                    :'Perturbation' => -1,
+                    }
+
+    # select a naming scheme for current user
+    current_user = User.find(@request.session[:user].id)
+    current_user.current_naming_scheme_id = 1
+    current_user.save
+
+    post :create, :'sample-0' => smpl1, :'sample-0_schemed_name' => smpl1_schemed,
+                  :'sample-1' => smpl2, :'sample-1_schemed_name' => smpl2_schemed
+
+    # select a naming scheme for current user
+    current_user.current_naming_scheme_id = nil
+    current_user.save
 
     assert_response :redirect
     assert_redirected_to :action => 'show'

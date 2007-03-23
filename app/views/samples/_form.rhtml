@@ -16,7 +16,7 @@
 	    <%= text_field 'add_samples', 'sbeams_user'  %></p>
 <% elsif SiteConfig.using_affy_arrays? && SiteConfig.create_gcos_files? %>
 	<p><label for="add_samples_sbeams_user">Array User Name (for GCOS)</label><br/>
-	    <%= text_field 'add_samples', 'sbeams_user'  %></p>
+	    <%= text_field 'add_samples', 'sbeams_user' %></p>
 <% else %>
    	    <%= hidden_field 'add_samples', 'sbeams_user'  %>
 <% end %>

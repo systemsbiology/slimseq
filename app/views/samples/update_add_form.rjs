@@ -1,0 +1,16 @@
+# iterate through all naming elements by index, so that it matches
+# up with what's in the form
+for @i in 0..@naming_elements.size-1
+  @element = @naming_elements[@i]
+  
+  # only alter those elements that are dependent
+  if(@dependent_elements.include?(@element))
+    if(@choice == -1)
+      @sample.naming_element_visibility[@i] = false
+      page.replace_html "sample-#{@n}_schemed_name_#{@element.name}_block", :partial => 'hidden_naming_element'
+    else
+      session[:samples][@n].naming_element_visibility[@i] = true
+      page.replace_html "sample-#{@n}_schemed_name_#{@element.name}_block", :partial => 'shown_naming_element'
+    end
+  end
+end

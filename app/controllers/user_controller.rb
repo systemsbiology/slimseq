@@ -16,6 +16,9 @@ class UserController < ApplicationController
       redirect_to :action => 'staff'
     end
     
+    # get all possible naming schemes
+    @naming_schemes = NamingScheme.find(:all)
+
     # grab SBEAMS configuration parameter here, rather than
     # grabbing it in the list view for every element displayed
     @using_sbeams = SiteConfig.find(1).using_sbeams?
@@ -41,6 +44,9 @@ class UserController < ApplicationController
   end
 
   def staff
+    # get all possible naming schemes
+    @naming_schemes = NamingScheme.find(:all)
+
     # grab SBEAMS configuration parameter here, rather than
     # grabbing it in the list view for every element displayed
     @using_sbeams = SiteConfig.find(1).using_sbeams?
@@ -120,6 +126,13 @@ class UserController < ApplicationController
     else
       redirect_back_or_default :action => 'list'
     end
+  end
+
+  # set the user's current naming scheme selection
+  def select_naming_scheme
+    current_user.current_naming_scheme_id = params[:user][:current_naming_scheme_id]
+    current_user.save
+    redirect_to :action => 'home'
   end
 
 end

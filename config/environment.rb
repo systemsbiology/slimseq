@@ -71,12 +71,12 @@ end
 
 # Include your application configuration below
 
-module ChipAccounting
-
-end
-
 module LoginEngine
-  config :salt, "mmm_kosher_rocks"
+  if( ENV["RAILS_ENV"] == "test" )
+    config :salt, "test-salt"
+  else
+    config :salt, "mmm_kosher_rocks"
+  end
 end
 
 module UserEngine

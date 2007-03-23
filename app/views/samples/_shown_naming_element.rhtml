@@ -1,0 +1,10 @@
+<select id="sample-<%=@n%>_schemed_name_<%=@element.name%>" name="sample-<%=@n%>_schemed_name[<%=@element.name%>]">
+<% if @element.optional == true %>
+    <option value="-1">- None -</option>
+<% end %>
+
+<% if @sample.naming_element_selections != nil %>
+   <%= options_from_collection_for_select @element.naming_terms, "id", "term", selected_value=@sample.naming_element_selections[@m.to_i].to_i %></select>
+<% else %>
+   <%= options_from_collection_for_select @element.naming_terms, "id", "term" %></select>
+<% end %>

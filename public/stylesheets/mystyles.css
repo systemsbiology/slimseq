@@ -1,9 +1,4 @@
-body {
-    font-family: "Trebuchet MS", Tahoma, Verdana, Arial, Helvetica, sans-serif;
-	font-size:80%;
-	color:#444;
-	//min-width: 1500px;
-}
+body { background-color: #fff; color: #333; }
 
 #title_bar {
     padding: 3ex 10ex 1ex 4ex;
@@ -17,31 +12,58 @@ body {
 #wrap {
 	float: left;
     margin:0 auto;
-    width:2200px;
+    width:2300px;
 }
 
 #menu {
-	border-right: 1px solid;
+	font-size: 12px;
+	line-height: 20px;
+	color: #333333;
+	background: #E3E8F7;
+	/*border-right: 1px solid;*/
 	float: left;
 	padding: 1ex 0 4ex 1ex;
-    color: #004;
-	width:13em;
+	width:15em;
 	margin:2px;
 }
 
 #main {
+	color: #333333;
+	background: #FFFFFF;
+	line-height: 20px;
     float:left;
     margin-left: -3px;
-    border-left: 1px solid;
+    /*border-left: 1px solid; */
     padding-top: 2ex;
 	padding-left: 3ex;
 	width:2000px;
 }
 
+body, p, ol, ul, td {
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size:   11px;
+  line-height: 16px;
+}
+
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+
+a { color: #5b84a5; text-decoration: none;}
+a:visited { color: #5b84a5; text-decoration: none;}
+a:hover { color: #5b84a5;  text-decoration: underline;}
+
+p.flash{
+	font-size: 14px; background-color:#FFFF99; color: #000000; padding:5px; width:95%;
+	margin: 5px auto;
+}
+
 #menu a{
     padding-left: 1ex;
     padding-right: 1ex;
-    color: #004;   
+    /*color: #004;   */
 }
 
 #menu li {
@@ -132,8 +154,8 @@ th {
 }
 
 #ErrorExplanation {
-  width: 400px;
-  border: 2px solid red;
+  width: 90%;
+  border: 2px solid 'red';
   padding: 7px;
   padding-bottom: 12px;
   margin-bottom: 20px;
@@ -160,6 +182,27 @@ th {
   font-size: 12px;
   list-style: square;
 }
+
+div.uploadStatus {
+  margin: 5px;
+}
+
+div.progressBar {
+  margin: 5px;
+}
+
+div.progressBar div.border {
+  background-color: #fff;
+  border: 1px solid grey;
+  width: 100%;
+}
+
+div.progressBar div.background {
+  background-color: #333;
+  height: 18px;
+  width: 0%;
+}
+
 
 #charge_sets {
     margin-left: 5ex;

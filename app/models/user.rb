@@ -31,6 +31,7 @@ class User < ActiveRecord::Base
 
   has_many :lab_memberships, :dependent => :destroy
   has_many :lab_groups, :through => :lab_memberships
+  belongs_to :naming_scheme, :foreign_key => "current_naming_scheme_id"
 
   # Returns the full name of this user.
   def fullname

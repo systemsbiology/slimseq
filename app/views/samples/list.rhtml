@@ -61,7 +61,7 @@
 	<p><%= submit_tag 'Delete Samples' %></p>
     <%= end_form_tag %>	
 <% else %>
-    <% if current_user.staff? || current_user.admin? %>
+    <% if current_user.staff? || current_user.admin? ||( @lab_groups != nil && @lab_groups.size > 0) %>
         <p>There are currently no samples.</p>
         <p><%= link_to 'Submit New Samples', :action => 'new' %></p>
     <% else %>

@@ -307,6 +307,28 @@ class HybridizationsController < ApplicationController
         # open an output file for writing
         gcos_file = File.new(SiteConfig.gcos_output_path + "/" + hybridization_date_number_string + 
                     "_" + sample.sample_name + ".txt", "w")
+
+        # gather individual and group naming scheme info, if a naming scheme is being used
+        if sample.naming_scheme_id != nil
+          gcos_sample_info = Array.new
+          gcos_experiment_info = Array.new
+          
+          # store the GCOS sample and experiment templates from the naming schemes
+          gcos_sample_info << "SampleTemplate=" + sample.naming_scheme.name + "\n"
+          gcos_experiment_info << "ExperimentTemplate=" + sample.naming_scheme.name + "\n"
+          
+          for sample_term in sample.sample_terms
+            if(sample_term.naming_term.naming_element.group_element == true)
+              gcos_sample_info << sample_term.naming_term.naming_element.name + "=" + sample_term.naming_term.term + "\n"
+            else
+              gcos_experiment_info << sample_term.naming_term.naming_element.name + "=" + sample_term.naming_term.term + "\n"
+            end
+          end
+        # use default sample template of AffyCore if there's no naming scheme
+        else
+          gcos_file << "SampleTemplate=AffyCore\n"
+        end
+        
         # write out information needed by GCOS Object Importer tool
         gcos_file << "[SAMPLE]\n"
         gcos_file << "SampleName=" + sample.sample_group_name + "\n"
@@ -314,14 +336,29 @@ class HybridizationsController < ApplicationController
         gcos_file << "SampleProject=" + sample.project.name + "\n"
         gcos_file << "SampleUser=affybot\n"
         gcos_file << "SampleUpdate=1\n"
-        gcos_file << "SampleTemplate=AffyCore\n"
         gcos_file << "Array User Name=" + sample.sbeams_user + "\n"
+        
+        # add any extra info from the naming scheme, if present
+        if( gcos_sample_info != nil )
+          for line in gcos_sample_info
+            gcos_file << line
+          end
+        end
+        
         gcos_file << "\n"
         gcos_file << "[EXPERIMENT]\n"
         gcos_file << "ExperimentName=" + hybridization_date_number_string + "_" + sample.sample_name + "\n"
         gcos_file << "ArrayType=" + ChipType.find(sample.chip_type_id).short_name + "\n"
         gcos_file << "ExperimentUser=affybot\n"
         gcos_file << "ExperimentUpdate=0\n"
+
+        # add any extra info from the naming scheme, if present
+        if( gcos_experiment_info != nil )
+          for line in gcos_experiment_info
+            gcos_file << line
+          end
+        end
+        
         gcos_file.close
       end
     end

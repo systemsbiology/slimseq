@@ -50,3 +50,5 @@ and <%= link_to 'creating some chip types', :controller => 'chip_types', :action
     <p>There are no samples submitted for hybridization.</p>
     <%= link_to 'Submit New Samples', :controller => 'samples', :action => 'new' %>
 <% end %>
+
+<%= render :partial => 'naming_scheme_select' %>

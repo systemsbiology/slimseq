@@ -408,7 +408,7 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     assert_equal 'submitted', Sample.find(sample2_id).status
   end
 
-  def test_bulk_gcos_file_export
+  def test_bulk_gcos_file_export_no_naming_scheme
     # set output directory to the rails root (we'll delete any test files when done)
     @site_config = SiteConfig.find(1)
     @site_config.update_attributes(:create_gcos_files => 1)
@@ -426,6 +426,35 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     assert File.exists?("#{RAILS_ROOT}/20060210_01_Old.txt")
     FileUtils.rm("#{RAILS_ROOT}/20060210_01_Old.txt")
   end
+
+  def test_bulk_gcos_file_export_with_naming_scheme
+    # select a naming scheme for current user
+    current_user = User.find(@request.session[:user].id)
+    current_user.current_naming_scheme_id = 1
+    current_user.save
+    
+    # set output directory to the rails root (we'll delete any test files when done)
+    @site_config = SiteConfig.find(1)
+    @site_config.update_attributes(:create_gcos_files => 1)
+    @site_config.update_attributes(:using_sbeams => 1)
+    @site_config.update_attributes(:gcos_output_path => "#{RAILS_ROOT}")
+    @site_config.save
+  
+    post :bulk_handler, :selected_hybridizations => {'1' => '1', '2' => '0'},
+         :commit => "Export GCOS Files"
+    
+    assert_response :redirect
+    assert_redirected_to :action => 'list'
+
+    # make sure gcos files was created, then delete it
+    assert File.exists?("#{RAILS_ROOT}/20060210_01_Old.txt")
+    FileUtils.rm("#{RAILS_ROOT}/20060210_01_Old.txt")
+    
+    # go back to no naming scheme
+    current_user.current_naming_scheme_id = nil
+    current_user.save
+  end
+
   
   def test_bulk_bioanalyzer_trace_export
     # copy images into place for use with this test

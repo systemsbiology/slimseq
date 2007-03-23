@@ -17,33 +17,34 @@
 	<table class="table">
 	  <th>Date</th>
 	  <th>Short Name</th>
-	  <th>Full Sample Name</th>
-	  <th>Sample Group Name</th>
+	  <% if current_user.current_naming_scheme_id == nil %>
+        <th>Full Sample Name</th>
+	    <th>Sample Group Name</th>
+	  <% else %>
+	    <% for element in @naming_elements %>
+        <th><%=h element.name %></th>
+        <% end %>
+	  <% end %>
 	  <th>Organism</th>
 	  <th>Chip Type</th>
 	  <th>Project</th>
 	  <% if SiteConfig.create_gcos_files? %>
 		  <th>SBEAMS User</th>
 	  <% end %>
-	  <% for n in 0..@samples.size-1 %>
+	  <% for @n in 0..@samples.size-1 %>
 	  <tr>
-	    <% sample = @samples[n] %>
-	    <td><%= sample.submission_date %></td>
-	    <td><input id="sample-<%=n%>_short_sample_name" 
-	        name="sample-<%=n%>[short_sample_name]" size="10" type="text"
-	        value="<%= sample.short_sample_name %>" /></td>
-	    <td><input id="sample-<%=n%>_sample_name" 
-	        name="sample-<%=n%>[sample_name]" size="30" type="text"
-	        value="<%= sample.sample_name %>" /></td>
-	    <td><input id="sample-<%=n%>_sample_group_name" 
-	        name="sample-<%=n%>[sample_group_name]" size="30" type="text"
-	        value="<%= sample.sample_group_name %>" /></td>
-	    <td><select id="sample-<%=n%>_organism_id" name="sample-<%=n%>[organism_id]">
-	    <%= options_from_collection_for_select @organisms, "id", "name", selected_value=sample.organism_id %></select></td>
-	    <td><%= ChipType.find(sample.chip_type_id).name %></td>
-	    <td><%= sample.project.name %></td>
+	    <% @sample = @samples[@n] %>
+	    <td><%= @sample.submission_date %></td>
+	    <td><input id="sample-<%=@n%>_short_sample_name" 
+	        name="sample-<%=@n%>[short_sample_name]" size="10" type="text"
+	        value="<%= @sample.short_sample_name %>" /></td>
+	    <%= render :partial => 'sample_name' %>
+	    <td><select id="sample-<%=@n%>_organism_id" name="sample-<%=@n%>[organism_id]">
+	    <%= options_from_collection_for_select @organisms, "id", "name", selected_value=@sample.organism_id %></select></td>
+	    <td><%= ChipType.find(@sample.chip_type_id).name %></td>
+	    <td><%= @sample.project.name %></td>
 	    <% if SiteConfig.create_gcos_files? %>
-	        <td><%= sample.sbeams_user %></td>
+	        <td><%= @sample.sbeams_user %></td>
 	    <% end %>
 	  </tr>
 	  <% end %>

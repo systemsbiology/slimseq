@@ -1,0 +1,24 @@
+strain:
+  id: 1
+  name: Strain
+  element_order: 1
+  group_element: true
+  optional: false
+  dependent_element_id: 0
+  naming_scheme_id: 1
+perturbation:
+  id: 2
+  name: Perturbation
+  element_order: 2
+  group_element: true
+  optional: false
+  dependent_element_id: 0
+  naming_scheme_id: 1
+perturbation_time:
+  id: 3
+  name: Perturbation Time
+  element_order: 3
+  group_element: true
+  optional: true
+  dependent_element_id: 2
+  naming_scheme_id: 1

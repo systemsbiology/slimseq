@@ -1,0 +1,30 @@
+wild_type:
+  id: 1
+  term: wild-type
+  abbreviated_term: wt
+  naming_element_id: 1
+mutant:
+  id: 2
+  term: mutant
+  abbreviated_term: mut
+  naming_element_id: 1
+heat:
+  id: 3
+  term: heat
+  abbreviated_term: HT
+  naming_element_id: 2
+heavy_metals:
+  id: 4
+  term: heavy metals
+  abbreviated_term: HM
+  naming_element_id: 2
+000:
+  id: 5
+  term: 000
+  abbreviated_term: 000
+  naming_element_id: 3
+024:
+  id: 6
+  term: 024
+  abbreviated_term: 024
+  naming_element_id: 3
