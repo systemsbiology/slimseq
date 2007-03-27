@@ -86,10 +86,13 @@ task :create_roles => :environment do
     raise "Couldn't save default user role!" if !user.save
 
     # all users automatically get the Guest permissions implicitly
+
+    # user permissions
     user.permissions << Permission.find_by_controller_and_action('user', 'logout')
     user.permissions << Permission.find_by_controller_and_action('user', 'home')
     user.permissions << Permission.find_by_controller_and_action('user', 'change_password')
     user.permissions << Permission.find_by_controller_and_action('user', 'edit')
+    user.permissions << Permission.find_by_controller_and_action('user', 'select_naming_scheme')
 
     # SLIMarray-specific permissions
     user.permissions << Permission.find_by_controller_and_action('chip_transactions', 'list_subset')
@@ -120,11 +123,14 @@ task :create_roles => :environment do
     raise "Couldn't save default user role!" if !staff.save
 
     # all users automatically get the Guest permissions implicitly
+    
+    # user permissions
     staff.permissions << Permission.find_by_controller_and_action('user', 'logout')
     staff.permissions << Permission.find_by_controller_and_action('user', 'home')
     staff.permissions << Permission.find_by_controller_and_action('user', 'staff')
     staff.permissions << Permission.find_by_controller_and_action('user', 'change_password')
     staff.permissions << Permission.find_by_controller_and_action('user', 'edit')
+    user.permissions << Permission.find_by_controller_and_action('user', 'select_naming_scheme')
 
     # SLIMarray-specific permissions
     staff.permissions << Permission.find_by_controller_and_action('organisms', 'new')
