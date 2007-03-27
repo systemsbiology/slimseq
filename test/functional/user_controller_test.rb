@@ -74,5 +74,33 @@ class UserControllerTest < Test::Unit::TestCase
 #    assert_redirected_to :action => 'list'
 #    assert_match /There is no user with ID/, flash[:message]
 #  end  
+
+  def test_select_naming_scheme_as_admin
+    @request.session[:user] = users(:admin_user)
+
+    get :staff
+    assert_response :success
+    assert_template 'staff'
+
+    post :select_naming_scheme, :user => { :current_naming_scheme_id => 1 }
+    assert_response :redirect
+    assert_redirected_to 'user/home'
+    
+    assert_equal 1, User.find(1).current_naming_scheme_id
+  end
+
+  def test_select_naming_scheme_as_customer
+    @request.session[:user] = users(:customer_user)
+
+    get :home
+    assert_response :success
+    assert_template 'home'
+
+    post :select_naming_scheme, :user => { :current_naming_scheme_id => 1 }
+    assert_response :redirect
+    assert_redirected_to 'user/home'
+    
+    assert_equal 1, User.find(2).current_naming_scheme_id
+  end 
   
 end

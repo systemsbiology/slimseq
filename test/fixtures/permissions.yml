@@ -734,3 +734,8 @@ permission_00144:
   id: 144
   description: 
   controller: hybridizations
+permission_00145: 
+  action: select_naming_scheme
+  id: 145
+  description: 
+  controller: user
