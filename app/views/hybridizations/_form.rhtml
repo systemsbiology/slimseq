@@ -28,8 +28,8 @@
   <% if SiteConfig.using_sbeams? %>
     <td><%=h sample.sbeams_user %></td>
   <% end %>
-    <td><%= link_to 'Edit', :action => 'edit', :id => sample %></td>
-    <td><%= link_to 'Destroy', { :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
+    <td><%= link_to 'Edit', :controller => 'samples', :action => 'edit', :id => sample %></td>
+    <td><%= link_to 'Destroy', {:controller => 'samples', :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
   </tr>
 <% end %>
 </table>
