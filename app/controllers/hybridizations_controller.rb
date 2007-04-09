@@ -8,8 +8,11 @@ class HybridizationsController < ApplicationController
   def list
     populate_arrays_from_tables
   
-    @hybridizations = Hybridization.find(:all, :order => "hybridization_date DESC, chip_number ASC", 
-                                         :include => { :sample => :project } )
+      @hybridization_pages, @hybridizations =
+        paginate :hybridizations, :per_page => 40, :order => "hybridization_date DESC, chip_number ASC",
+                 :include => { :sample => :project }
+#    @hybridizations = Hybridization.find(:all, :order => "hybridization_date DESC, chip_number ASC", 
+#                                         :include => { :sample => :project } )
   end
 
   def new

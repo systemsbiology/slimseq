@@ -37,6 +37,7 @@
 		  </tr>
 		<% end %>
 		</table>
+    <p>Page: <%= pagination_links @hybridization_pages, :link_to_current_page => true %></p>
     <p><%= submit_tag 'Delete Hybridizations' %></p>
     <% if SiteConfig.create_gcos_files? %>
         <p><%= submit_tag 'Export GCOS Files' %></p>

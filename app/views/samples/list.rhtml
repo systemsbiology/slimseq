@@ -58,6 +58,7 @@
 		  </tr>
 		<% end %>
 		</table>
+    <p>Page: <%= pagination_links @sample_pages, :link_to_current_page => true %></p>
 	<p><%= submit_tag 'Delete Samples' %></p>
     <%= end_form_tag %>	
 <% else %>

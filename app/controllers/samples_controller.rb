@@ -15,8 +15,10 @@ class SamplesController < ApplicationController
       for project in @projects
         project_ids << project.id
       end
-      @samples = Sample.find(:all, :conditions => [ "project_id IN (?)", project_ids ],
-                                :order => "submission_date DESC, sample_name ASC", :include => 'project')
+
+      @sample_pages, @samples =
+        paginate :samples, :conditions => [ "project_id IN (?)", project_ids ], :per_page => 40,
+                 :order => "submission_date DESC, sample_name ASC", :include => 'project'
     end
   end
 
@@ -125,6 +127,7 @@ class SamplesController < ApplicationController
         @samples[n].naming_element_selections = Array.new
         sample_terms[n] = Array.new
         term_count = 0
+
         for element in @naming_elements
           # put underscores between terms
           if(@samples[n].sample_name.length > 0)
@@ -208,12 +211,33 @@ class SamplesController < ApplicationController
 
   def edit
     populate_arrays_from_tables
+    populate_sample_naming_scheme_choices
+    
     @sample = Sample.find(params[:id])
 
     # if a naming scheme was used, find the relevant terms
     if( @sample.naming_scheme_id != nil )
       @sample_terms = SampleTerm.find(:all, :conditions => ["sample_id = ?", @sample.id],
                                       :order => "term_order ASC")
+      # set default visibilities
+      visibility = Array.new
+      for element in @naming_elements
+        if( element.dependent_element_id > 0 )
+          visibility << false
+        else
+          visibility << true
+        end
+      end
+      
+      # set sample-specific visibilities
+      for term in @sample_terms
+        # see if there's a naming term for this element,
+        # and if so show it
+        i = @naming_elements.index( term.naming_element )
+        if( i != nil)
+          visibility[i] = true
+        end
+      end
     end
     
     populate_arrays_for_edit(@sample)
