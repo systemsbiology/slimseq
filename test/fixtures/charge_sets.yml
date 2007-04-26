@@ -13,4 +13,10 @@ alligator_jan:
   name: Alligator-Internal
   budget_manager: Jose Cuervo
   budget: 11112222
-
+bob_jan:
+  id: 3
+  lab_group_id: 1
+  charge_period_id: 1
+  name: Bob's Stuff
+  budget: 12345678
+  budget_manager: Bob Himself

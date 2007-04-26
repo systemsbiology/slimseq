@@ -5,7 +5,7 @@ class ChargePeriodTest < Test::Unit::TestCase
 
   def test_destroy_warning
     expected_warning = "Destroying this charge period will also destroy:\n" + 
-                       "2 charge set(s)\n" +
+                       "3 charge set(s)\n" +
                        "Are you sure you want to destroy it?"
   
     period = ChargePeriod.find(1)   

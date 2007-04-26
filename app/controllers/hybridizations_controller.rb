@@ -55,19 +55,20 @@ class HybridizationsController < ApplicationController
         project = sample.project
         # does user want charge set(s) created based on projects?
         if(@submit_hybridizations.charge_set_id == -1)
-          @charge_set = ChargeSet.find(:first, :conditions => ["name = ? AND lab_group_id = ? AND budget = ?",
-                                       project.name, project.lab_group_id, project.budget])
-          # see if new charge set need to be created
-          if(@charge_set == nil)
-            # get latest charge period
-            charge_period = ChargePeriod.find(:first, :order => "id DESC")
+          # get latest charge period
+          charge_period = ChargePeriod.find(:first, :order => "id DESC")
 
-            # if no charge periods exist, make a default one
-            if( charge_period == nil )
-              charge_period = ChargePeriod.new(:name => "Default Charge Period")
-              charge_period.save
-            end
-            
+          # if no charge periods exist, make a default one
+          if( charge_period == nil )
+            charge_period = ChargePeriod.new(:name => "Default Charge Period")
+            charge_period.save
+          end
+          
+          @charge_set = ChargeSet.find(:first, :conditions => ["name = ? AND lab_group_id = ? AND budget = ? AND charge_period_id = ?",
+                                       project.name, project.lab_group_id, project.budget, charge_period.id])
+
+          # see if new charge set need to be created
+          if(@charge_set == nil)  
             @charge_set = ChargeSet.new(:charge_period_id => charge_period.id,
                                         :name => project.name,
                                         :lab_group_id => project.lab_group_id,
@@ -394,7 +395,7 @@ class HybridizationsController < ApplicationController
       chip_name = hybridization_date_number_string + "_" + sample.sample_name
 
       output_path = SiteConfig.quality_trace_dropoff + "/" + hybridization_year_month
-      
+
       # output each quality trace image if it exists
       if( sample.starting_quality_trace != nil )
         copy_image_based_on_chip_name( sample.starting_quality_trace, output_path, chip_name + ".EGRAM_T.jpg" )

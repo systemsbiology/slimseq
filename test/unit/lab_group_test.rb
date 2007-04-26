@@ -6,7 +6,7 @@ class LabGroupTest < Test::Unit::TestCase
 
   def test_destroy_warning
     expected_warning = "Destroying this lab group will also destroy:\n" + 
-                       "2 charge set(s)\n" +
+                       "3 charge set(s)\n" +
                        "2 project(s)\n" +
                        "2 inventory check(s)\n" +
                        "2 chip transaction(s)\n" +

@@ -9,7 +9,8 @@ class HybridizationsController; def rescue_action(e) raise e end; end
 
 class HybridizationsControllerTest < Test::Unit::TestCase
   fixtures :hybridizations, :samples, :projects,
-           :lab_groups, :chip_types, :organisms, :charge_templates, :charge_sets
+           :lab_groups, :chip_types, :organisms, :charge_templates, :charge_sets,
+           :quality_traces
 
   def setup
     @controller = HybridizationsController.new
@@ -89,6 +90,7 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     new_charge_set = ChargeSet.find(:first, :order => "id DESC")
     assert_equal "Bob's Stuff", new_charge_set.name
     assert_equal "12345678", new_charge_set.budget
+    assert_equal 2, new_charge_set.charge_period_id
     assert_equal 1, new_charge_set.lab_group_id
     
     # this should have populated the session[:hybridizations] array
@@ -144,6 +146,10 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     @site_config.update_attributes(:quality_trace_dropoff => "#{RAILS_ROOT}")
     @site_config.save
 
+    # get rid of any existing output folder
+    if( File.exists?("#{RAILS_ROOT}/200602") )
+      FileUtils.rm_rf("#{RAILS_ROOT}/200602")
+    end
     # temporarily make a folder for output traces
     FileUtils.mkdir("#{RAILS_ROOT}/200602")
 
@@ -471,9 +477,13 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     @site_config.update_attributes(:quality_trace_dropoff => "#{RAILS_ROOT}")
     @site_config.save    
 
+    # get rid of any existing output folder
+    if( File.exists?("#{RAILS_ROOT}/200602") )
+      FileUtils.rm_rf("#{RAILS_ROOT}/200602")
+    end
     # temporarily make a folder for output traces
     FileUtils.mkdir("#{RAILS_ROOT}/200602")
-
+    
     post :bulk_handler, :selected_hybridizations => {'1' => '1', '2' => '0'},
          :commit => "Export Bioanalyzer Images"
     
