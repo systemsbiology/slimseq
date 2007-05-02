@@ -1,6 +1,6 @@
 <h2>Listing Charges for <%= @charge_set.name %></h2>
 
-<%= start_form_tag :action => 'bulk_move_or_destroy' %>
+<%= start_form_tag :action => 'bulk_edit_move_or_destroy' %>
 	<table class="sortable" id="charges">
 	  <tr>
 	    <th>Select</th>
@@ -32,6 +32,19 @@
 	  </tr>
 	<% end %>
 	</table>
+    <p>
+    <%= submit_tag 'Set Field' %> 
+        <select id="field_name" name="field_name">
+            <option value="chips_used">Chips Used</option>
+            <option value="chip_cost">Chip Cost</option>
+            <option value="labeling_cost">Labeling Cost</option>
+            <option value="hybridization_cost">Hybridization Cost</option>
+            <option value="qc_cost">QC Cost</option>
+            <option value="other_cost">Other Cost</option>
+        </select>
+        To 
+        <input type="text" id="field_value" name="field_value" size="20"/>
+    </p>
     <p>
     <%= submit_tag 'Move Charges To This Charge Set' %> 
     <select id="charge_set_id" name="charge_set_id">

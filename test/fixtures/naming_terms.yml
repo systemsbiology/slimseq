@@ -18,12 +18,12 @@ heavy_metals:
   term: heavy metals
   abbreviated_term: HM
   naming_element_id: 2
-000:
+time000:
   id: 5
   term: 000
   abbreviated_term: 000
   naming_element_id: 3
-024:
+time024:
   id: 6
   term: 024
   abbreviated_term: 024

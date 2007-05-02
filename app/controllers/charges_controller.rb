@@ -7,8 +7,10 @@ class ChargesController < ApplicationController
     if(params[:charge_set_id] != nil)
       @charge_set = ChargeSet.find(params[:charge_set_id])
       session[:charge_set] = @charge_set
-    else
+    elsif(session[:charge_set] != nil)
       @charge_set = session[:charge_set]    
+    else
+      @charge_set = ChargeSet.find(:first, :order => 'id DESC')
     end
 
     # non-admin users must belong to group they want to see
@@ -95,9 +97,27 @@ class ChargesController < ApplicationController
     end
   end
 
-  def bulk_move_or_destroy
-    # move or destroy?
-    if(params[:commit] == "Move Charges To This Charge Set")
+  def bulk_edit_move_or_destroy
+    # edit, move or destroy?
+    if(params[:commit] == "Set Field")
+      name = params[:field_name]
+      value = params[:field_value]
+      selected_charges = params[:selected_charges]
+      success = true
+      for charge_id in selected_charges.keys
+        if selected_charges[charge_id] == '1'
+          charge = Charge.find(charge_id)
+          # update charge and keep track of whether any updates fail
+          if( !charge.update_attributes( name => value ) )
+            success = false
+          end
+        end
+      end
+
+      if( !success )
+        flash[:warning] = "Setting field failed for one or more charges"
+      end
+    elsif(params[:commit] == "Move Charges To This Charge Set")
       charge_set_id = params[:charge_set_id]
       selected_charges = params[:selected_charges]
       for charge_id in selected_charges.keys

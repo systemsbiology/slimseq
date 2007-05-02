@@ -100,8 +100,37 @@ class ChargesControllerTest < Test::Unit::TestCase
     assert_equal "charge1", Charge.find(1).description
   end
 
+  def test_bulk_edit_valid_change
+    post :bulk_edit_move_or_destroy, :selected_charges => {'2' => '1'},
+         :field_name => "chip_cost", :field_value => "500",
+         :commit => "Set Field"
+
+    assert_response :success
+    assert_template 'list_within_charge_set'
+
+    # assert non-selected charge didn't change
+    assert_equal 400, Charge.find(1).chip_cost
+    # assert selected charge did change chip cost
+    assert_equal 500, Charge.find(2).chip_cost
+  end
+  
+  def test_bulk_edit_invalid_change
+    post :bulk_edit_move_or_destroy, :selected_charges => {'2' => '1'},
+         :field_name => "chip_cost", :field_value => "adsf",
+         :commit => "Set Field"
+
+    assert_response :success
+    assert_template 'list_within_charge_set'
+    assert_flash_warning
+
+    # assert non-selected charge didn't change
+    assert_equal 400, Charge.find(1).chip_cost
+    # assert selected charge didn't change
+    assert_equal 0, Charge.find(2).chip_cost
+  end
+
   def test_bulk_move
-    post :bulk_move_or_destroy, :charge_set_id => 2, :selected_charges => {'2' => '1'},
+    post :bulk_edit_move_or_destroy, :charge_set_id => 2, :selected_charges => {'2' => '1'},
          :commit => "Move Charges To This Charge Set"
     
     assert_response :success
@@ -114,7 +143,7 @@ class ChargesControllerTest < Test::Unit::TestCase
   end
 
   def test_bulk_destroy
-        post :bulk_move_or_destroy, :charge_set_id => 2, :selected_charges => {'1' => '1', '2' => '1'},
+        post :bulk_edit_move_or_destroy, :charge_set_id => 2, :selected_charges => {'1' => '1', '2' => '1'},
          :commit => "Delete Charges"
     
     assert_response :success
