@@ -14,15 +14,7 @@
 	<%= text_field 'sample', 'sample_name', :size => 50  %></p>
 
     <p><label for="sample_sample_name">Sample Name</label><br>
-    <% if @sample.naming_scheme_id == nil %>
-        <%= text_field 'sample', 'sample_name', :size => 50  %>
-    <% else %>
-        <% for term in @sample_terms %>
-            <% naming_element = term.naming_term.naming_element %>
-            <select id="sample_schemed_name_<%=naming_element.name%>" name="sample_schemed_name[<%=naming_element.name%>]">
-    	       <%= options_from_collection_for_select naming_element.naming_terms, "id", "term", selected_value=term.naming_term_id %></select>
-        <% end %>
-    <% end %></p>
+	    <%= render :partial => 'sample_name' %></p>
 
 	<p><label for="sample_sample_group_name">Sample Group Name</label><br/>
 	<%= text_field 'sample', 'sample_group_name', :size => 50  %></p>
