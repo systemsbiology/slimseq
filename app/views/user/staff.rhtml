@@ -51,4 +51,6 @@ and <%= link_to 'creating some chip types', :controller => 'chip_types', :action
     <%= link_to 'Submit New Samples', :controller => 'samples', :action => 'new' %>
 <% end %>
 
-<%= render :partial => 'naming_scheme_select' %>
+<% if @naming_schemes.size > 0 %>
+    <%= render :partial => 'naming_scheme_select' %>
+<% end %>

@@ -63,7 +63,7 @@ SLIMarray web site</a> for documentation and additional information.</p>
 					                  :lab_group_id => lab_group.id,
 					                  :chip_type_id => chip_type.id}) %>:
 					<%=h totals['chips'] %>
-					</li>
+					<</li>
 				<% end %>
 		    <% end %>
 			<br>    
@@ -76,4 +76,6 @@ SLIMarray web site</a> for documentation and additional information.</p>
 	<% end %>
 <% end %>
 
-<%= render :partial => 'naming_scheme_select' %>
+<% if @naming_schemes.size > 0 %>
+    <%= render :partial => 'naming_scheme_select' %>
+<% end %>
