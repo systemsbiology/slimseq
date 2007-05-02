@@ -25,6 +25,6 @@
         <%= observe_field "sample-#{@n}_schemed_name_#{@element.name}", :url => { :action => 'update_add_form',
                                                                                 :sample_number => @n,
                                                                                 :dependent_id => @element.id },
-                                                                                :with => "'choice=' + escape(value)" %>
+                                                                                :with => "'choice=' + value" %>
     <% end %>
 <% end %>
