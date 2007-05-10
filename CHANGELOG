@@ -1,3 +1,10 @@
+*0.3.0*
+
+* Added Bioanalyzer data handling
+* Added naming schemes
+* Added SBEAMS array request importing
+* See Subversion repository for additional bug fixes and optimizations: http://slimarray.systemsbiology.net/svn
+
 *0.2.4*
 
 * Added projects as a means for users to specify charge information for submitted samples
