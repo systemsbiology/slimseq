@@ -48,6 +48,10 @@
 		                :wrap_in => 'li'%>
 		            <%= link_if_authorized 'Charge Templates', {:controller => 'charge_templates', :action => 'list'}, 
 		                :wrap_in => 'li'%>
+		            <% if SiteConfig.using_sbeams? %>
+    		            <%= link_if_authorized 'SBEAMS Import', {:controller => 'charges', :action => 'select_from_sbeams'}, 
+    		                :wrap_in => 'li'%>
+    		        <% end %>
 		        <% end %>
                 <% if authorized?(:controller => 'lab_groups', :action => 'list') || 
                       authorized?(:controller => 'user', :action => 'list') ||

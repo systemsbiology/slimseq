@@ -141,6 +141,30 @@ class ChargesController < ApplicationController
     render :action => 'list_within_charge_set'
   end
 
+  def select_from_sbeams
+    @lab_groups = LabGroup.find(:all, :order => "name ASC")
+  end
+
+  def import_from_sbeams
+    username = params[:username]
+    password = params[:password]
+    request_id = params[:request_id]
+    lab_group_id = params[:lab_group_id]
+
+    begin
+      Charge.scrape_array_request(username, password, request_id, lab_group_id)
+      flash[:notice] = "Import complete"
+      redirect_to :controller => 'charge_sets', :action => 'list'
+    rescue
+      flash[:warning] = "Unable to import array request. Check SBEAMS " +
+        "address in site configuration, and ensure that the array request " +
+        "has been set to 'finished'."
+      select_from_sbeams
+      render 'charges/select_from_sbeams'
+    end
+
+  end
+
   def destroy
     @charge_set = session[:charge_set]
     Charge.find(params[:id]).destroy

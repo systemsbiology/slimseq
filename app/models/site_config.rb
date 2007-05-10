@@ -78,4 +78,8 @@ class SiteConfig < ActiveRecord::Base
     return SiteConfig.find(1).quality_trace_dropoff
   end
 
+  def SiteConfig.sbeams_address
+    return SiteConfig.find(1).sbeams_address
+  end
+  
 end
