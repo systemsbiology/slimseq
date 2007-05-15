@@ -95,7 +95,8 @@ class SamplesController < ApplicationController
     # find the elements that are depending upon the altered field
     @dependent_elements = NamingElement.find(:all, :conditions => ["dependent_element_id = ?", @dependent_element_id])# iterate through naming elements in form
 
-    @choice = params['choice'].to_i
+    choice_text = params['choice'].gsub(/\&\_\=/,"")
+    @choice = choice_text.to_i
 
 
     populate_sample_naming_scheme_choices
