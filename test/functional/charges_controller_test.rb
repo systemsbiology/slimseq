@@ -1,5 +1,8 @@
 require File.dirname(__FILE__) + '/../test_helper'
 require 'charges_controller'
+require 'assert_select'
+require 'html_selector'
+Test::Unit::TestCase.send :include, Test::Unit::AssertSelect
 
 # Re-raise errors caught by the controller.
 class ChargesController; def rescue_action(e) raise e end; end
@@ -101,13 +104,17 @@ class ChargesControllerTest < Test::Unit::TestCase
   end
 
   def test_bulk_edit_valid_change
+    get :list_within_charge_set, :charge_set_id => 1
+  
     post :bulk_edit_move_or_destroy, :selected_charges => {'2' => '1'},
          :field_name => "chip_cost", :field_value => "500",
-         :commit => "Set Field"
+         :move_charge_set_id => 2, :commit => "Set Field"
 
     assert_response :success
     assert_template 'list_within_charge_set'
-
+    expected_heading = "Listing Charges for " + @charge_sets['mouse_jan']['name']
+    assert_select "h2", expected_heading
+    
     # assert non-selected charge didn't change
     assert_equal 400, Charge.find(1).chip_cost
     # assert selected charge did change chip cost
@@ -122,7 +129,7 @@ class ChargesControllerTest < Test::Unit::TestCase
     assert_response :success
     assert_template 'list_within_charge_set'
     assert_flash_warning
-
+    
     # assert non-selected charge didn't change
     assert_equal 400, Charge.find(1).chip_cost
     # assert selected charge didn't change
@@ -130,11 +137,13 @@ class ChargesControllerTest < Test::Unit::TestCase
   end
 
   def test_bulk_move
-    post :bulk_edit_move_or_destroy, :charge_set_id => 2, :selected_charges => {'2' => '1'},
+    post :bulk_edit_move_or_destroy, :move_charge_set_id => 2, :selected_charges => {'2' => '1'},
          :commit => "Move Charges To This Charge Set"
     
     assert_response :success
     assert_template 'list_within_charge_set'
+    expected_heading = "Listing Charges for " + @charge_sets['alligator_jan']['name']
+    assert_select "h2", expected_heading
 
     # assert non-selected charge doesn't move    
     assert_equal 1, Charge.find(1).charge_set_id
@@ -143,11 +152,15 @@ class ChargesControllerTest < Test::Unit::TestCase
   end
 
   def test_bulk_destroy
-        post :bulk_edit_move_or_destroy, :charge_set_id => 2, :selected_charges => {'1' => '1', '2' => '1'},
-         :commit => "Delete Charges"
+    get :list_within_charge_set, :charge_set_id => 1
+    
+    post :bulk_edit_move_or_destroy, :selected_charges => {'1' => '1', '2' => '1'},
+         :move_charge_set_id => 2, :commit => "Delete Charges"
     
     assert_response :success
     assert_template 'list_within_charge_set'
+    expected_heading = "Listing Charges for " + @charge_sets['mouse_jan']['name']
+    assert_select "h2", expected_heading
 
     # assert that destroys have taken place
     assert_raise(ActiveRecord::RecordNotFound) {

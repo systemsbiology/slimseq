@@ -118,7 +118,7 @@ class ChargesController < ApplicationController
         flash[:warning] = "Setting field failed for one or more charges"
       end
     elsif(params[:commit] == "Move Charges To This Charge Set")
-      charge_set_id = params[:charge_set_id]
+      charge_set_id = params[:move_charge_set_id]
       selected_charges = params[:selected_charges]
       for charge_id in selected_charges.keys
         if selected_charges[charge_id] == '1'
@@ -126,8 +126,10 @@ class ChargesController < ApplicationController
           charge.update_attributes( { :charge_set_id => charge_set_id } )
         end
       end
+      
+      # change current charge set to the one where we moved the charges
+      session[:charge_set] = ChargeSet.find(charge_set_id.to_i)
     elsif(params[:commit] == "Delete Charges")
-      charge_set_id = params[:charge_set_id]
       selected_charges = params[:selected_charges]
       for charge_id in selected_charges.keys
         if selected_charges[charge_id] == '1'
