@@ -19,7 +19,7 @@ class HybridizationsController < ApplicationController
     populate_arrays_from_tables
 
     @available_samples = Sample.find(:all, :conditions => [ "status = 'submitted'" ],
-                                     :order => "submission_date DESC, id ASC")
+                                     :order => "id ASC")
   
     # clear out hybridization record since this is a 'new' set
     session[:hybridizations] = Array.new

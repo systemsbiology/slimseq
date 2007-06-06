@@ -22,3 +22,11 @@ perturbation_time:
   optional: true
   dependent_element_id: 2
   naming_scheme_id: 1
+replicate:
+  id: 4
+  name: Replicate
+  element_order: 4
+  group_element: false
+  optional: false
+  dependent_element_id: 0
+  naming_scheme_id: 1

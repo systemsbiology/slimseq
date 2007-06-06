@@ -39,7 +39,7 @@ class UserController < ApplicationController
         project_ids << project.id
       end
       @samples = Sample.find(:all, :conditions => [ "project_id IN (?) AND status = ?", project_ids, 'submitted' ],
-                                :order => "submission_date DESC, sample_name ASC")
+                                :order => "samples.id ASC")
     end
   end
 
@@ -56,7 +56,7 @@ class UserController < ApplicationController
     @lab_groups = LabGroup.find(:all, :order => "name ASC")
     @chip_types = ChipType.find(:all, :order => "name ASC")
     @samples = Sample.find(:all, :conditions => [ "status = ?", 'submitted' ],
-                              :order => "submission_date DESC, sample_name ASC",
+                              :order => "samples.id ASC",
                               :include => 'project')
   end
 

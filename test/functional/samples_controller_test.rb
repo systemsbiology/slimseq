@@ -8,7 +8,8 @@ class SamplesControllerTest < Test::Unit::TestCase
   fixtures :samples, :projects, :bioanalyzer_runs, :quality_traces,
            :lab_groups, :chip_types, :organisms, :lab_memberships,
            :users, :roles, :permissions, :users_roles, :permissions_roles,
-           :naming_schemes, :naming_elements, :naming_terms
+           :naming_schemes , :naming_elements, :naming_terms,
+           :sample_terms
 
   def setup
     @controller = SamplesController.new
@@ -391,7 +392,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     assert_template 'show'
   end
 
-  def test_edit
+  def test_edit_without_naming_scheme_as_admin
     login_as_admin
     get :edit, :id => 1
 
@@ -402,18 +403,68 @@ class SamplesControllerTest < Test::Unit::TestCase
     assert assigns(:sample).valid?
   end
 
-  def test_update_as_admin
+  def test_edit_with_naming_scheme_as_admin
     login_as_admin
-    post :update, :id => 1, :sample => { :submission_date => '2006-02-09' }
+
+    # select a naming scheme for current user
+    current_user = User.find(@request.session[:user].id)
+    current_user.current_naming_scheme_id = 1
+    current_user.save
+    
+    get :edit, :id => 1
+
+    assert_response :success
+    assert_template 'edit'
+
+    assert_not_nil assigns(:sample)
+    assert assigns(:sample).valid?
+  end
+
+  def test_update_without_naming_scheme_as_admin
+    login_as_admin
+    post :update, :id => 1, :sample => { :submission_date => '2006-02-09',
+                                         :sample_group_name => 'new group' }
     
     sample = Sample.find(1)
     assert_equal Date.new(2006,2,9), sample.submission_date
+    assert_equal "new group", sample.sample_group_name
     
     assert_response :redirect
     assert_redirected_to :action => 'list'
   end
 
-  def test_update_locked_as_admin
+  def test_update_with_naming_scheme_as_admin
+    login_as_admin
+
+    # select a naming scheme for current user
+    current_user = User.find(@request.session[:user].id)
+    current_user.current_naming_scheme_id = 1
+    current_user.save
+    
+    post :update, :id => 6, :sample => { :submission_date => '2006-02-09' },
+                            :'sample-0_schemed_name' => { :Strain => 1,
+                                                          :Perturbation => 3,
+                                                          :'Perturbation Time' => 6,
+                                                          :Replicate => 7 } 
+    
+    sample = Sample.find(6)
+    assert_equal Date.new(2006,2,9), sample.submission_date
+    assert_equal "wt_HT_024_A", sample.sample_name
+    assert_equal "wt_HT_024", sample.sample_group_name
+    
+    sample_terms = SampleTerm.find(:all, :conditions => ["sample_id = ?", 6],
+                                   :order => "term_order ASC")
+    assert_equal 4, sample_terms.size
+    expected_terms = [1,3,6,7]
+    for i in 0..expected_terms.size-1
+      assert_equal expected_terms[i], sample_terms[i].naming_term_id
+    end
+    
+    assert_response :redirect
+    assert_redirected_to :action => 'list'
+  end
+
+  def test_update_locked_without_naming_scheme_as_admin
     login_as_admin
     # grab the sample we're going to use twice
     sample1 = Sample.find(1)
@@ -1067,18 +1118,51 @@ class SamplesControllerTest < Test::Unit::TestCase
     assert assigns(:sample).valid?
   end
 
-  def test_update_as_customer
+  def test_update_without_naming_scheme_as_customer
     login_as_customer
-    post :update, :id => 1, :sample => { :submission_date => '2006-02-09' }
+    post :update, :id => 1, :sample => { :submission_date => '2006-02-09',
+                                         :sample_group_name => 'new group' }
     
     sample = Sample.find(1)
     assert_equal Date.new(2006,2,9), sample.submission_date
+    assert_equal "new group", sample.sample_group_name
     
     assert_response :redirect
     assert_redirected_to :action => 'list'
   end
 
-  def test_update_locked_as_customer
+  def test_update_with_naming_scheme_as_customer
+    login_as_customer
+
+    # select a naming scheme for current user
+    current_user = User.find(@request.session[:user].id)
+    current_user.current_naming_scheme_id = 1
+    current_user.save
+    
+    post :update, :id => 6, :sample => { :submission_date => '2006-02-09' },
+                            :'sample-0_schemed_name' => { :Strain => 1,
+                                                          :Perturbation => 3,
+                                                          :'Perturbation Time' => 6,
+                                                          :Replicate => 7 } 
+    
+    sample = Sample.find(6)
+    assert_equal Date.new(2006,2,9), sample.submission_date
+    assert_equal "wt_HT_024_A", sample.sample_name
+    assert_equal "wt_HT_024", sample.sample_group_name
+    
+    sample_terms = SampleTerm.find(:all, :conditions => ["sample_id = ?", 6],
+                                   :order => "term_order ASC")
+    assert_equal 4, sample_terms.size
+    expected_terms = [1,3,6,7]
+    for i in 0..expected_terms.size-1
+      assert_equal expected_terms[i], sample_terms[i].naming_term_id
+    end
+    
+    assert_response :redirect
+    assert_redirected_to :action => 'list'
+  end
+
+  def test_update_locked_without_naming_scheme_as_customer
     login_as_customer
     # grab the sample we're going to use twice
     sample1 = Sample.find(1)

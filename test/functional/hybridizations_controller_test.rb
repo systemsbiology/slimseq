@@ -47,7 +47,8 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     # use test_new to populate session variables
     get :new
   
-    get :add, :selected_samples => { '1' => '1', '2'=>'0', '3' => '0' },
+    get :add, :selected_samples => { '1' => '1', '3' => '0',
+                                     '5' => '0', '6' => '0' },
               :submit_hybridizations => {:hybridization_date => "2006-02-13", 
                             :charge_set_id => 1,
                             :charge_template_id => 1}
@@ -66,8 +67,8 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     assert_equal 1, @hybridizations[0].charge_template_id
 
     # make sure that only only non-selected samples remain in selection list
-    # should have 2 rows (header + 1 samples)
-    assert_select "table#available_samples>tr", 3
+    # should have 4 rows (header + 3 samples)
+    assert_select "table#available_samples>tr", 4
   end
 
   def test_add_charge_set_based_on_sample
@@ -77,7 +78,8 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     # use test_new to populate session variables
     get :new
   
-    get :add, :selected_samples => { '1' => '0', '2'=>'0', '3' => '0', '4' => '0', '5' => '1' },
+    get :add, :selected_samples => { '1' => '0', '3' => '0',
+                                     '5' => '1', '6' => '0' },
               :submit_hybridizations => {:hybridization_date => "2006-09-29", 
                             :charge_set_id => -1,
                             :charge_template_id => 1}
@@ -104,15 +106,16 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     assert_equal 1, @hybridizations[0].charge_template_id
 
     # make sure that only only non-selected samples remain in selection list
-    # should have 2 rows (header + 1 samples)
-    assert_select "table#available_samples>tr", 3
+    # should have 4 rows (header + 3 samples)
+    assert_select "table#available_samples>tr", 4
   end
 
   def test_add_nothing_selected
     # use test_new to populate session variables
     get :new
   
-    get :add, :selected_samples => { '1' => '0', '2'=>'0', '3' => '0' },
+    get :add, :selected_samples => { '1' => '0', '3' => '0',
+                                     '5' => '0', '6' => '0' },
               :submit_hybridizations => {:hybridization_date => "2006-02-13", 
                             :charge_set_id => 1,
                             :charge_template_id => 1}
@@ -125,8 +128,8 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     @hybridizations = session[:hybridizations]
     assert_equal 0, @hybridizations.size
 
-    # should have 3 rows (header + 2 samples)
-    assert_select "table#available_samples>tr", 4
+    # should have 5 rows (header + 4 samples)
+    assert_select "table#available_samples>tr", 5
   end
 
   def test_create_all_tracking_on

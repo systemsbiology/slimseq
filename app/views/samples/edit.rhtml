@@ -1,4 +1,5 @@
 <%= error_messages_for 'sample' %>
+<%= error_messages_for_samples %>
 
 <h2>Editing Sample</h2>
 
@@ -10,14 +11,25 @@
 	<p><label for="sample_short_sample_name">Short Sample Name</label><br/>
 	<%= text_field 'sample', 'short_sample_name'  %></p>
 	
-	<p><label for="sample_sample_name">Sample Name</label><br/>
-	<%= text_field 'sample', 'sample_name', :size => 50  %></p>
-
-    <p><label for="sample_sample_name">Sample Name</label><br>
-	    <%= render :partial => 'sample_name' %></p>
-
-	<p><label for="sample_sample_group_name">Sample Group Name</label><br/>
-	<%= text_field 'sample', 'sample_group_name', :size => 50  %></p>
+    <% if @sample.naming_scheme_id == nil %>
+        <p><label for="sample_sample_name">Sample Name</label><br/>
+            <input id="sample_sample_name" 
+                name="sample[sample_name]" size="30" type="text"
+                value="<%= @sample.sample_name %>" /></p>
+        <p><label for="sample_sample_group_name">Sample Group Name</label><br/>
+            <input id="sample_sample_group_name" 
+        	   name="sample[sample_group_name]" size="30" type="text"
+        	   value="<%= @sample.sample_group_name %>" /></p>
+    <% else %>
+        <p>Sample Name<br/>
+        <table>
+            <tr>
+                <% @n = 0 %>
+                <%= render :partial => 'schemed_sample_name' %>
+            </tr>
+        </table>
+        </p>
+    <% end %>
 
 	<p><label for="sample_starting_quality_trace_id">Total RNA Trace</label><br/>
     	<select id="sample_starting_quality_trace_id" name="sample[starting_quality_trace_id]">

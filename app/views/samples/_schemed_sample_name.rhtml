@@ -1,0 +1,17 @@
+<% for @m in 0..@naming_elements.size-1 
+   @element = @naming_elements[@m] %>
+    <td>
+        <div id="sample-<%=@n%>_schemed_name_<%=@element.name%>_block">
+            <% if @sample.naming_element_visibility[@m] == true %>
+                <%= render :partial => 'shown_naming_element' %>
+            <% else %>
+                <%= render :partial => 'hidden_naming_element' %>
+            <% end %>
+        </div>
+    </td>
+    
+    <%= observe_field "sample-#{@n}_schemed_name_#{@element.name}", :url => { :action => 'update_add_form',
+                                                                            :sample_number => @n,
+                                                                            :dependent_id => @element.id },
+                                                                            :with => "'choice=' + value" %>
+<% end %>

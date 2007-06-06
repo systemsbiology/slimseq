@@ -20,11 +20,22 @@ heavy_metals:
   naming_element_id: 2
 time000:
   id: 5
-  term: 000
-  abbreviated_term: 000
+  term: '000'
+  abbreviated_term: '000'
   naming_element_id: 3
 time024:
   id: 6
-  term: 024
-  abbreviated_term: 024
+  term: '024'
+  abbreviated_term: '024'
   naming_element_id: 3
+replicateA:
+  id: 7
+  term: A
+  abbreviated_term: A
+  naming_element_id: 4
+replicateB:
+  id: 8
+  term: B
+  abbreviated_term: B
+  naming_element_id: 4
+
