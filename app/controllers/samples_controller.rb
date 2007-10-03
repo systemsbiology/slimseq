@@ -237,8 +237,26 @@ class SamplesController < ApplicationController
         i = @naming_elements.index( term.naming_term.naming_element )
         if( i != nil)
           visibility[i] = true
+        end        
+      end
+      
+      # find dependent elements, and show them
+      # if the element they depend upon is shown
+      for i in (0..@naming_elements.size-1)
+        element = @naming_elements[i]
+        
+        # does this element depend upon another?
+        if( element.dependent_element_id > 0 )
+          dependent_element = NamingElement.find(element.dependent_element_id)
+          # check each term to see if the dependent is used
+          for term in @sample_terms
+            if(term.naming_term.naming_element == dependent_element)
+              visibility[i] = true
+            end
+          end
         end
       end
+      
       
       @sample.naming_element_visibility = visibility
       
