@@ -1,0 +1,45 @@
+<h1>Listing naming elements for <%=h @naming_scheme.name %></h1>
+
+<table class="sortable" id="naming_elements">
+  <tr>
+  <% for column in ["Name", "Order", "Group Element?", "Optional?",
+                    "Depends On?", "Edit", "Terms", "Delete"] %>
+    <th><%= column %></th>
+  <% end %>
+  </tr>
+  
+<% for naming_element in @naming_elements %>
+  <tr>
+    <td><%=h naming_element.name %></td>
+    <td><%=h naming_element.element_order %></td>
+    <td>
+        <% if naming_element.group_element %>
+            Yes
+        <% else %>
+            No
+        <% end %>
+    </td>
+    <td>
+        <% if naming_element.optional %>
+            Yes
+        <% else %>
+            No
+        <% end %>
+    </td>
+    <td>
+        <% if naming_element.dependent_element_id > 0%>
+            <%=h NamingElement.find(naming_element.dependent_element_id).name %>
+        <% end %>
+    </td>
+    <td><%= link_to 'Edit', :action => 'edit', :id => naming_element, 
+                    :naming_scheme_id => @naming_scheme.id %></td>
+    <td><%= link_to 'Add/Remove Terms', :controller => 'naming_terms',
+                    :action => 'list_for_naming_element', :id => naming_element %></td>
+    <td><%= link_to 'Delete', { :action => 'destroy', :id => naming_element },
+            :confirm => naming_element.destroy_warning %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'New naming element', :action => 'new', :naming_scheme_id => @naming_scheme.id %>
+ | <%= link_to 'Back to naming schemes', :controller => 'naming_schemes', :action => 'list'%>

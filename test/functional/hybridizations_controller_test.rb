@@ -66,7 +66,7 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     assert_equal 1, @hybridizations[0].charge_set_id
     assert_equal 1, @hybridizations[0].charge_template_id
 
-    # make sure that only only non-selected samples remain in selection list
+    # make sure that only non-selected samples remain in selection list
     # should have 4 rows (header + 3 samples)
     assert_select "table#available_samples>tr", 4
   end

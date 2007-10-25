@@ -1,0 +1,11 @@
+<%= error_messages_for 'naming_scheme' %>
+
+<!--[form:naming_scheme]-->
+<p><label for="naming_scheme_name">Name</label><br/>
+<%= text_field 'naming_scheme', 'name'  %></p>
+
+<%= hidden_field 'naming_element_id', 'lock_version' %>
+
+<%= hidden_field 'naming_scheme', 'lock_version' %>
+<!--[eoform:naming_scheme]-->
+

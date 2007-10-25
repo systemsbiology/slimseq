@@ -3,12 +3,11 @@ class NamingElement < ActiveRecord::Base
 
   has_many :naming_terms, :dependent => :destroy
 
-#  attr_accessor :selection, :hidden
-
-#  def after_find
-#    # elements with a dependency start as hidden
-#    if dependent_element_id > 0
-#      @hidden = true
-#    end
-#  end
+  def destroy_warning
+    naming_terms = NamingTerm.find(:all, :conditions => ["naming_element_id = ?", id])
+    
+    return "Destroying this naming element will also destroy:\n" + 
+           naming_terms.size.to_s + " naming term(s)\n" +
+           "Are you sure you want to destroy it?"
+  end
 end

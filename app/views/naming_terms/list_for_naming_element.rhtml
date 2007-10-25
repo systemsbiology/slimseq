@@ -1,0 +1,34 @@
+<h1>Listing naming elements for <%=h @naming_element.name %></h1>
+
+<table class="sortable" id="naming_terms">
+    <tr>
+        <% for column in ["Term", "Abbreviated Term", "Edit", "Delete"] %>
+            <th><%= column %></th>
+        <% end %>
+    </tr>
+  
+    <% for term in @naming_terms %>
+        <tr>
+            <td>
+                <%=h term.term %>
+            </td>
+            <td>
+                <%=h term.abbreviated_term %>
+            </td>
+            <td>
+                <%= link_to 'Edit', :controller => 'naming_terms', :action => 'edit', :id => term %>
+            </td>
+            <td>
+                <%= link_to 'Delete', {:controller => 'naming_terms', :action => 'destroy', :id => term},
+                    :confirm => term.destroy_warning %>
+            </td>
+        </tr>
+    <% end %>
+</table>
+
+<hr>
+
+<%= start_form_tag :action => 'create' %>
+  <%= render :partial => 'form' %>
+  <%= submit_tag "Add Term" %>
+<%= end_form_tag %>
