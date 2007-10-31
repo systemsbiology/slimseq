@@ -23,7 +23,15 @@
     <% end %>
   </tr>
 </table>
-  
+
+<% if @totals['owed_out'] != 0 %>
+    <p class="notice">This group owes <%=h @totals['owed_out'] %> chips to other groups</p>
+<% end %>
+
+<% if @totals['owed_in'] != 0 %>
+    <p class="notice">Other groups owe <%=h @totals['owed_in'] %> chips to this group</p>
+<% end %>
+
 <h2>Individual Transactions</h2>
 <table class="sortable" id="individual_chip_transactions">
   <tr>

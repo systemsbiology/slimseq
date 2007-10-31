@@ -62,6 +62,12 @@ class ChipTransaction < ActiveRecord::Base
       end
     end
     
+    # net number owed to other lab groups
+    @totals['owed_out'] = @totals['borrowed_in'] - @totals['returned_out']
+    
+    # net number owed by other lab groups
+    @totals['owed_in'] = @totals['borrowed_out'] - @totals['returned_in']
+    
     return @totals
   end
 
