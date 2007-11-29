@@ -30,6 +30,9 @@ class HybridizationsController < ApplicationController
 
   def add
     populate_arrays_from_tables
+
+    @available_samples = Sample.find(:all, :conditions => [ "status = 'submitted'" ],
+                                     :order => "submission_date DESC, id ASC")
   
     @submit_hybridizations = SubmitHybridizations.new
 
@@ -38,9 +41,10 @@ class HybridizationsController < ApplicationController
     selected_samples = params[:selected_samples]
     @samples = Array.new
     if selected_samples != nil
-      for sample_id in selected_samples.keys
-        if selected_samples[sample_id] == '1'
-          @samples << Sample.find(sample_id)
+      #for sample_id in selected_samples.keys
+      for sample in   @available_samples
+        if selected_samples[sample.id.to_s] == '1'
+          @samples << Sample.find(sample.id)
         end
       end
     end
@@ -90,9 +94,7 @@ class HybridizationsController < ApplicationController
       session[:hybridization_number] = current_hyb_number
     end
     
-    # get list of available samples, and removed ones currently in hybridization table
-    @available_samples = Sample.find(:all, :conditions => [ "status = 'submitted'" ],
-                                     :order => "submission_date DESC, id ASC")
+    # remove samples in the hybridization table from the sample list
     for hybridization in @hybridizations
       sample = hybridization.sample
       if( @available_samples.include?(sample) )
