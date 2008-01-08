@@ -82,4 +82,7 @@ class SiteConfig < ActiveRecord::Base
     return SiteConfig.find(1).sbeams_address
   end
   
+  def SiteConfig.raw_data_root_path
+    return SiteConfig.find(1).raw_data_root_path  
+  end
 end

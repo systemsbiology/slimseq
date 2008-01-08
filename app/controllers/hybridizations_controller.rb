@@ -175,6 +175,10 @@ class HybridizationsController < ApplicationController
                             "directory in the Site Config."
         end
       end
+      # set raw_data_path for these hybridizations
+      if SiteConfig.raw_data_root_path != nil && SiteConfig.raw_data_root_path != ""
+        Hybridization.populate_raw_data_paths(@hybridizations)
+      end
       if(flash[:notice] != nil)
         flash[:notice] += ' created successfully.'
       end

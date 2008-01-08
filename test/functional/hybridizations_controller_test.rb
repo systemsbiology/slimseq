@@ -147,6 +147,7 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     @site_config.update_attributes(:using_sbeams => 1)
     @site_config.update_attributes(:gcos_output_path => "#{RAILS_ROOT}")
     @site_config.update_attributes(:quality_trace_dropoff => "#{RAILS_ROOT}")
+    @site_config.update_attributes(:raw_data_root_path => "/raw/data/root")
     @site_config.save
 
     # get rid of any existing output folder
@@ -179,6 +180,10 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     # make sure a charge was recorded
     assert_equal num_charges + 1,
                  Charge.count    
+
+    # make sure raw data path was populated
+    hybridization = Hybridization.find(:first, :order => "id DESC")
+    assert_equal "/raw/data/root/200602/20060213_01_Young.CEL", hybridization.raw_data_path
 
     # make sure gcos file was created, then delete it
     assert File.exists?("#{RAILS_ROOT}/20060213_01_Young.txt")
