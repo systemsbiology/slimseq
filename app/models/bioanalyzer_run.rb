@@ -120,7 +120,7 @@ class BioanalyzerRun < ActiveRecord::Base
                 highest_repeat = 0
                 # find highest repeat number and store it
                 for repeat in repeat_traces
-                  repeat_number = repeat.scan( /.*_r(.)/ )
+                  repeat_number = repeat.name.scan( /.*_r(.)/ )
                   if( repeat_number != nil && repeat_number > highest_repeat )
                     highest_repeat = repeat_number
                   end
