@@ -2,13 +2,18 @@
 
 <table class="sortable" id="naming_terms">
     <tr>
-        <% for column in ["Term", "Abbreviated Term", "Edit", "Delete"] %>
+        <% for column in ["Term Order","Term", "Abbreviated Term", "Edit", "Delete"] %>
             <th><%= column %></th>
         <% end %>
+        <th>Move Up</th>
+        <th>Move Down</th>
     </tr>
   
     <% for term in @naming_terms %>
         <tr>
+            <td>
+                <%=h term.term_order %>
+            </td>
             <td>
                 <%=h term.term %>
             </td>
@@ -22,9 +27,18 @@
                 <%= link_to 'Delete', {:controller => 'naming_terms', :action => 'destroy', :id => term},
                     :confirm => term.destroy_warning %>
             </td>
+            <td>
+                <%= link_to 'Move Up', :controller => 'naming_terms', :action => 'move_up', :id => term %>
+            </td>
+            <td>
+                <%= link_to 'Move Down', :controller => 'naming_terms', :action => 'move_down', :id => term %>
+            </td>
         </tr>
     <% end %>
 </table>
+
+<%= link_to 'Back to naming elements', :controller => 'naming_elements',
+    :action => 'list_for_naming_scheme', :id => @naming_element.naming_scheme_id %>
 
 <hr>
 

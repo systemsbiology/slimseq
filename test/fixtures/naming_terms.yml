@@ -3,39 +3,47 @@ wild_type:
   term: wild-type
   abbreviated_term: wt
   naming_element_id: 1
+  term_order: 0
 mutant:
   id: 2
   term: mutant
   abbreviated_term: mut
   naming_element_id: 1
+  term_order: 1
 heat:
   id: 3
   term: heat
   abbreviated_term: HT
   naming_element_id: 2
+  term_order: 0
 heavy_metals:
   id: 4
   term: heavy metals
   abbreviated_term: HM
   naming_element_id: 2
+  term_order: 1
 time000:
   id: 5
   term: '000'
   abbreviated_term: '000'
   naming_element_id: 3
+  term_order: 0
 time024:
   id: 6
   term: '024'
   abbreviated_term: '024'
   naming_element_id: 3
+  term_order: 1
 replicateA:
   id: 7
   term: A
   abbreviated_term: A
   naming_element_id: 4
+  term_order: 0
 replicateB:
   id: 8
   term: B
   abbreviated_term: B
   naming_element_id: 4
+  term_order: 1
 

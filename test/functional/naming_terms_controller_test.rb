@@ -44,6 +44,32 @@ class NamingTermsControllerTest < Test::Unit::TestCase
     assert_redirected_to :action => 'list_for_naming_element'
   end
 
+  def test_move_up
+    post :move_up, :id => 2
+
+    assert_response :redirect
+    assert_redirected_to :action => 'list_for_naming_element'
+    
+    down_term = NamingTerm.find(1)
+    up_term = NamingTerm.find(2)
+
+    assert_equal 1, down_term.term_order
+    assert_equal 0, up_term.term_order
+  end
+
+  def test_move_down 
+    post :move_down, :id => 1
+
+    assert_response :redirect
+    assert_redirected_to :action => 'list_for_naming_element'
+    
+    down_term = NamingTerm.find(1)
+    up_term = NamingTerm.find(2)
+
+    assert_equal 1, down_term.term_order
+    assert_equal 0, up_term.term_order
+  end
+
   def test_edit
     get :edit, :id => 1
 
