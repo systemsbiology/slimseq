@@ -38,11 +38,11 @@ class BioanalyzerRun < ActiveRecord::Base
         # find the chip-wide lab group
         chip_lab_name = doc.elements["Chipset/Chips/Chip/Files/File/FileInformation/Comment"].text
 
-		if( chip_lab_name != nil )
+		    if( chip_lab_name != nil )
 	        # get rid of trailing whitespace
 	        chip_lab_name = chip_lab_name.scan(/(.*)\n*/)[0]
 	        chip_lab_group = LabGroup.find(:first, :conditions => [ "name = ?", chip_lab_name])
-    	end
+    	  end
     
         # create an array to hold traces
         traces = Array.new
@@ -118,9 +118,10 @@ class BioanalyzerRun < ActiveRecord::Base
                 repeat_traces = QualityTrace.find(:all, :conditions => ["name LIKE ?", "%#{name}%_r%"])
                 
                 highest_repeat = 0
+
                 # find highest repeat number and store it
                 for repeat in repeat_traces
-                  repeat_number = repeat.name.scan( /.*_r(.)/ )
+                  repeat_number = repeat.name.scan( /.*_r(.)/ )[0][0].to_i
                   if( repeat_number != nil && repeat_number > highest_repeat )
                     highest_repeat = repeat_number
                   end
