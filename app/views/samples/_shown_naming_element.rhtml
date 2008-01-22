@@ -4,7 +4,7 @@
 <% end %>
 
 <% if @sample.naming_element_selections != nil %>
-   <%= options_from_collection_for_select @element.naming_terms, "id", "term", selected_value=@sample.naming_element_selections[@m.to_i].to_i %></select>
+   <%= options_from_collection_for_select @element.ordered_naming_terms, "id", "term", selected_value=@sample.naming_element_selections[@m.to_i].to_i %></select>
 <% else %>
-   <%= options_from_collection_for_select @element.naming_terms, "id", "term" %></select>
+   <%= options_from_collection_for_select @element.ordered_naming_terms, "id", "term" %></select>
 <% end %>

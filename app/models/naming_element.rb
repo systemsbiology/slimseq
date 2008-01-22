@@ -10,4 +10,8 @@ class NamingElement < ActiveRecord::Base
            naming_terms.size.to_s + " naming term(s)\n" +
            "Are you sure you want to destroy it?"
   end
+
+  def ordered_naming_terms
+    return NamingTerm.find(:all, :conditions => ["naming_element_id = ?", self.id], :order => "term_order ASC")
+  end
 end
