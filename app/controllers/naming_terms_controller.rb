@@ -12,6 +12,13 @@ class NamingTermsController < ApplicationController
 
   def create
     @naming_term = NamingTerm.new(params[:naming_term])
+    naming_element = NamingElement.find( @naming_term.naming_element_id )
+    highest_order_term = naming_element.naming_terms.find(:first, :order => "term_order DESC")
+    if( highest_order_term.nil? )
+      @naming_term.term_order = 0
+    else
+      @naming_term.term_order = highest_order_term.term_order + 1
+    end
 
     if @naming_term.save
       flash[:notice] = 'Naming term was successfully created.'

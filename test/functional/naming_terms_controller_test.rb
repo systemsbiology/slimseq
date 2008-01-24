@@ -35,6 +35,10 @@ class NamingTermsControllerTest < Test::Unit::TestCase
     assert_redirected_to :action => 'list_for_naming_element', :id => 1
 
     assert_equal num_naming_terms + 1, NamingTerm.count
+    
+    # make sure the correct term order is assigned
+    new_term = NamingTerm.find(:first, :order => "id DESC")
+    assert_equal 2, new_term.term_order
   end
   
   def test_update
