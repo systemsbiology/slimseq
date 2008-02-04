@@ -6,7 +6,7 @@ class AddNamingTermOrder < ActiveRecord::Migration
     # right now, which is sorted by id
     naming_elements = NamingElement.find(:all)
     naming_elements.each do |e|
-      naming_terms = e.naming_terms.find(:all, :order => "id ASC")
+      naming_terms = e.naming_terms.find(:all, :order => "term ASC")
       current_order = 0
       naming_terms.each do |t|
         t.update_attribute('term_order', current_order)
