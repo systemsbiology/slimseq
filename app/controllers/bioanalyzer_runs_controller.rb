@@ -11,25 +11,28 @@ class BioanalyzerRunsController < ApplicationController
   def list
     lab_group_ids = current_user.get_lab_group_ids
   
-    # get the traces that the user has access to
-    traces = QualityTrace.find( :all, :conditions => ["lab_group_id IN (?)", lab_group_ids] )
+    # make sure this user belongs to at least one lab group        
+    if(lab_group_ids.size > 0)
+      # get the traces that the user has access to
+      traces = QualityTrace.find( :all, :conditions => ["lab_group_id IN (?)", lab_group_ids] )
 
-    # get unique bioanalyzer run ids from all traces
-    bioanalyzer_run_ids = Array.new
-    for trace in traces
-      if( !bioanalyzer_run_ids.include?(trace.bioanalyzer_run_id) )
-        bioanalyzer_run_ids << trace.bioanalyzer_run_id
+      # get unique bioanalyzer run ids from all traces
+      bioanalyzer_run_ids = Array.new
+      for trace in traces
+        if( !bioanalyzer_run_ids.include?(trace.bioanalyzer_run_id) )
+          bioanalyzer_run_ids << trace.bioanalyzer_run_id
+        end
       end
+      bioanalyzer_run_ids.flatten
+
+      if(bioanalyzer_run_ids.size > 0)
+        @bioanalyzer_run_pages, @bioanalyzer_runs = paginate :bioanalyzer_runs, 
+                                                    :per_page => 10, :order => "date DESC",
+                                                    :conditions => ["id IN (?)", bioanalyzer_run_ids]
+      end      
     end
-    bioanalyzer_run_ids.flatten
-
-    if(bioanalyzer_run_ids.size > 0)
-      @bioanalyzer_run_pages, @bioanalyzer_runs = paginate :bioanalyzer_runs, 
-                                                  :per_page => 10, :order => "date DESC",
-                                                  :conditions => ["id IN (?)", bioanalyzer_run_ids]
-    end      
   end
-
+  
   def show
     @bioanalyzer_run = BioanalyzerRun.find(params[:id])
     
