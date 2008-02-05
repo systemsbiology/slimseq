@@ -16,12 +16,15 @@ class SamplesController < ApplicationController
         project_ids << project.id
       end
 
-      @sample_pages, @samples =
-        paginate :samples, :conditions => [ "project_id IN (?)", project_ids ], :per_page => 40,
-                 :order => "submission_date DESC, samples.id ASC", :include => 'project'
+      # make sure at least one project exists
+      if(project_ids.size > 0)
+        @sample_pages, @samples =
+          paginate :samples, :conditions => [ "project_id IN (?)", project_ids ], :per_page => 40,
+                   :order => "submission_date DESC, samples.id ASC", :include => 'project'
+      end
     end
   end
-
+  
   def new
     populate_arrays_from_tables
 
