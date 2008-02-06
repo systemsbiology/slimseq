@@ -18,6 +18,9 @@ Quick guide to installing on Windows using MySQL database and WEBrick web server
 ===SLIMarray Linux(Generic) Quickstart:
 Quick guide to installing on a generic Linux system using MySQL database and WEBrick web server, without LDAP authentication support. See SLIMarrayLinuxQuickstart[link:files/doc/SLIMarrayLinuxQuickstart.html]
 
+===SLIMarray Ubuntu Quickstart:
+Quick guide to installation specifically on Ubuntu using MySQL database and Mongrel web server, without LDAP authentication support. See SLIMarrayUbuntuQuickstart[link:files/doc/SLIMarrayUbuntuQuickstart.html]
+
 ===SLIMarray Fedora Core 5 Quickstart:
 Quick guide to installation specifically on Fedora Core 5 using MySQL database and WEBrick web server, without LDAP authentication support. See SLIMarrayFC5Quickstart[link:files/doc/SLIMarrayFC5Quickstart.html]
 

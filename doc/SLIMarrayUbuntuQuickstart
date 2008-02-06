@@ -1,0 +1,62 @@
+= Quickstart Notes for SLIMarray on Ubuntu Linux
+(provided by Robert Searles of OHSU)
+
+SLIMarray runs on Ubuntu linux, but the installation requires some additional work to get RAILS to run properly.  The steps below are derived from the RailsOnUbuntu webpage ( http://wiki.rubyonrails.org/rails/pages/RailsOnUbuntu ).  This site lists three approaches to doing the set-up: the quickest way, the proper way, and the recommended way.  SLIMarray has been tested with the recommended way, with a couple of modifications.
+
+If mysql-server has not been previously installed, then install it using the command 
+
+    sudo apt-get install mysql-server
+
+During the installation process, the user will be prompted for a root account password.  Note that, unlike the Ubuntu user account password prompt, this prompt only asks once, so type it carefully.
+
+After mysql-server is installed, check to see what socket the daemon is using.  Do this with the following commands:
+
+    sudo apt-get install libmysqlclient15-dev
+    mysql_config --socket
+
+The socket path returned by this command goes into the slimarray database.yml file (see below).
+
+Install Ruby and RubyGems using the command: 
+
+    sudo apt-get install ruby rubygems irb ri rdoc ruby1.8-dev build-essential
+
+According to the RailsOnUbuntu website, the recommended way to install Rails is through RubyGems, but it works just as well using apt-get and this doesn't run the risk of confusing apt.  Use the command
+
+    sudo get-apt install rails
+
+All needed dependencies will come with it.
+
+One then needs to install the Ruby interface to the mysql-server.  Enter the command 
+
+    sudo apt-get install libmysql-ruby
+
+Rake will not function if this interface isn't in the system.
+
+Putting SLIMarray on the system
+
+Acquire SLIMarray as described in <b>SLIMarray Rails App</b> in SLIMarrayFullInstallNotes[link:files/doc/SLIMarrayFullInstallNotes.html].  Check to make certain that there is a sub-directory named 'log' in the slimarray directory.  If the log subdirectory doesn't exist, then create it.  If you are testing the installation of SLIMarray with WEBrick, the server will run, but it will give an error message if this directory doesn't exist and all error messages during operation will default to output in the terminal window.
+
+Configure MySQL as described in <b>MySQL Configuration</b> in SLIMarrayFullInstallNotes[link:files/doc/SLIMarrayFullInstallNotes.html].  This will create three versions of the database: development, production, and test.
+
+Configure SLIMarray as described in <b>Configuring SLIMarray</b> in SLIMarrayFullInstallNotes[link:files/doc/SLIMarrayFullInstallNotes.html].  This means prepare the database.yml file by adding the correct user name and password and by entering the correct MySQL socket path (see above). 
+
+Set up the databases as described in <b>Setting up your databases</b> in SLIMarrayFullInstallNotes[link:files/doc/SLIMarrayFullInstallNotes.html].  Basically, cd to the slimarray folder, then type
+
+    rake migrate
+    rake bootstrap
+    rake RAILS_ENV=production migrate
+    rake RAILS_ENV=production bootstrap
+
+The database is now ready for testing using WEBrick as described.  For a more robust server than WEBrick, one can also use Mongrel.  This server is described in detail at http://mongrel.rubyforge.org .   To install Mongrel, enter the command
+
+    sudo apt-get install mongrel
+
+Then cd to the slimarray folder and enter in the command
+
+    mongrel_rails start -d --port ####
+
+replacing #### with the port you want to use (3000 is a good one).  
+
+This sets up Mongrel to run as a daemon, so you can close the terminal window and log off without disrupting SLIMarray.  To shut down Mongrel, open a terminal window and type:
+ 
+    mongrel_rails stop
