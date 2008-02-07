@@ -1,6 +1,6 @@
 require 'rake/gempackagetask'
 
-PKG_VERSION = "0.3.0"
+PKG_VERSION = "0.3.5"
 PKG_NAME = "slimarray"
 
 spec = Gem::Specification.new do |s|
