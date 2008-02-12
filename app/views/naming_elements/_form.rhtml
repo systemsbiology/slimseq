@@ -18,6 +18,9 @@
     <option value="-1">-- None --</option>
     <%= options_from_collection_for_select @naming_element_list, 'id', 'name',
                                            selected_value = @naming_element.dependent_element_id %></select></p>
+                                           
+<p><%= check_box 'naming_element', 'free_text' %>
+<label for="naming_element_free_text">Free Text?</label></p>                                           
 
 <%= hidden_field 'naming_element', 'element_order' %>
 <%= hidden_field 'naming_element', 'naming_scheme_id' %>

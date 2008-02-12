@@ -299,6 +299,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     smpl1_schemed = {:'Strain' => 1,
                     :'Perturbation' => 1,
                     :'Perturbation Time' => 2,
+                    :'Subject Number' => '42231'
                     }
     smpl2 = {:submission_date => '2006-02-12',
             :short_sample_name => 'DisSmpl',
@@ -306,6 +307,7 @@ class SamplesControllerTest < Test::Unit::TestCase
             }  
     smpl2_schemed = {:'Strain' => 2,
                     :'Perturbation' => -1,
+                    :'Subject Number' => '42643'
                     }
 
     # select a naming scheme for current user
@@ -445,11 +447,13 @@ class SamplesControllerTest < Test::Unit::TestCase
                             :'sample-0_schemed_name' => { :Strain => 1,
                                                           :Perturbation => 3,
                                                           :'Perturbation Time' => 6,
-                                                          :Replicate => 7 } 
+                                                          :Replicate => 7,
+                                                          :'Subject Number' => 32235
+                                                         } 
     
     sample = Sample.find(6)
     assert_equal Date.new(2006,2,9), sample.submission_date
-    assert_equal "wt_HT_024_A", sample.sample_name
+    assert_equal "wt_HT_024_A_32235", sample.sample_name
     assert_equal "wt_HT_024", sample.sample_group_name
     
     sample_terms = SampleTerm.find(:all, :conditions => ["sample_id = ?", 6],
@@ -1143,11 +1147,13 @@ class SamplesControllerTest < Test::Unit::TestCase
                             :'sample-0_schemed_name' => { :Strain => 1,
                                                           :Perturbation => 3,
                                                           :'Perturbation Time' => 6,
-                                                          :Replicate => 7 } 
+                                                          :Replicate => 7,
+                                                          :'Subject Number' => 32235
+                                                         } 
     
     sample = Sample.find(6)
     assert_equal Date.new(2006,2,9), sample.submission_date
-    assert_equal "wt_HT_024_A", sample.sample_name
+    assert_equal "wt_HT_024_A_32235", sample.sample_name
     assert_equal "wt_HT_024", sample.sample_group_name
     
     sample_terms = SampleTerm.find(:all, :conditions => ["sample_id = ?", 6],

@@ -113,7 +113,8 @@ class SamplesController < ApplicationController
 
     # array of arrays terms per each sample
     sample_terms = Array.new
-
+    sample_texts = Array.new
+    
     failed = false
     for n in 0..sample_number-1
       form_entries = params['sample-'+n.to_s]
@@ -129,7 +130,8 @@ class SamplesController < ApplicationController
         @samples[n].sample_group_name = ""
         @samples[n].naming_element_selections = Array.new
         sample_terms[n] = Array.new
-        term_count = 0
+        sample_texts[n] = Array.new
+        #term_count = 0
 
         for element in @naming_elements
           # put underscores between terms
@@ -146,19 +148,31 @@ class SamplesController < ApplicationController
           @samples[n].naming_element_selections << schemed_name[element.name]
           
           if( schemed_name[element.name].to_i > 0 )
-            naming_term = NamingTerm.find(schemed_name[element.name])
-            naming_element = naming_term.naming_element
-            sample_term = SampleTerm.new( :term_order => naming_element.element_order,
-                                          :naming_term_id => naming_term.id )
-            sample_terms[n] << sample_term
-            @samples[n].sample_name << naming_term.abbreviated_term
+            if( element.free_text )
+              sample_text = SampleText.new( :text => schemed_name[element.name],
+                                            :naming_element_id => element.id )
+              sample_texts[n] << sample_text
+              @samples[n].sample_name << schemed_name[element.name]
+              
+              # add to group name if this is a group element
+              if(element.group_element == true)
+                @samples[n].sample_group_name << schemed_name[element.name]
+              end
+            else
+              naming_term = NamingTerm.find(schemed_name[element.name])
+              naming_element = naming_term.naming_element
+              sample_term = SampleTerm.new( :term_order => naming_element.element_order,
+                                            :naming_term_id => naming_term.id )
+              sample_terms[n] << sample_term
+              @samples[n].sample_name << naming_term.abbreviated_term
 
-            # add to group name if this is a group element
-            if(element.group_element == true)
-              @samples[n].sample_group_name << naming_term.abbreviated_term
+              # add to group name if this is a group element
+              if(element.group_element == true)
+                @samples[n].sample_group_name << naming_term.abbreviated_term
+              end
+
+              #term_count += 1
             end
-            
-            term_count += 1
           end
         end
       else
@@ -192,6 +206,15 @@ class SamplesController < ApplicationController
             sample_term.save
           end
         end
+        
+        # if there are sample texts, save them
+        if(sample_texts[n] != nil && sample_texts[n].size > 0)
+          for sample_text in sample_texts[n]
+            # grab the newly-generated sample id
+            sample_text.sample_id = @samples[n].id
+            sample_text.save
+          end
+        end
       end
       flash[:notice] = "Samples created successfully"
       redirect_to :action => 'show'
@@ -222,6 +245,7 @@ class SamplesController < ApplicationController
       populate_sample_naming_scheme_choices(@sample.naming_scheme)
       @sample_terms = SampleTerm.find(:all, :conditions => ["sample_id = ?", @sample.id],
                                       :order => "term_order ASC")
+      @sample_texts = SampleText.find(:all, :conditions => ["sample_id = ?", @sample.id])
       
       # set default visibilities
       visibility = Array.new
@@ -277,6 +301,12 @@ class SamplesController < ApplicationController
       
       @sample.naming_element_selections = selections
       
+      @sample.text_values = Hash.new
+      # set sample texts
+      for text in @sample_texts
+        @sample.text_values[text.naming_element.name] = text.text
+      end
+      
       # put Sample in an array and store it in the session
       # for update_add_form
       @samples = Array.new
@@ -302,6 +332,8 @@ class SamplesController < ApplicationController
       @samples[0].naming_element_selections = Array.new
       sample_terms = Array.new
       sample_terms[0] = Array.new
+      sample_texts = Array.new
+      sample_texts[0] = Array.new
       term_count = 0
 
       for element in @naming_elements
@@ -319,19 +351,31 @@ class SamplesController < ApplicationController
         @samples[0].naming_element_selections << schemed_name[element.name]
         
         if( schemed_name[element.name].to_i > 0 )
-          naming_term = NamingTerm.find(schemed_name[element.name])
-          naming_element = naming_term.naming_element
-          sample_term = SampleTerm.new( :term_order => naming_element.element_order,
-                                        :naming_term_id => naming_term.id )
-          sample_terms[0] << sample_term
-          @samples[0].sample_name << naming_term.abbreviated_term
+          if( element.free_text )
+            sample_text = SampleText.new( :text => schemed_name[element.name],
+                                          :naming_element_id => element.id )
+            sample_texts[0] << sample_text
+            @samples[0].sample_name << schemed_name[element.name].to_s
 
-          # add to group name if this is a group element
-          if(element.group_element == true)
-            @samples[0].sample_group_name << naming_term.abbreviated_term
+            # add to group name if this is a group element
+            if(element.group_element == true)
+              @samples[0].sample_group_name << schemed_name[element.name]
+            end
+          else
+            naming_term = NamingTerm.find(schemed_name[element.name])
+            naming_element = naming_term.naming_element
+            sample_term = SampleTerm.new( :term_order => naming_element.element_order,
+                                          :naming_term_id => naming_term.id )
+            sample_terms[0] << sample_term
+            @samples[0].sample_name << naming_term.abbreviated_term
+
+            # add to group name if this is a group element
+            if(element.group_element == true)
+              @samples[0].sample_group_name << naming_term.abbreviated_term
+            end
+
+            term_count += 1
           end
-          
-          term_count += 1
         end
       end
     end
@@ -349,9 +393,22 @@ class SamplesController < ApplicationController
           
           # then re-populate this sample's terms
           for sample_term in sample_terms[0]
-            # grab the newly-generated sample id
             sample_term.sample_id = @samples[0].id
             sample_term.save
+          end
+          
+          # if there are sample texts, delete old and save new
+          texts = @samples[0].sample_texts
+          for text in texts
+            text.destroy
+          end
+          
+          if(sample_texts[0] != nil && sample_texts[0].size > 0)
+            for sample_text in sample_texts[0]
+              # grab the newly-generated sample id
+              sample_text.sample_id = @samples[0].id
+              sample_text.save
+            end
           end
         end
 
@@ -773,8 +830,12 @@ class SamplesController < ApplicationController
       used_trace_ids.delete(selected_sample.fragmented_quality_trace_id)
     end
 
-    available_traces = QualityTrace.find(:all, :conditions => [ "id NOT IN (?)", used_trace_ids ],
-                                   :order => "name ASC")
+    if( used_trace_ids.size > 0 )
+      available_traces = QualityTrace.find(:all, :conditions => [ "id NOT IN (?)", used_trace_ids ],
+                                           :order => "name ASC")
+    else
+      available_traces = QualityTrace.find(:all, :order => "name ASC")
+    end
 
     # check each trace to see if it belongs in one of the sets
     @total_traces = Array.new

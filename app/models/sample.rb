@@ -9,6 +9,7 @@ class Sample < ActiveRecord::Base
   belongs_to :naming_scheme
   
   has_many :sample_terms, :dependent => :destroy
+  has_many :sample_texts, :dependent => :destroy
   
   validates_associated :chip_type, :project
   validates_presence_of :sample_name, :short_sample_name, :submission_date, :project_id
@@ -18,7 +19,8 @@ class Sample < ActiveRecord::Base
   validates_length_of :sbeams_user, :maximum => 20
   validates_length_of :status, :maximum => 50
 
-  attr_accessor :naming_element_selections, :naming_element_visibility
+  attr_accessor :naming_element_selections, :naming_element_visibility,
+                :text_values
   
   def validate_on_create
     # make sure date/short_sample_name/sample_name combo is unique

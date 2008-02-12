@@ -3,7 +3,7 @@
 <table class="sortable" id="naming_elements">
   <tr>
   <% for column in ["Name", "Order", "Group Element?", "Optional?",
-                    "Depends On?", "Edit", "Terms", "Delete"] %>
+                    "Free Text?", "Depends On?", "Edit", "Terms", "Delete"] %>
     <th><%= column %></th>
   <% end %>
   </tr>
@@ -27,14 +27,25 @@
         <% end %>
     </td>
     <td>
+        <% if naming_element.free_text %>
+            Yes
+        <% else %>
+            No
+        <% end %>
+    </td>
+    <td>
         <% if naming_element.dependent_element_id > 0%>
             <%=h NamingElement.find(naming_element.dependent_element_id).name %>
         <% end %>
     </td>
     <td><%= link_to 'Edit', :action => 'edit', :id => naming_element, 
                     :naming_scheme_id => @naming_scheme.id %></td>
-    <td><%= link_to 'Add/Remove Terms', :controller => 'naming_terms',
-                    :action => 'list_for_naming_element', :id => naming_element %></td>
+    <td>
+      <% if !naming_element.free_text %>
+        <%= link_to 'Add/Remove Terms', :controller => 'naming_terms',
+                    :action => 'list_for_naming_element', :id => naming_element %>
+      <% end %>
+    </td>
     <td><%= link_to 'Delete', { :action => 'destroy', :id => naming_element },
             :confirm => naming_element.destroy_warning %></td>
   </tr>

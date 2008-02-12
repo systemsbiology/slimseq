@@ -1,0 +1,6 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+sample6_subject_number:
+  id: 1
+  sample_id: 6
+  naming_element_id: 5
+  text: 32234
