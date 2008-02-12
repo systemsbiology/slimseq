@@ -27,7 +27,9 @@ class SamplesController < ApplicationController
   
   def new
     populate_arrays_from_tables
-
+    
+    @naming_schemes = NamingScheme.find(:all)
+    
     # clear out sample table since this is a 'new' set
     session[:samples] = Array.new
     session[:sample_number] = 0
@@ -39,7 +41,9 @@ class SamplesController < ApplicationController
   def add
     populate_arrays_from_tables
     populate_sample_naming_scheme_choices(current_user.naming_scheme)
-
+    
+    @naming_schemes = NamingScheme.find(:all)
+    
     @samples = session[:samples]
     previous_samples = session[:sample_number]
 
@@ -59,25 +63,33 @@ class SamplesController < ApplicationController
         # deal with initial visibility for schemed names
         if( current_user.current_naming_scheme_id == nil )
           visibility = nil
+          text_values = nil
         else
-          # set initial visibilities
+          # set initial visibilities, text values
           visibility = Array.new
+          text_values = Hash.new
           for element in @naming_elements
             if( element.dependent_element_id > 0 )
               visibility << false
             else
               visibility << true
             end
+            
+            # free text
+            if( element.free_text )
+              text_values[element.name] = ""
+            end
           end
         end
-        
+
         @samples << Sample.new(:submission_date => @add_samples.submission_date,      
               :chip_type_id => @add_samples.chip_type_id,
               :sbeams_user => @add_samples.sbeams_user,                                              
               :project_id => @add_samples.project_id,
               :organism_id => ChipType.find( @add_samples.chip_type_id).organism_id,
               :status => 'submitted',
-              :naming_element_visibility => visibility)
+              :naming_element_visibility => visibility,
+              :text_values => text_values)
       end
       session[:sample_number] = previous_samples + @add_samples.number 
     else
