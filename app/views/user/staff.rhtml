@@ -13,41 +13,40 @@ and <%= link_to 'creating some chip types', :controller => 'chip_types', :action
 <h3>Samples Submitted for Hybridization</h3>
 
 <% if @samples != nil && @samples.size > 0 %>
-	<table class="sortable" id="samples">
-	  <tr>
-	    <th>Date</th>
-	    <th>Short Sample Name</th>
-	    <th>Sample Name</th>
-	    <th>Sample Group Name</th>
-	    <th>Project</th>
-	  <% if @using_sbeams %>
-	    <th>SBEAMS User</th>
-	  <% end %>
-	    <th>Status</th>
-	    <th>Edit</th>
-	    <th>Destroy</th>
-	  </tr>
-	  
-	<% for sample in @samples %>
-	  <tr>
-	    <td><%=h sample.submission_date %></td>
-	    <td><%=h sample.short_sample_name %></td>
-	    <td><%=h sample.sample_name %></td>
-	    <td><%=h sample.sample_group_name %></td>
-	    <td><%=h sample.project.name %></td>
-	  <% if @using_sbeams %>
-	    <td><%=h sample.sbeams_user %></td>
-	  <% end %>
-	    <td><%=h sample.status %></td>
-	    <td><%= link_to 'Edit', :controller => 'samples', :action => 'edit', :id => sample %></td>
-	    <td><%= link_to 'Destroy', { :controller => 'samples', :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
-	  </tr>
-	<% end %>
-	</table>
-	
-	<%= link_to 'Hybridize Samples', :controller => 'hybridizations', :action => 'new' %>
-<% else %>
-    <p>There are no samples submitted for hybridization.</p>
-    <%= link_to 'Submit New Samples', :controller => 'samples', :action => 'new' %>
-<% end %>
+  <table class="sortable" id="samples">
+    <tr>
+      <th>Date</th>
+      <th>Short Sample Name</th>
+      <th>Sample Name</th>
+      <th>Sample Group Name</th>
+      <th>Project</th>
+    <% if @using_sbeams %>
+      <th>SBEAMS User</th>
+    <% end %>
+      <th>Status</th>
+      <th>Edit</th>
+      <th>Destroy</th>
+    </tr>
 
+  <% for sample in @samples %>
+    <tr>
+      <td><%=h sample.submission_date %></td>
+      <td><%=h sample.short_sample_name %></td>
+      <td><%=h sample.sample_name %></td>
+      <td><%=h sample.sample_group_name %></td>
+      <td><%=h sample.project.name %></td>
+    <% if @using_sbeams %>
+      <td><%=h sample.sbeams_user %></td>
+    <% end %>
+      <td><%=h sample.status %></td>
+      <td><%= link_to 'Edit', :controller => 'samples', :action => 'edit', :id => sample %></td>
+      <td><%= link_to 'Destroy', { :controller => 'samples', :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
+    </tr>
+  <% end %>
+  </table>
+
+  <p><%= link_to 'Hybridize Samples', :controller => 'hybridizations', :action => 'new' %></p>
+<% else %>
+  <p>There are no samples submitted for hybridization.</p>  
+<% end %>
+  <p><%= link_to 'Submit New Samples', :controller => 'samples', :action => 'new' %></p>
