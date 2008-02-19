@@ -399,6 +399,14 @@ class SamplesController < ApplicationController
       end
     end
 
+    # shorten up sample and group names if needed
+    if( @samples[0].sample_name > 59 )
+      @samples[0].sample_name = @samples[0].sample_name[0..58]
+    end
+    if( @samples[0].sample_group_name > 59 )
+      @samples[0].sample_group_name = @samples[0].sample_group_name[0..58]
+    end
+    
     begin
       # update main sample attributes, and if successful go
       # ahead and re-populate sample terms, if applicable
@@ -434,7 +442,7 @@ class SamplesController < ApplicationController
         flash[:notice] = 'Sample was successfully updated.'
         redirect_to :action => 'list'
       else
-        flash[:warning] = 'Resulting sample name too long'
+        flash[:warning] = 'Resulting sample name or group name too long'
         params[:id] = @samples[0].id
         edit
         render :action => 'edit'
