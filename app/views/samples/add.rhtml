@@ -8,9 +8,6 @@
 <%#= end_form_tag %>
 
 <% if @samples.size > 0 %>
-	<h3>Wait until you've finished adding samples to this table before
-	   entering the sample names.</h3>
-	
 	<%= start_form_tag :action => 'create' %>
 	<table class="table">
 	  <th>Date</th>
