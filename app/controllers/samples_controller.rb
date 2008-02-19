@@ -400,10 +400,10 @@ class SamplesController < ApplicationController
     end
 
     # shorten up sample and group names if needed
-    if( @samples[0].sample_name > 59 )
+    if( @samples[0].sample_name.length > 59 )
       @samples[0].sample_name = @samples[0].sample_name[0..58]
     end
-    if( @samples[0].sample_group_name > 59 )
+    if( @samples[0].sample_group_name.length > 59 )
       @samples[0].sample_group_name = @samples[0].sample_group_name[0..58]
     end
     
