@@ -5,4 +5,5 @@
   <%= submit_tag 'Edit' %>
 <%= end_form_tag %>
 
-<%= link_to 'Back', :action => 'list' %>
+<%= link_to 'Back', :action => 'list_for_naming_scheme', 
+    :naming_scheme_id => @naming_scheme_id %>

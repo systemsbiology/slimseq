@@ -40,14 +40,17 @@ class SamplesController < ApplicationController
 
   def add
     populate_arrays_from_tables
-    populate_sample_naming_scheme_choices(current_user.naming_scheme)
+
+    @add_samples = AddSamples.new(params[:add_samples])
+    if( @add_samples.naming_scheme_id != nil )
+      populate_sample_naming_scheme_choices( NamingScheme.find(@add_samples.naming_scheme_id) )
+    end
     
     @naming_schemes = NamingScheme.find(:all)
     
     @samples = session[:samples]
     previous_samples = session[:sample_number]
 
-    @add_samples = AddSamples.new(params[:add_samples])
     # should a new project be created?
     if(@add_samples.project_id == -1)
       @project = Project.new(params[:project])
@@ -61,7 +64,7 @@ class SamplesController < ApplicationController
       for sample_number in previous_samples+1..previous_samples+@add_samples.number
         
         # deal with initial visibility for schemed names
-        if( current_user.current_naming_scheme_id == nil )
+        if( @add_samples.naming_scheme_id == nil )
           visibility = nil
           text_values = nil
         else
@@ -93,7 +96,7 @@ class SamplesController < ApplicationController
       end
       session[:sample_number] = previous_samples + @add_samples.number 
     else
-      render :action => 'add'
+      render :action => 'new'
     end
   end
   
@@ -147,7 +150,7 @@ class SamplesController < ApplicationController
 
         for element in @naming_elements
           # put underscores between terms
-          if(@samples[n].sample_name.length > 0)
+          if(element.include_in_sample_name && @samples[n].sample_name.length > 0)
             @samples[n].sample_name << "_"
             
             # add an underscore between group terms
@@ -164,11 +167,14 @@ class SamplesController < ApplicationController
               sample_text = SampleText.new( :text => schemed_name[element.name],
                                             :naming_element_id => element.id )
               sample_texts[n] << sample_text
-              @samples[n].sample_name << schemed_name[element.name]
               
-              # add to group name if this is a group element
-              if(element.group_element == true)
-                @samples[n].sample_group_name << schemed_name[element.name]
+              if( element.include_in_sample_name )
+                @samples[n].sample_name << schemed_name[element.name]
+
+                # add to group name if this is a group element
+                if(element.group_element == true)
+                  @samples[n].sample_group_name << schemed_name[element.name]
+                end
               end
             else
               naming_term = NamingTerm.find(schemed_name[element.name])
@@ -176,14 +182,15 @@ class SamplesController < ApplicationController
               sample_term = SampleTerm.new( :term_order => naming_element.element_order,
                                             :naming_term_id => naming_term.id )
               sample_terms[n] << sample_term
-              @samples[n].sample_name << naming_term.abbreviated_term
+              
+              if( element.include_in_sample_name )
+                @samples[n].sample_name << naming_term.abbreviated_term
 
-              # add to group name if this is a group element
-              if(element.group_element == true)
-                @samples[n].sample_group_name << naming_term.abbreviated_term
+                # add to group name if this is a group element
+                if(element.group_element == true)
+                  @samples[n].sample_group_name << naming_term.abbreviated_term
+                end
               end
-
-              #term_count += 1
             end
           end
         end

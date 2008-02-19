@@ -21,6 +21,13 @@
    	    <%= hidden_field 'add_samples', 'sbeams_user'  %>
 <% end %>
 
+<% if @naming_schemes.size > 0 %>
+  <p><label for="add_samples_naming_scheme_id">Naming Scheme</label><br/>
+    <select id="add_samples_naming_scheme_id" name="add_samples[naming_scheme_id]">
+     <option value="">- None -</option>
+     <%= options_from_collection_for_select @naming_schemes, "id", "name", selected_value=current_user.current_naming_scheme_id %></select></p>
+<% end %>
+
 <p>Choose Project<br>
     <select id="add_samples_project_id" name="add_samples[project_id]">
     <option value="-1">Create New Project Below</option>

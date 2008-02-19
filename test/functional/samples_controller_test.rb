@@ -165,7 +165,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     # make sure it complained
     assert_errors
     assert_response :success
-    assert_template 'add'
+    assert_template 'new'
   end
 
   def test_add_project_from_form_as_admin
@@ -297,8 +297,8 @@ class SamplesControllerTest < Test::Unit::TestCase
             :organism_id => '1',
             }
     smpl1_schemed = {:'Strain' => 1,
-                    :'Perturbation' => 1,
-                    :'Perturbation Time' => 2,
+                    :'Perturbation' => 3,
+                    :'Perturbation Time' => 6,
                     :'Subject Number' => '42231'
                     }
     smpl2 = {:submission_date => '2006-02-12',
@@ -322,7 +322,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     post :create, :'sample-0' => smpl1, :'sample-0_schemed_name' => smpl1_schemed,
                   :'sample-1' => smpl2, :'sample-1_schemed_name' => smpl2_schemed
 
-    # select a naming scheme for current user
+    # de-select a naming scheme for current user
     current_user.current_naming_scheme_id = nil
     current_user.save
 
@@ -332,7 +332,15 @@ class SamplesControllerTest < Test::Unit::TestCase
     # make sure the records made it into the samples table
     assert_equal num_samples + 2,
                  Sample.count
-                 
+
+    # check sample names to make sure they include and exclude the appropriate
+    # info
+    smpl1_record = Sample.find(:first, 
+                               :conditions => "short_sample_name = 'HlthySmp'")
+    smpl2_record = Sample.find(:first, 
+                               :conditions => "short_sample_name = 'DisSmpl'")
+    assert_equal "wt_HT_024_42231", smpl1_record.sample_name
+    assert_equal "mut___42643", smpl2_record.sample_name
   end
 
   def test_create_duplicate_sample_name_as_admin
@@ -881,10 +889,10 @@ class SamplesControllerTest < Test::Unit::TestCase
     @samples = session[:samples]
     assert_equal @samples.size, 0  
     
-    # make sure it complained
+    # make sure it complained, and kicks back to 'new' form
     assert_errors
     assert_response :success
-    assert_template 'add'
+    assert_template 'new'
   end
 
   def test_add_project_from_form_as_customer

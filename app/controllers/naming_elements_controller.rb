@@ -39,9 +39,9 @@ class NamingElementsController < ApplicationController
   end
 
   def edit
-    naming_scheme_id = params[:naming_scheme_id]
+    @naming_scheme_id = params[:naming_scheme_id]
     @naming_element_list = NamingElement.find(:all,
-                             :conditions => ["naming_scheme_id = ?", naming_scheme_id],
+                             :conditions => ["naming_scheme_id = ?", @naming_scheme_id],
                              :order => "element_order ASC")
     @naming_element = NamingElement.find(params[:id])
   end

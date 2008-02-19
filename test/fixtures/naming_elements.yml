@@ -7,6 +7,7 @@ strain:
   dependent_element_id: 0
   naming_scheme_id: 1
   free_text: false
+  include_in_sample_name: true
 perturbation:
   id: 2
   name: Perturbation
@@ -16,6 +17,7 @@ perturbation:
   dependent_element_id: 0
   naming_scheme_id: 1
   free_text: false
+  include_in_sample_name: true
 perturbation_time:
   id: 3
   name: Perturbation Time
@@ -25,6 +27,7 @@ perturbation_time:
   dependent_element_id: 2
   naming_scheme_id: 1
   free_text: false
+  include_in_sample_name: true
 replicate:
   id: 4
   name: Replicate
@@ -34,6 +37,7 @@ replicate:
   dependent_element_id: 0
   naming_scheme_id: 1
   free_text: false
+  include_in_sample_name: false
 subject_number:
   id: 5
   name: Subject Number
@@ -43,3 +47,4 @@ subject_number:
   dependent_element_id: 0
   naming_scheme_id: 1
   free_text: true
+  include_in_sample_name: true

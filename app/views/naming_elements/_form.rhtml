@@ -20,7 +20,10 @@
                                            selected_value = @naming_element.dependent_element_id %></select></p>
                                            
 <p><%= check_box 'naming_element', 'free_text' %>
-<label for="naming_element_free_text">Free Text?</label></p>                                           
+<label for="naming_element_free_text">Free Text?</label></p>
+
+<p><%= check_box 'naming_element', 'include_in_sample_name' %>
+<label for="naming_element_include_in_sample_name">Include In Sample Name?</label></p>
 
 <%= hidden_field 'naming_element', 'element_order' %>
 <%= hidden_field 'naming_element', 'naming_scheme_id' %>

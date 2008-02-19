@@ -10,7 +10,8 @@ class AddSamples < ActiveRecord::Base
   column :chip_type_id, :integer
   column :sbeams_user, :string
   column :project_id, :integer
-
+  column :naming_scheme_id, :integer
+  
   validates_numericality_of :number
   if SiteConfig.using_affy_arrays? && SiteConfig.create_gcos_files?
     validates_presence_of :sbeams_user, :project_id
