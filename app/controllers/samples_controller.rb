@@ -43,6 +43,9 @@ class SamplesController < ApplicationController
 
     @add_samples = AddSamples.new(params[:add_samples])
     if( @add_samples.naming_scheme_id != nil )
+      # change current naming scheme to whatever was selected
+      current_user.current_naming_scheme_id = @add_samples.naming_scheme_id
+      current_user.save
       populate_sample_naming_scheme_choices( NamingScheme.find(@add_samples.naming_scheme_id) )
     end
     
