@@ -3,7 +3,8 @@
 <table class="sortable" id="naming_elements">
   <tr>
   <% for column in ["Name", "Order", "Group Element?", "Optional?",
-                    "Free Text?", "Depends On?", "Edit", "Terms", "Delete"] %>
+                    "Free Text?", "Depends On?", "Include In Sample Name?",
+                    "Edit", "Terms", "Delete"] %>
     <th><%= column %></th>
   <% end %>
   </tr>
@@ -36,6 +37,13 @@
     <td>
         <% if naming_element.dependent_element_id > 0%>
             <%=h NamingElement.find(naming_element.dependent_element_id).name %>
+        <% end %>
+    </td>
+    <td>
+        <% if naming_element.include_in_sample_name %>
+            Yes
+        <% else %>
+            No
         <% end %>
     </td>
     <td><%= link_to 'Edit', :action => 'edit', :id => naming_element, 
