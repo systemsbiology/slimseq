@@ -165,21 +165,22 @@ class SamplesController < ApplicationController
           # save user's selections in case page needs to be re-rendered
           @samples[n].naming_element_selections << schemed_name[element.name]
           
-          if( schemed_name[element.name].to_i > 0 )
-            if( element.free_text )
-              sample_text = SampleText.new( :text => schemed_name[element.name],
-                                            :naming_element_id => element.id )
-              sample_texts[n] << sample_text
-              
-              if( element.include_in_sample_name )
-                @samples[n].sample_name << schemed_name[element.name]
+          
+          if( element.free_text )
+            sample_text = SampleText.new( :text => schemed_name[element.name],
+                                          :naming_element_id => element.id )
+            sample_texts[n] << sample_text
 
-                # add to group name if this is a group element
-                if(element.group_element == true)
-                  @samples[n].sample_group_name << schemed_name[element.name]
-                end
+            if( element.include_in_sample_name )
+              @samples[n].sample_name << schemed_name[element.name]
+
+              # add to group name if this is a group element
+              if(element.group_element == true)
+                @samples[n].sample_group_name << schemed_name[element.name]
               end
-            else
+            end
+          else
+            if( schemed_name[element.name].to_i > 0 )
               naming_term = NamingTerm.find(schemed_name[element.name])
               naming_element = naming_term.naming_element
               sample_term = SampleTerm.new( :term_order => naming_element.element_order,
@@ -372,18 +373,18 @@ class SamplesController < ApplicationController
         # save user's selections in case page needs to be re-rendered
         @samples[0].naming_element_selections << schemed_name[element.name]
         
-        if( schemed_name[element.name].to_i > 0 )
-          if( element.free_text )
-            sample_text = SampleText.new( :text => schemed_name[element.name],
-                                          :naming_element_id => element.id )
-            sample_texts[0] << sample_text
-            @samples[0].sample_name << schemed_name[element.name].to_s
+        if( element.free_text )
+          sample_text = SampleText.new( :text => schemed_name[element.name],
+                                        :naming_element_id => element.id )
+          sample_texts[0] << sample_text
+          @samples[0].sample_name << schemed_name[element.name].to_s
 
-            # add to group name if this is a group element
-            if(element.group_element == true)
-              @samples[0].sample_group_name << schemed_name[element.name]
-            end
-          else
+          # add to group name if this is a group element
+          if(element.group_element == true)
+            @samples[0].sample_group_name << schemed_name[element.name]
+          end
+        else
+          if( schemed_name[element.name].to_i > 0 )
             naming_term = NamingTerm.find(schemed_name[element.name])
             naming_element = naming_term.naming_element
             sample_term = SampleTerm.new( :term_order => naming_element.element_order,
