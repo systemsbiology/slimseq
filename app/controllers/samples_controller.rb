@@ -171,7 +171,8 @@ class SamplesController < ApplicationController
                                           :naming_element_id => element.id )
             sample_texts[n] << sample_text
 
-            if( element.include_in_sample_name )
+            # include in the sample name if desired, and field isn't blank
+            if( element.include_in_sample_name && !schemed_name[element.name].nil? )
               @samples[n].sample_name << schemed_name[element.name]
 
               # add to group name if this is a group element
