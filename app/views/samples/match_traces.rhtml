@@ -2,7 +2,7 @@
 
 <%= error_messages_for_samples %>
 
-<%= start_form_tag :action => 'submit_matched_traces' %>
+<% form_tag :action => 'submit_matched_traces' do -%>
 <table class="table">
     <tr>
         <th>Total RNA Trace</th>
@@ -33,4 +33,4 @@
 <input type="hidden" name="num_samples" value="<%=h @samples.size %>" />
 
   <%= submit_tag "Submit Samples" %>
-<%= end_form_tag %>
+<% end -%>

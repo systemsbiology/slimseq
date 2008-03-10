@@ -1,5 +1,7 @@
 class SiteConfigController < ApplicationController
-
+  before_filter :login_required
+  before_filter :admin_required
+  
   def edit
     @site_config = SiteConfig.find(1)
   end

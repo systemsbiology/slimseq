@@ -37,21 +37,6 @@ class AddNamingSchemes < ActiveRecord::Migration
     
     # associate each sample with a naming scheme
     add_column :samples, :naming_scheme_id, :integer
-
-    # create new permissions
-    Rake::Task[:sync_permissions].invoke
-    
-    # If customer role exists, give access to change naming scheme
-    customer_role = Role.find(:first, :conditions => "name = 'Customer'")
-    if(customer_role != nil)
-      customer_role.permissions << Permission.find_by_controller_and_action('user', 'select_naming_scheme')
-    end
-    
-    # If staff role exists, give access to change naming scheme
-    staff_role = Role.find(:first, :conditions => "name = 'Staff'")
-    if(staff_role != nil)
-      staff_role.permissions << Permission.find_by_controller_and_action('user', 'select_naming_scheme')
-    end
   end
 
   def self.down

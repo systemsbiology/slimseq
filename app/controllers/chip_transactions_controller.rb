@@ -1,4 +1,7 @@
 class ChipTransactionsController < ApplicationController
+  before_filter :login_required
+  before_filter :staff_or_admin_required
+
   attr_reader :totals
 
   def index
@@ -13,7 +16,7 @@ class ChipTransactionsController < ApplicationController
     
     # allow admin user to look at any group, but
     # other users should only see their stuff
-    if(current_user.staff? || current_user.admin?)
+    if(current_user.staff_or_admin?)
       # if a lab group was passed in, use it,
       # otherwise stick with the session lab group
       if(params[:lab_group_id] != nil)
@@ -51,8 +54,8 @@ class ChipTransactionsController < ApplicationController
   def create
     begin
       @chip_transaction = ChipTransaction.new(params[:chip_transaction])
-      @lab_groups = LabGroup.find_all
-      @chip_types = ChipType.find_all
+      @lab_groups = LabGroup.find(:all)
+      @chip_types = ChipType.find(:all)
       if @chip_transaction.save
         # grab lab group and chip type for display of subset
         session[:lab_group_id] = @chip_transaction.lab_group_id
@@ -70,14 +73,14 @@ class ChipTransactionsController < ApplicationController
 
   def edit
     @chip_transaction = ChipTransaction.find(params[:id])
-    @chip_types = ChipType.find_all
-    @lab_groups = LabGroup.find_all
+    @chip_types = ChipType.find(:all)
+    @lab_groups = LabGroup.find(:all)
   end
 
   def update
     @chip_transaction = ChipTransaction.find(params[:id])
-    @chip_types = ChipType.find_all
-    @lab_groups = LabGroup.find_all
+    @chip_types = ChipType.find(:all)
+    @lab_groups = LabGroup.find(:all)
 
     begin
       if @chip_transaction.update_attributes(params[:chip_transaction])

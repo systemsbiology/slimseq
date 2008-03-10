@@ -2,7 +2,7 @@
 
 <h2>Listing Charges for <%= @charge_set.name %></h2>
 
-<%= start_form_tag( { :action => 'bulk_edit_move_or_destroy' }, { :name => 'bulk_edit_move_or_destroy' } )%>
+<% form_tag( { :action => 'bulk_edit_move_or_destroy' }, { :name => 'bulk_edit_move_or_destroy' } ) do -%>
 	<table class="sortable" id="charges">
 	  <tr>
 	    <th>Select</th>
@@ -58,7 +58,7 @@
     <select id="move_charge_set_id" name="move_charge_set_id">
         <%= charge_set_options_for_select %></select></p>
     <p><%= submit_tag 'Delete Charges' %></p>
-<%= end_form_tag %>
+<% end -%>
 
 <br>
 <%= link_to 'Back to Charge Sets', :controller => 'charge_sets', :action => 'list' %> | 

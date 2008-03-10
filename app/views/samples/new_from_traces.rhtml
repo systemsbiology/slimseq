@@ -3,7 +3,7 @@
 <%= error_messages_for 'project' %>
 <%= error_messages_for_samples %>
 
-<%= start_form_tag :action => 'create_from_traces' %>
+<% form_tag :action => 'create_from_traces' do -%>
 
     <% if @samples.size > 0 %>
         <table class="table">
@@ -68,8 +68,7 @@
             </select></p>
     
       <%= submit_tag "Create Samples" %>
-    <%= end_form_tag %>
     <% else %>
         <h3>No samples were selected!</h3>
     <% end %>
-    
+<% end -%>    

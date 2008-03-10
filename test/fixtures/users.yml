@@ -3,25 +3,25 @@ admin_user:
   login: admin
   firstname: Admin
   lastname: User
-  salted_password: b1de1d1d2aec05df2be6f02995537c1783f08490 # atest
+  crypted_password: b1de1d1d2aec05df2be6f02995537c1783f08490 # atest
   salt: bf3c47e71c0bfeb6288c9b6b5e24e15256a0e407
   email: admin@company.com
-  verified: 1
+  role: admin
   
 customer_user:
   id: 2
   login: customer
   firstname: Joe
   lastname: Customer
-  salted_password: b1de1d1d2aec05df2be6f02995537c1783f08490 # atest
+  crypted_password: b1de1d1d2aec05df2be6f02995537c1783f08490 # atest
   salt: bf3c47e71c0bfeb6288c9b6b5e24e15256a0e407
   email: customerr@company.com
-  verified: 1  
+  role: customer
 
 another_customer_user:
   id: 3
   login: another_customer
-  salted_password: b1de1d1d2aec05df2be6f02995537c1783f08490 # atest
+  crypted_password: b1de1d1d2aec05df2be6f02995537c1783f08490 # atest
   salt: bf3c47e71c0bfeb6288c9b6b5e24e15256a0e407
   email: another_customer@company.com
-  verified: 1
+  role: customer

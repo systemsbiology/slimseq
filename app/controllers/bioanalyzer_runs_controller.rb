@@ -1,4 +1,7 @@
 class BioanalyzerRunsController < ApplicationController
+  before_filter :login_required
+  before_filter :staff_or_admin_required, :only => [ :destroy ]
+  
   def index
     list
     render :action => 'list'

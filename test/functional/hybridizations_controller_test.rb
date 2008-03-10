@@ -443,7 +443,7 @@ class HybridizationsControllerTest < Test::Unit::TestCase
 
   def test_bulk_gcos_file_export_with_naming_scheme
     # select a naming scheme for current user
-    current_user = User.find(@request.session[:user].id)
+    current_user = User.find(@request.session[:user_id])
     current_user.current_naming_scheme_id = 1
     current_user.save
     

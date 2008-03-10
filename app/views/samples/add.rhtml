@@ -8,7 +8,7 @@
 <%#= end_form_tag %>
 
 <% if @samples.size > 0 %>
-	<%= start_form_tag :action => 'create' %>
+	<% form_tag :action => 'create' do -%>
 	<table class="table">
 	  <th>Date</th>
 	  <th>Short Name</th>
@@ -60,7 +60,7 @@
 	  <% end %>
 	</table>
 	  <p><%= submit_tag "Create Sample Records" %></p>
-	<%= end_form_tag %>
+	<% end -%>
 	
 	<%= link_to 'Clear Samples', :action => 'clear' %> | <%= link_to 'Back to List of Samples', :action => 'list' %>
 <% end %>

@@ -14,7 +14,7 @@ class ChargesController < ApplicationController
     end
 
     # non-admin users must belong to group they want to see
-    if(!current_user.staff? && !current_user.admin?)
+    if(!current_user.staff_or_admin?)
       # get lab group name
       lab_group_name = LabGroup.find(@charge_set.lab_group_id)
       # if login doesn't match name of lab group that owns this

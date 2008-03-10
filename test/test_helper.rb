@@ -2,13 +2,11 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
 
-module LoginEngine
-  config :salt, "test-salt", :force
-end
-
 class Test::Unit::TestCase
-  fixtures :users, :roles, :permissions, :users_roles, :permissions_roles,
-           :site_config
+  # RESTful authentication
+  include AuthenticatedTestHelper
+  
+  fixtures :users, :site_config
 
   # Transactional fixtures accelerate your tests by wrapping each test method
   # in a transaction that's rolled back on completion.  This ensures that the
@@ -53,6 +51,10 @@ class Test::Unit::TestCase
     assert_no_tag flash_warning_field(message)
   end
   
+  def assert_empty_flash_warning
+    assert_tag flash_warning_field("")
+  end
+  
   def flash_warning_field(message)
     {:tag => "p", :attributes => { :style => "color: red" }, :child => /#{message}/}
   end
@@ -71,12 +73,14 @@ class Test::Unit::TestCase
 
   # login as admin, necessary to reach pages for testing
   def login_as_admin
-    @request.session[:user] = users(:admin_user)
+    login_as(:admin_user)
+    ##@request.session[:user] = users(:admin_user)
   end
 
   # login as a customer to test customer-specific code
   def login_as_customer
-    @request.session[:user] = users(:customer_user)
+    login_as(:customer_user)
+    ##@request.session[:user] = users(:customer_user)
   end
 
 end
