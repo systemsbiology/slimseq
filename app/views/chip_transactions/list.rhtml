@@ -1,8 +1,8 @@
 <h2>Listing Chip Transactions for <%= @lab_group_name%> and <%= @chip_type_name%></h2>
 
-<%= link_to 'Chip Inventory Home', :controller => 'inventory', :action=>'index'%> 
-<%= link_if_staff_or_admin 'New chip_transaction', :action => 'new' %> 
-<%= link_if_staff_or_admin 'Enter an Inventory Check', :controller => 'inventory_checks',
+<%= link_if_authorized 'Chip Inventory Home', :controller => 'inventory', :action=>'index'%> 
+<%= link_if_authorized 'New chip_transaction', :action => 'new' %> 
+<%= link_if_authorized 'Enter an Inventory Check', :controller => 'inventory_checks',
     :action => 'new', :expected => @totals['chips'], :lab_group_id => session[:lab_group_id],
     :chip_type_id => session[:chip_type_id] %>
 

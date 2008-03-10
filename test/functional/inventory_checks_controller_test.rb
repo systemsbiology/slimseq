@@ -5,7 +5,8 @@ require 'inventory_checks_controller'
 class InventoryChecksController; def rescue_action(e) raise e end; end
 
 class InventoryChecksControllerTest < Test::Unit::TestCase
-  fixtures :inventory_checks, :users
+  fixtures :inventory_checks,
+    :users, :roles, :permissions, :users_roles, :permissions_roles
 
   def setup
     @controller = InventoryChecksController.new

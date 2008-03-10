@@ -1,2 +1,2 @@
-module NamingSchemesHelper
+module NamingSchemesControllerHelper
 end

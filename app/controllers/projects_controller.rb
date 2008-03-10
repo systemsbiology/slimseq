@@ -1,7 +1,4 @@
 class ProjectsController < ApplicationController
-  before_filter :login_required
-  before_filter :staff_or_admin_required
-  
   def index
     list
     render :action => 'list'
@@ -61,7 +58,7 @@ class ProjectsController < ApplicationController
   def populate_arrays_from_tables
     # Administrators and staff can see all projects, otherwise users
     # are restricted to seeing only projects for lab groups they belong to
-    if(current_user.staff_or_admin?)
+    if(current_user.staff? || current_user.admin?)
       @lab_groups = LabGroup.find(:all, :order => "name ASC")
     else
       @lab_groups = current_user.lab_groups

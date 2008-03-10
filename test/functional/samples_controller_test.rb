@@ -7,7 +7,8 @@ class SamplesController; def rescue_action(e) raise e end; end
 class SamplesControllerTest < Test::Unit::TestCase
   fixtures :samples, :projects, :bioanalyzer_runs, :quality_traces,
            :lab_groups, :chip_types, :organisms, :lab_memberships,
-           :users, :naming_schemes , :naming_elements, :naming_terms,
+           :users, :roles, :permissions, :users_roles, :permissions_roles,
+           :naming_schemes , :naming_elements, :naming_terms,
            :sample_terms
 
   def setup
@@ -213,7 +214,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     login_as_admin
 
     # select a naming scheme for current user
-    current_user = User.find(@request.session[:user_id])
+    current_user = User.find(@request.session[:user].id)
     current_user.current_naming_scheme_id = 1
     current_user.save
 
@@ -310,7 +311,7 @@ class SamplesControllerTest < Test::Unit::TestCase
                     }
 
     # select a naming scheme for current user
-    current_user = User.find(@request.session[:user_id])
+    current_user = User.find(@request.session[:user].id)
     current_user.current_naming_scheme_id = 1
     current_user.save
     
@@ -416,7 +417,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     login_as_admin
 
     # select a naming scheme for current user
-    current_user = User.find(@request.session[:user_id])
+    current_user = User.find(@request.session[:user].id)
     current_user.current_naming_scheme_id = 1
     current_user.save
     
@@ -446,7 +447,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     login_as_admin
 
     # select a naming scheme for current user
-    current_user = User.find(@request.session[:user_id])
+    current_user = User.find(@request.session[:user].id)
     current_user.current_naming_scheme_id = 1
     current_user.save
     
@@ -547,9 +548,8 @@ class SamplesControllerTest < Test::Unit::TestCase
     
     post :submit_traces, :commit => 'Request Labeling',
                          :selected_traces => {'1' => '1', '2' => '1'}
-
-    # for some reason a warning field, albeit empty, is created
-    assert_empty_flash_warning
+                         
+    assert_no_flash_warning
     assert_response :success
     assert_template 'new_from_traces'
   end
@@ -941,7 +941,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     login_as_customer
 
     # select a naming scheme for current user
-    current_user = User.find(@request.session[:user_id])
+    current_user = User.find(@request.session[:user].id)
     current_user.current_naming_scheme_id = 1
     current_user.save
 
@@ -1036,7 +1036,7 @@ class SamplesControllerTest < Test::Unit::TestCase
                     }
 
     # select a naming scheme for current user
-    current_user = User.find(@request.session[:user_id])
+    current_user = User.find(@request.session[:user].id)
     current_user.current_naming_scheme_id = 1
     current_user.save
     
@@ -1147,7 +1147,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     login_as_customer
 
     # select a naming scheme for current user
-    current_user = User.find(@request.session[:user_id])
+    current_user = User.find(@request.session[:user].id)
     current_user.current_naming_scheme_id = 1
     current_user.save
     

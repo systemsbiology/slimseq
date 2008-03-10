@@ -1,6 +1,5 @@
 class SamplesController < ApplicationController
-  before_filter :login_required
-  
+
   def index
     list
     render :action => 'list'
@@ -45,10 +44,11 @@ class SamplesController < ApplicationController
     @add_samples = AddSamples.new(params[:add_samples])
     if( @add_samples.naming_scheme_id != nil )
       # change current naming scheme to whatever was selected
-      current_user.update_attribute('current_naming_scheme_id', @add_samples.naming_scheme_id )
+      current_user.current_naming_scheme_id = @add_samples.naming_scheme_id
+      current_user.save
       populate_sample_naming_scheme_choices( NamingScheme.find(@add_samples.naming_scheme_id) )
     end
- 
+    
     @naming_schemes = NamingScheme.find(:all)
     
     @samples = session[:samples]
@@ -142,6 +142,7 @@ class SamplesController < ApplicationController
       # see if a naming scheme was used
       schemed_name = params['sample-'+n.to_s+'_schemed_name']
       if(schemed_name != nil)
+        naming_scheme = current_user.naming_scheme  
         @samples[n].naming_scheme_id = current_user.current_naming_scheme_id
         @samples[n].sample_name = ""
         @samples[n].sample_group_name = ""
@@ -471,7 +472,7 @@ class SamplesController < ApplicationController
   def destroy
     sample = Sample.find(params[:id])
 
-    if(current_user.staff_or_admin? || sample.status == "submitted")
+    if(current_user.staff? || current_user.admin? || sample.status == "submitted")
       sample.destroy
       redirect_to :back
     else
@@ -813,7 +814,7 @@ class SamplesController < ApplicationController
     
     # Administrators and staff can see all projects, otherwise users
     # are restricted to seeing only projects for lab groups they belong to
-    if(current_user.staff_or_admin?)
+    if(current_user.staff? || current_user.admin?)
       @lab_groups = LabGroup.find(:all, :order => "name ASC")
       @projects = Project.find(:all, :order => "name ASC")
     else

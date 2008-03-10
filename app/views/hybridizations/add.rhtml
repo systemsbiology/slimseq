@@ -7,22 +7,22 @@
 
 <h2>Enter Hybridizations</h2>
 
-<% form_tag( { :action => 'add' }, { :name => 'add_samples' } ) do -%>
+<%= start_form_tag( { :action => 'add' }, { :name => 'add_samples' } )%>
     <%= render :partial => 'form' %>
   <%= submit_tag "Add to Hybridization Set" %>
-<% end -%>
+<%= end_form_tag %>
 
 <% if @hybridizations.size > 0 %>
     <h3>Hybridizations</h3>
     <p>Drag and drop hybridizations to rearrange their order:</p>
-    <% form_tag :action => 'create' do -%>
+    <%= start_form_tag :action => 'create' %>
     
     <ul id="hybridization_list">
     <%= render :partial => 'hybridization_list' %>
     </ul>
     
       <p><%= submit_tag "Create Hybridization Records" %></p>
-    <% end -%>
+    <%= end_form_tag %>
 <% end %>
 
 <%= link_to 'Clear Hybridizations', :action => 'clear' %> | <%= link_to 'Back to List of Hybridizations', :action => 'list' %>

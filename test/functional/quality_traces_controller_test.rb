@@ -5,7 +5,8 @@ require 'quality_traces_controller'
 class QualityTracesController; def rescue_action(e) raise e end; end
 
 class QualityTracesControllerTest < Test::Unit::TestCase
-  fixtures :quality_traces, :users
+  fixtures :quality_traces, 
+           :users, :roles, :permissions, :users_roles, :permissions_roles
 
   def setup
     @controller = QualityTracesController.new

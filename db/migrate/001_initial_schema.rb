@@ -30,6 +30,11 @@ class InitialSchema < ActiveRecord::Migration
         t.column "default_organism_id", :integer, :default => 0, :null => false
       end
     
+      create_table "engine_schema_info", :id => false, :force => true do |t|
+        t.column "engine_name", :string
+        t.column "version", :integer
+      end
+    
       create_table "hybridizations", :force => true do |t|
         t.column "date", :date
         t.column "chip_number", :integer, :limit => 4
@@ -58,7 +63,25 @@ class InitialSchema < ActiveRecord::Migration
       create_table "organisms", :force => true do |t|
         t.column "name", :string, :limit => 50
       end
-      
+    
+      create_table "permissions", :force => true do |t|
+        t.column "controller", :string, :default => "", :null => false
+        t.column "action", :string, :default => "", :null => false
+        t.column "description", :string
+      end
+    
+      create_table "permissions_roles", :id => false, :force => true do |t|
+        t.column "permission_id", :integer, :default => 0, :null => false
+        t.column "role_id", :integer, :default => 0, :null => false
+      end
+    
+      create_table "roles", :force => true do |t|
+        t.column "name", :string, :default => "", :null => false
+        t.column "description", :string
+        t.column "omnipotent", :boolean, :default => false, :null => false
+        t.column "system_role", :boolean, :default => false, :null => false
+      end
+    
       create_table "users", :force => true do |t|
         t.column "login", :string, :limit => 80, :default => "", :null => false
         t.column "salted_password", :string, :limit => 40, :default => "", :null => false
@@ -75,6 +98,11 @@ class InitialSchema < ActiveRecord::Migration
         t.column "logged_in_at", :datetime
         t.column "deleted", :integer, :default => 0
         t.column "delete_after", :datetime
+      end
+    
+      create_table "users_roles", :id => false, :force => true do |t|
+        t.column "user_id", :integer, :default => 0, :null => false
+        t.column "role_id", :integer, :default => 0, :null => false
       end
     end
   end

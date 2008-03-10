@@ -1,0 +1,10 @@
+--- 
+admin_admin:
+  role_id: "2"
+  user_id: "1"
+customer_customer:
+  role_id: "3"
+  user_id: "2"
+another_customer:
+  role_id: "3"
+  user_id: "3"

@@ -1,6 +1,6 @@
 <h2>Editing hybridization</h2>
 
-<% form_tag :action => 'update', :id => @hybridization do -%>
+<%= start_form_tag :action => 'update', :id => @hybridization %>
 
 	<p><label for="hybridization_sample_id">Sample</label><br/>
 	    <select id="hybridization_sample_id" name="hybridization[sample_id]">
@@ -23,6 +23,6 @@
     <%= hidden_field 'hybridization', 'lock_version' %>
 	
   <%= submit_tag 'Edit' %>
-<% end -%>
+<%= end_form_tag %>
 
 <%= link_to 'Back to List', :action => 'list' %>

@@ -1,10 +1,10 @@
 <h2>Enter Hybridizations</h2>
 
 <% if(@available_samples.size > 0) %>
-<% form_tag( { :action => 'add' }, { :name => 'add_samples' } ) do -%>
+<%= start_form_tag( { :action => 'add' }, { :name => 'add_samples' } )%>
     <%= render :partial => 'form' %>    
   <%= submit_tag 'Add Samples to Hybridization Table' %>
-<% end -%>
+<%= end_form_tag %>
 <% else %>
     <p>There are no submitted samples available for hybridization.</p>
 <% end %>

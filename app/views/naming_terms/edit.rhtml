@@ -1,4 +1,4 @@
-<% form_tag :action => 'update', :id => @naming_term do -%>
+<%= start_form_tag :action => 'update', :id => @naming_term %>
   <%= render :partial => 'form' %>
   <%= submit_tag "Update" %>
-<% end -%>
+<%= end_form_tag %>

@@ -1,9 +1,9 @@
 <h2>Hybridizations</h2>
 
-<p><%= link_if_staff_or_admin 'New Hybridizations', :action => 'new' %></p>
+<p><%= link_if_authorized 'New Hybridizations', :action => 'new' %></p>
 
 <% if @hybridizations.size > 0 %>
-    <% form_tag :action => 'bulk_handler' do -%>
+    <%= start_form_tag :action => 'bulk_handler' %>
 		<table class="sortable" id="hybridized_samples">
 		  <tr>
 		    <th>Select</th>
@@ -37,7 +37,6 @@
 		  </tr>
 		<% end %>
 		</table>
-       <% end -%>
     <p>Page: <%= pagination_links @hybridization_pages, :link_to_current_page => true %></p>
     <p><%= submit_tag 'Delete Hybridizations' %></p>
     <% if SiteConfig.create_gcos_files? %>

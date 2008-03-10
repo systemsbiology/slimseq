@@ -41,6 +41,43 @@ class AddBioanalyzerData < ActiveRecord::Migration
     site_config.bioanalyzer_pickup = "/tmp/"
     site_config.quality_trace_dropoff = "/tmp/"
     site_config.save
+    
+    # create new permissions
+    Rake::Task[:sync_permissions].invoke
+    
+    # If customer role exists, give access to new bioanalyzer-related interfaces
+    customer_role = Role.find(:first, :conditions => "name = 'Customer'")
+    if(customer_role != nil)
+      customer_role.permissions << Permission.find_by_controller_and_action('bioanalyzer_runs', 'list')
+      customer_role.permissions << Permission.find_by_controller_and_action('bioanalyzer_runs', 'show')
+      customer_role.permissions << Permission.find_by_controller_and_action('bioanalyzer_runs', 'index')
+      customer_role.permissions << Permission.find_by_controller_and_action('bioanalyzer_runs', 'pdf')
+      
+      customer_role.permissions << Permission.find_by_controller_and_action('quality_traces', 'show')
+
+      customer_role.permissions << Permission.find_by_controller_and_action('samples', 'submit_traces')     
+      customer_role.permissions << Permission.find_by_controller_and_action('samples', 'new_from_traces')
+      customer_role.permissions << Permission.find_by_controller_and_action('samples', 'create_from_traces')
+      customer_role.permissions << Permission.find_by_controller_and_action('samples', 'match_traces')
+      customer_role.permissions << Permission.find_by_controller_and_action('samples', 'submit_matched_traces')
+    end
+    
+    # If staff role exists, give access to new bioanalyzer-related interfaces
+    staff_role = Role.find(:first, :conditions => "name = 'Staff'")
+    if(staff_role != nil)
+      staff_role.permissions << Permission.find_by_controller_and_action('bioanalyzer_runs', 'index')
+      staff_role.permissions << Permission.find_by_controller_and_action('bioanalyzer_runs', 'list')
+      staff_role.permissions << Permission.find_by_controller_and_action('bioanalyzer_runs', 'show')
+      staff_role.permissions << Permission.find_by_controller_and_action('bioanalyzer_runs', 'destroy')
+      
+      staff_role.permissions << Permission.find_by_controller_and_action('quality_traces', 'show')
+
+      staff_role.permissions << Permission.find_by_controller_and_action('samples', 'submit_traces')     
+      staff_role.permissions << Permission.find_by_controller_and_action('samples', 'new_from_traces')
+      staff_role.permissions << Permission.find_by_controller_and_action('samples', 'create_from_traces')
+      staff_role.permissions << Permission.find_by_controller_and_action('samples', 'match_traces')
+      staff_role.permissions << Permission.find_by_controller_and_action('samples', 'submit_matched_traces')
+    end
   end
 
   def self.down

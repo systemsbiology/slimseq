@@ -1,64 +1,84 @@
 <html>
-  <head>
-      <title><%= SiteConfig.site_name %> | <%= controller.controller_name %> | <%= controller.action_name %></title>
-      <%= stylesheet_link_tag 'mystyles' %>
-      <%= stylesheet_link_tag 'print', :media => 'print' %>
-      <%= javascript_include_tag 'sorttable' %>
-      <%= javascript_include_tag 'checkall' %>
-      <%= javascript_include_tag :defaults %>
-  </head>
-  <body>
-    <div id="title_bar">
-      <h1><%= SiteConfig.find(1).site_name %></h1>
-    </div>
-    <div id="wrap">
-      <div id="menu">
-        <% if logged_in? %>
-          <%= link_to 'Home', {:controller => 'welcome', :action => 'home'} %>
-          <% if SiteConfig.track_inventory? %>
-            <li class="category">Chips</li>
-            <%= link_to 'Chip Inventory', {:controller => 'inventory', :action => 'index'}, 
-            :wrap_in => 'li' %>
-            <%= link_if_staff_or_admin 'Inventory Checks', {:controller => 'inventory_checks', :action => 'list'}, 
-            :wrap_in => 'li'%>
-            <%= link_if_staff_or_admin 'Chip Types', {:controller => 'chip_types', :action => 'list'}, 
-            :wrap_in => 'li'%>
-          <% end %>
-          <% if SiteConfig.track_hybridizations? %>
-            <li class="category">Samples</li>
-            <%= link_to 'Bioanalyzer Results', {:controller => 'bioanalyzer_runs', :action => 'list'}, 
-            :wrap_in => 'li'%>
-            <%= link_to 'Samples', {:controller => 'samples', :action => 'list'}, 
-            :wrap_in => 'li'%>
-            <%= link_if_staff_or_admin 'Hybridizations', {:controller => 'hybridizations', :action => 'list'}, 
-            :wrap_in => 'li'%>
-          <% end %>
-          <% if SiteConfig.track_charges? %>
-            <% if current_user.staff_or_admin? %>
-              <li class="category">Charges</li>
-              <li><%= link_to 'Charges', {:controller => 'charge_sets', :action => 'list'} %></li>
-              <li><%= link_to 'Charge Templates', {:controller => 'charge_templates', :action => 'list'} %></li>
-            <% end %>    
-          <% end %>
-          <% if current_user.staff_or_admin? %>
-            <li class="category">Administration</li>
-            <li><%= link_to 'Lab Groups', {:controller => 'lab_groups', :action => 'list'} %></li>
-            <li><%= link_to 'Projects', {:controller => 'projects', :action => 'list'} %></li>
-            <li><%= link_to 'Organisms', {:controller => 'organisms', :action => 'list'} %></li>
-            <li><%= link_to 'Naming Schemes', {:controller => 'naming_schemes', :action => 'list'} %></li>
-            <li><%= link_to 'Users', users_path %></li>
-          <% end %>
-          <% if current_user.admin? %>
-            <li><%= link_to 'Site Config', {:controller => 'site_config', :action => 'edit'} %></li>
-          <% end %>
-          <li><%= link_to 'Log Out', '/sessions/destroy' %></li>
-        <% end %>    
-      </div>
-      <div id="main">
-        <p style="color: green"><%= flash[:notice] %></p>
-        <p style="color: red"><%= flash[:warning] %></p>
-        <%= @content_for_layout %>
-      </div>
-    </div>
-  </body>
+    <head>
+        <title><%= SiteConfig.site_name %> | <%= controller.controller_name %> | <%= controller.action_name %></title>
+        <%= stylesheet_link_tag 'mystyles' %>
+        <%= stylesheet_link_tag 'print', :media => 'print' %>
+        <%= javascript_include_tag 'sorttable' %>
+        <%= javascript_include_tag 'checkall' %>
+        <%= javascript_include_tag :defaults %>
+    </head>
+    <body>
+        <div id="title_bar">
+            <h1><%= SiteConfig.find(1).site_name %></h1>
+        </div>
+        <div id="wrap">
+	        <div id="menu">
+	            <%= link_if_authorized 'Home', {:controller => 'user', :action => 'home'} %>
+	            <% if SiteConfig.track_inventory? %>
+	                <% if authorized?(:controller => 'inventory', :action => 'index') || 
+	                      authorized?(:controller => 'inventory_checks', :action => 'list') ||
+	                      authorized?(:controller => 'chip_types', :action => 'list') %>
+		                <li class="category">Chips</li>
+		                <% end %>
+		            <%= link_if_authorized 'Chip Inventory', {:controller => 'inventory', :action => 'index'}, 
+		                :wrap_in => 'li' %>
+		            <%= link_if_authorized 'Inventory Checks', {:controller => 'inventory_checks', :action => 'list'}, 
+		                :wrap_in => 'li'%>
+    	            <%= link_if_authorized 'Chip Types', {:controller => 'chip_types', :action => 'list'}, 
+    	                :wrap_in => 'li'%>
+		        <% end %>
+		        <% if SiteConfig.track_hybridizations? %>
+	                <% if authorized?(:controller => 'samples', :action => 'new') ||
+	                      authorized?(:controller => 'hybridizations', :action => 'list') %>
+		                <li class="category">Samples</li>
+	                <% end %>
+		            <%= link_if_authorized 'Bioanalyzer Results', {:controller => 'bioanalyzer_runs', :action => 'list'}, 
+	                    :wrap_in => 'li'%>
+   	                <%= link_if_authorized 'Samples', {:controller => 'samples', :action => 'list'}, 
+	                    :wrap_in => 'li'%>
+	                <%= link_if_authorized 'Hybridizations', {:controller => 'hybridizations', :action => 'list'}, 
+	                    :wrap_in => 'li'%>
+	            <% end %>
+	            <% if SiteConfig.track_charges? %>
+	                <% if authorized?(:controller => 'charge_sets', :action => 'list') || 
+	                      authorized?(:controller => 'charge_templates', :action => 'list') %>
+	                   <li class="category">Charges</li>
+	                <% end %>
+		            <%= link_if_authorized 'Charges', {:controller => 'charge_sets', :action => 'list'}, 
+		                :wrap_in => 'li'%>
+		            <%= link_if_authorized 'Charge Templates', {:controller => 'charge_templates', :action => 'list'}, 
+		                :wrap_in => 'li'%>
+		            <% if SiteConfig.using_sbeams? %>
+    		            <%= link_if_authorized 'SBEAMS Import', {:controller => 'charges', :action => 'select_from_sbeams'}, 
+    		                :wrap_in => 'li'%>
+    		        <% end %>
+		        <% end %>
+                <% if authorized?(:controller => 'lab_groups', :action => 'list') || 
+                      authorized?(:controller => 'user', :action => 'list') ||
+                      authorized?(:controller => 'site_config', :action => 'edit') ||
+                      authorized?(:controller => 'user', :action => 'logout') %>
+                    <li class="category">Administration</li>
+                <% end %>
+	            <%= link_if_authorized 'Lab Groups', {:controller => 'lab_groups', :action => 'list'}, 
+	                :wrap_in => 'li'%>
+                <%= link_if_authorized 'Projects', {:controller => 'projects', :action => 'list'}, 
+	                :wrap_in => 'li'%>
+	            <%= link_if_authorized 'Organisms', {:controller => 'organisms', :action => 'list'}, 
+	                :wrap_in => 'li'%>
+	            <%= link_if_authorized 'Naming Schemes', {:controller => 'naming_schemes', :action => 'list'}, 
+	                :wrap_in => 'li'%>
+	            <%= link_if_authorized 'Users', {:controller => 'user', :action => 'list'}, 
+	                :wrap_in => 'li'%>
+	            <%= link_if_authorized 'Site Config', {:controller => 'site_config', :action => 'edit'}, 
+	                :wrap_in => 'li'%>
+	            <%= link_if_authorized 'Log Out', {:controller => 'user', :action => 'logout'}, 
+	                :wrap_in => 'li'%>
+	        </div>
+	        <div id="main">
+	            <p style="color: green"><%= flash[:notice] %></p>
+	            <p style="color: red"><%= flash[:warning] %></p>
+	            <%= @content_for_layout %>
+	        </div>
+	    </div>
+    </body>
 </html>

@@ -1,8 +1,8 @@
 <h2>Editing Lab Group</h2>
 
-<% form_tag :action => 'update', :id => @lab_group do -%>
+<%= start_form_tag :action => 'update', :id => @lab_group %>
   <%= render :partial => 'form' %>
   <%= submit_tag 'Edit' %>
-<% end -%>
+<%= end_form_tag %>
 
 <%= link_to 'Back', :action => 'list' %>

@@ -1,8 +1,8 @@
 <h2>Editing Charge Period</h2>
 
-<% form_tag :action => 'update', :id => @charge_period do -%>
+<%= start_form_tag :action => 'update', :id => @charge_period %>
   <%= render :partial => 'form' %>
   <%= submit_tag 'Edit' %>
-<% end -%>
+<%= end_form_tag %>
 
 <%= link_to 'Back', :action => 'list' %>

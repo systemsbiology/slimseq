@@ -1,8 +1,8 @@
 <h2>Editing Inventory Check</h2>
 
-<% form_tag :action => 'update', :id => @inventory_check do -%>
+<%= start_form_tag :action => 'update', :id => @inventory_check %>
   <%= render :partial => 'form' %>
   <%= submit_tag 'Edit' %>
-<% end -%>
+<%= end_form_tag %>
 
 <%= link_to 'Back', :action => 'list' %>

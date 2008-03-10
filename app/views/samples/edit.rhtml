@@ -3,7 +3,7 @@
 
 <h2>Editing Sample</h2>
 
-<% form_tag :action => 'update', :id => @sample do -%>
+<%= start_form_tag :action => 'update', :id => @sample %>
 
 	<p><label for="sample_submission_date">Date</label><br/>
 	<%= date_select 'sample', 'submission_date'  %></p>
@@ -66,6 +66,6 @@
     <%= hidden_field 'sample', 'lock_version' %>
 	
   <%= submit_tag 'Edit' %>
-<% end -%>
+<%= end_form_tag %>
 
 <%= link_to 'Back to List', :action => 'list' %>

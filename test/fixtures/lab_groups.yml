@@ -5,6 +5,3 @@ gorilla_group:
 alligator_group:
   id: 2
   name: AlligatorGroup
-monkey_group:
-  id: 3
-  name: Monkeys

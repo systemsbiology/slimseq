@@ -1,6 +1,6 @@
 <h2>Edit Site Configuration</h2>
 
-<% form_tag :action => 'update' do -%>
+<%= start_form_tag :action => 'update' %>
 	<p><label for="site_config_site_name">Web Site Title</label><br/>
 	<%= text_field 'site_config', 'site_name'  %></p>
 
@@ -60,4 +60,4 @@
 	<%= hidden_field 'site_config', 'lock_version' %>
 	
   <%= submit_tag 'Update Site Configuration' %>
-<% end -%>
+<%= end_form_tag %>

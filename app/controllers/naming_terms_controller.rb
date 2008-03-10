@@ -1,7 +1,5 @@
 class NamingTermsController < ApplicationController
-  before_filter :login_required
-  before_filter :staff_or_admin_required
-  
+
   def list_for_naming_element
     @naming_element = NamingElement.find(params[:id])
     @naming_terms = NamingTerm.find(:all,

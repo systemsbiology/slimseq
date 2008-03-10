@@ -1,7 +1,5 @@
 class NamingElementsController < ApplicationController
-  before_filter :login_required
-  before_filter :staff_or_admin_required
-  
+
   def list_for_naming_scheme
     if params[:naming_scheme_id] != nil
       @naming_scheme = NamingScheme.find(params[:naming_scheme_id])

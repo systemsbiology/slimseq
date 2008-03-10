@@ -6,7 +6,7 @@ class LabGroupsController; def rescue_action(e) raise e end; end
 
 class LabGroupsControllerTest < Test::Unit::TestCase
   fixtures :lab_groups, :hybridizations, :chip_transactions,
-    :users
+    :users, :roles, :permissions, :users_roles, :permissions_roles
 
   def setup
     @controller = LabGroupsController.new

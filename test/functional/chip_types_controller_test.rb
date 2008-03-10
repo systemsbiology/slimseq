@@ -6,7 +6,8 @@ class ChipTypesController; def rescue_action(e) raise e end; end
 
 class ChipTypesControllerTest < Test::Unit::TestCase
   fixtures :chip_types, :chip_transactions,
-    :users, :organisms
+    :users, :roles, :permissions, :users_roles, :permissions_roles,
+    :organisms
 
   def setup
     @controller = ChipTypesController.new

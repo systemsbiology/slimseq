@@ -1,9 +1,9 @@
 <h1>Edit naming element</h1>
 
-<% form_tag :action => 'update', :id => @naming_element do -%>
+<%= start_form_tag :action => 'update', :id => @naming_element %>
   <%= render :partial => 'form' %>
   <%= submit_tag 'Edit' %>
-<% end -%>
+<%= end_form_tag %>
 
 <%= link_to 'Back', :action => 'list_for_naming_scheme', 
     :naming_scheme_id => @naming_scheme_id %>

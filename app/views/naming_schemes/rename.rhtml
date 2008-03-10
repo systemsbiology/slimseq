@@ -1,8 +1,8 @@
 <h1>Rename naming scheme</h1>
 
-<% form_tag :action => 'update', :id => @naming_scheme do -%>
+<%= start_form_tag :action => 'update', :id => @naming_scheme %>
   <%= render :partial => 'form' %>
   <%= submit_tag 'Rename' %>
-<% end -%>
+<%= end_form_tag %>
 
 <%= link_to 'Back', :action => 'list' %>

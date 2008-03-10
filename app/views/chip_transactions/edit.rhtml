@@ -1,8 +1,8 @@
 <h2>Editing Chip Transaction</h2>
 
-<% form_tag :action => 'update', :id => @chip_transaction do -%>
+<%= start_form_tag :action => 'update', :id => @chip_transaction %>
   <%= render :partial => 'form' %>
   <%= submit_tag 'Edit' %>
-<% end -%>
+<%= end_form_tag %>
 
 <%= link_to 'Back to Listing', :action => 'list_subset' %>
