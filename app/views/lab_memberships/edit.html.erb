@@ -1,0 +1,19 @@
+<h1>Editing lab_membership</h1>
+
+<%= error_messages_for :lab_membership %>
+
+<% form_for([@user, @lab_membership]) do |f| %>
+  <p>
+    <b>Lab Group</b><br />
+    <%= f.collection_select :lab_group_id,
+                            LabGroup.find(:all, :order => "name ASC"),
+                            'id',
+                            'name' %>
+  </p>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', user_lab_memberships_path(@user) %>
