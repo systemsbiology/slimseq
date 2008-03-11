@@ -1,6 +1,6 @@
 <h2>Import Charges from SBEAMS Array Request</h2>
 
-<%= start_form_tag :action => 'import_from_sbeams' %>
+<% form_tag :action => 'import_from_sbeams' do -%>
 
   <p><label for="username">SBEAMS User Name</label><br>
     <INPUT id="username" name="username" type="text"/></p>
@@ -16,4 +16,4 @@
     <%= options_from_collection_for_select @lab_groups, "id", "name" %></select></p>
 
   <%= submit_tag 'Import' %>
-<%= end_form_tag %>
+<% end -%>

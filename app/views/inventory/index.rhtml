@@ -1,6 +1,6 @@
 <h2>Chip Inventory</h2>
 
-<%= link_if_authorized 'New Chip Transaction', :controller=> 'chip_transactions', :action => 'new' %>
+<%= link_if_staff_or_admin 'New Chip Transaction', :controller=> 'chip_transactions', :action => 'new' %>
 <% if(@lab_groups.size > 0) %>
 	<% for lab_group in @lab_groups %>
 		<p><%=h lab_group.name %>:
@@ -15,7 +15,7 @@
 		</p>
 	<% end %>
 <% else %>
-    <% if current_user.staff? || current_user.admin? %>
+    <% if current_user.staff_or_admin? %>
     <p>There are currently no chip inventories</p>
     <% else %>
 	    <p>You belong to no lab groups, and therefore cannot see any array inventories<br>

@@ -1,8 +1,5 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
-  include LoginEngine
-  include UserEngine
-
   def fmt_dollars(amt)
     sprintf("$%0.2f", amt)
   end
@@ -20,5 +17,27 @@ module ApplicationHelper
     end
 
     options_for_select(charge_set_choices, selected = selected_value)
+  end
+
+  #TODO: add real authorization
+  def link_if_authorized(a,b,c=1)
+    return "link"
+  end
+  
+  def link_if_staff_or_admin(name, options = {}, html_options = {}, *params, &block)
+    if current_user.staff_or_admin?
+      wrap_tag = html_options.delete(:wrap_in)
+      result = link_to(name, options, html_options, *params)
+      
+      result = content_tag(wrap_tag, result, html_options) if wrap_tag != nil
+      
+      return result
+    else
+      return ""
+    end
+  end
+  
+  def authorized?(a)
+    return true
   end
 end

@@ -6,7 +6,7 @@ class BioanalyzerRunsController; def rescue_action(e) raise e end; end
 
 class BioanalyzerRunsControllerTest < Test::Unit::TestCase
   fixtures :bioanalyzer_runs, :quality_traces, :lab_groups, :lab_memberships,
-           :users, :roles, :permissions, :users_roles, :permissions_roles
+           :users
 
   def setup
     @controller = BioanalyzerRunsController.new
@@ -112,6 +112,7 @@ class BioanalyzerRunsControllerTest < Test::Unit::TestCase
     assert_equal 13, assigns(:quality_traces).size
   end
 
+  # customers should not be destroying bioanalyzer traces
   def test_destroy_as_customer
     login_as_customer
   
@@ -119,11 +120,10 @@ class BioanalyzerRunsControllerTest < Test::Unit::TestCase
 
     post :destroy, :id => 1
     assert_response :redirect
-    assert_redirected_to :action => 'list'
+    assert_redirected_to :controller => 'welcome'
 
-    assert_raise(ActiveRecord::RecordNotFound) {
-      BioanalyzerRun.find(1)
-    }
+    # make sure it didn't get destroyed
+    assert_not_nil BioanalyzerRun.find(1)
   end
 
 end

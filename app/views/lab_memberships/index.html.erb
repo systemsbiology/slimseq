@@ -1,0 +1,22 @@
+<h1>Listing lab_memberships for <%=h @user.fullname %></h1>
+
+<table class="sortable">
+  <tr>
+    <td>Lab Group</td>
+    <td>Edit</td>
+    <td>Destroy</td>
+  </tr>
+
+<% for lab_membership in @lab_memberships %>
+  <tr>
+    <td><%=h lab_membership.lab_group.name %></td>
+    <td><%= link_to 'Edit', edit_user_lab_membership_path(@user, lab_membership) %></td>
+    <td><%= link_to 'Destroy', user_lab_membership_path(@user, lab_membership),
+                :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New lab_membership', new_user_lab_membership_path %>

@@ -1,8 +1,8 @@
 <h2>Editing Charge Set</h2>
 
-<%= start_form_tag :action => 'update', :id => @charge_set %>
+<% form_tag :action => 'update', :id => @charge_set do -%>
   <%= render :partial => 'form' %>
   <%= submit_tag 'Update Charge Set Information' %>
-<%= end_form_tag %>
+<% end -%>
 
 <%= link_to 'Back', :action => 'list' %>

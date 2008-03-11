@@ -1,8 +1,0 @@
-<h3>Naming Scheme</h3>
-<%= start_form_tag :action => 'select_naming_scheme' %>
-  <select id="user_current_naming_scheme_id" name="user[current_naming_scheme_id]">
-     <option value="">- None -</option>
-     <%= options_from_collection_for_select @naming_schemes, "id", "name", selected_value=current_user.current_naming_scheme_id %></select>
-  <br>
-  <%= submit_tag "Update" %>
-<%= end_form_tag %>

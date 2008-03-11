@@ -4,7 +4,9 @@ require 'spreadsheet/excel'
 include Spreadsheet
 
 class ChargePeriodsController < ApplicationController
-
+  before_filter :login_required
+  before_filter :staff_or_admin_required
+  
   def new
     @charge_period = ChargePeriod.new
   end
