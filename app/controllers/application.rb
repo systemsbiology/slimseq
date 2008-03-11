@@ -6,4 +6,7 @@ class ApplicationController < ActionController::Base
   
   # Homebrew, very simple authorization
   include Authorization
+
+  # filter passwords out of logs
+  filter_parameter_logging "password"
 end
