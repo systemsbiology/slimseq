@@ -20,17 +20,17 @@ class UserTest < Test::Unit::TestCase
     end
   end
 
-  def test_should_require_password
-    assert_no_difference 'User.count' do
+  def test_should_not_require_password
+    assert_difference 'User.count' do
       u = create_user(:password => nil)
-      assert u.errors.on(:password)
+      assert !u.new_record?, "#{u.errors.full_messages.to_sentence}"
     end
   end
 
-  def test_should_require_password_confirmation
-    assert_no_difference 'User.count' do
-      u = create_user(:password_confirmation => nil)
-      assert u.errors.on(:password_confirmation)
+  def test_should_not_require_password_confirmation_without_password
+    assert_difference 'User.count' do
+      u = create_user(:password => nil, :password_confirmation => nil)
+      assert !u.new_record?, "#{u.errors.full_messages.to_sentence}"
     end
   end
 
@@ -41,6 +41,28 @@ class UserTest < Test::Unit::TestCase
     end
   end
 
+  def test_should_require_firstname
+    assert_no_difference 'User.count' do
+      u = create_user(:firstname => nil)
+      assert u.errors.on(:firstname)
+    end    
+  end
+
+  def test_should_require_lastname
+    assert_no_difference 'User.count' do
+      u = create_user(:lastname => nil)
+      assert u.errors.on(:lastname)
+    end    
+  end
+  
+  def test_should_require_unique_name
+    assert_no_difference 'User.count' do
+      u = create_user(:firstname => "Joe",
+                      :lastname => "Customer")
+      assert u.errors
+    end    
+  end
+  
   def test_should_reset_password
     users(:customer_user).update_attributes(:password => 'new password', :password_confirmation => 'new password')
     assert_equal users(:customer_user), User.authenticate('customer', 'new password')
@@ -96,6 +118,13 @@ class UserTest < Test::Unit::TestCase
 
 protected
   def create_user(options = {})
-    User.create({ :login => 'quire', :email => 'quire@example.com', :password => 'quire', :password_confirmation => 'quire' }.merge(options))
+    User.create({ :login => 'quire',
+                  :email => 'quire@example.com',
+                  :password => 'quire',
+                  :password_confirmation => 'quire',
+                  :firstname => 'Quentin',
+                  :lastname => 'Quire',
+                  :role => 'customer'
+                }.merge(options))
   end
 end

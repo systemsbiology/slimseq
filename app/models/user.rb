@@ -8,33 +8,48 @@ class User < ActiveRecord::Base
   
   # Virtual attribute for the unencrypted password
   attr_accessor :password
+  attr_accessor :password_confirmation
 
-  validates_presence_of     :login, :email
-  validates_presence_of     :password,                   :if => :password_required?
-  validates_presence_of     :password_confirmation,      :if => :password_required?
-  validates_length_of       :password, :within => 4..40, :if => :password_required?
-  validates_confirmation_of :password,                   :if => :password_required?
+  validates_presence_of     :login, :email, :firstname, :lastname
+  validates_presence_of     :password_confirmation,      :if => :password_present?
+  validates_confirmation_of :password,                   :if => :password_present?
   validates_length_of       :login,    :within => 3..40
   validates_length_of       :email,    :within => 3..100
   validates_uniqueness_of   :login, :email, :case_sensitive => false
-  before_save :encrypt_password
+  validate :unique_combination_of_firstname_and_lastname
+  before_save :encrypt_password, :set_role
   
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :password, :password_confirmation
+  attr_accessible :login, :email, :password, :password_confirmation,
+    :role, :firstname, :lastname
 
+  def unique_combination_of_firstname_and_lastname
+    same_name_users = User.find(:all,
+                      :conditions => ["firstname = ? AND lastname = ?",
+                      firstname, lastname])
+    # don't count the current user
+    if( same_name_users.include?(self) )
+      same_name_users.delete(self)
+    end
+    if( same_name_users.size > 0 )
+      errors.add("This name is already in use")
+    end
+  end
+  
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
     u = find_by_login(login) # need to get the salt
     if( u && u.authenticated?(password) )
       return u
-    else
+    elsif(u)
       # if regular authentication failed, try via LDAP if that's an option
       if(SiteConfig.use_LDAP? && u.authenticated_LDAP?(password))
         return u
       end
+    else
+      return nil
     end
-    #u && (u.authenticated?(password) || u.authenticated_LDAP?(password)) ? u : nil
   end
 
   # Encrypts some data with the salt.
@@ -109,9 +124,19 @@ class User < ActiveRecord::Base
       self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{login}--") if new_record?
       self.crypted_password = encrypt(password)
     end
-      
+    
+    def set_role
+      if(self.role == nil)
+        self.role = 'customer'
+      end
+    end
+       
     def password_required?
       crypted_password.blank? || !password.blank?
+    end
+    
+    def password_present?
+      !password.blank?
     end
 
   #########################

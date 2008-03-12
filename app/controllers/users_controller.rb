@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_filter :login_required, :only => [ :list, :edit, :update, :destroy ]
-  before_filter :staff_or_admin_required, :only => [ :list, :edit, :update, :destroy ]
+  before_filter :login_required, :only => [ :index, :edit, :update, :destroy ]
+  before_filter :staff_or_admin_required, :only => [ :index, :edit, :update, :destroy ]
   
   # render new.rhtml
   def new
@@ -39,7 +39,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.update_attributes(params[:user])
         flash[:notice] = 'User was successfully updated.'
-        format.html { redirect_to(@user) }
+        format.html { redirect_to(users_url) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

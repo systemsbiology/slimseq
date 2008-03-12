@@ -28,15 +28,23 @@ class UsersControllerTest < Test::Unit::TestCase
     end
   end
 
-  def test_should_require_password_on_signup
-    assert_no_difference 'User.count' do
-      create_user(:password => nil)
-      assert assigns(:user).errors.on(:password)
-      assert_response :success
+  def test_should_not_require_password_on_signup
+    assert_difference 'User.count' do
+      create_user(:password => nil, :password_confirmation => nil)
+      assert assigns(:user)
+      assert_response :redirect
     end
   end
 
-  def test_should_require_password_confirmation_on_signup
+  def test_should_not_require_password_confirmation_on_signup_without_password
+    assert_difference 'User.count' do
+      create_user(:password => nil, :password_confirmation => nil)
+      assert assigns(:user)
+      assert_response :redirect
+    end
+  end
+  
+  def test_should_require_password_confirmation_on_signup_with_password
     assert_no_difference 'User.count' do
       create_user(:password_confirmation => nil)
       assert assigns(:user).errors.on(:password_confirmation)
@@ -71,7 +79,7 @@ class UsersControllerTest < Test::Unit::TestCase
     login_as_admin
     
     put :update, :id => users(:admin_user).id, :user => { :firstname => 'Bob' }
-    assert_redirected_to user_path(assigns(:user))
+    assert_redirected_to users_path
   end
 
   def test_should_destroy_user
@@ -85,6 +93,7 @@ class UsersControllerTest < Test::Unit::TestCase
   protected
     def create_user(options = {})
       post :create, :user => { :login => 'quire', :email => 'quire@example.com',
-        :password => 'quire', :password_confirmation => 'quire' }.merge(options)
+        :password => 'quire', :password_confirmation => 'quire',
+        :firstname => 'quentin', :lastname => 'quire' }.merge(options)
     end
 end
