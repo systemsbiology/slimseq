@@ -7,6 +7,11 @@ class ApplicationController < ActionController::Base
   # Homebrew, very simple authorization
   include Authorization
 
+  # Exception Notifier plugin
+  include ExceptionNotifiable
+  
   # filter passwords out of logs
   filter_parameter_logging "password"
+
+  alias :rescue_action_locally :rescue_action_in_public
 end

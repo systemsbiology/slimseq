@@ -62,3 +62,12 @@ Rails::Initializer.run do |config|
 end
 
 AUTHENTICATION_SALT = 'your-super-secret-salt' unless defined? AUTHENTICATION_SALT
+
+# Set up ActionMailer
+ActionMailer::Base.delivery_method = :sendmail
+ActionMailer::Base.raise_delivery_errors = true
+
+# Exception Notifier plugin configuration
+ExceptionNotifier.exception_recipients = "bmarzolf@systemsbiology.org"
+ExceptionNotifier.sender_address =
+    %("Application Error" <slimarray@db.systemsbiology.net>)
