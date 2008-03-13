@@ -3,7 +3,7 @@ ActionController::Routing::Routes.draw do |map|
     users.resources :lab_memberships, :name_prefix => "user_"
   end
   
-  map.resource :session
+
 
   # The priority is based upon order of creation: first created -> highest priority.
 
@@ -38,4 +38,6 @@ ActionController::Routing::Routes.draw do |map|
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
+
+  map.resource :session
 end
