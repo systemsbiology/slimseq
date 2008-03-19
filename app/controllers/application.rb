@@ -12,6 +12,4 @@ class ApplicationController < ActionController::Base
   
   # filter passwords out of logs
   filter_parameter_logging "password"
-
-  alias :rescue_action_locally :rescue_action_in_public
 end
