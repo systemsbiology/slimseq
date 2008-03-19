@@ -336,6 +336,14 @@ class HybridizationsController < ApplicationController
               gcos_experiment_info << sample_term.naming_term.naming_element.name + "=" + sample_term.naming_term.term + "\n"
             end
           end
+          
+          for sample_text in sample.sample_texts
+            if(sample_text.naming_element.group_element == true)
+              gcos_sample_info << sample_text.naming_element.name + "=" + sample_text.text + "\n"
+            else
+              gcos_experiment_info << sample_text.naming_element.name + "=" + sample_text.text + "\n"
+            end
+          end
         # use default sample template of AffyCore if there's no naming scheme
         else
           gcos_file << "SampleTemplate=AffyCore\n"
