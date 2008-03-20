@@ -369,7 +369,7 @@ class SamplesController < ApplicationController
 
       for element in @naming_elements
         # put underscores between terms
-        if(@samples[0].sample_name.length > 0)
+        if(element.include_in_sample_name && @samples[0].sample_name.length > 0)
           @samples[0].sample_name << "_"
           
           # add an underscore between group terms
@@ -385,26 +385,31 @@ class SamplesController < ApplicationController
           sample_text = SampleText.new( :text => schemed_name[element.name],
                                         :naming_element_id => element.id )
           sample_texts[0] << sample_text
-          @samples[0].sample_name << schemed_name[element.name].to_s
+          if(element.include_in_sample_name)
+            @samples[0].sample_name << schemed_name[element.name].to_s
 
-          # add to group name if this is a group element
-          if(element.group_element == true)
-            @samples[0].sample_group_name << schemed_name[element.name]
+            # add to group name if this is a group element
+            if(element.group_element == true)
+              @samples[0].sample_group_name << schemed_name[element.name]
+            end
           end
         else
           if( schemed_name[element.name].to_i > 0 )
             naming_term = NamingTerm.find(schemed_name[element.name])
-            naming_element = naming_term.naming_element
-            sample_term = SampleTerm.new( :term_order => naming_element.element_order,
+            #naming_element = naming_term.naming_element
+            sample_term = SampleTerm.new( :term_order => element.element_order,
                                           :naming_term_id => naming_term.id )
             sample_terms[0] << sample_term
-            @samples[0].sample_name << naming_term.abbreviated_term
+            
+            if(element.include_in_sample_name)
+              @samples[0].sample_name << naming_term.abbreviated_term
 
-            # add to group name if this is a group element
-            if(element.group_element == true)
-              @samples[0].sample_group_name << naming_term.abbreviated_term
+              # add to group name if this is a group element
+              if(element.group_element == true)
+                @samples[0].sample_group_name << naming_term.abbreviated_term
+              end
             end
-
+            
             term_count += 1
           end
         end

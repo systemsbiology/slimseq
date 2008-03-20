@@ -298,7 +298,8 @@ class SamplesControllerTest < Test::Unit::TestCase
     smpl1_schemed = {:'Strain' => 1,
                     :'Perturbation' => 3,
                     :'Perturbation Time' => 6,
-                    :'Subject Number' => '42231'
+                    :'Subject Number' => '42231',
+                    :'Replicate' => 'A'
                     }
     smpl2 = {:submission_date => '2006-02-12',
             :short_sample_name => 'DisSmpl',
@@ -306,7 +307,8 @@ class SamplesControllerTest < Test::Unit::TestCase
             }  
     smpl2_schemed = {:'Strain' => 2,
                     :'Perturbation' => -1,
-                    :'Subject Number' => '42643'
+                    :'Subject Number' => '42643',
+                    :'Replicate' => 'A'
                     }
 
     # select a naming scheme for current user
@@ -460,7 +462,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     
     sample = Sample.find(6)
     assert_equal Date.new(2006,2,9), sample.submission_date
-    assert_equal "wt_HT_024_A_32235", sample.sample_name
+    assert_equal "wt_HT_024_32235", sample.sample_name
     assert_equal "wt_HT_024", sample.sample_group_name
     
     sample_terms = SampleTerm.find(:all, :conditions => ["sample_id = ?", 6],
@@ -1161,7 +1163,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     
     sample = Sample.find(6)
     assert_equal Date.new(2006,2,9), sample.submission_date
-    assert_equal "wt_HT_024_A_32235", sample.sample_name
+    assert_equal "wt_HT_024_32235", sample.sample_name
     assert_equal "wt_HT_024", sample.sample_group_name
     
     sample_terms = SampleTerm.find(:all, :conditions => ["sample_id = ?", 6],
