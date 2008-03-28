@@ -8,8 +8,10 @@
 <p>Chip Type<br>
     <select id="add_samples_chip_type_id" name="add_samples[chip_type_id]">
     <%= options_from_collection_for_select @chip_types, "id", "name", selected_value=@add_samples.chip_type_id %></select>
-    <% authorized?(:controller => 'chip_types', :action => 'new'){ %>
-        (<%= link_to 'Add Chip Type', :controller=> 'chip_types', :action => 'new' %>) <% } %></p>
+    <% if staff_or_admin? %>
+      (<%= link_to 'Add Chip Type', :controller=> 'chip_types', :action => 'new' %>)
+    <% end %>
+</p>
 
 <% if SiteConfig.using_affy_arrays? && SiteConfig.create_gcos_files? && SiteConfig.using_sbeams? %>
 	<p><label for="add_samples_sbeams_user">SBEAMS User (Affymetrix Only)</label><br/>

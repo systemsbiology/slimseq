@@ -8,15 +8,15 @@
     <select id="lab_group_id" name="inventory_check[lab_group_id]">
     <%= options_from_collection_for_select @lab_groups, "id", "name",
     @inventory_check.lab_group_id %></select>
-    <% authorized?(:controller => 'lab_groups', :action => 'new'){ %>
-        (<%= link_to 'Add Lab Group', :controller=> 'lab_groups', :action => 'new' %>) <% } %></p>
+    (<%= link_to 'Add Lab Group', :controller=> 'lab_groups', :action => 'new' %>)
+</p>
 
 <p><label for="inventory_check_chip_type_id">Chip Type</label><br/>    
     <select id="chip_type_id" name="inventory_check[chip_type_id]">
     <%= options_from_collection_for_select @chip_types, "id", "name",
     @inventory_check.chip_type_id %></select>
-    <% authorized?(:controller => 'chip_types', :action => 'new'){ %>
-        (<%= link_to 'Add Chip Type', :controller=> 'chip_types', :action => 'new' %>) <% } %></p>
+    (<%= link_to 'Add Chip Type', :controller=> 'chip_types', :action => 'new' %>)
+</p>
 
 <p><label for="inventory_check_number_expected">Number expected</label><br/>
 <%= text_field 'inventory_check', 'number_expected'  %></p>

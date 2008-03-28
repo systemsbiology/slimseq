@@ -44,8 +44,10 @@
     <td class="table">Returned(Out)</td>
     <td class="table">Borrowed(Out)</td>
     <td class="table">Returned(In)</td>
-    <% authorized?(:action => 'edit'){ %><th>Edit</th><% } %>
-    <% authorized?(:action => 'destroy'){ %><th>Destroy</th><% } %>
+    <% if staff_or_admin? %>
+      <th>Edit</th>
+      <th>Destroy</th>
+    <% end %>
   </tr>  
 
     <% for chip_transaction in @chip_transactions %>
@@ -59,8 +61,10 @@
     <td class="table"><%=h chip_transaction.returned_out %></td>
     <td class="table"><%=h chip_transaction.borrowed_out %></td>
     <td class="table"><%=h chip_transaction.returned_in %></td>  
-    <% authorized?(:action => 'edit'){ %><td class="table"><%= link_to 'Edit', :action => 'edit', :id => chip_transaction %></td><% } %>
-    <% authorized?(:action => 'edit'){ %><td class="table"><%= link_to 'Destroy', { :action => 'destroy', :id => chip_transaction }, :confirm => 'Are you sure?' %></td><% } %>
+    <% if staff_or_admin? %>
+      <td class="table"><%= link_to 'Edit', :action => 'edit', :id => chip_transaction %></td>
+      <td class="table"><%= link_to 'Destroy', { :action => 'destroy', :id => chip_transaction }, :confirm => 'Are you sure?' %></td>
+    <% end %>
   </tr>
     <% end %>
 </table>

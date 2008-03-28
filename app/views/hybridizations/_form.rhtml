@@ -46,13 +46,13 @@ onClick="uncheckAll(document.add_samples)">
     <select id="submit_hybridizations_charge_set_id" name="submit_hybridizations[charge_set_id]">
     <option value="-1">(Charge Set Based on Sample Project)</option>
     <%= options_from_collection_for_select @charge_sets, "id", "name" %></select>
-    <% authorized?(:controller => 'charge_sets', :action => 'new'){ %>
-        (<%= link_to 'Add Charge Set', :controller=> 'charge_sets', :action => 'new' %>) <% } %></p>
+    (<%= link_to 'Add Charge Set', :controller=> 'charge_sets', :action => 'new' %>)
+</p>
 
 <p><label for="submit_hybridizations_charge_template_id">Charge Template</label><br>
     <select id="submit_hybridizations_charge_template_id" name="submit_hybridizations[charge_template_id]">
     <%= options_from_collection_for_select @charge_templates, "id", "name" %></select>
-    <% authorized?(:controller => 'charge_templates', :action => 'new'){ %>
-        (<%= link_to 'Add Charge Template', :controller=> 'charge_templates', :action => 'new' %>) <% } %></p>
+    (<%= link_to 'Add Charge Template', :controller=> 'charge_templates', :action => 'new' %>)
+</p>
 
 <!--[eoform:add_samples]-->

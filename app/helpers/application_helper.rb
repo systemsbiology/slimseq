@@ -18,11 +18,6 @@ module ApplicationHelper
 
     options_for_select(charge_set_choices, selected = selected_value)
   end
-
-  #TODO: add real authorization
-  def link_if_authorized(a,b,c=1)
-    return "link"
-  end
   
   def link_if_staff_or_admin(name, options = {}, html_options = {}, *params, &block)
     if current_user.staff_or_admin?
@@ -37,7 +32,7 @@ module ApplicationHelper
     end
   end
   
-  def authorized?(a)
-    return true
+  def staff_or_admin?
+    current_user.staff_or_admin?
   end
 end

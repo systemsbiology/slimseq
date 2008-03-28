@@ -10,8 +10,10 @@
     <select id="charge_set_charge_period_id" name="charge_set[charge_period_id]">
     <%= options_from_collection_for_select @charge_periods, "id", "name",
     @charge_set.charge_period_id %></select>
-    <% authorized?(:controller => 'charge_periods', :action => 'new'){ %>
-        (<%= link_to 'Add Charge Period', :controller=> 'charge_periods', :action => 'new' %>) <% } %></p>
+    <% if staff_or_admin? %>
+        (<%= link_to 'Add Charge Period', :controller=> 'charge_periods', :action => 'new' %>)
+    <% end %>
+</p>
 
 <p><label for="charge_set_name">Name</label><br/>
 	<%= text_field 'charge_set', 'name'  %></p>
