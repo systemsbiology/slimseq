@@ -16,19 +16,24 @@ class Charge < ActiveRecord::Base
     
     username = ui.ask("Username: ")
     password = ui.ask("Password: ") { |q| q.echo = "x" }
-    request_id = ui.ask("Array Request ID: ")
-
-    # ask what lab group to assign charges into
-    lab_groups = LabGroup.find(:all)
     
-    puts "Lab Groups:\n\n"
-    for n in 0..lab_groups.size-1
-      puts (n+1).to_s + ". " + lab_groups[n].name + "\n"
-    end
-    lab_group_number = ui.ask("\n> ")
-    lab_group_id = lab_groups[lab_group_number.to_i-1].id
+    request_id = 0
+    while(request_id != -1)
+      request_id = ui.ask("Array Request ID (-1 to exit): ")
+      return if request_id == -1
 
-    scrape_array_request(username, password, request_id, lab_group_id)
+      # ask what lab group to assign charges into
+      lab_groups = LabGroup.find(:all)
+
+      puts "Lab Groups:\n\n"
+      for n in 0..lab_groups.size-1
+        puts (n+1).to_s + ". " + lab_groups[n].name + "\n"
+      end
+      lab_group_number = ui.ask("\n> ")
+      lab_group_id = lab_groups[lab_group_number.to_i-1].id
+
+      scrape_array_request(username, password, request_id, lab_group_id)
+    end
   end
 
   # web scrape an array_request view form from SBEAMS
