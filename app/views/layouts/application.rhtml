@@ -17,8 +17,7 @@
           <%= link_to 'Home', {:controller => 'welcome', :action => 'home'} %>
           <% if SiteConfig.track_inventory? %>
             <li class="category">Chips</li>
-            <%= link_to 'Chip Inventory', {:controller => 'inventory', :action => 'index'}, 
-            :wrap_in => 'li' %>
+            <li><%= link_to 'Chip Inventory', {:controller => 'inventory', :action => 'index'} %></li>
             <%= link_if_staff_or_admin 'Inventory Checks', {:controller => 'inventory_checks', :action => 'list'}, 
             :wrap_in => 'li'%>
             <%= link_if_staff_or_admin 'Chip Types', {:controller => 'chip_types', :action => 'list'}, 
@@ -26,10 +25,8 @@
           <% end %>
           <% if SiteConfig.track_hybridizations? %>
             <li class="category">Samples</li>
-            <%= link_to 'Bioanalyzer Results', {:controller => 'bioanalyzer_runs', :action => 'list'}, 
-            :wrap_in => 'li'%>
-            <%= link_to 'Samples', {:controller => 'samples', :action => 'list'}, 
-            :wrap_in => 'li'%>
+            <li><%= link_to 'Bioanalyzer Results', {:controller => 'bioanalyzer_runs', :action => 'list'} %></li>
+            <li><%= link_to 'Samples', {:controller => 'samples', :action => 'list'} %></li>
             <%= link_if_staff_or_admin 'Hybridizations', {:controller => 'hybridizations', :action => 'list'}, 
             :wrap_in => 'li'%>
           <% end %>
