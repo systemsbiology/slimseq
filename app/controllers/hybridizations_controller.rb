@@ -25,7 +25,7 @@ class HybridizationsController < ApplicationController
   
     # clear out hybridization record since this is a 'new' set
     session[:hybridizations] = Array.new
-    session[:hybridization_number] = 0
+#    session[:hybridization_number] = 0
   
     @submit_hybridizations = SubmitHybridizations.new
   end
@@ -52,7 +52,15 @@ class HybridizationsController < ApplicationController
     end
     
     @hybridizations = session[:hybridizations]
-    current_hyb_number = session[:hybridization_number]
+    highest_chip_number_hyb = Hybridization.find(:first, 
+      :conditions => {:hybridization_date => @submit_hybridizations.hybridization_date},
+      :order => "chip_number DESC"
+    )
+    if(highest_chip_number_hyb.nil?)
+      current_hyb_number = 0
+    else
+      current_hyb_number = highest_chip_number_hyb.chip_number
+    end
     @submit_hybridizations = SubmitHybridizations.new(params[:submit_hybridizations])
 
     # only add more hyb slots if that's what was asked
@@ -86,7 +94,7 @@ class HybridizationsController < ApplicationController
           @submit_hybridizations.charge_set_id = @charge_set.id
         end
         current_hyb_number += 1
-        @hybridizations << Hybridization.new(:hybridization_date => @submit_hybridizations.hybridization_date,      
+        @hybridizations << Hybridization.new(:hybridization_date => @submit_hybridizations.hybridization_date,
               :chip_number => current_hyb_number,
               :charge_set_id => @submit_hybridizations.charge_set_id,
               :charge_template_id => @submit_hybridizations.charge_template_id,

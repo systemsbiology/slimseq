@@ -57,7 +57,7 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     assert_template 'add'
     
     # this should have populated the session[:hybridizations] array
-    # with two Hybridization objects containing appropriate info
+    # with one Hybridization object containing appropriate info
     @hybridizations = session[:hybridizations]
     assert_equal 1, @hybridizations.size
     assert_equal Date.new(2006, 2, 13), @hybridizations[0].hybridization_date
@@ -331,7 +331,6 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     assert_redirected_to :action => 'new'
     
     assert_equal 0, session[:hybridizations].size
-    assert_equal 0, session[:hybridization_number]
   end
 
   def test_show
