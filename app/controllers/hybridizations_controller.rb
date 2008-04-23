@@ -52,6 +52,8 @@ class HybridizationsController < ApplicationController
     end
     
     @hybridizations = session[:hybridizations]
+    
+    @submit_hybridizations = SubmitHybridizations.new(params[:submit_hybridizations])
     highest_chip_number_hyb = Hybridization.find(:first, 
       :conditions => {:hybridization_date => @submit_hybridizations.hybridization_date},
       :order => "chip_number DESC"
@@ -61,7 +63,6 @@ class HybridizationsController < ApplicationController
     else
       current_hyb_number = highest_chip_number_hyb.chip_number
     end
-    @submit_hybridizations = SubmitHybridizations.new(params[:submit_hybridizations])
 
     # only add more hyb slots if that's what was asked
     if(@submit_hybridizations.valid?) 
