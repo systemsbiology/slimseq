@@ -3,47 +3,48 @@
 <p><%= link_if_staff_or_admin 'New Hybridizations', :action => 'new' %></p>
 
 <% if @hybridizations.size > 0 %>
-    <% form_tag :action => 'bulk_handler' do -%>
-		<table class="sortable" id="hybridized_samples">
-		  <tr>
-		    <th>Select</th>
-		    <th>Date Hybridized</th>
-		    <th>Chip Number</th>
-		    <th>Short Sample Name</th>
-		    <th>Sample Name</th>
-		    <th>Sample Group Name</th>
-		    <th>Project</th>
-		  <% if SiteConfig.using_sbeams? %>
-		    <th>SBEAMS User</th>
-		  <% end %>
-		    <th>Edit</th>
-		    <th>Destroy</th>
-		  </tr>
-		  
-		<% for hybridization in @hybridizations %>
-		  <tr>
-		    <td><%= check_box 'selected_hybridizations', hybridization.id %></td>
-		    <td><%=h hybridization.hybridization_date %></td>
-		    <td><%=h hybridization.chip_number %></td>
-		    <td><%=h hybridization.sample.short_sample_name %></td>
-		    <td><%=h hybridization.sample.sample_name %></td>
-		    <td><%=h hybridization.sample.sample_group_name %></td>
-		  <% if @using_sbeams %>
-		    <td><%=h hybridization.sample.sbeams_user %></td>
-		  <% end %>
-  		    <td><%=h hybridization.sample.project.name %></td>
-		    <td><%= link_to 'Edit', :action => 'edit', :id => hybridization %></td>
-		    <td><%= link_to 'Destroy', { :action => 'destroy', :id => hybridization }, :confirm => 'Are you sure?' %></td>
-		  </tr>
-		<% end %>
-		</table>
-       <% end -%>
+      <% form_tag :action => 'bulk_handler' do -%>
+    <table class="sortable" id="hybridized_samples">
+      <tr>
+        <th>Select</th>
+        <th>Date Hybridized</th>
+        <th>Chip Number</th>
+        <th>Short Sample Name</th>
+        <th>Sample Name</th>
+        <th>Sample Group Name</th>
+        <th>Project</th>
+        <% if SiteConfig.using_sbeams? %>
+          <th>SBEAMS User</th>
+        <% end %>
+        <th>Edit</th>
+        <th>Destroy</th>
+      </tr>
+  
+    <% for hybridization in @hybridizations %>
+        <tr>
+          <td><%= check_box 'selected_hybridizations', hybridization.id %></td>
+          <td><%=h hybridization.hybridization_date %></td>
+          <td><%=h hybridization.chip_number %></td>
+          <td><%=h hybridization.sample.short_sample_name %></td>
+          <td><%=h hybridization.sample.sample_name %></td>
+          <td><%=h hybridization.sample.sample_group_name %></td>
+          <% if @using_sbeams %>
+            <td><%=h hybridization.sample.sbeams_user %></td>
+          <% end %>
+          <td><%=h hybridization.sample.project.name %></td>
+          <td><%= link_to 'Edit', :action => 'edit', :id => hybridization %></td>
+          <td><%= link_to 'Destroy', { :action => 'destroy', :id => hybridization }, :confirm => 'Are you sure?' %></td>
+        </tr>
+      <% end %>
+    </table>
+
     <p>Page: <%= pagination_links @hybridization_pages, :link_to_current_page => true %></p>
     <p><%= submit_tag 'Delete Hybridizations' %></p>
     <% if SiteConfig.create_gcos_files? %>
-        <p><%= submit_tag 'Export GCOS Files' %></p>
+      <p><%= submit_tag 'Export GCOS Files' %></p>
     <% end %>
     <p><%= submit_tag 'Export Bioanalyzer Images' %></p>
+  <% end -%>
 <% else %>
-    <p>There are currently no hybridizations.</p>
+  <p>There are currently no hybridizations.</p>
 <% end %>
