@@ -51,8 +51,17 @@ class NamingElementsController < ApplicationController
   def update
     @naming_element = NamingElement.find(params[:id])
     
+    # determine whether a change to/from free-text is desired
+    free_text_change = 
+      params[:naming_element][:free_text] != @naming_element.free_text
+    
     begin
       if @naming_element.update_attributes(params[:naming_element])
+        # if there was a free text change, do necessary
+        # sample term <-> sample text conversions
+        if free_text_change
+          @naming_element.free_text_conversion
+        end
         flash[:notice] = 'Naming element was successfully updated.'
         redirect_to :action => 'list_for_naming_scheme', :id => @naming_element
       else
