@@ -293,34 +293,6 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     assert_equal num_charges, Charge.count   
   end
 
-  def test_create_duplicate_hybridization_date_number_combo
-    num_hybridizations = Hybridization.count
-
-    # enter a new set of hybs
-    get :new
-
-    # add one hyb that will have a duplicate hybridization_date/number  
-    get :add, :selected_samples => { '1' => '1', '2'=>'0', '3' => '0' },
-              :submit_hybridizations => {:hybridization_date => "2006-02-10", 
-                            :charge_set_id => 1,
-                            :charge_template_id => 1}
-    # add another hyb with unique hybridization_date/number
-    get :add, :selected_samples => { '2'=>'0', '3' => '1' },
-              :submit_hybridizations => {:hybridization_date => "2006-02-12", 
-                            :charge_set_id => 1,
-                            :charge_template_id => 1}
-                       
-    post :create
-
-    # make sure it complained
-    assert_errors
-    assert_response :success
-    assert_template 'add'
-
-    # make sure records were not inserted
-    assert_equal num_hybridizations, Hybridization.count
-  end
-
   def test_clear
     # use test_add to populate session[:hybridizations] and session[:hybridization_number]
     test_add
