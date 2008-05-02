@@ -76,7 +76,15 @@ class NamingElementsControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => 1
+    post :update, :id => 1, :naming_element => { 
+                                             :name => "Strain",
+                                             :element_order => 1,
+                                             :group_element => true,
+                                             :optional => true,
+                                             :dependent_element_id => 0,
+                                             :naming_scheme_id => 1,
+                                             :free_text => false,
+                                             :include_in_sample_name => true }
 
     assert_response :redirect
     assert_redirected_to :action => 'list_for_naming_scheme'
