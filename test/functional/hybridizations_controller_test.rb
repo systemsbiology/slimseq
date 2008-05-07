@@ -132,6 +132,47 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     assert_select "table#available_samples>tr", 5
   end
 
+  def test_multiple_adds
+    # use test_new to populate session variables
+    get :new
+  
+    get :add, :selected_samples => { '1' => '1', '3' => '0',
+                                     '5' => '0', '6' => '0' },
+              :submit_hybridizations => {:hybridization_date => "2006-02-13", 
+                            :charge_set_id => 1,
+                            :charge_template_id => 1}
+    
+    assert_response :success
+    assert_template 'add'
+    
+    get :add, :selected_samples => { '3' => '1', '5' => '0', '6' => '0' },
+              :submit_hybridizations => {:hybridization_date => "2006-02-13", 
+                            :charge_set_id => 1,
+                            :charge_template_id => 1}
+                          
+    assert_response :success
+    assert_template 'add'
+    
+    # this should have populated the session[:hybridizations] array
+    # with two Hybridization objects containing appropriate info
+    @hybridizations = session[:hybridizations]
+    assert_equal 2, @hybridizations.size
+    assert_equal Date.new(2006, 2, 13), @hybridizations[0].hybridization_date
+    assert_equal 1, @hybridizations[0].chip_number
+    assert_equal 1, @hybridizations[0].sample_id
+    assert_equal 1, @hybridizations[0].charge_set_id
+    assert_equal 1, @hybridizations[0].charge_template_id
+    assert_equal Date.new(2006, 2, 13), @hybridizations[1].hybridization_date
+    assert_equal 2, @hybridizations[1].chip_number
+    assert_equal 3, @hybridizations[1].sample_id
+    assert_equal 1, @hybridizations[1].charge_set_id
+    assert_equal 1, @hybridizations[1].charge_template_id
+
+    # make sure that only non-selected samples remain in selection list
+    # should have 3 rows (header + 2 samples)
+    assert_select "table#available_samples>tr", 3
+  end
+  
   def test_create_all_tracking_on
     # copy images into place for use with this test
     FileUtils.cp("#{RAILS_ROOT}/test/fixtures/bioanalyzer_files/2100 expert_EukaryoteTotal RNA Nano_DE02000308_2004-07-29_11-23-22_EGRAM_Sample1.jpg",
@@ -291,6 +332,39 @@ class HybridizationsControllerTest < Test::Unit::TestCase
 
     # make sure a charge was recorded
     assert_equal num_charges, Charge.count   
+  end
+
+  def test_create_on_date_with_existing_hybridizations
+    num_hybridizations = Hybridization.count
+    num_transactions = ChipTransaction.count
+    num_charges = Charge.count
+    
+    # enter a new set of hybs
+    get :new
+
+    get :add, :selected_samples => { '1' => '1', '2'=>'0', '3' => '0' },
+              :submit_hybridizations => {:hybridization_date => "2006-02-10", 
+                            :charge_set_id => 1,
+                            :charge_template_id => 1}
+                       
+    post :create
+
+    assert_response :redirect
+    assert_redirected_to :action => 'show'
+
+    assert_equal Hybridization.find(:first, :order => "id DESC").
+      chip_number, 3
+    
+    # make sure the records made it into the hybridizations table
+    assert_equal num_hybridizations + 1,
+                 Hybridization.count
+                 
+    # make sure a chip transaction was recorded
+    assert_equal num_transactions + 1,
+                 ChipTransaction.count
+
+    # make sure a charge was recorded
+    assert_equal num_charges + 1, Charge.count   
   end
 
   def test_clear
