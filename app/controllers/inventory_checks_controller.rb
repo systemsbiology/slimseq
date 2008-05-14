@@ -32,7 +32,7 @@ class InventoryChecksController < ApplicationController
     @inventory_check = InventoryCheck.new(params[:inventory_check])
     if @inventory_check.save
       flash[:notice] = 'InventoryCheck was successfully created.'
-      redirect_to :action => 'list'
+      redirect_to :controller => 'inventory', :action => 'index'
     else
       render :action => 'new'
     end
