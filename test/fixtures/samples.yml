@@ -13,6 +13,7 @@ sample1:
   starting_quality_trace_id: 6
   amplified_quality_trace_id: 10
   fragmented_quality_trace_id: 14
+  naming_scheme_id:
 sample2:
   id: 2
   submission_date: 2006-02-10
@@ -27,6 +28,7 @@ sample2:
   starting_quality_trace_id: 7
   amplified_quality_trace_id: 11
   fragmented_quality_trace_id: 15
+  naming_scheme_id:
 sample3:
   id: 3
   submission_date: 2006-02-10
@@ -38,6 +40,7 @@ sample3:
   organism_id: 1
   sbeams_user: bob
   status: submitted
+  naming_scheme_id:
 sample4:
   id: 4
   submission_date: 2006-02-10
@@ -49,6 +52,7 @@ sample4:
   organism_id: 1
   sbeams_user: bob
   status: hybridized
+  naming_scheme_id:
 sample5:
   id: 5
   submission_date: 2006-09-10
@@ -60,12 +64,13 @@ sample5:
   organism_id: 1
   sbeams_user: bob
   status: submitted
+  naming_scheme_id:
 sample6:
   id: 6
   submission_date: 2007-05-31
   short_sample_name: a1
   sample_name: wt_HT_024_B_32234
-  sample_group_name: wt_HT_024 
+  sample_group_name: wt_HT_024
   project_id: 2
   chip_type_id: 2
   organism_id: 1
