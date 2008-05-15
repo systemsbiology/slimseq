@@ -52,7 +52,7 @@ class InventoryChecksControllerTest < Test::Unit::TestCase
                                       }
 
     assert_response :redirect
-    assert_redirected_to :action => 'list'
+    assert_redirected_to :controller=> 'inventory', :action => 'index'
 
     assert_equal num_inventory_checks + 1, InventoryCheck.count
   end
