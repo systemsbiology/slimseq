@@ -4,17 +4,11 @@ require 'parseexcel'
 class SampleTest < Test::Unit::TestCase
   fixtures :all
 
-  def test_to_excel
-    excel_file = Sample.to_excel
+  def test_to_csv_unschemed
+    csv_file_name = Sample.to_csv
     
-    workbook = Spreadsheet::ParseExcel.parse(excel_file)
+    csv = CSV.open(csv_file_name, 'r')
     
-    #################################
-    # check unschemed samples
-    #################################
-    
-    worksheet = workbook.worksheet(0)
-
     # heading
     assert_row_equal([
       "Sample ID",
@@ -26,12 +20,11 @@ class SampleTest < Test::Unit::TestCase
       "Organism",
       "SBEAMS User",
       "Project",
-      "Status"
-    ], worksheet.row(0))
+    ], csv.shift)
     
     # samples
     assert_row_equal([
-      "1.0",
+      "1",
       "2006-02-10",
       "yng",
       "Young",
@@ -40,11 +33,10 @@ class SampleTest < Test::Unit::TestCase
       "Mouse",
       "bob",
       "MouseGroup",
-      "submitted"
-    ], worksheet.row(1))
+    ], csv.shift)
     
     assert_row_equal([
-      "2.0",
+      "2",
       "2006-02-10",
       "old",
       "Old",
@@ -53,11 +45,10 @@ class SampleTest < Test::Unit::TestCase
       "Mouse",
       "bob",
       "MouseGroup",
-      "hybridized"
-    ], worksheet.row(2))
+    ], csv.shift)
     
     assert_row_equal([
-      "3.0",
+      "3",
       "2006-02-10",
       "vold",
       "Very Old",
@@ -66,11 +57,10 @@ class SampleTest < Test::Unit::TestCase
       "Mouse",
       "bob",
       "MouseGroup",
-      "submitted"
-    ], worksheet.row(3))
+    ], csv.shift)
     
     assert_row_equal([
-      "4.0",
+      "4",
       "2006-02-10",
       "vvold",
       "Very Very Old",
@@ -79,11 +69,10 @@ class SampleTest < Test::Unit::TestCase
       "Mouse",
       "bob",
       "MouseGroup",
-      "hybridized"
-    ], worksheet.row(4))
+    ], csv.shift)
     
     assert_row_equal([
-      "5.0",
+      "5",
       "2006-09-10",
       "bb",
       "Bob B",
@@ -92,14 +81,14 @@ class SampleTest < Test::Unit::TestCase
       "Mouse",
       "bob",
       "Bob's Stuff",
-      "submitted"
-    ], worksheet.row(5))
+    ], csv.shift)
+  end
   
-    #################################
-    # check schemed samples
-    #################################
+  def test_to_csv_schemed
+    csv_file_name = Sample.to_csv('Yeast Scheme')
     
-    worksheet = workbook.worksheet(2)
+    csv = CSV.open(csv_file_name, 'r')
+    
     assert_row_equal([
       "Sample ID",
       "Submission Date",
@@ -110,16 +99,15 @@ class SampleTest < Test::Unit::TestCase
       "Organism",
       "SBEAMS User",
       "Project",
-      "Status",
       "Strain",
       "Perturbation",
       "Perturbation Time",
       "Replicate",
       "Subject Number",
-    ], worksheet.row(0))
+    ], csv.shift)
     
     assert_row_equal([
-      "6.0",
+      "6",
       "2007-05-31",
       "a1",
       "wt_HT_024_B_32234",
@@ -128,13 +116,53 @@ class SampleTest < Test::Unit::TestCase
       "Mouse",
       "bob",
       "Bob's Stuff",
-      "submitted",
       "wild-type",
       "heat",
       "024",
       "B",
       "32234"      
-    ], worksheet.row(1))
+    ], csv.shift)
+  end
+
+  def test_from_csv_updated_unschemed_samples
+    csv_file = "#{RAILS_ROOT}/test/fixtures/csv/updated_unschemed_samples.csv"
+    
+    errors = Sample.from_csv(csv_file)
+    
+    assert_equal "", errors
+    
+    # one change was made to sample 1
+    sample_1 = Sample.find(1)
+    assert_equal "yng1", sample_1.short_sample_name
+    
+    # multiple changes to sample 2
+    sample_2 = Sample.find(2)
+    assert_equal "old1", sample_2.short_sample_name
+    assert_equal "Old1", sample_2.sample_name
+    assert_equal 1, sample_2.chip_type_id
+    assert_equal "robert", sample_2.sbeams_user
+    assert_equal 2, sample_2.project_id
+    assert_equal "Hyena", sample_2.organism.name
+  end
+  
+  def test_from_csv_updated_schemed_samples
+    csv_file = "#{RAILS_ROOT}/test/fixtures/csv/updated_yeast_scheme_samples.csv"
+    
+    errors = Sample.from_csv(csv_file, true)
+    
+    assert_equal "", errors
+    
+    # changes to schemed sample
+    assert_not_nil SampleTerm.find(:first, :conditions => {
+      :sample_id => 6,
+      :naming_term_id => naming_terms(:mutant).id } )
+    assert_not_nil SampleTerm.find(:first, :conditions => {
+      :sample_id => 6,
+      :naming_term_id => naming_terms(:replicateA).id } )
+    sample_6_number = SampleText.find(:first, :conditions => {
+      :sample_id => 6,
+      :naming_element_id => naming_elements(:subject_number).id } )
+    assert_equal "32236", sample_6_number.text
   end
   
   def assert_row_equal(expected, row)
