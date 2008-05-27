@@ -7,7 +7,7 @@ class LabGroup < ActiveRecord::Base
   has_many :inventory_checks, :dependent => :destroy
   has_many :projects, :dependent => :destroy
 
-  validates_length_of :name, :within => 1..20
+  validates_length_of :name, :within => 1..250
   validates_uniqueness_of :name
 
   def destroy_warning

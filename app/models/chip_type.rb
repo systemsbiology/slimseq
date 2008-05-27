@@ -6,8 +6,8 @@ class ChipType < ActiveRecord::Base
   
   validates_uniqueness_of :name
   validates_uniqueness_of :short_name
-  validates_length_of :name, :within => 1..20
-  validates_length_of :short_name, :within => 1..20
+  validates_length_of :name, :within => 1..250
+  validates_length_of :short_name, :within => 1..100
 
   def destroy_warning
     samples = Sample.find(:all, :conditions => ["chip_type_id = ?", id])

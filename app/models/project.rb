@@ -5,8 +5,8 @@ class Project < ActiveRecord::Base
   validates_associated :lab_group
 
   validates_presence_of :name, :budget
-  validates_length_of :name, :maximum => 50
-  validates_length_of :budget, :maximum => 8
+  validates_length_of :name, :maximum => 250
+  validates_length_of :budget, :maximum => 100
   
   def validate_on_create
     # make sure name/budget combo is unique

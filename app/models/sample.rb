@@ -242,16 +242,25 @@ class Sample < ActiveRecord::Base
                   return "Unable to create #{e.name} for row #{row_number}"
                 end
               else
-                # match leading 0's if there are any
                 naming_term = NamingTerm.find(:first, 
                   :conditions => ["naming_element_id = ? AND " +
-                    "(term REGEXP ? OR abbreviated_term REGEXP ?)",
+                    "(term = ? OR abbreviated_term = ?)",
                     e.id,
-                    "0*" + row[current_column_index],
-                    "0*" + row[current_column_index] ])
-                # try 
+                    row[current_column_index],
+                    row[current_column_index] ])
+                # if naming term wasn't found,
+                # match leading 0's if there are any
                 if(naming_term.nil?)
-                  return "Naming term doesn't exist for #{e.name} for row #{row_number}"
+                  naming_term = NamingTerm.find(:first, 
+                    :conditions => ["naming_element_id = ? AND " +
+                      "(term REGEXP ? OR abbreviated_term REGEXP ?)",
+                      e.id,
+                      "0*" + row[current_column_index],
+                      "0*" + row[current_column_index] ])
+                end
+                if(naming_term.nil?)
+                  return "Naming term #{row[current_column_index]} doesn't " +
+                    "exist for #{e.name} for row #{row_number}"
                 end
                 sample_term = SampleTerm.new(
                   :sample_id => sample.id,
@@ -313,7 +322,8 @@ class Sample < ActiveRecord::Base
           :sbeams_user => row[7],
           :project_id => project.id
         ))
-      return "Problem updating values"
+      puts errors.full_messages
+      return "Problem updating values for sample id=#{id}"
     end
     
     return ""
