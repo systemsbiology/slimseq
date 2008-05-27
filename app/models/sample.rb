@@ -73,12 +73,12 @@ class Sample < ActiveRecord::Base
           "Organism",
           "SBEAMS User",
           "Project",
+          "Naming Scheme"
         ]
 
         samples = Sample.find( :all, :conditions => {:naming_scheme_id => nil},
           :include => [:project, :chip_type, :organism], :order => "samples.id ASC" )
 
-        current_row = 0
         for sample in samples
           csv << [ sample.id,
             sample.submission_date.to_s,
@@ -89,6 +89,7 @@ class Sample < ActiveRecord::Base
             sample.organism.name,
             sample.sbeams_user,
             sample.project.name,
+            "None"
           ]
         end
       else
@@ -108,6 +109,7 @@ class Sample < ActiveRecord::Base
           "Organism",
           "SBEAMS User",
           "Project",
+          "Naming Scheme"
         ]
 
         # headings for naming elements
@@ -132,7 +134,8 @@ class Sample < ActiveRecord::Base
             sample.chip_type.name,
             sample.organism.name,
             sample.sbeams_user,
-            sample.project.name
+            sample.project.name,
+            sample.naming_scheme.name
           ]
           # values for naming elements
           scheme.naming_elements.each do |e|
@@ -160,124 +163,130 @@ class Sample < ActiveRecord::Base
         end
       end    
     end
-
+  
     csv_file.close
      
     return csv_file_name
   end
 
-  def self.from_csv(csv_file_name, schemed = false)
+  def self.from_csv(csv_file_name)
 
-    if(schemed == false)
-      ###########################################
-      # non-naming schemed samples
-      ###########################################
+    row_number = 0
 
-      row_number = 0
-      CSV.open(csv_file_name, 'r') do |row|
-        # don't process header row
-        if(row_number > 0)
+    CSV.open(csv_file_name, 'r') do |row|
+      # don't process header row
+      if(row_number > 0)
+        begin
+          sample = Sample.find(row[0].to_i)
+        rescue
+          return "Sample ID is invalidin row #{row_number}"
+        end
+      
+        # check to see if this sample should have a naming scheme
+        if(row[9] == "None")
+          ###########################################
+          # non-naming schemed sample
+          ###########################################
+        
           # there should be 10 cells in each row
-          if(row.size != 9)
-            return "Wrong number of columns in row #{row_number} of non-naming schemed samples"
+          if(row.size != 10)
+            return "Wrong number of columns in row #{row_number}. Expected 10"
           end
 
-          errors = update_unschemed_columns(row)
+          sample.destroy_existing_naming_scheme_info
+        
+          errors = sample.update_unschemed_columns(row)
           if(errors != "")
             return errors + " in row #{row_number} of non-naming schemed samples"
           end
-        end
-        
-        row_number += 1
-      end
-    else
-      ###########################################
-      # naming schemed samples
-      ###########################################
-    
-      row_number = 0
-      CSV.open(csv_file_name, 'r') do |row|
-        # don't process header row
-        if(row_number > 0)
-          begin
-            sample = Sample.find(row[0].to_i)
-          rescue
-            return "Sample ID is invalidin row #{row_number} for tab #{current_worksheet}"
-          end
+        else
+          ###########################################
+          # naming schemed samples
+          ###########################################
 
+          naming_scheme = NamingScheme.find(:first, 
+            :conditions => {:name => row[9]})
           # make sure this sample has a naming scheme
-          if(sample.naming_scheme_id.nil?)
-            return "Naming scheme expected in row #{row_number} for tab #{current_worksheet}"
+          if(naming_scheme.nil?)
+            return "Naming scheme #{row[9]} doesn't exist in row #{row_number}"
           end
 
-          naming_scheme = sample.naming_scheme
           naming_elements = naming_scheme.naming_elements
 
-          if(row.size != 9 + naming_elements.size)
-            return "Wrong number of columns in row #{row_number} for tab #{current_worksheet}"
+          expected_columns = 10 + naming_elements.size
+          if(row.size != expected_columns)
+            return "Wrong number of columns in row #{row_number}. " +
+              "Expected #{expected_columns}"
           end
 
+          sample.destroy_existing_naming_scheme_info
+        
           # update the sample attributes
-          errors = update_unschemed_columns(row)
+          errors = sample.update_unschemed_columns(row)
           if(errors != "")
-            return errors + " in row #{row_number} for tab #{current_worksheet}"
+            return errors + " in row #{row_number}"
           end
 
           # update the naming scheme records
-          current_column_index = 9
+          current_column_index = 10
           naming_elements.each do |e|
-            if(e.free_text == true)
-              sample_text = SampleText.find(:first, 
-                :conditions => {:sample_id => sample.id,
-                  :naming_element_id => e.id})
-              if(!sample_text.update_attribute('text',
-                    row[current_column_index]) )
-                return "Unable to update #{e.name} for row #{row_number}" +
-                  " for tab #{current_worksheet}"
-              end
-            else
-              sample_term = SampleTerm.find(:first,
-                :include => :naming_term,
-                :conditions => ["sample_id = ? AND naming_element_id = ?",
-                  sample.id, e.id] )
-              new_naming_term = NamingTerm.find(:first, 
-                :conditions => ["term = ? OR abbreviated_term = ?", 
-                  row[current_column_index],
-                  row[current_column_index] ])
-              if(new_naming_term.nil?)
-                return "Naming term doesn't exist for #{e.name} for row #{row_number}" +
-                  " for tab #{current_worksheet}"
-              end
-              if(!sample_term.update_attribute('naming_term_id',
-                    new_naming_term.id))
-                return "Unable to update #{e.name} for row #{row_number}" +
-                  " for tab #{current_worksheet}"
+            # do nothing if there's nothing in the cell
+            if(row[current_column_index] != nil)
+              if(e.free_text == true)
+                sample_text = SampleText.new(
+                  :sample_id => sample.id,
+                  :naming_element_id => e.id,
+                  :text => row[current_column_index]
+                )
+                if(!sample_text.save)
+                  return "Unable to create #{e.name} for row #{row_number}"
+                end
+              else
+                # match leading 0's if there are any
+                naming_term = NamingTerm.find(:first, 
+                  :conditions => ["naming_element_id = ? AND " +
+                    "(term REGEXP ? OR abbreviated_term REGEXP ?)",
+                    e.id,
+                    "0*" + row[current_column_index],
+                    "0*" + row[current_column_index] ])
+                # try 
+                if(naming_term.nil?)
+                  return "Naming term doesn't exist for #{e.name} for row #{row_number}"
+                end
+                sample_term = SampleTerm.new(
+                  :sample_id => sample.id,
+                  :naming_term_id => naming_term.id
+                )
+                if(!sample_term.save)
+                  return "Unable to create #{e.name} for row #{row_number}"
+                end
               end
             end
-
             current_column_index += 1
           end
+          sample.update_attributes(:naming_scheme_id => naming_scheme.id)
         end
-        
-        row_number += 1
       end
+      row_number += 1
     end
 
     return ""
   end
 
-  private
-
-  def self.update_unschemed_columns(row)
-    # have to use error blocks since unexpected values can cause exceptions
-    # to be raised
-
-    begin
-      sample = Sample.find(row[0].to_i)
-    rescue
-      return "Sample ID is invalid"
+  def destroy_existing_naming_scheme_info
+    SampleText.find(:all, 
+      :conditions => {:sample_id => id}
+    ). each do |st|
+      st.destroy
     end
-    
+    SampleTerm.find(:all, 
+      :conditions => {:sample_id => id}
+    ). each do |st|
+      st.destroy
+    end
+  end
+
+  def update_unschemed_columns(row)  
     chip_type = ChipType.find(:first, 
       :conditions => [ "name = ? OR short_name = ?", row[5], row[5] ])
     if(chip_type.nil?)
@@ -294,7 +303,7 @@ class Sample < ActiveRecord::Base
       return "Project doesn't exist"
     end
     
-    if(!sample.update_attributes(
+    if(!update_attributes(
           :submission_date => row[1],
           :short_sample_name => row[2],
           :sample_name => row[3],

@@ -20,6 +20,7 @@ class SampleTest < Test::Unit::TestCase
       "Organism",
       "SBEAMS User",
       "Project",
+      "Naming Scheme"
     ], csv.shift)
     
     # samples
@@ -33,6 +34,7 @@ class SampleTest < Test::Unit::TestCase
       "Mouse",
       "bob",
       "MouseGroup",
+      "None"
     ], csv.shift)
     
     assert_row_equal([
@@ -45,6 +47,7 @@ class SampleTest < Test::Unit::TestCase
       "Mouse",
       "bob",
       "MouseGroup",
+      "None"
     ], csv.shift)
     
     assert_row_equal([
@@ -57,6 +60,7 @@ class SampleTest < Test::Unit::TestCase
       "Mouse",
       "bob",
       "MouseGroup",
+      "None"
     ], csv.shift)
     
     assert_row_equal([
@@ -69,6 +73,7 @@ class SampleTest < Test::Unit::TestCase
       "Mouse",
       "bob",
       "MouseGroup",
+      "None"
     ], csv.shift)
     
     assert_row_equal([
@@ -81,6 +86,7 @@ class SampleTest < Test::Unit::TestCase
       "Mouse",
       "bob",
       "Bob's Stuff",
+      "None"
     ], csv.shift)
   end
   
@@ -99,6 +105,7 @@ class SampleTest < Test::Unit::TestCase
       "Organism",
       "SBEAMS User",
       "Project",
+      "Naming Scheme",
       "Strain",
       "Perturbation",
       "Perturbation Time",
@@ -116,6 +123,7 @@ class SampleTest < Test::Unit::TestCase
       "Mouse",
       "bob",
       "Bob's Stuff",
+      "Yeast Scheme",
       "wild-type",
       "heat",
       "024",
@@ -148,7 +156,7 @@ class SampleTest < Test::Unit::TestCase
   def test_from_csv_updated_schemed_samples
     csv_file = "#{RAILS_ROOT}/test/fixtures/csv/updated_yeast_scheme_samples.csv"
     
-    errors = Sample.from_csv(csv_file, true)
+    errors = Sample.from_csv(csv_file)
     
     assert_equal "", errors
     
@@ -163,6 +171,31 @@ class SampleTest < Test::Unit::TestCase
       :sample_id => 6,
       :naming_element_id => naming_elements(:subject_number).id } )
     assert_equal "32236", sample_6_number.text
+    assert_equal naming_schemes(:yeast_scheme).id, Sample.find(6).naming_scheme.id
+  end
+  
+  def test_from_csv_no_scheme_to_scheme
+    csv_file = "#{RAILS_ROOT}/test/fixtures/csv/no_scheme_to_scheme.csv"
+    
+    errors = Sample.from_csv(csv_file)
+    
+    assert_equal "", errors
+    
+    # changes to schemed sample
+    assert_not_nil SampleTerm.find(:first, :conditions => {
+      :sample_id => 3,
+      :naming_term_id => naming_terms(:wild_type).id } )
+    assert_not_nil SampleTerm.find(:first, :conditions => {
+      :sample_id => 3,
+      :naming_term_id => naming_terms(:heat).id } )
+    assert_not_nil SampleTerm.find(:first, :conditions => {
+      :sample_id => 3,
+      :naming_term_id => naming_terms(:replicateB).id } )
+    sample_6_number = SampleText.find(:first, :conditions => {
+      :sample_id => 3,
+      :naming_element_id => naming_elements(:subject_number).id } )
+    assert_equal "234", sample_6_number.text
+    assert_equal naming_schemes(:yeast_scheme).id, Sample.find(3).naming_scheme_id
   end
   
   def assert_row_equal(expected, row)
