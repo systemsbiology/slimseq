@@ -64,7 +64,8 @@ class Sample < ActiveRecord::Base
     csv_file = File.open(csv_file_name, 'wb')
     CSV::Writer.generate(csv_file) do |csv|
       if(naming_scheme == "")
-        csv << [  "Sample ID",
+        csv << [ "CEL File",
+          "Sample ID",
           "Submission Date",
           "Short Sample Name",
           "Sample Name",
@@ -80,7 +81,13 @@ class Sample < ActiveRecord::Base
           :include => [:project, :chip_type, :organism], :order => "samples.id ASC" )
 
         for sample in samples
-          csv << [ sample.id,
+          if(sample.hybridization != nil)
+            cel_file = sample.hybridization.raw_data_path
+          else
+            cel_file = ""
+          end
+          csv << [ cel_file,
+            sample.id,
             sample.submission_date.to_s,
             sample.short_sample_name,
             sample.sample_name,
@@ -100,7 +107,8 @@ class Sample < ActiveRecord::Base
         end
         
         # stock headings
-        headings = [ "Sample ID",
+        headings = [ "CEL File",
+          "Sample ID",
           "Submission Date",
           "Short Sample Name",
           "Sample Name",
@@ -126,7 +134,13 @@ class Sample < ActiveRecord::Base
 
         current_row = 0
         for sample in samples
-          column_values = [ sample.id,
+          if(sample.hybridization != nil)
+            cel_file = sample.hybridization.raw_data_path
+          else
+            cel_file = ""
+          end
+          column_values = [ cel_file,
+            sample.id,
             sample.submission_date.to_s,
             sample.short_sample_name,
             sample.sample_name,
@@ -177,20 +191,20 @@ class Sample < ActiveRecord::Base
       # don't process header row
       if(row_number > 0)
         begin
-          sample = Sample.find(row[0].to_i)
+          sample = Sample.find(row[1].to_i)
         rescue
           return "Sample ID is invalidin row #{row_number}"
         end
       
         # check to see if this sample should have a naming scheme
-        if(row[9] == "None")
+        if(row[10] == "None")
           ###########################################
           # non-naming schemed sample
           ###########################################
         
           # there should be 10 cells in each row
-          if(row.size != 10)
-            return "Wrong number of columns in row #{row_number}. Expected 10"
+          if(row.size != 11)
+            return "Wrong number of columns in row #{row_number}. Expected 11"
           end
 
           sample.destroy_existing_naming_scheme_info
@@ -205,15 +219,15 @@ class Sample < ActiveRecord::Base
           ###########################################
 
           naming_scheme = NamingScheme.find(:first, 
-            :conditions => {:name => row[9]})
+            :conditions => {:name => row[10]})
           # make sure this sample has a naming scheme
           if(naming_scheme.nil?)
-            return "Naming scheme #{row[9]} doesn't exist in row #{row_number}"
+            return "Naming scheme #{row[10]} doesn't exist in row #{row_number}"
           end
 
           naming_elements = naming_scheme.naming_elements
 
-          expected_columns = 10 + naming_elements.size
+          expected_columns = 11 + naming_elements.size
           if(row.size != expected_columns)
             return "Wrong number of columns in row #{row_number}. " +
               "Expected #{expected_columns}"
@@ -228,7 +242,7 @@ class Sample < ActiveRecord::Base
           end
 
           # update the naming scheme records
-          current_column_index = 10
+          current_column_index = 11
           naming_elements.each do |e|
             # do nothing if there's nothing in the cell
             if(row[current_column_index] != nil)
@@ -297,29 +311,29 @@ class Sample < ActiveRecord::Base
 
   def update_unschemed_columns(row)  
     chip_type = ChipType.find(:first, 
-      :conditions => [ "name = ? OR short_name = ?", row[5], row[5] ])
+      :conditions => [ "name = ? OR short_name = ?", row[6], row[6] ])
     if(chip_type.nil?)
       return "Chip type doesn't exist"
     end
     
-    organism = Organism.find(:first, :conditions => { :name => row[6] })
+    organism = Organism.find(:first, :conditions => { :name => row[7] })
     if(organism.nil?)
-      organism = Organism.create(:name => row[6])
+      organism = Organism.create(:name => row[7])
     end
     
-    project = Project.find(:first, :conditions => { :name => row[8] })
+    project = Project.find(:first, :conditions => { :name => row[9] })
     if(project.nil?)
       return "Project doesn't exist"
     end
     
     if(!update_attributes(
-          :submission_date => row[1],
-          :short_sample_name => row[2],
-          :sample_name => row[3],
-          :sample_group_name => row[4],
+          :submission_date => row[2],
+          :short_sample_name => row[3],
+          :sample_name => row[4],
+          :sample_group_name => row[5],
           :chip_type_id => chip_type.id,
           :organism_id => organism.id,
-          :sbeams_user => row[7],
+          :sbeams_user => row[8],
           :project_id => project.id
         ))
       puts errors.full_messages

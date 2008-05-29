@@ -6,6 +6,7 @@ hyb1:
   charge_template_id: 1
   charge_set_id: 1
   sample_id: 2
+  raw_data_path: "/tmp/20060210_01_Old.CEL"
 hyb2:
   id: 2
   hybridization_date: 2006-02-10
@@ -13,3 +14,4 @@ hyb2:
   charge_template_id: 1
   charge_set_id: 1
   sample_id: 4
+  raw_data_path: "/tmp/20060210_02_Very Very Old.CEL"

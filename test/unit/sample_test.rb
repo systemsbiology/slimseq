@@ -11,6 +11,7 @@ class SampleTest < Test::Unit::TestCase
     
     # heading
     assert_row_equal([
+      "CEL File",
       "Sample ID",
       "Submission Date",
       "Short Sample Name",
@@ -25,6 +26,7 @@ class SampleTest < Test::Unit::TestCase
     
     # samples
     assert_row_equal([
+      "",
       "1",
       "2006-02-10",
       "yng",
@@ -38,6 +40,7 @@ class SampleTest < Test::Unit::TestCase
     ], csv.shift)
     
     assert_row_equal([
+      "/tmp/20060210_01_Old.CEL",
       "2",
       "2006-02-10",
       "old",
@@ -51,6 +54,7 @@ class SampleTest < Test::Unit::TestCase
     ], csv.shift)
     
     assert_row_equal([
+      "",
       "3",
       "2006-02-10",
       "vold",
@@ -64,6 +68,7 @@ class SampleTest < Test::Unit::TestCase
     ], csv.shift)
     
     assert_row_equal([
+      "/tmp/20060210_02_Very Very Old.CEL",
       "4",
       "2006-02-10",
       "vvold",
@@ -77,6 +82,7 @@ class SampleTest < Test::Unit::TestCase
     ], csv.shift)
     
     assert_row_equal([
+      "",
       "5",
       "2006-09-10",
       "bb",
@@ -96,6 +102,7 @@ class SampleTest < Test::Unit::TestCase
     csv = CSV.open(csv_file_name, 'r')
     
     assert_row_equal([
+      "CEL File",
       "Sample ID",
       "Submission Date",
       "Short Sample Name",
@@ -114,6 +121,7 @@ class SampleTest < Test::Unit::TestCase
     ], csv.shift)
     
     assert_row_equal([
+      "",
       "6",
       "2007-05-31",
       "a1",
