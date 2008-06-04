@@ -61,13 +61,13 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
 end
 
-AUTHENTICATION_SALT = 'your-super-secret-salt' unless defined? AUTHENTICATION_SALT
+AUTHENTICATION_SALT = 'mmm_kosher_rocks' unless defined? AUTHENTICATION_SALT
 
 # Set up ActionMailer
 ActionMailer::Base.delivery_method = :sendmail
 ActionMailer::Base.raise_delivery_errors = true
 
 # Exception Notifier plugin configuration
-ExceptionNotifier.exception_recipients = "bmarzolf@systemsbiology.org"
+ExceptionNotifier.exception_recipients = SiteConfig.administrator_email
 ExceptionNotifier.sender_address =
-    %("Application Error" <slimarray@db.systemsbiology.net>)
+    %("Application Error" <slimarray@#{`hostname`.strip}>)
