@@ -247,6 +247,10 @@ class SamplesController < ApplicationController
           end
         end
       end
+      
+      # notification of new samples
+      SampleNotifier.deliver_submission_notification(@samples)
+      
       flash[:notice] = "Samples created successfully"
       redirect_to :action => 'show'
     end

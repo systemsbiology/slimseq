@@ -14,3 +14,4 @@ first:
   bioanalyzer_pickup: /tmp/
   bioanalyzer_pickup: /tmp/
   quality_trace_dropoff: /tmp/
+  administrator_email: admin@example.com
