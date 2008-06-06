@@ -67,7 +67,12 @@ AUTHENTICATION_SALT = 'mmm_kosher_rocks' unless defined? AUTHENTICATION_SALT
 ActionMailer::Base.delivery_method = :sendmail
 ActionMailer::Base.raise_delivery_errors = true
 
+
 # Exception Notifier plugin configuration
-ExceptionNotifier.exception_recipients = SiteConfig.administrator_email
+if( ENV["RAILS_ENV"] == "test" )
+  ExceptionNotifier.exception_recipients = "admin@example.com"
+else
+  ExceptionNotifier.exception_recipients = SiteConfig.administrator_email
+end  
 ExceptionNotifier.sender_address =
     %("Application Error" <slimarray@#{`hostname`.strip}>)
