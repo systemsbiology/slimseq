@@ -1,17 +1,16 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-first:
+--- 
+first: 
   id: 1
-  site_name: Test Site
-  organization_name: Test Organization
-  facility_name: Test Facility
-  array_platform: both
-  track_inventory: 1
-  track_hybridizations: 1
   track_charges: 1
-  create_gcos_files: 0
+  facility_name: Test Facility
   using_sbeams: 0
+  track_hybridizations: 1
+  create_gcos_files: 0
+  organization_name: Test Organization
+  bioanalyzer_pickup: /tmp/
+  array_platform: both
+  site_name: Test Site
   gcos_output_path: /tmp/
-  bioanalyzer_pickup: /tmp/
-  bioanalyzer_pickup: /tmp/
-  quality_trace_dropoff: /tmp/
+  track_inventory: 1
   administrator_email: admin@example.com
+  quality_trace_dropoff: /tmp/

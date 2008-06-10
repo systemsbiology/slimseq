@@ -56,7 +56,7 @@ class ChargeSetsControllerTest < Test::Unit::TestCase
   end
 
   def test_edit
-    get :edit, :id => 1
+    get :edit, :id => charge_sets(:mouse_jan).id
 
     assert_response :success
     assert_template 'edit'
@@ -66,35 +66,35 @@ class ChargeSetsControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => 1
+    post :update, :id => charge_sets(:mouse_jan).id
     assert_response :redirect
     assert_redirected_to :action => 'list'
   end
 
   def test_update_locked
     # grab the charge set we're going to use twice
-    set1 = ChargeSet.find(1)
-    set2 = ChargeSet.find(1)
+    set1 = charge_sets(:mouse_jan)
+    set2 = charge_sets(:mouse_jan)
     
     # update it once, which should sucess
-    post :update, :id => 1, :charge_set => { :name => "set1", 
+    post :update, :id => charge_sets(:mouse_jan).id, :charge_set => { :name => "set1", 
                                                 :lock_version => set1.lock_version }
 
     # and then update again with stale info, and it should fail
-    post :update, :id => 1, :charge_set => { :name => "set2", 
+    post :update, :id => charge_sets(:mouse_jan).id, :charge_set => { :name => "set2", 
                                                 :lock_version => set2.lock_version }                                               
 
     assert_response :success                                                
     assert_template 'edit'
     assert_flash_warning
     
-    assert_equal "set1", ChargeSet.find(1).name
+    assert_equal "set1", ChargeSet.find( charge_sets(:mouse_jan).id ).name
   end
 
   def test_destroy
-    assert_not_nil ChargeSet.find(2)
+    assert_not_nil ChargeSet.find( charge_sets(:alligator_jan).id )
 
-    post :destroy, :id => 2
+    post :destroy, :id => charge_sets(:alligator_jan).id
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
@@ -104,14 +104,14 @@ class ChargeSetsControllerTest < Test::Unit::TestCase
   end
   
   def test_destroy_with_associated_charges
-    assert_not_nil ChargeSet.find(1)
+    assert_not_nil ChargeSet.find( charge_sets(:mouse_jan).id )
 
-    post :destroy, :id => 1
+    post :destroy, :id => charge_sets(:mouse_jan).id
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      ChargeSet.find(1)
+      ChargeSet.find( charge_sets(:mouse_jan).id )
     }
   end
 end

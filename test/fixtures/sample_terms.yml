@@ -1,20 +1,17 @@
-sample6_strain:
-  id: 1
-  term_order: 1
-  sample_id: 6
-  naming_term_id: 1
-sample6_perturbation:
-  id: 2
-  term_order: 2
-  sample_id: 6
-  naming_term_id: 3
-sample6_perturbation_time:
-  id: 3
-  term_order: 3
-  sample_id: 6
-  naming_term_id: 6
-sample6_replicate:
-  id: 4
+--- 
+sample6_replicate: 
+  sample: sample6
+  naming_term: replicateB
   term_order: 4
-  sample_id: 6
-  naming_term_id: 8
+sample6_perturbation_time: 
+  sample: sample6
+  naming_term: time024
+  term_order: 3
+sample6_perturbation: 
+  sample: sample6
+  naming_term: heat
+  term_order: 2
+sample6_strain: 
+  sample: sample6
+  naming_term: wild_type
+  term_order: 1

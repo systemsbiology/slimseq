@@ -4,6 +4,12 @@ class NamingElement < ActiveRecord::Base
   has_many :naming_terms, :dependent => :destroy
   has_many :sample_texts, :dependent => :destroy
   
+  belongs_to :depends_upon_element, :foreign_key => 'dependent_element_id',
+             :class_name => 'NamingElement'
+  
+  has_many :dependent_elements, :foreign_key => 'dependent_element_id',
+             :class_name => 'NamingElement'
+  
   def destroy_warning
     naming_terms = NamingTerm.find(:all, :conditions => ["naming_element_id = ?", id])
     sample_texts = SampleText.find(:all, :conditions => ["naming_element_id = ?", id])

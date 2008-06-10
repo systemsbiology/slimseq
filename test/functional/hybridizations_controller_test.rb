@@ -8,9 +8,7 @@ Test::Unit::TestCase.send :include, Test::Unit::AssertSelect
 class HybridizationsController; def rescue_action(e) raise e end; end
 
 class HybridizationsControllerTest < Test::Unit::TestCase
-  fixtures :hybridizations, :samples, :projects,
-           :lab_groups, :chip_types, :organisms, :charge_templates, :charge_sets,
-           :quality_traces
+  fixtures :all
 
   def setup
     @controller = HybridizationsController.new
@@ -47,11 +45,16 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     # use test_new to populate session variables
     get :new
   
-    get :add, :selected_samples => { '1' => '1', '3' => '0',
-                                     '5' => '0', '6' => '0' },
-              :submit_hybridizations => {:hybridization_date => "2006-02-13", 
-                            :charge_set_id => 1,
-                            :charge_template_id => 1}
+    get :add, 
+      :selected_samples => { 
+        samples(:sample1).id.to_s => '1', 
+        samples(:sample3).id.to_s => '0',
+        samples(:sample5).id.to_s => '0',
+        samples(:sample6).id.to_s => '0' 
+      },
+      :submit_hybridizations => {:hybridization_date => "2006-02-13", 
+                                 :charge_set_id => charge_sets(:mouse_jan).id,
+                                 :charge_template_id => charge_templates(:labeling_and_hyb).id}
 
     assert_response :success
     assert_template 'add'
@@ -62,9 +65,9 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     assert_equal 1, @hybridizations.size
     assert_equal Date.new(2006, 2, 13), @hybridizations[0].hybridization_date
     assert_equal 1, @hybridizations[0].chip_number
-    assert_equal 1, @hybridizations[0].sample_id
-    assert_equal 1, @hybridizations[0].charge_set_id
-    assert_equal 1, @hybridizations[0].charge_template_id
+    assert_equal samples(:sample1).id, @hybridizations[0].sample_id
+    assert_equal charge_sets(:mouse_jan).id, @hybridizations[0].charge_set_id
+    assert_equal charge_templates(:labeling_and_hyb).id, @hybridizations[0].charge_template_id
 
     # make sure that only non-selected samples remain in selection list
     # should have 4 rows (header + 3 samples)
@@ -78,11 +81,16 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     # use test_new to populate session variables
     get :new
   
-    get :add, :selected_samples => { '1' => '0', '3' => '0',
-                                     '5' => '1', '6' => '0' },
-              :submit_hybridizations => {:hybridization_date => "2006-09-29", 
-                            :charge_set_id => -1,
-                            :charge_template_id => 1}
+    get :add, 
+      :selected_samples => { 
+        samples(:sample1).id.to_s => '0', 
+        samples(:sample3).id.to_s => '0',
+        samples(:sample5).id.to_s => '1',
+        samples(:sample6).id.to_s => '0' 
+      },
+      :submit_hybridizations => {:hybridization_date => "2006-09-29", 
+                                 :charge_set_id => -1,
+                                 :charge_template_id => charge_templates(:labeling_and_hyb).id}
 
     assert_response :success
     assert_template 'add'
@@ -92,8 +100,8 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     new_charge_set = ChargeSet.find(:first, :order => "id DESC")
     assert_equal "Bob's Stuff", new_charge_set.name
     assert_equal "12345678", new_charge_set.budget
-    assert_equal 2, new_charge_set.charge_period_id
-    assert_equal 1, new_charge_set.lab_group_id
+    assert_equal charge_periods(:february).id, new_charge_set.charge_period_id
+    assert_equal lab_groups(:gorilla_group).id, new_charge_set.lab_group_id
     
     # this should have populated the session[:hybridizations] array
     # with two Hybridization objects containing appropriate info
@@ -101,9 +109,9 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     assert_equal 1, @hybridizations.size
     assert_equal Date.new(2006, 9, 29), @hybridizations[0].hybridization_date
     assert_equal 1, @hybridizations[0].chip_number
-    assert_equal 5, @hybridizations[0].sample_id
+    assert_equal samples(:sample5).id, @hybridizations[0].sample_id
     assert_equal new_charge_set.id, @hybridizations[0].charge_set_id
-    assert_equal 1, @hybridizations[0].charge_template_id
+    assert_equal charge_templates(:labeling_and_hyb).id, @hybridizations[0].charge_template_id
 
     # make sure that only only non-selected samples remain in selection list
     # should have 4 rows (header + 3 samples)
@@ -114,11 +122,16 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     # use test_new to populate session variables
     get :new
   
-    get :add, :selected_samples => { '1' => '0', '3' => '0',
-                                     '5' => '0', '6' => '0' },
-              :submit_hybridizations => {:hybridization_date => "2006-02-13", 
-                            :charge_set_id => 1,
-                            :charge_template_id => 1}
+    get :add,
+      :selected_samples => { 
+        samples(:sample1).id.to_s => '0', 
+        samples(:sample3).id.to_s => '0',
+        samples(:sample5).id.to_s => '0',
+        samples(:sample6).id.to_s => '0' 
+      },
+      :submit_hybridizations => {:hybridization_date => "2006-02-13", 
+                                 :charge_set_id => 1,
+                                 :charge_template_id => 1}
 
     assert_response :success
     assert_template 'add'
@@ -136,8 +149,13 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     # use test_new to populate session variables
     get :new
   
-    get :add, :selected_samples => { '1' => '1', '3' => '0',
-                                     '5' => '0', '6' => '0' },
+    get :add,
+      :selected_samples => { 
+        samples(:sample1).id.to_s => '1', 
+        samples(:sample3).id.to_s => '0',
+        samples(:sample5).id.to_s => '0',
+        samples(:sample6).id.to_s => '0' 
+      },
               :submit_hybridizations => {:hybridization_date => "2006-02-13", 
                             :charge_set_id => 1,
                             :charge_template_id => 1}
@@ -145,10 +163,15 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     assert_response :success
     assert_template 'add'
     
-    get :add, :selected_samples => { '3' => '1', '5' => '0', '6' => '0' },
-              :submit_hybridizations => {:hybridization_date => "2006-02-13", 
-                            :charge_set_id => 1,
-                            :charge_template_id => 1}
+    get :add,
+      :selected_samples => { 
+        samples(:sample3).id.to_s => '1',
+        samples(:sample5).id.to_s => '0',
+        samples(:sample6).id.to_s => '0' 
+      },
+      :submit_hybridizations => {:hybridization_date => "2006-02-13", 
+                                 :charge_set_id => 1,
+                                 :charge_template_id => 1}
                           
     assert_response :success
     assert_template 'add'
@@ -159,12 +182,12 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     assert_equal 2, @hybridizations.size
     assert_equal Date.new(2006, 2, 13), @hybridizations[0].hybridization_date
     assert_equal 1, @hybridizations[0].chip_number
-    assert_equal 1, @hybridizations[0].sample_id
+    assert_equal samples(:sample1).id, @hybridizations[0].sample_id
     assert_equal 1, @hybridizations[0].charge_set_id
     assert_equal 1, @hybridizations[0].charge_template_id
     assert_equal Date.new(2006, 2, 13), @hybridizations[1].hybridization_date
     assert_equal 2, @hybridizations[1].chip_number
-    assert_equal 3, @hybridizations[1].sample_id
+    assert_equal samples(:sample3).id, @hybridizations[1].sample_id
     assert_equal 1, @hybridizations[1].charge_set_id
     assert_equal 1, @hybridizations[1].charge_template_id
 
@@ -342,10 +365,15 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     # enter a new set of hybs
     get :new
 
-    get :add, :selected_samples => { '1' => '1', '2'=>'0', '3' => '0' },
+    get :add, 
+      :selected_samples => { 
+        samples(:sample1).id.to_s => '1', 
+        samples(:sample2).id.to_s => '0',
+        samples(:sample3).id.to_s => '0'
+      },
               :submit_hybridizations => {:hybridization_date => "2006-02-10", 
-                            :charge_set_id => 1,
-                            :charge_template_id => 1}
+                            :charge_set_id => charge_sets(:mouse_jan).id,
+                            :charge_template_id => charge_templates(:labeling_and_hyb).id}
                        
     post :create
 
@@ -387,7 +415,7 @@ class HybridizationsControllerTest < Test::Unit::TestCase
   end
 
   def test_edit
-    get :edit, :id => 1
+    get :edit, :id => hybridizations(:hyb1).id
 
     assert_response :success
     assert_template 'edit'
@@ -397,9 +425,10 @@ class HybridizationsControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => 1, :hybridization => { :hybridization_date => '2006-02-09' }
+    post :update, :id => hybridizations(:hyb1).id,
+      :hybridization => { :hybridization_date => '2006-02-09' }
     
-    hybridization = Hybridization.find(1)
+    hybridization = Hybridization.find( hybridizations(:hyb1).id )
     assert_equal Date.new(2006,2,9), hybridization.hybridization_date
     
     assert_response :redirect
@@ -408,30 +437,33 @@ class HybridizationsControllerTest < Test::Unit::TestCase
 
   def test_update_locked
     # grab the hybridization we're going to use twice
-    hybridization1 = Hybridization.find(1)
-    hybridization2 = Hybridization.find(1)
+    hybridization1 = hybridizations(:hyb1)
+    hybridization2 = hybridizations(:hyb1)
     
     # update it once, which should sucess
-    post :update, :id => 1, :hybridization => { :sample_id => 1, 
-                                                :lock_version => hybridization1.lock_version }
+    post :update, :id => hybridizations(:hyb1).id,
+      :hybridization => { :sample_id => samples(:sample1).id,
+                          :lock_version => hybridization1.lock_version }
 
     # and then update again with stale info, and it should fail
-    post :update, :id => 1, :hybridization => { :sample_id => 3, 
-                                                :lock_version => hybridization2.lock_version }                                               
+    post :update, :id => hybridizations(:hyb1).id,
+      :hybridization => { :sample_id => samples(:sample3).id,
+                          :lock_version => hybridization2.lock_version }                                               
 
     assert_response :success
     assert_template 'edit'
     assert_flash_warning
     
-    assert_equal 1, Hybridization.find(1).sample_id
+    assert_equal samples(:sample1).id,
+      Hybridization.find( hybridizations(:hyb1).id ).sample_id
   end
 
   def test_destroy
-    hybridization = Hybridization.find(1)
+    hybridization = Hybridization.find( hybridizations(:hyb1).id )
     sample_id = hybridization.sample_id
     assert_not_nil hybridization
 
-    post :destroy, :id => 1
+    post :destroy, :id => hybridizations(:hyb1).id
     assert_response :redirect
     assert_redirected_to :action => 'list'
     
@@ -445,21 +477,25 @@ class HybridizationsControllerTest < Test::Unit::TestCase
   end
 
   def test_bulk_destroy
-    sample1_id = Hybridization.find(1).sample_id
-    sample2_id = Hybridization.find(2).sample_id
+    sample1_id = samples(:sample1).id
+    sample2_id = samples(:sample2).id
   
-    post :bulk_handler, :selected_hybridizations => {'1' => '1', '2' => '1'},
-         :commit => "Delete Hybridizations"
+    post :bulk_handler, 
+      :selected_hybridizations => { 
+        hybridizations(:hyb1).id.to_s => '1', 
+        hybridizations(:hyb2).id.to_s => '1',
+      },
+      :commit => "Delete Hybridizations"
     
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
     # assert that destroys have taken place
     assert_raise(ActiveRecord::RecordNotFound) {
-      Hybridization.find(1)
+      Hybridization.find( hybridizations(:hyb1).id )
     }
     assert_raise(ActiveRecord::RecordNotFound) {
-      Hybridization.find(2)
+      Hybridization.find( hybridizations(:hyb2).id )
     }
     
     # assert Samples have been reverted to 'submitted' status
@@ -475,7 +511,11 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     @site_config.update_attributes(:gcos_output_path => "#{RAILS_ROOT}")
     @site_config.save
   
-    post :bulk_handler, :selected_hybridizations => {'1' => '1', '2' => '0'},
+    post :bulk_handler, 
+      :selected_hybridizations => { 
+        hybridizations(:hyb1).id.to_s => '1', 
+        hybridizations(:hyb2).id.to_s => '0',
+      },
          :commit => "Export GCOS Files"
     
     assert_response :redirect
@@ -499,7 +539,11 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     @site_config.update_attributes(:gcos_output_path => "#{RAILS_ROOT}")
     @site_config.save
   
-    post :bulk_handler, :selected_hybridizations => {'1' => '1', '2' => '0'},
+    post :bulk_handler, 
+      :selected_hybridizations => { 
+        hybridizations(:hyb1).id.to_s => '1', 
+        hybridizations(:hyb2).id.to_s => '0',
+      },
          :commit => "Export GCOS Files"
     
     assert_response :redirect
@@ -537,7 +581,11 @@ class HybridizationsControllerTest < Test::Unit::TestCase
     # temporarily make a folder for output traces
     FileUtils.mkdir("#{RAILS_ROOT}/200602")
     
-    post :bulk_handler, :selected_hybridizations => {'1' => '1', '2' => '0'},
+    post :bulk_handler, 
+      :selected_hybridizations => { 
+        hybridizations(:hyb1).id.to_s => '1', 
+        hybridizations(:hyb2).id.to_s => '0',
+      },
          :commit => "Export Bioanalyzer Images"
     
     assert_response :redirect

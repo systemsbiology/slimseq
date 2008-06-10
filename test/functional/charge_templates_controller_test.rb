@@ -58,7 +58,7 @@ class ChargeTemplatesControllerTest < Test::Unit::TestCase
   end
 
   def test_edit
-    get :edit, :id => 1
+    get :edit, :id => charge_templates(:labeling_and_hyb).id
 
     assert_response :success
     assert_template 'edit'
@@ -68,40 +68,41 @@ class ChargeTemplatesControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => 1
+    post :update, :id => charge_templates(:labeling_and_hyb).id
     assert_response :redirect
     assert_redirected_to :action => 'list'
   end
 
   def test_update_locked
     # grab the charge template we're going to use twice
-    template1 = ChargeTemplate.find(1)
-    template2 = ChargeTemplate.find(1)
+    template1 = charge_templates(:labeling_and_hyb)
+    template2 = charge_templates(:labeling_and_hyb)
     
     # update it once, which should sucess
-    post :update, :id => 1, :charge_template => { :name => "template1", 
+    post :update, :id => charge_templates(:labeling_and_hyb).id, :charge_template => { :name => "template1", 
                                                 :lock_version => template1.lock_version }
 
     # and then update again with stale info, and it should fail
-    post :update, :id => 1, :charge_template => { :name => "template2", 
+    post :update, :id => charge_templates(:labeling_and_hyb).id, :charge_template => { :name => "template2", 
                                                 :lock_version => template2.lock_version }                                               
 
     assert_response :success                                                
     assert_template 'edit'
     assert_flash_warning
     
-    assert_equal "template1", ChargeTemplate.find(1).name
+    assert_equal "template1",
+      ChargeTemplate.find( charge_templates(:labeling_and_hyb).id ).name
   end
 
   def test_destroy
-    assert_not_nil ChargeTemplate.find(1)
+    assert_not_nil ChargeTemplate.find( charge_templates(:not_very_useful_template).id )
 
-    post :destroy, :id => 3
+    post :destroy, :id => charge_templates(:not_very_useful_template).id
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      ChargeTemplate.find(3)
+      ChargeTemplate.find( charge_templates(:not_very_useful_template).id )
     }
   end
 end

@@ -54,7 +54,7 @@ class NamingSchemesControllerTest < Test::Unit::TestCase
   end
 
   def test_rename
-    get :rename, :id => 1
+    get :rename, :id => naming_schemes(:yeast_scheme).id
 
     assert_response :success
     assert_template 'rename'
@@ -64,52 +64,52 @@ class NamingSchemesControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => 1
+    post :update, :id => naming_schemes(:yeast_scheme).id
     assert_response :redirect
     assert_redirected_to :action => 'list'
   end
 
   def test_update_locked
     # grab the chip_type we're going to use twice
-    naming_scheme1 = NamingScheme.find(1)
-    naming_scheme2 = NamingScheme.find(1)
+    naming_scheme1 = naming_schemes(:yeast_scheme)
+    naming_scheme2 = naming_schemes(:yeast_scheme)
     
     # update it once, which should sucess
-    post :update, :id => 1, :naming_scheme => { :name => "Updated Name 1", 
+    post :update, :id => naming_schemes(:yeast_scheme).id, :naming_scheme => { :name => "Updated Name 1", 
                                             :lock_version => naming_scheme1.lock_version }
 
     # and then update again with stale info, and it should fail
-    post :update, :id => 1, :naming_scheme => { :name => "Updated Name 2", 
+    post :update, :id => naming_schemes(:yeast_scheme).id, :naming_scheme => { :name => "Updated Name 2", 
                                             :lock_version => naming_scheme2.lock_version }                                               
 
     assert_response :success                                                
     assert_template 'rename'
     assert_flash_warning
     
-    assert_equal "Updated Name 1", NamingScheme.find(1).name
+    assert_equal "Updated Name 1", NamingScheme.find( naming_schemes(:yeast_scheme).id ).name
   end
 
   def test_destroy_no_associated_transactions
-    assert_not_nil NamingScheme.find(1)
+    assert_not_nil NamingScheme.find( naming_schemes(:fly_scheme).id )
 
-    post :destroy, :id => 2
+    post :destroy, :id => naming_schemes(:fly_scheme).id
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      NamingScheme.find(2)
+      NamingScheme.find( naming_schemes(:fly_scheme).id )
     }
   end
   
   def test_destroy_with_associated_transactions
-    assert_not_nil NamingScheme.find(1)
+    assert_not_nil NamingScheme.find( naming_schemes(:yeast_scheme).id )
 
-    post :destroy, :id => 1
+    post :destroy, :id => naming_schemes(:yeast_scheme).id
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      NamingScheme.find(1)
+      NamingScheme.find( naming_schemes(:yeast_scheme).id )
     }
   end
 

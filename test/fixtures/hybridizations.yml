@@ -1,17 +1,15 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-hyb1:
-  id: 1
+--- 
+hyb1: 
+  sample: sample2
+  charge_template: labeling_and_hyb
+  charge_set: mouse_jan
   hybridization_date: 2006-02-10
+  raw_data_path: /tmp/20060210_01_Old.CEL
   chip_number: 1
-  charge_template_id: 1
-  charge_set_id: 1
-  sample_id: 2
-  raw_data_path: "/tmp/20060210_01_Old.CEL"
-hyb2:
-  id: 2
+hyb2: 
+  sample: sample4
+  charge_template: labeling_and_hyb
+  charge_set: mouse_jan
   hybridization_date: 2006-02-10
+  raw_data_path: /tmp/20060210_02_Very Very Old.CEL
   chip_number: 2
-  charge_template_id: 1
-  charge_set_id: 1
-  sample_id: 4
-  raw_data_path: "/tmp/20060210_02_Very Very Old.CEL"

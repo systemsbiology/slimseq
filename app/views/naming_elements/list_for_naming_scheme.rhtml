@@ -35,7 +35,8 @@
         <% end %>
     </td>
     <td>
-        <% if naming_element.dependent_element_id > 0%>
+        <% if naming_element.dependent_element_id != nil &&
+              naming_element.dependent_element_id > 0%>
             <%=h NamingElement.find(naming_element.dependent_element_id).name %>
         <% end %>
     </td>

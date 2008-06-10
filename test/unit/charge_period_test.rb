@@ -8,7 +8,7 @@ class ChargePeriodTest < Test::Unit::TestCase
                        "3 charge set(s)\n" +
                        "Are you sure you want to destroy it?"
   
-    period = ChargePeriod.find(1)   
+    period = ChargePeriod.find( charge_periods(:january) )   
     assert_equal expected_warning, period.destroy_warning
   end
 end

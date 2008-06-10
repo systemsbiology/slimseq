@@ -1,6 +1,5 @@
-yeast_scheme:
-  id: 1
+--- 
+yeast_scheme: 
   name: Yeast Scheme
-fly_scheme:
-  id: 2
+fly_scheme: 
   name: Fly Scheme

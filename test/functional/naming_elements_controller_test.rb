@@ -17,7 +17,7 @@ class NamingElementsControllerTest < Test::Unit::TestCase
   end
 
   def test_list_for_naming_scheme_with_naming_scheme_param
-    get :list_for_naming_scheme, :naming_scheme_id => 1
+    get :list_for_naming_scheme, :naming_scheme_id => naming_schemes(:yeast_scheme).id
 
     assert_response :success
     assert_template 'list_for_naming_scheme'
@@ -27,7 +27,7 @@ class NamingElementsControllerTest < Test::Unit::TestCase
 
   def test_list_for_naming_scheme_with_naming_scheme_in_session
     # use to set session[:naming_scheme_id]
-    get :list_for_naming_scheme, :naming_scheme_id => 1
+    get :list_for_naming_scheme, :naming_scheme_id => naming_schemes(:yeast_scheme).id
 
     get :list_for_naming_scheme
 
@@ -66,7 +66,7 @@ class NamingElementsControllerTest < Test::Unit::TestCase
   end
 
   def test_edit
-    get :edit, :id => 1
+    get :edit, :id => naming_elements(:strain).id
 
     assert_response :success
     assert_template 'edit'
@@ -76,7 +76,7 @@ class NamingElementsControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => 1, :naming_element => { 
+    post :update, :id => naming_elements(:strain).id, :naming_element => { 
                                              :name => "Strain",
                                              :element_order => 1,
                                              :group_element => true,
@@ -91,14 +91,14 @@ class NamingElementsControllerTest < Test::Unit::TestCase
   end
 
   def test_destroy
-    assert_not_nil NamingElement.find(1)
+    assert_not_nil NamingElement.find( naming_elements(:strain).id )
 
-    post :destroy, :id => 1
+    post :destroy, :id => naming_elements(:strain).id
     assert_response :redirect
     assert_redirected_to :action => 'list_for_naming_scheme'
     
     assert_raise(ActiveRecord::RecordNotFound) {
-      NamingElement.find(1)
+      NamingElement.find( naming_elements(:strain).id )
     }
   end
 end

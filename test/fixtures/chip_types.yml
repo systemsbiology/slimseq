@@ -1,13 +1,11 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-mouse:
-  id: 1
+--- 
+mouse: 
+  organism: first
   name: Mouse 430 2.0
+  array_platform: affy
   short_name: Mouse430_2
-  organism_id: 1
-  array_platform: affy
-alligator:
-  id: 2
+alligator: 
+  organism: another
   name: Alligator 670 2.0
-  short_name: Gator670_2
-  organism_id: 2
   array_platform: affy
+  short_name: Gator670_2

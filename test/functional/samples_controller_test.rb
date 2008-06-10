@@ -93,7 +93,8 @@ class SamplesControllerTest < Test::Unit::TestCase
     get :new
   
     get :add, :add_samples => {:submission_date => "2006-02-12", :number => 2,
-                            :project_id => 1, :chip_type_id => 2,
+                            :project_id => projects(:first).id,
+                            :chip_type_id => chip_types(:alligator).id,
                             :sbeams_user => "Bob"}
     
     # this should have populated the session[:samples] array
@@ -101,14 +102,14 @@ class SamplesControllerTest < Test::Unit::TestCase
     @samples = session[:samples]
     assert_equal 2, @samples.size
     assert_equal Date.new(2006, 2, 12), @samples[0].submission_date
-    assert_equal 1, @samples[0].project_id
-    assert_equal 2, @samples[0].chip_type_id
-    assert_equal 2, @samples[0].organism_id
+    assert_equal projects(:first).id, @samples[0].project_id
+    assert_equal chip_types(:alligator).id, @samples[0].chip_type_id
+    assert_equal organisms(:another).id, @samples[0].organism_id
     assert_equal "Bob", @samples[0].sbeams_user
     assert_equal Date.new(2006, 2, 12), @samples[1].submission_date
-    assert_equal 1, @samples[1].project_id
-    assert_equal 2, @samples[1].chip_type_id   
-    assert_equal 2, @samples[1].organism_id
+    assert_equal projects(:first).id, @samples[1].project_id
+    assert_equal chip_types(:alligator).id, @samples[1].chip_type_id   
+    assert_equal organisms(:another).id, @samples[1].organism_id
     assert_equal "Bob", @samples[1].sbeams_user
     
     assert_response :success
@@ -128,20 +129,21 @@ class SamplesControllerTest < Test::Unit::TestCase
     get :new
   
     get :add, :add_samples => {:submission_date => "2006-02-12", :number => 2,
-                            :project_id => 1, :chip_type_id => 2}
+                            :project_id => projects(:first).id,
+                            :chip_type_id => chip_types(:alligator).id}
     
     # this should have populated the session[:samples] array
     # with two Sample objects containing appropriate info
     @samples = session[:samples]
     assert_equal 2, @samples.size
     assert_equal Date.new(2006, 2, 12), @samples[0].submission_date
-    assert_equal 1, @samples[0].project_id
-    assert_equal 2, @samples[0].chip_type_id
-    assert_equal 2, @samples[0].organism_id
+    assert_equal projects(:first).id, @samples[0].project_id
+    assert_equal chip_types(:alligator).id, @samples[0].chip_type_id
+    assert_equal organisms(:another).id, @samples[0].organism_id
     assert_equal Date.new(2006, 2, 12), @samples[1].submission_date
-    assert_equal 1, @samples[1].project_id
-    assert_equal 2, @samples[1].chip_type_id   
-    assert_equal 2, @samples[1].organism_id
+    assert_equal projects(:first).id, @samples[1].project_id
+    assert_equal chip_types(:alligator).id, @samples[1].chip_type_id   
+    assert_equal organisms(:another).id, @samples[1].organism_id
     
     assert_response :success
     assert_template 'add'
@@ -154,8 +156,9 @@ class SamplesControllerTest < Test::Unit::TestCase
     login_as_admin
     get :new
   
-    get :add, :submission_date => '2006-02-12', :project_id => 1,
-        :chip_type_id => 2
+    get :add, :submission_date => '2006-02-12',
+        :project_id => projects(:first).id,
+        :chip_type_id => chip_types(:alligator).id
     
     # no samples should have been added
     @samples = session[:samples]
@@ -175,22 +178,24 @@ class SamplesControllerTest < Test::Unit::TestCase
     get :new
   
     get :add, :add_samples => {:submission_date => "2006-02-12", :number => 2,
-                               :project_id => -1, :chip_type_id => 2,
+                               :project_id => -1,
+                               :chip_type_id => chip_types(:alligator).id,
                                :sbeams_user => "Bob"},
               :project => {:name => "Test Project",
-                           :budget => "12340001", :lab_group_id => 2}
+                           :budget => "12340001",
+                           :lab_group_id => lab_groups(:alligator_group).id}
     
     # this should have populated the session[:samples] array
     # with two Sample objects containing appropriate info
     @samples = session[:samples]
     assert_equal 2, @samples.size
     assert_equal Date.new(2006, 2, 12), @samples[0].submission_date
-    assert_equal 2, @samples[0].chip_type_id
-    assert_equal 2, @samples[0].organism_id
+    assert_equal chip_types(:alligator).id, @samples[0].chip_type_id
+    assert_equal organisms(:another).id, @samples[0].organism_id
     assert_equal "Bob", @samples[0].sbeams_user
     assert_equal Date.new(2006, 2, 12), @samples[1].submission_date
-    assert_equal 2, @samples[1].chip_type_id   
-    assert_equal 2, @samples[1].organism_id
+    assert_equal chip_types(:alligator).id, @samples[1].chip_type_id   
+    assert_equal organisms(:another).id, @samples[1].organism_id
     assert_equal "Bob", @samples[1].sbeams_user
 
     # there should also be a new project with the info
@@ -200,7 +205,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     new_project = Project.find(:first, :order => "id DESC")
     assert_equal "Test Project", new_project.name
     assert_equal "12340001", new_project.budget
-    assert_equal 2, new_project.lab_group_id
+    assert_equal lab_groups(:alligator_group).id, new_project.lab_group_id
 
     assert_response :success
     assert_template 'add'
@@ -214,28 +219,29 @@ class SamplesControllerTest < Test::Unit::TestCase
 
     # select a naming scheme for current user
     current_user = User.find(@request.session[:user_id])
-    current_user.current_naming_scheme_id = 1
+    current_user.current_naming_scheme_id = naming_schemes(:yeast_scheme).id
     current_user.save
 
     # use new to populate session variables
     get :new
   
     get :add, :add_samples => {:submission_date => "2006-02-12", :number => 2,
-                            :project_id => 1, :chip_type_id => 2,
+                            :project_id => projects(:first).id,
+                            :chip_type_id => chip_types(:alligator).id,
                             :sbeams_user => "Bob"}
     # this should have populated the session[:samples] array
     # with two Sample objects containing appropriate info
     @samples = session[:samples]
     assert_equal 2, @samples.size
     assert_equal Date.new(2006, 2, 12), @samples[0].submission_date
-    assert_equal 1, @samples[0].project_id
-    assert_equal 2, @samples[0].chip_type_id
-    assert_equal 2, @samples[0].organism_id
+    assert_equal projects(:first).id, @samples[0].project_id
+    assert_equal chip_types(:alligator).id, @samples[0].chip_type_id
+    assert_equal organisms(:another).id, @samples[0].organism_id
     assert_equal "Bob", @samples[0].sbeams_user
     assert_equal Date.new(2006, 2, 12), @samples[1].submission_date
-    assert_equal 1, @samples[1].project_id
-    assert_equal 2, @samples[1].chip_type_id   
-    assert_equal 2, @samples[1].organism_id
+    assert_equal projects(:first).id, @samples[1].project_id
+    assert_equal chip_types(:alligator).id, @samples[1].chip_type_id   
+    assert_equal organisms(:another).id, @samples[1].organism_id
     assert_equal "Bob", @samples[1].sbeams_user
     
     assert_response :success
@@ -262,13 +268,13 @@ class SamplesControllerTest < Test::Unit::TestCase
             :short_sample_name => 'HlthySmp',
             :sample_name => 'Healthy_Sample',
             :sample_group_name => 'Healthy',
-            :organism_id => '1',
+            :organism_id => organisms(:another).id,
             }
     smpl2 = {:submission_date => '2006-02-12',
             :short_sample_name => 'DisSmpl',
             :sample_name => 'Disease_Sample',
             :sample_group_name => 'Disease',
-            :organism_id => '1',
+            :organism_id => organisms(:another).id,
             }  
 
     post :create, :'sample-0' => smpl1, :'sample-1' => smpl2
@@ -293,19 +299,19 @@ class SamplesControllerTest < Test::Unit::TestCase
 
     smpl1 = {:submission_date => '2006-02-12',
             :short_sample_name => 'HlthySmp',
-            :organism_id => '1',
+            :organism_id => organisms(:first).id,
             }
-    smpl1_schemed = {:'Strain' => 1,
-                    :'Perturbation' => 3,
-                    :'Perturbation Time' => 6,
+    smpl1_schemed = {:'Strain' => naming_terms(:wild_type).id,
+                    :'Perturbation' => naming_terms(:heat).id,
+                    :'Perturbation Time' => naming_terms(:time024).id,
                     :'Subject Number' => '42231',
                     :'Replicate' => 'A'
                     }
     smpl2 = {:submission_date => '2006-02-12',
             :short_sample_name => 'DisSmpl',
-            :organism_id => '1',
+            :organism_id => organisms(:first).id,
             }  
-    smpl2_schemed = {:'Strain' => 2,
+    smpl2_schemed = {:'Strain' => naming_terms(:mutant).id,
                     :'Perturbation' => -1,
                     :'Subject Number' => '42643',
                     :'Replicate' => 'A'
@@ -353,21 +359,23 @@ class SamplesControllerTest < Test::Unit::TestCase
 
     # add one sample that will have a duplicate submission_date/number  
     get :add, :add_samples => {:submission_date => '2006-02-10', :number => 1,
-                            :project_id => 1, :chip_type_id => 2}
+                            :project_id => projects(:first).id,
+                            :chip_type_id => chip_types(:alligator).id}
     # add another sample with unique submission_date/number
     get :add, :add_samples => {:submission_date => '2006-02-12', :number => 1,
-                            :project_id => 1, :chip_type_id => 2}
+                            :project_id => projects(:first).id,
+                            :chip_type_id => chip_types(:alligator).id}
     
     # leave out sample name
     smpl1 = {:short_sample_name => 'HlthySmpl',
             :sample_name => 'Healthy_Sample',
             :sample_group_name => 'Healthy',
-            :organism_id => '2'
+            :organism_id => organisms(:another).id
             }
     smpl2 = {:short_sample_name => 'Hty',
             :sample_name => 'Healthy_Sample',
             :sample_group_name => 'Health',
-            :organism_id => '2'
+            :organism_id => organisms(:another).id
             }  
                        
     post :create, :'sample-0' => smpl1, :'sample-1' => smpl2
@@ -405,7 +413,7 @@ class SamplesControllerTest < Test::Unit::TestCase
 
   def test_edit_without_naming_scheme_as_admin
     login_as_admin
-    get :edit, :id => 1
+    get :edit, :id => samples(:sample1).id
 
     assert_response :success
     assert_template 'edit'
@@ -422,7 +430,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     current_user.current_naming_scheme_id = 1
     current_user.save
     
-    get :edit, :id => 1
+    get :edit, :id => samples(:sample1).id
 
     assert_response :success
     assert_template 'edit'
@@ -433,10 +441,10 @@ class SamplesControllerTest < Test::Unit::TestCase
 
   def test_update_without_naming_scheme_as_admin
     login_as_admin
-    post :update, :id => 1, :sample => { :submission_date => '2006-02-09',
+    post :update, :id => samples(:sample1).id, :sample => { :submission_date => '2006-02-09',
                                          :sample_group_name => 'new group' }
     
-    sample = Sample.find(1)
+    sample = Sample.find( samples(:sample1).id )
     assert_equal Date.new(2006,2,9), sample.submission_date
     assert_equal "new group", sample.sample_group_name
     
@@ -449,26 +457,32 @@ class SamplesControllerTest < Test::Unit::TestCase
 
     # select a naming scheme for current user
     current_user = User.find(@request.session[:user_id])
-    current_user.current_naming_scheme_id = 1
+    current_user.current_naming_scheme_id = naming_schemes(:yeast_scheme).id
     current_user.save
     
-    post :update, :id => 6, :sample => { :submission_date => '2006-02-09' },
-                            :'sample-0_schemed_name' => { :Strain => 1,
-                                                          :Perturbation => 3,
-                                                          :'Perturbation Time' => 6,
-                                                          :Replicate => 7,
-                                                          :'Subject Number' => 32235
-                                                         } 
+    post :update, :id => samples(:sample6).id,
+      :sample => { :submission_date => '2006-02-09' },
+      :'sample-0_schemed_name' => { :'Strain' => naming_terms(:wild_type).id,
+                                    :'Perturbation' => naming_terms(:heat).id,
+                                    :'Perturbation Time' => naming_terms(:time024).id,
+                                    :Replicate => naming_terms(:replicateA).id,
+                                    :'Subject Number' => 32235
+                                  } 
     
-    sample = Sample.find(6)
+    sample = Sample.find( samples(:sample6).id )
     assert_equal Date.new(2006,2,9), sample.submission_date
     assert_equal "wt_HT_024_32235", sample.sample_name
     assert_equal "wt_HT_024", sample.sample_group_name
     
-    sample_terms = SampleTerm.find(:all, :conditions => ["sample_id = ?", 6],
-                                   :order => "term_order ASC")
+    sample_terms = SampleTerm.find(:all, 
+                       :conditions => ["sample_id = ?", samples(:sample6).id],
+                       :order => "term_order ASC")
     assert_equal 4, sample_terms.size
-    expected_terms = [1,3,6,7]
+    expected_terms = [naming_terms(:wild_type).id,
+                      naming_terms(:heat).id,
+                      naming_terms(:time024).id,
+                      naming_terms(:replicateA).id
+                     ]
     for i in 0..expected_terms.size-1
       assert_equal expected_terms[i], sample_terms[i].naming_term_id
     end
@@ -480,55 +494,57 @@ class SamplesControllerTest < Test::Unit::TestCase
   def test_update_locked_without_naming_scheme_as_admin
     login_as_admin
     # grab the sample we're going to use twice
-    sample1 = Sample.find(1)
-    sample2 = Sample.find(1)
+    sample1 = Sample.find( samples(:sample1).id )
+    sample2 = Sample.find( samples(:sample1).id )
     
     # update it once, which should sucess
-    post :update, :id => 1, :sample => { :sample_name => "sample1", 
+    post :update, :id => samples(:sample1).id, :sample => { :sample_name => "sample1", 
                                                 :lock_version => sample1.lock_version }
 
     # and then update again with stale info, and it should fail
-    post :update, :id => 1, :sample => { :sample_name => "sample2", 
+    post :update, :id => samples(:sample1).id, :sample => { :sample_name => "sample2", 
                                                 :lock_version => sample2.lock_version }                                               
 
     assert_response :success                                                
     assert_template 'edit'
     assert_flash_warning
     
-    assert_equal "sample1", Sample.find(1).sample_name
+    assert_equal "sample1", Sample.find( samples(:sample1).id ).sample_name
   end
 
   def test_destroy_submitted_sample_as_admin
     login_as_admin
-    assert_not_nil Sample.find(1)
+    assert_not_nil Sample.find( samples(:sample1).id )
 
     @request.env["HTTP_REFERER"] = "/samples/list"
-    post :destroy, :id => 1
+    post :destroy, :id => samples(:sample1).id
     assert_response :redirect
     assert_redirected_to "samples/list"
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      Sample.find(1)
+      Sample.find( samples(:sample1).id )
     }
   end
 
   def test_destroy_hybridized_sample_as_admin
     login_as_admin
-    assert_not_nil Sample.find(2)
+    assert_not_nil Sample.find( samples(:sample2).id )
 
     @request.env["HTTP_REFERER"] = "/samples/list"
-    post :destroy, :id => 2
+    post :destroy, :id => samples(:sample2).id
     assert_response :redirect
     assert_redirected_to "samples/list"
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      Sample.find(2)
+      Sample.find( samples(:sample2).id )
     }
   end
 
   def test_bulk_destroy
     login_as_admin
-    post :bulk_destroy, :selected_samples => {'1' => '1', '2' => '1'},
+    post :bulk_destroy, :selected_samples => {
+                                              samples(:sample1).id => '1',
+                                              samples(:sample2).id => '1'},
          :commit => "Delete Samples"
     
     assert_response :redirect
@@ -536,10 +552,10 @@ class SamplesControllerTest < Test::Unit::TestCase
 
     # assert that destroys have taken place
     assert_raise(ActiveRecord::RecordNotFound) {
-      Sample.find(1)
+      Sample.find( samples(:sample1).id )
     }
     assert_raise(ActiveRecord::RecordNotFound) {
-      Sample.find(2)
+      Sample.find( samples(:sample2).id )
     }
   end
 
@@ -548,10 +564,13 @@ class SamplesControllerTest < Test::Unit::TestCase
     login_as_admin
     
     post :submit_traces, :commit => 'Request Labeling',
-                         :selected_traces => {'1' => '1', '2' => '1'}
-
-    # for some reason a warning field, albeit empty, is created
-    assert_empty_flash_warning
+      :selected_traces => {
+      quality_traces(:quality_trace_00001).id => '1',
+      quality_traces(:quality_trace_00002).id => '1'
+    }
+     
+    # flash warning doesn't show up as admin for some reason
+    #assert_no_flash_warning
     assert_response :success
     assert_template 'new_from_traces'
   end
@@ -561,7 +580,11 @@ class SamplesControllerTest < Test::Unit::TestCase
     login_as_admin
     
     post :submit_traces, :commit => 'Request Labeling',
-                         :selected_traces => {'1' => '1', '2' => '1', '10' => '1'}
+                         :selected_traces => {
+      quality_traces(:quality_trace_00001).id => '1',
+      quality_traces(:quality_trace_00002).id => '1',
+      quality_traces(:quality_trace_00010).id => '1'
+    }
 
     assert_flash_warning
     assert_response :success
@@ -578,9 +601,9 @@ class SamplesControllerTest < Test::Unit::TestCase
     test_submit_traces_request_labeling_total_RNA_only_as_admin
               
     post :create_from_traces, :add_samples => {:submission_date => '2006-11-29',
-                                               :chip_type_id => 1,
+                                               :chip_type_id => chip_types(:mouse).id,
                                                :sbeams_user => 'janderson',
-                                               :project_id => 1},
+                                               :project_id => projects(:first).id},
                               :'sample-0' => {:short_sample_name => 'wA',
                                               :sample_name => 'WT_A',
                                               :sample_group_name => 'WT'},
@@ -603,12 +626,15 @@ class SamplesControllerTest < Test::Unit::TestCase
     login_as_admin
 
     post :submit_traces, :commit => 'Request Labeling',
-                         :selected_traces => {'6' => '1', '7' => '1'}
+                         :selected_traces => {
+                               quality_traces(:quality_trace_00006).id => '1',
+                               quality_traces(:quality_trace_00007).id => '1'
+                              }
     
     post :create_from_traces, :add_samples => {:submission_date => '2006-11-28',
-                                               :chip_type_id => 1,
+                                               :chip_type_id => chip_types(:mouse).id,
                                                :sbeams_user => 'janderson',
-                                               :project_id => 1},
+                                               :project_id => projects(:first).id},
                               :'sample-0' => {:short_sample_name => 'c1',
                                               :sample_name => 'Control_1',
                                               :sample_group_name => 'con'},
@@ -617,8 +643,12 @@ class SamplesControllerTest < Test::Unit::TestCase
                                               :sample_group_name => 'con'}
         
     post :submit_traces, :commit => 'Request Hybridization',
-                         :selected_traces => {'10' => '1', '14' => '1',
-                                              '11' => '1', '15' => '1'}
+         :selected_traces => {
+                               quality_traces(:quality_trace_00010).id => '1',
+                               quality_traces(:quality_trace_00014).id => '1',
+                               quality_traces(:quality_trace_00011).id => '1',
+                               quality_traces(:quality_trace_00015).id => '1'
+                             }
 
     assert_response :success
     assert_template 'match_traces'
@@ -635,18 +665,20 @@ class SamplesControllerTest < Test::Unit::TestCase
     num_samples = Sample.count
     
     # find samples that were created
-    s1 = Sample.find(:first, :conditions => ["starting_quality_trace_id = 6"])
-    s2 = Sample.find(:first, :conditions => ["starting_quality_trace_id = 7"])
+    s1 = Sample.find(:first, :conditions => ["starting_quality_trace_id = ?",
+      quality_traces(:quality_trace_00006).id])
+    s2 = Sample.find(:first, :conditions => ["starting_quality_trace_id = ?",
+      quality_traces(:quality_trace_00007).id])
     
     post :submit_matched_traces, :num_samples => '2',
-                                 :'sample-0' => {:starting_quality_trace_id => '6',
-                                                 :amplified_quality_trace_id => '10',
-                                                 :fragmented_quality_trace_id => '14',
-                                                 :id => s1.id},
-                                 :'sample-1' => {:starting_quality_trace_id => '7',
-                                                 :amplified_quality_trace_id => '11',
-                                                 :fragmented_quality_trace_id => '15',
-                                                 :id => s2.id}
+           :'sample-0' => {:starting_quality_trace_id => quality_traces(:quality_trace_00006).id,
+                           :amplified_quality_trace_id => quality_traces(:quality_trace_00010).id,
+                           :fragmented_quality_trace_id => quality_traces(:quality_trace_00014).id,
+                           :id => s1.id},
+           :'sample-1' => {:starting_quality_trace_id => quality_traces(:quality_trace_00007).id,
+                           :amplified_quality_trace_id => quality_traces(:quality_trace_00011).id,
+                           :fragmented_quality_trace_id => quality_traces(:quality_trace_00015).id,
+                           :id => s2.id}
 
     assert_response :redirect
     assert_redirected_to :action => 'show'
@@ -655,12 +687,14 @@ class SamplesControllerTest < Test::Unit::TestCase
     assert_equal num_samples, Sample.count
     
     # verify that the samples are now tagged with the correct trace ids
-    s1 = Sample.find(:first, :conditions => ["starting_quality_trace_id = 6"])
-    s2 = Sample.find(:first, :conditions => ["starting_quality_trace_id = 7"])
-    assert_equal 10, s1.amplified_quality_trace_id
-    assert_equal 14, s1.fragmented_quality_trace_id
-    assert_equal 11, s2.amplified_quality_trace_id
-    assert_equal 15, s2.fragmented_quality_trace_id
+    s1 = Sample.find(:first, :conditions => ["starting_quality_trace_id = ?",
+      quality_traces(:quality_trace_00006).id])
+    s2 = Sample.find(:first, :conditions => ["starting_quality_trace_id = ?",
+      quality_traces(:quality_trace_00007).id])
+    assert_equal quality_traces(:quality_trace_00010).id, s1.amplified_quality_trace_id
+    assert_equal quality_traces(:quality_trace_00014).id, s1.fragmented_quality_trace_id
+    assert_equal quality_traces(:quality_trace_00011).id, s2.amplified_quality_trace_id
+    assert_equal quality_traces(:quality_trace_00015).id, s2.fragmented_quality_trace_id
   end
 
   # choose a set of traces (total RNA/cRNA/fragmented),
@@ -669,7 +703,10 @@ class SamplesControllerTest < Test::Unit::TestCase
     login_as_admin
     
     post :submit_traces, :commit => 'Request Hybridization',
-                         :selected_traces => {'6' => '1', '10' => '1', '14' => '1'}
+           :selected_traces => {
+                                quality_traces(:quality_trace_00006).id => '1',
+                                quality_traces(:quality_trace_00010).id => '1',
+                                quality_traces(:quality_trace_00014).id => '1'}
 
     assert_response :success
     assert_template 'match_traces'
@@ -690,10 +727,10 @@ class SamplesControllerTest < Test::Unit::TestCase
     test_submit_traces_request_hybridization_as_admin
     
     post :submit_matched_traces, :num_samples => '1',
-                                 :'sample-0' => {:starting_quality_trace_id => '6',
-                                                 :amplified_quality_trace_id => '10',
-                                                 :fragmented_quality_trace_id => '14',
-                                                 :id => '0'}
+           :'sample-0' => {:starting_quality_trace_id => quality_traces(:quality_trace_00006).id,
+                           :amplified_quality_trace_id => quality_traces(:quality_trace_00010).id,
+                           :fragmented_quality_trace_id => quality_traces(:quality_trace_00014).id,
+                           :id => '0'}
     
     assert_response :success
     assert_template 'new_from_traces'
@@ -711,9 +748,9 @@ class SamplesControllerTest < Test::Unit::TestCase
     test_submit_matched_traces_from_hybridization_request_as_admin
               
     post :create_from_traces, :add_samples => {:submission_date => '2006-11-29',
-                                               :chip_type_id => 1,
+                                               :chip_type_id => chip_types(:mouse).id,
                                                :sbeams_user => 'janderson',
-                                               :project_id => 1},
+                                               :project_id => projects(:first).id},
                               :'sample-0' => {:short_sample_name => 'c1',
                                               :sample_name => 'Control_1',
                                               :sample_group_name => 'con'}
@@ -733,7 +770,11 @@ class SamplesControllerTest < Test::Unit::TestCase
     login_as_admin
     
     post :submit_traces, :commit => 'Match to Hybridized Samples',
-                         :selected_traces => {'6' => '1', '10' => '1', '14' => '1'}
+           :selected_traces => {
+                                quality_traces(:quality_trace_00006).id => '1',
+                                quality_traces(:quality_trace_00010).id => '1',
+                                quality_traces(:quality_trace_00014).id => '1'
+                               }
 
     assert_response :success
     assert_template 'match_traces'
@@ -823,7 +864,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     get :new
   
     get :add, :add_samples => {:submission_date => "2006-02-12", :number => 2,
-                            :project_id => 1, :chip_type_id => 2,
+                            :project_id => projects(:first).id, :chip_type_id => chip_types(:alligator).id,
                             :sbeams_user => "Bob"}
     
     # this should have populated the session[:samples] array
@@ -831,14 +872,14 @@ class SamplesControllerTest < Test::Unit::TestCase
     @samples = session[:samples]
     assert_equal 2, @samples.size
     assert_equal Date.new(2006, 2, 12), @samples[0].submission_date
-    assert_equal 1, @samples[0].project_id
-    assert_equal 2, @samples[0].chip_type_id
-    assert_equal 2, @samples[0].organism_id
+    assert_equal projects(:first).id, @samples[0].project_id
+    assert_equal chip_types(:alligator).id, @samples[0].chip_type_id
+    assert_equal organisms(:another).id, @samples[0].organism_id
     assert_equal "Bob", @samples[0].sbeams_user
     assert_equal Date.new(2006, 2, 12), @samples[1].submission_date
-    assert_equal 1, @samples[1].project_id
-    assert_equal 2, @samples[1].chip_type_id   
-    assert_equal 2, @samples[1].organism_id
+    assert_equal projects(:first).id, @samples[1].project_id
+    assert_equal chip_types(:alligator).id, @samples[1].chip_type_id   
+    assert_equal organisms(:another).id, @samples[1].organism_id
     assert_equal "Bob", @samples[1].sbeams_user
     
     assert_response :success
@@ -858,20 +899,20 @@ class SamplesControllerTest < Test::Unit::TestCase
     get :new
   
     get :add, :add_samples => {:submission_date => "2006-02-12", :number => 2,
-                            :project_id => 1, :chip_type_id => 2}
+                            :project_id => projects(:first).id, :chip_type_id => chip_types(:alligator).id}
     
     # this should have populated the session[:samples] array
     # with two Sample objects containing appropriate info
     @samples = session[:samples]
     assert_equal 2, @samples.size
     assert_equal Date.new(2006, 2, 12), @samples[0].submission_date
-    assert_equal 1, @samples[0].project_id
-    assert_equal 2, @samples[0].chip_type_id
-    assert_equal 2, @samples[0].organism_id
+    assert_equal projects(:first).id, @samples[0].project_id
+    assert_equal chip_types(:alligator).id, @samples[0].chip_type_id
+    assert_equal organisms(:another).id, @samples[0].organism_id
     assert_equal Date.new(2006, 2, 12), @samples[1].submission_date
-    assert_equal 1, @samples[1].project_id
-    assert_equal 2, @samples[1].chip_type_id   
-    assert_equal 2, @samples[1].organism_id
+    assert_equal projects(:first).id, @samples[1].project_id
+    assert_equal chip_types(:alligator).id, @samples[1].chip_type_id   
+    assert_equal organisms(:another).id, @samples[1].organism_id
     
     assert_response :success
     assert_template 'add'
@@ -884,8 +925,8 @@ class SamplesControllerTest < Test::Unit::TestCase
     login_as_customer
     get :new
   
-    get :add, :submission_date => '2006-02-12', :project_id => 1,
-        :chip_type_id => 2
+    get :add, :submission_date => '2006-02-12', :project_id => projects(:first).id,
+        :chip_type_id => chip_types(:alligator).id
     
     # no samples should have been added
     @samples = session[:samples]
@@ -905,22 +946,22 @@ class SamplesControllerTest < Test::Unit::TestCase
     get :new
   
     get :add, :add_samples => {:submission_date => "2006-02-12", :number => 2,
-                               :project_id => -1, :chip_type_id => 2,
+                               :project_id => -1, :chip_type_id => chip_types(:alligator).id,
                                :sbeams_user => "Bob"},
               :project => {:name => "Test Project",
-                           :budget => "12340001", :lab_group_id => 2}
+                           :budget => "12340001", :lab_group_id => lab_groups(:alligator_group).id}
     
     # this should have populated the session[:samples] array
     # with two Sample objects containing appropriate info
     @samples = session[:samples]
     assert_equal 2, @samples.size
     assert_equal Date.new(2006, 2, 12), @samples[0].submission_date
-    assert_equal 2, @samples[0].chip_type_id
-    assert_equal 2, @samples[0].organism_id
+    assert_equal chip_types(:alligator).id, @samples[0].chip_type_id
+    assert_equal organisms(:another).id, @samples[0].organism_id
     assert_equal "Bob", @samples[0].sbeams_user
     assert_equal Date.new(2006, 2, 12), @samples[1].submission_date
-    assert_equal 2, @samples[1].chip_type_id   
-    assert_equal 2, @samples[1].organism_id
+    assert_equal chip_types(:alligator).id, @samples[1].chip_type_id
+    assert_equal organisms(:another).id, @samples[1].organism_id
     assert_equal "Bob", @samples[1].sbeams_user
 
     # there should also be a new project with the info
@@ -930,7 +971,7 @@ class SamplesControllerTest < Test::Unit::TestCase
     new_project = Project.find(:first, :order => "id DESC")
     assert_equal "Test Project", new_project.name
     assert_equal "12340001", new_project.budget
-    assert_equal 2, new_project.lab_group_id
+    assert_equal lab_groups(:alligator_group).id, new_project.lab_group_id
 
     assert_response :success
     assert_template 'add'
@@ -944,28 +985,28 @@ class SamplesControllerTest < Test::Unit::TestCase
 
     # select a naming scheme for current user
     current_user = User.find(@request.session[:user_id])
-    current_user.current_naming_scheme_id = 1
+    current_user.current_naming_scheme_id = naming_schemes(:yeast_scheme).id
     current_user.save
 
     # use new to populate session variables
     get :new
   
     get :add, :add_samples => {:submission_date => "2006-02-12", :number => 2,
-                            :project_id => 1, :chip_type_id => 2,
+                            :project_id => projects(:first).id, :chip_type_id => chip_types(:alligator).id,
                             :sbeams_user => "Bob"}
     # this should have populated the session[:samples] array
     # with two Sample objects containing appropriate info
     @samples = session[:samples]
     assert_equal 2, @samples.size
     assert_equal Date.new(2006, 2, 12), @samples[0].submission_date
-    assert_equal 1, @samples[0].project_id
-    assert_equal 2, @samples[0].chip_type_id
-    assert_equal 2, @samples[0].organism_id
+    assert_equal projects(:first).id, @samples[0].project_id
+    assert_equal chip_types(:alligator).id, @samples[0].chip_type_id
+    assert_equal organisms(:another).id, @samples[0].organism_id
     assert_equal "Bob", @samples[0].sbeams_user
     assert_equal Date.new(2006, 2, 12), @samples[1].submission_date
-    assert_equal 1, @samples[1].project_id
-    assert_equal 2, @samples[1].chip_type_id   
-    assert_equal 2, @samples[1].organism_id
+    assert_equal projects(:first).id, @samples[1].project_id
+    assert_equal chip_types(:alligator).id, @samples[1].chip_type_id   
+    assert_equal organisms(:another).id, @samples[1].organism_id
     assert_equal "Bob", @samples[1].sbeams_user
     
     assert_response :success
@@ -992,13 +1033,13 @@ class SamplesControllerTest < Test::Unit::TestCase
             :short_sample_name => 'HlthySmp',
             :sample_name => 'Healthy_Sample',
             :sample_group_name => 'Healthy',
-            :organism_id => '1',
+            :organism_id => organisms(:first).id,
             }
     smpl2 = {:submission_date => '2006-02-12',
             :short_sample_name => 'DisSmpl',
             :sample_name => 'Disease_Sample',
             :sample_group_name => 'Disease',
-            :organism_id => '1',
+            :organism_id => organisms(:first).id,
             }  
 
     post :create, :'sample-0' => smpl1, :'sample-1' => smpl2
@@ -1023,23 +1064,27 @@ class SamplesControllerTest < Test::Unit::TestCase
 
     smpl1 = {:submission_date => '2006-02-12',
             :short_sample_name => 'HlthySmp',
-            :organism_id => '1',
+            :organism_id => organisms(:first).id,
             }
-    smpl1_schemed = {:'Strain' => 1,
-                    :'Perturbation' => 1,
-                    :'Perturbation Time' => 2,
+    smpl1_schemed = {:'Strain' => naming_terms(:wild_type).id,
+                    :'Perturbation' => naming_terms(:heat).id,
+                    :'Perturbation Time' => naming_terms(:time024).id,
+                    :'Subject Number' => '42231',
+                    :'Replicate' => 'A'
                     }
     smpl2 = {:submission_date => '2006-02-12',
             :short_sample_name => 'DisSmpl',
-            :organism_id => '1',
+            :organism_id => organisms(:first).id,
             }  
-    smpl2_schemed = {:'Strain' => 2,
+    smpl2_schemed = {:'Strain' => naming_terms(:mutant).id,
                     :'Perturbation' => -1,
+                    :'Subject Number' => '42643',
+                    :'Replicate' => 'A'
                     }
 
     # select a naming scheme for current user
     current_user = User.find(@request.session[:user_id])
-    current_user.current_naming_scheme_id = 1
+    current_user.current_naming_scheme_id = naming_schemes(:yeast_scheme).id
     current_user.save
     
     # have to set session user before post, even though this isn't
@@ -1071,21 +1116,23 @@ class SamplesControllerTest < Test::Unit::TestCase
 
     # add one sample that will have a duplicate submission_date/number  
     get :add, :add_samples => {:submission_date => '2006-02-10', :number => 1,
-                            :project_id => 1, :chip_type_id => 2}
+                            :project_id => projects(:first).id,
+                            :chip_type_id => chip_types(:alligator).id}
     # add another sample with unique submission_date/number
     get :add, :add_samples => {:submission_date => '2006-02-12', :number => 1,
-                            :project_id => 1, :chip_type_id => 2}
+                            :project_id => projects(:first).id,
+                            :chip_type_id => chip_types(:alligator).id}
     
     # leave out sample name
     smpl1 = {:short_sample_name => 'HlthySmpl',
             :sample_name => 'Healthy_Sample',
             :sample_group_name => 'Healthy',
-            :organism_id => '2'
+            :organism_id => organisms(:another).id
             }
     smpl2 = {:short_sample_name => 'Hty',
             :sample_name => 'Healthy_Sample',
             :sample_group_name => 'Health',
-            :organism_id => '2'
+            :organism_id => organisms(:another).id
             }  
                        
     post :create, :'sample-0' => smpl1, :'sample-1' => smpl2
@@ -1123,7 +1170,7 @@ class SamplesControllerTest < Test::Unit::TestCase
 
   def test_edit_as_customer
     login_as_customer
-    get :edit, :id => 1
+    get :edit, :id => samples(:sample1).id
 
     assert_response :success
     assert_template 'edit'
@@ -1134,10 +1181,10 @@ class SamplesControllerTest < Test::Unit::TestCase
 
   def test_update_without_naming_scheme_as_customer
     login_as_customer
-    post :update, :id => 1, :sample => { :submission_date => '2006-02-09',
+    post :update, :id => samples(:sample1).id, :sample => { :submission_date => '2006-02-09',
                                          :sample_group_name => 'new group' }
     
-    sample = Sample.find(1)
+    sample = Sample.find( samples(:sample1).id )
     assert_equal Date.new(2006,2,9), sample.submission_date
     assert_equal "new group", sample.sample_group_name
     
@@ -1150,26 +1197,32 @@ class SamplesControllerTest < Test::Unit::TestCase
 
     # select a naming scheme for current user
     current_user = User.find(@request.session[:user_id])
-    current_user.current_naming_scheme_id = 1
+    current_user.current_naming_scheme_id = naming_schemes(:yeast_scheme).id
     current_user.save
     
-    post :update, :id => 6, :sample => { :submission_date => '2006-02-09' },
-                            :'sample-0_schemed_name' => { :Strain => 1,
-                                                          :Perturbation => 3,
-                                                          :'Perturbation Time' => 6,
-                                                          :Replicate => 7,
-                                                          :'Subject Number' => 32235
-                                                         } 
+    post :update, :id => samples(:sample6).id,
+      :sample => { :submission_date => '2006-02-09' },
+      :'sample-0_schemed_name' => { :'Strain' => naming_terms(:wild_type).id,
+                                    :'Perturbation' => naming_terms(:heat).id,
+                                    :'Perturbation Time' => naming_terms(:time024).id,
+                                    :Replicate => naming_terms(:replicateA).id,
+                                    :'Subject Number' => 32235
+                                  } 
     
-    sample = Sample.find(6)
+    sample = Sample.find( samples(:sample6).id )
     assert_equal Date.new(2006,2,9), sample.submission_date
     assert_equal "wt_HT_024_32235", sample.sample_name
     assert_equal "wt_HT_024", sample.sample_group_name
     
-    sample_terms = SampleTerm.find(:all, :conditions => ["sample_id = ?", 6],
-                                   :order => "term_order ASC")
+    sample_terms = SampleTerm.find(:all, 
+                       :conditions => ["sample_id = ?", samples(:sample6).id],
+                       :order => "term_order ASC")
     assert_equal 4, sample_terms.size
-    expected_terms = [1,3,6,7]
+    expected_terms = [naming_terms(:wild_type).id,
+                      naming_terms(:heat).id,
+                      naming_terms(:time024).id,
+                      naming_terms(:replicateA).id
+                     ]
     for i in 0..expected_terms.size-1
       assert_equal expected_terms[i], sample_terms[i].naming_term_id
     end
@@ -1181,50 +1234,50 @@ class SamplesControllerTest < Test::Unit::TestCase
   def test_update_locked_without_naming_scheme_as_customer
     login_as_customer
     # grab the sample we're going to use twice
-    sample1 = Sample.find(1)
-    sample2 = Sample.find(1)
+    sample1 = Sample.find( samples(:sample1).id )
+    sample2 = Sample.find( samples(:sample1).id )
     
     # update it once, which should sucess
-    post :update, :id => 1, :sample => { :sample_name => "sample1", 
+    post :update, :id => samples(:sample1).id, :sample => { :sample_name => "sample1", 
                                                 :lock_version => sample1.lock_version }
 
     # and then update again with stale info, and it should fail
-    post :update, :id => 1, :sample => { :sample_name => "sample2", 
+    post :update, :id => samples(:sample1).id, :sample => { :sample_name => "sample2", 
                                                 :lock_version => sample2.lock_version }                                               
 
     assert_response :success                                                
     assert_template 'edit'
     assert_flash_warning
     
-    assert_equal "sample1", Sample.find(1).sample_name
+    assert_equal "sample1", Sample.find( samples(:sample1).id ).sample_name
   end
 
   def test_destroy_submitted_sample_as_customer
     login_as_customer
-    assert_not_nil Sample.find(1)
+    assert_not_nil Sample.find( samples(:sample1).id )
 
     @request.env["HTTP_REFERER"] = "/samples/list"
-    post :destroy, :id => 1
+    post :destroy, :id => samples(:sample1).id
     assert_response :redirect
     assert_redirected_to "samples/list"
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      Sample.find(1)
+      Sample.find( samples(:sample1).id )
     }
   end
 
   # Customers should not be able to delete hybridized sample records
   def test_destroy_hybridized_sample_as_customer
     login_as_customer
-    assert_not_nil Sample.find(2)
+    assert_not_nil Sample.find( samples(:sample2).id )
 
     @request.env["HTTP_REFERER"] = "/samples/list"
-    post :destroy, :id => 2
+    post :destroy, :id => samples(:sample2).id
     assert_response :success
     assert_template 'list'
     assert_flash_warning
 
-    assert_not_nil Sample.find(2)
+    assert_not_nil Sample.find( samples(:sample2).id )
   end
 
 end
@@ -1234,7 +1287,10 @@ end
     login_as_customer
     
     post :submit_traces, :commit => 'Request Labeling',
-                         :selected_traces => {'1' => '1', '2' => '1'}
+      :selected_traces => {
+      quality_traces(:quality_trace_00001).id => '1',
+      quality_traces(:quality_trace_00002).id => '1'
+    }
                          
     assert_no_flash_warning
     assert_response :success
@@ -1246,7 +1302,11 @@ end
     login_as_customer
     
     post :submit_traces, :commit => 'Request Labeling',
-                         :selected_traces => {'1' => '1', '2' => '1', '10' => '1'}
+                         :selected_traces => {
+      quality_traces(:quality_trace_00001).id => '1',
+      quality_traces(:quality_trace_00002).id => '1',
+      quality_traces(:quality_trace_00010).id => '1'
+    }
 
     assert_flash_warning
     assert_response :success
@@ -1263,9 +1323,9 @@ end
     test_submit_traces_request_labeling_total_RNA_only_as_customer
               
     post :create_from_traces, :add_samples => {:submission_date => '2006-11-29',
-                                               :chip_type_id => 1,
+                                               :chip_type_id => chip_types(:mouse).id,
                                                :sbeams_user => 'janderson',
-                                               :project_id => 1},
+                                               :project_id => projects(:first).id},
                               :'sample-0' => {:short_sample_name => 'wA',
                                               :sample_name => 'WT_A',
                                               :sample_group_name => 'WT'},
@@ -1288,12 +1348,15 @@ end
     login_as_customer
 
     post :submit_traces, :commit => 'Request Labeling',
-                         :selected_traces => {'6' => '1', '7' => '1'}
+                         :selected_traces => {
+      quality_traces(:quality_trace_00006).id => '1',
+      quality_traces(:quality_trace_00007).id => '1',
+    }
     
     post :create_from_traces, :add_samples => {:submission_date => '2006-11-28',
-                                               :chip_type_id => 1,
+                                               :chip_type_id => chip_types(:mouse).id,
                                                :sbeams_user => 'janderson',
-                                               :project_id => 1},
+                                               :project_id => projects(:first).id},
                               :'sample-0' => {:short_sample_name => 'c1',
                                               :sample_name => 'Control_1',
                                               :sample_group_name => 'con'},
@@ -1302,8 +1365,12 @@ end
                                               :sample_group_name => 'con'}
         
     post :submit_traces, :commit => 'Request Hybridization',
-                         :selected_traces => {'10' => '1', '14' => '1',
-                                              '11' => '1', '15' => '1'}
+                         :selected_traces => {
+      quality_traces(:quality_trace_00010).id => '1',
+      quality_traces(:quality_trace_00014).id => '1',
+      quality_traces(:quality_trace_00011).id => '1',
+      quality_traces(:quality_trace_00015).id => '1'
+    }
 
     assert_response :success
     assert_template 'match_traces'
@@ -1320,18 +1387,20 @@ end
     num_samples = Sample.count
     
     # find samples that were created
-    s1 = Sample.find(:first, :conditions => ["starting_quality_trace_id = 6"])
-    s2 = Sample.find(:first, :conditions => ["starting_quality_trace_id = 7"])
+    s1 = Sample.find(:first, :conditions => ["starting_quality_trace_id = ?",
+      quality_traces(:quality_trace_00006).id])
+    s2 = Sample.find(:first, :conditions => ["starting_quality_trace_id = ?",
+      quality_traces(:quality_trace_00007).id])
     
     post :submit_matched_traces, :num_samples => '2',
-                                 :'sample-0' => {:starting_quality_trace_id => '6',
-                                                 :amplified_quality_trace_id => '10',
-                                                 :fragmented_quality_trace_id => '14',
-                                                 :id => s1.id},
-                                 :'sample-1' => {:starting_quality_trace_id => '7',
-                                                 :amplified_quality_trace_id => '11',
-                                                 :fragmented_quality_trace_id => '15',
-                                                 :id => s2.id}
+           :'sample-0' => {:starting_quality_trace_id => quality_traces(:quality_trace_00006).id,
+                           :amplified_quality_trace_id => quality_traces(:quality_trace_00010).id,
+                           :fragmented_quality_trace_id => quality_traces(:quality_trace_00014).id,
+                           :id => s1.id},
+           :'sample-1' => {:starting_quality_trace_id => quality_traces(:quality_trace_00007).id,
+                           :amplified_quality_trace_id => quality_traces(:quality_trace_00011).id,
+                           :fragmented_quality_trace_id => quality_traces(:quality_trace_00015).id,
+                           :id => s2.id}
 
     assert_response :redirect
     assert_redirected_to :action => 'show'
@@ -1340,12 +1409,14 @@ end
     assert_equal num_samples, Sample.count
     
     # verify that the samples are now tagged with the correct trace ids
-    s1 = Sample.find(:first, :conditions => ["starting_quality_trace_id = 6"])
-    s2 = Sample.find(:first, :conditions => ["starting_quality_trace_id = 7"])
-    assert_equal 10, s1.amplified_quality_trace_id
-    assert_equal 14, s1.fragmented_quality_trace_id
-    assert_equal 11, s2.amplified_quality_trace_id
-    assert_equal 15, s2.fragmented_quality_trace_id
+    s1 = Sample.find(:first, :conditions => ["starting_quality_trace_id = ?",
+      quality_traces(:quality_trace_00006).id])
+    s2 = Sample.find(:first, :conditions => ["starting_quality_trace_id = ?",
+      quality_traces(:quality_trace_00007).id])
+    assert_equal quality_traces(:quality_trace_00010).id, s1.amplified_quality_trace_id
+    assert_equal quality_traces(:quality_trace_00014).id, s1.fragmented_quality_trace_id
+    assert_equal quality_traces(:quality_trace_00011).id, s2.amplified_quality_trace_id
+    assert_equal quality_traces(:quality_trace_00015).id, s2.fragmented_quality_trace_id
   end
 
   # choose a set of traces (total RNA/cRNA/fragmented),
@@ -1375,10 +1446,10 @@ end
     test_submit_traces_request_hybridization_as_customer
     
     post :submit_matched_traces, :num_samples => '1',
-                                 :'sample-0' => {:starting_quality_trace_id => '6',
-                                                 :amplified_quality_trace_id => '10',
-                                                 :fragmented_quality_trace_id => '14',
-                                                 :id => '0'}
+           :'sample-0' => {:starting_quality_trace_id => quality_traces(:quality_trace_00006).id,
+                           :amplified_quality_trace_id => quality_traces(:quality_trace_00010).id,
+                           :fragmented_quality_trace_id => quality_traces(:quality_trace_00014).id,
+                           :id => '0'}
     
     assert_response :success
     assert_template 'new_from_traces'
@@ -1396,9 +1467,9 @@ end
     test_submit_matched_traces_from_hybridization_request_as_customer
               
     post :create_from_traces, :add_samples => {:submission_date => '2006-11-29',
-                                               :chip_type_id => 1,
+                                               :chip_type_id => chip_types(:mouse).id,
                                                :sbeams_user => 'janderson',
-                                               :project_id => 1},
+                                               :project_id => projects(:first).id},
                               :'sample-0' => {:short_sample_name => 'c1',
                                               :sample_name => 'Control_1',
                                               :sample_group_name => 'con'}

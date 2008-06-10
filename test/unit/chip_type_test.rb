@@ -10,7 +10,7 @@ class ChipTypeTest < Test::Unit::TestCase
                        "2 chip transaction(s)\n" +
                        "Are you sure you want to destroy it?"
   
-    type = ChipType.find(2)   
+    type = ChipType.find( chip_types(:alligator) )   
     assert_equal expected_warning, type.destroy_warning
   end
 end

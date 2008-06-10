@@ -17,7 +17,7 @@ class NamingTermsControllerTest < Test::Unit::TestCase
   end
 
   def test_list_for_naming_element
-    get :list_for_naming_element, :id => 1
+    get :list_for_naming_element, :id => naming_elements(:strain).id
 
     assert_response :success
     assert_template 'list_for_naming_element'
@@ -29,10 +29,10 @@ class NamingTermsControllerTest < Test::Unit::TestCase
     num_naming_terms = NamingTerm.count
 
     post :create, :naming_term => {:term => "My Term",
-                                   :naming_element_id => 1}
+                                   :naming_element_id => naming_elements(:strain).id}
 
     assert_response :redirect
-    assert_redirected_to :action => 'list_for_naming_element', :id => 1
+    assert_redirected_to :action => 'list_for_naming_element', :id => naming_elements(:strain).id
 
     assert_equal num_naming_terms + 1, NamingTerm.count
     
@@ -42,40 +42,40 @@ class NamingTermsControllerTest < Test::Unit::TestCase
   end
   
   def test_update
-    post :update, :id => 1
+    post :update, :id => naming_terms(:wild_type).id
 
     assert_response :redirect
     assert_redirected_to :action => 'list_for_naming_element'
   end
 
   def test_move_up
-    post :move_up, :id => 2
+    post :move_up, :id => naming_terms(:mutant).id
 
     assert_response :redirect
     assert_redirected_to :action => 'list_for_naming_element'
     
-    down_term = NamingTerm.find(1)
-    up_term = NamingTerm.find(2)
+    down_term = NamingTerm.find( naming_terms(:wild_type).id )
+    up_term = NamingTerm.find( naming_terms(:mutant) )
 
     assert_equal 1, down_term.term_order
     assert_equal 0, up_term.term_order
   end
 
   def test_move_down 
-    post :move_down, :id => 1
+    post :move_down, :id => naming_terms(:wild_type).id
 
     assert_response :redirect
     assert_redirected_to :action => 'list_for_naming_element'
     
-    down_term = NamingTerm.find(1)
-    up_term = NamingTerm.find(2)
+    down_term = NamingTerm.find( naming_terms(:wild_type) )
+    up_term = NamingTerm.find( naming_terms(:mutant) )
 
     assert_equal 1, down_term.term_order
     assert_equal 0, up_term.term_order
   end
 
   def test_edit
-    get :edit, :id => 1
+    get :edit, :id => naming_terms(:wild_type).id
 
     assert_response :success
     assert_template 'edit'
@@ -86,14 +86,14 @@ class NamingTermsControllerTest < Test::Unit::TestCase
   end
 
   def test_destroy
-    assert_not_nil NamingTerm.find(1)
+    assert_not_nil NamingTerm.find( naming_terms(:wild_type).id )
 
-    post :destroy, :id => 1
+    post :destroy, :id => naming_terms(:wild_type).id
     assert_response :redirect
     assert_redirected_to :action => 'list_for_naming_element'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      NamingTerm.find(1)
+      NamingTerm.find( naming_terms(:wild_type).id )
     }
   end
 

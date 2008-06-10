@@ -1,79 +1,73 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-sample1:
-  id: 1
-  submission_date: 2006-02-10
-  short_sample_name: yng
-  sample_name: Young
-  sample_group_name: Young
-  project_id: 1
-  chip_type_id: 2
-  organism_id: 1
-  sbeams_user: bob
+--- 
+sample5: 
+  organism: first
   status: submitted
-  starting_quality_trace_id: 6
-  amplified_quality_trace_id: 10
-  fragmented_quality_trace_id: 14
-  naming_scheme_id:
-sample2:
-  id: 2
-  submission_date: 2006-02-10
-  short_sample_name: old
-  sample_name: Old
-  sample_group_name: Old
-  project_id: 1
-  chip_type_id: 2
-  organism_id: 1
-  sbeams_user: bob
-  status: hybridized
-  starting_quality_trace_id: 7
-  amplified_quality_trace_id: 11
-  fragmented_quality_trace_id: 15
-  naming_scheme_id:
-sample3:
-  id: 3
-  submission_date: 2006-02-10
-  short_sample_name: vold
-  sample_name: Very Old
-  sample_group_name: Old
-  project_id: 1
-  chip_type_id: 2
-  organism_id: 1
-  sbeams_user: bob
-  status: submitted
-  naming_scheme_id:
-sample4:
-  id: 4
-  submission_date: 2006-02-10
-  short_sample_name: vvold
-  sample_name: Very Very Old
-  sample_group_name: Old
-  project_id: 1
-  chip_type_id: 2
-  organism_id: 1
-  sbeams_user: bob
-  status: hybridized
-  naming_scheme_id:
-sample5:
-  id: 5
-  submission_date: 2006-09-10
-  short_sample_name: bb
-  sample_name: Bob B
   sample_group_name: Bob
-  project_id: 2
-  chip_type_id: 2
-  organism_id: 1
+  short_sample_name: bb
+  naming_scheme_id: 
+  project: another
+  sample_name: Bob B
+  submission_date: 2006-09-10
+  chip_type: alligator
   sbeams_user: bob
+sample6: 
+  organism: first
   status: submitted
-  naming_scheme_id:
-sample6:
-  id: 6
-  submission_date: 2007-05-31
-  short_sample_name: a1
-  sample_name: wt_HT_024_B_32234
   sample_group_name: wt_HT_024
-  project_id: 2
-  chip_type_id: 2
-  organism_id: 1
+  short_sample_name: a1
+  project: another
+  sample_name: wt_HT_024_B_32234
+  submission_date: 2007-05-31
+  chip_type: alligator
+  naming_scheme: yeast_scheme
   sbeams_user: bob
+sample1: 
+  organism: first
   status: submitted
-  naming_scheme_id: 1
+  sample_group_name: Young
+  short_sample_name: yng
+  naming_scheme_id: 
+  amplified_quality_trace: quality_trace_00010
+  project: first
+  sample_name: Young
+  submission_date: 2006-02-10
+  chip_type: alligator
+  sbeams_user: bob
+  starting_quality_trace: quality_trace_00006
+  fragmented_quality_trace: quality_trace_00014
+sample2: 
+  organism: first
+  status: hybridized
+  sample_group_name: Old
+  short_sample_name: old
+  naming_scheme_id: 
+  amplified_quality_trace: quality_trace_00011
+  project: first
+  sample_name: Old
+  submission_date: 2006-02-10
+  chip_type: alligator
+  sbeams_user: bob
+  starting_quality_trace: quality_trace_00007
+  fragmented_quality_trace: quality_trace_00015
+sample3: 
+  organism: first
+  status: submitted
+  sample_group_name: Old
+  short_sample_name: vold
+  naming_scheme_id: 
+  project: first
+  sample_name: Very Old
+  submission_date: 2006-02-10
+  chip_type: alligator
+  sbeams_user: bob
+sample4: 
+  organism: first
+  status: hybridized
+  sample_group_name: Old
+  short_sample_name: vvold
+  naming_scheme_id: 
+  project: first
+  sample_name: Very Very Old
+  submission_date: 2006-02-10
+  chip_type: alligator
+  sbeams_user: bob

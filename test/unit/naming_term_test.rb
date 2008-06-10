@@ -8,7 +8,7 @@ class NamingTermTest < Test::Unit::TestCase
                        "1 sample term(s)\n" +
                        "Are you sure you want to destroy it?"
   
-    term = NamingTerm.find(1)   
+    term = NamingTerm.find( naming_terms(:wild_type).id )   
     assert_equal expected_warning, term.destroy_warning
   end
 end

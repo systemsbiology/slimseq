@@ -1,6 +1,9 @@
 class ChargeSet < ActiveRecord::Base
   belongs_to :charge_period
+  belongs_to :lab_group
+  
   has_many :charges, :dependent => :destroy
+  has_many :hybridizations, :dependent => :nullify
   
   def get_totals
     totals = Hash.new(0)

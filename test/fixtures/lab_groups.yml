@@ -1,10 +1,7 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-gorilla_group:
-  id: 1
-  name: Gorillaz
-alligator_group:
-  id: 2
-  name: AlligatorGroup
-monkey_group:
-  id: 3
+--- 
+monkey_group: 
   name: Monkeys
+gorilla_group: 
+  name: Gorillaz
+alligator_group: 
+  name: AlligatorGroup

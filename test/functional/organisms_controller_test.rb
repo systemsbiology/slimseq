@@ -53,7 +53,7 @@ class OrganismsControllerTest < Test::Unit::TestCase
   end
 
   def test_edit
-    get :edit, :id => 1
+    get :edit, :id => organisms(:first).id
 
     assert_response :success
     assert_template 'edit'
@@ -63,42 +63,42 @@ class OrganismsControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => 1
+    post :update, :id => organisms(:first).id
     assert_response :redirect
-    assert_redirected_to :action => 'list', :id => 1
+    assert_redirected_to :action => 'list', :id => organisms(:first).id
   end
 
   def test_update_locked
-    get :edit, :id => 1
+    get :edit, :id => organisms(:first).id
 
     # grab the organism we're going to use twice
-    organism1 = Organism.find(1)
-    organism2 = Organism.find(1)
+    organism1 = organisms(:first)
+    organism2 = organisms(:first)
     
     # update it once, which should sucess
-    post :update, :id => 1, :organism => { :name => "org1", 
+    post :update, :id => organisms(:first).id, :organism => { :name => "org1", 
                                             :lock_version => organism1.lock_version }
 
     # and then update again with stale info, and it should fail
-    post :update, :id => 1, :organism => { :name => "org2", 
+    post :update, :id => organisms(:first).id, :organism => { :name => "org2", 
                                             :lock_version => organism2.lock_version }                                               
 
     assert_response :success                                                
     assert_template 'edit'
     assert_flash_warning
     
-    assert_equal "org1", Organism.find(1).name
+    assert_equal "org1", Organism.find( organisms(:first).id ).name
   end
 
   def test_destroy
-    assert_not_nil Organism.find(3)
+    assert_not_nil Organism.find( organisms(:weevil).id )
 
-    post :destroy, :id => 3
+    post :destroy, :id => organisms(:weevil).id
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      Organism.find(3)
+      Organism.find( organisms(:weevil).id )
     }
   end
 end

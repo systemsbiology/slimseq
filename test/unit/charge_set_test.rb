@@ -13,7 +13,7 @@ class ChargeSetTest < Test::Unit::TestCase
     expected_totals['other_cost'] = 0
     expected_totals['total_cost'] = 805
 
-    set = ChargeSet.find(1)
+    set = charge_sets(:mouse_jan)
     assert_equal expected_totals, set.get_totals
   end
 
@@ -22,7 +22,7 @@ class ChargeSetTest < Test::Unit::TestCase
                        "2 charge(s)\n" +
                        "Are you sure you want to destroy it?"
   
-    set = ChargeSet.find(1)   
+    set = charge_sets(:mouse_jan)
     assert_equal expected_warning, set.destroy_warning
   end
 end

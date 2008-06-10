@@ -1,31 +1,28 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-labeling_and_hyb:
-  id: 1
-  name: Label and Hyb
-  description: Core facility labels, hybs, washes, stains, scans
-  chips_used: 1
-  chip_cost: 0
-  labeling_cost: 280
-  hybridization_cost: 100
-  qc_cost: 0
-  other_cost: 0
-bioanalyzer:
-  id: 2
-  name: Bioanalyzer
-  description: Run one Bioanalyzer Nano or Pico chip
-  chips_used: 0
-  chip_cost: 0
+--- 
+not_very_useful_template: 
+  name: Not Useful
   labeling_cost: 0
+  chips_used: 14
   hybridization_cost: 0
+  chip_cost: 5
+  description: This template exists to die
   qc_cost: 25
   other_cost: 0
-not_very_useful_template:
-  id: 3
-  name: Not Useful
-  description: This template exists to die
-  chips_used: 14
-  chip_cost: 5
+labeling_and_hyb: 
+  name: Label and Hyb
+  labeling_cost: 280
+  chips_used: 1
+  hybridization_cost: 100
+  chip_cost: 0
+  description: Core facility labels, hybs, washes, stains, scans
+  qc_cost: 0
+  other_cost: 0
+bioanalyzer: 
+  name: Bioanalyzer
   labeling_cost: 0
+  chips_used: 0
   hybridization_cost: 0
+  chip_cost: 0
+  description: Run one Bioanalyzer Nano or Pico chip
   qc_cost: 25
   other_cost: 0

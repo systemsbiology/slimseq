@@ -45,7 +45,7 @@ class ProjectsControllerTest < Test::Unit::TestCase
 
     post :create, :project => {:name => "The Best Project",
                                :budget => "12345678",
-                               :lab_group_id => 1}
+                               :lab_group_id => lab_groups(:gorilla_group)}
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
@@ -54,7 +54,7 @@ class ProjectsControllerTest < Test::Unit::TestCase
   end
 
   def test_edit
-    get :edit, :id => 1
+    get :edit, :id => projects(:first).id
 
     assert_response :success
     assert_template 'edit'
@@ -64,52 +64,52 @@ class ProjectsControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => 1
+    post :update, :id => projects(:first).id
     assert_response :redirect
-    assert_redirected_to :action => 'list', :id => 1
+    assert_redirected_to :action => 'list', :id => projects(:first).id
   end
 
   def test_update_locked
     # grab the project we're going to use twice
-    project1 = Project.find(1)
-    project2 = Project.find(1)
+    project1 = Project.find( projects(:first).id )
+    project2 = Project.find( projects(:first).id )
     
     # update it once, which should sucess
-    post :update, :id => 1, :project => { :name => "project1", 
+    post :update, :id => projects(:first).id, :project => { :name => "project1", 
                                             :lock_version => project1.lock_version }
 
     # and then update again with stale info, and it should fail
-    post :update, :id => 1, :project => { :name => "project2", 
+    post :update, :id => projects(:first).id, :project => { :name => "project2", 
                                             :lock_version => project2.lock_version }                                               
 
     assert_response :success                                                
     assert_template 'edit'
     assert_flash_warning
     
-    assert_equal "project1", Project.find(1).name
+    assert_equal "project1", Project.find( projects(:first).id ).name
   end
 
   def test_destroy_no_associated_transactions
-    assert_not_nil Project.find(2)
+    assert_not_nil Project.find( projects(:another).id )
 
-    post :destroy, :id => 2
+    post :destroy, :id => projects(:another).id
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      Project.find(2)
+      Project.find( projects(:another).id )
     }
   end
   
   def test_destroy_with_associated_transactions
-    assert_not_nil Project.find(1)
+    assert_not_nil Project.find( projects(:first).id )
 
-    post :destroy, :id => 1
+    post :destroy, :id => projects(:first).id
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      Project.find(1)
+      Project.find( projects(:first).id )
     }
   end
 end

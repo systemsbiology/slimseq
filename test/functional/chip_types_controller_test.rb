@@ -46,7 +46,7 @@ class ChipTypesControllerTest < Test::Unit::TestCase
     num_chip_types = ChipType.count
 
     post :create, :chip_type => {:name => "Chippy", :short_name => "chpy",
-         :organism_id => "1", :array_platform => "affy"}
+         :organism_id => organisms(:first).id, :array_platform => "affy"}
 
     assert_response :redirect
     assert_redirected_to :action => 'list'
@@ -55,7 +55,7 @@ class ChipTypesControllerTest < Test::Unit::TestCase
   end
 
   def test_edit
-    get :edit, :id => 1
+    get :edit, :id => chip_types(:mouse).id
 
     assert_response :success
     assert_template 'edit'
@@ -65,52 +65,52 @@ class ChipTypesControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => 1
+    post :update, :id => chip_types(:mouse).id
     assert_response :redirect
-    assert_redirected_to :action => 'list', :id => 1
+    assert_redirected_to :action => 'list', :id => chip_types(:mouse).id
   end
 
   def test_update_locked
     # grab the chip_type we're going to use twice
-    chip_type1 = ChipType.find(1)
-    chip_type2 = ChipType.find(1)
+    chip_type1 = chip_types(:mouse)
+    chip_type2 = chip_types(:mouse)
     
     # update it once, which should sucess
-    post :update, :id => 1, :chip_type => { :name => "chip type1", 
+    post :update, :id => chip_types(:mouse).id, :chip_type => { :name => "chip type1", 
                                             :lock_version => chip_type1.lock_version }
 
     # and then update again with stale info, and it should fail
-    post :update, :id => 1, :chip_type => { :name => "chip type2", 
+    post :update, :id => chip_types(:mouse).id, :chip_type => { :name => "chip type2", 
                                             :lock_version => chip_type2.lock_version }                                               
 
     assert_response :success                                                
     assert_template 'edit'
     assert_flash_warning
     
-    assert_equal "chip type1", ChipType.find(1).name
+    assert_equal "chip type1", ChipType.find( chip_types(:mouse) ).name
   end
 
   def test_destroy_no_associated_transactions
-    assert_not_nil ChipType.find(1)
+    assert_not_nil ChipType.find( chip_types(:mouse).id )
 
-    post :destroy, :id => 1
+    post :destroy, :id => chip_types(:mouse).id
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      ChipType.find(1)
+      ChipType.find( chip_types(:mouse).id )
     }
   end
   
   def test_destroy_with_associated_transactions
-    assert_not_nil ChipType.find(2)
+    assert_not_nil ChipType.find( chip_types(:alligator).id )
 
-    post :destroy, :id => 2
+    post :destroy, :id => chip_types(:alligator).id
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      ChipType.find(2)
+      ChipType.find( chip_types(:alligator).id )
     }
   end
 end

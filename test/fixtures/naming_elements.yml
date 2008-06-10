@@ -1,50 +1,46 @@
-strain:
-  id: 1
-  name: Strain
+--- 
+strain: 
+  include_in_sample_name: true
+  free_text: false
   element_order: 1
-  group_element: true
+  name: Strain
   optional: false
-  dependent_element_id: 0
-  naming_scheme_id: 1
-  free_text: false
+  naming_scheme: yeast_scheme
+  group_element: true
+  depends_upon_element: 
+perturbation: 
   include_in_sample_name: true
-perturbation:
-  id: 2
-  name: Perturbation
+  free_text: false
   element_order: 2
-  group_element: true
+  name: Perturbation
   optional: false
-  dependent_element_id: 0
-  naming_scheme_id: 1
-  free_text: false
-  include_in_sample_name: true
-perturbation_time:
-  id: 3
-  name: Perturbation Time
-  element_order: 3
+  naming_scheme: yeast_scheme
   group_element: true
-  optional: true
-  dependent_element_id: 2
-  naming_scheme_id: 1
-  free_text: false
-  include_in_sample_name: true
-replicate:
-  id: 4
-  name: Replicate
-  element_order: 4
-  group_element: false
-  optional: false
-  dependent_element_id: 0
-  naming_scheme_id: 1
-  free_text: false
+  depends_upon_element: 
+replicate: 
   include_in_sample_name: false
-subject_number:
-  id: 5
-  name: Subject Number
-  element_order: 5
-  group_element: false
+  free_text: false
+  element_order: 4
+  name: Replicate
   optional: false
-  dependent_element_id: 0
-  naming_scheme_id: 1
-  free_text: true
+  naming_scheme: yeast_scheme
+  group_element: false
+  depends_upon_element: 
+perturbation_time: 
   include_in_sample_name: true
+  free_text: false
+  element_order: 3
+  name: Perturbation Time
+  optional: true
+  naming_scheme: yeast_scheme
+  group_element: true
+  depends_upon_element: perturbation
+subject_number: 
+  include_in_sample_name: true
+  free_text: true
+  element_order: 5
+  name: Subject Number
+  optional: false
+  naming_scheme: yeast_scheme
+  group_element: false
+  depends_upon_element: 

@@ -1,15 +1,13 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-early_check:
-  id: 1
-  lab_group_id: 1
-  chip_type_id: 2
-  date: 2006-01-04
+--- 
+early_check: 
+  lab_group: gorilla_group
   number_expected: 20
+  date: 2006-01-04
+  chip_type: alligator
   number_counted: 20
-late_check:
-  id: 2
-  lab_group_id: 1
-  chip_type_id: 2
-  date: 2006-02-04
+late_check: 
+  lab_group: gorilla_group
   number_expected: 30
+  date: 2006-02-04
+  chip_type: alligator
   number_counted: 10

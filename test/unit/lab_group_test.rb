@@ -12,7 +12,7 @@ class LabGroupTest < Test::Unit::TestCase
                        "2 chip transaction(s)\n" +
                        "Are you sure you want to destroy it?"
 
-    group = LabGroup.find(1)   
+    group = LabGroup.find( lab_groups(:gorilla_group).id )   
     assert_equal expected_warning, group.destroy_warning
   end
 end

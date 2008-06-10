@@ -16,7 +16,7 @@ class QualityTracesControllerTest < Test::Unit::TestCase
   def test_show_as_admin
     login_as_admin
     
-    get :show, :id => 1
+    get :show, :id => quality_traces(:quality_trace_00001).id
 
     assert_response :success
     assert_template 'show'
@@ -28,7 +28,7 @@ class QualityTracesControllerTest < Test::Unit::TestCase
   def test_show_as_customer
     login_as_customer
     
-    get :show, :id => 1
+    get :show, :id => quality_traces(:quality_trace_00001).id
 
     assert_response :success
     assert_template 'show'

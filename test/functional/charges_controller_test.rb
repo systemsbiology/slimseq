@@ -20,7 +20,7 @@ class ChargesControllerTest < Test::Unit::TestCase
   end
 
   def test_list_within_charge_set_given_charge_set_id
-    get :list_within_charge_set, :charge_set_id => 1
+    get :list_within_charge_set, :charge_set_id => charge_sets(:mouse_jan).id
 
     assert_response :success
     assert_template 'list_within_charge_set'
@@ -29,7 +29,7 @@ class ChargesControllerTest < Test::Unit::TestCase
   end
 
   def test_new_given_charge_set_id
-    get :new, :charge_set_id => 1
+    get :new, :charge_set_id => charge_sets(:mouse_jan).id
 
     assert_response :success
     assert_template 'new'
@@ -40,7 +40,7 @@ class ChargesControllerTest < Test::Unit::TestCase
   def test_new_using_template
     test_new_given_charge_set_id
     
-    post :new, :charge_template_id => 1
+    post :new, :charge_template_id => charge_templates(:labeling_and_hyb).id
     
     assert_response :success
     assert_template 'new'
@@ -51,7 +51,7 @@ class ChargesControllerTest < Test::Unit::TestCase
   def test_create
     num_charges = Charge.count
 
-    post :create, :charge => { :charge_set_id => 1,
+    post :create, :charge => { :charge_set_id => charge_sets(:mouse_jan).id,
                                :date => '2006-03-07',
                                :chips_used => 1,
                                :description => 'Sample B',
@@ -68,7 +68,7 @@ class ChargesControllerTest < Test::Unit::TestCase
   end
 
   def test_edit
-    get :edit, :id => 1
+    get :edit, :id => charges(:mouse1).id
 
     assert_response :success
     assert_template 'edit'
@@ -78,35 +78,37 @@ class ChargesControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => 1
+    post :update, :id => charges(:mouse1).id
     assert_response :redirect
     assert_redirected_to :action => 'list_within_charge_set'
   end
 
   def test_update_locked
     # grab the charge we're going to use twice
-    charge1 = Charge.find(1)
-    charge2 = Charge.find(1)
+    charge1 = Charge.find( charges(:mouse1).id )
+    charge2 = Charge.find( charges(:mouse1).id )
     
     # update it once, which should sucess
-    post :update, :id => 1, :charge => { :description => "charge1", 
+    post :update, :id => charges(:mouse1).id, :charge => { :description => "charge1", 
                                                 :lock_version => charge1.lock_version }
 
     # and then update again with stale info, and it should fail
-    post :update, :id => 1, :charge => { :description => "charge2", 
+    post :update, :id => charges(:mouse1).id, :charge => { :description => "charge2", 
                                                 :lock_version => charge2.lock_version }                                               
 
     assert_response :success                                                
     assert_template 'edit'
     assert_flash_warning
     
-    assert_equal "charge1", Charge.find(1).description
+    assert_equal "charge1", Charge.find( charges(:mouse1).id ).description
   end
 
   def test_bulk_edit_valid_change
-    get :list_within_charge_set, :charge_set_id => 1
+    get :list_within_charge_set, :charge_set_id => charge_sets(:mouse_jan).id
   
-    post :bulk_edit_move_or_destroy, :selected_charges => {'2' => '1'},
+    post :bulk_edit_move_or_destroy, :selected_charges => {
+       charges(:mouse2).id  => '1'
+      },
          :field_name => "chip_cost", :field_value => "500",
          :move_charge_set_id => 2, :commit => "Set Field"
 
@@ -116,13 +118,15 @@ class ChargesControllerTest < Test::Unit::TestCase
     assert_select "h2", expected_heading
     
     # assert non-selected charge didn't change
-    assert_equal 400, Charge.find(1).chip_cost
+    assert_equal 400, Charge.find( charges(:mouse1).id ).chip_cost
     # assert selected charge did change chip cost
-    assert_equal 500, Charge.find(2).chip_cost
+    assert_equal 500, Charge.find( charges(:mouse2).id ).chip_cost
   end
   
   def test_bulk_edit_invalid_change
-    post :bulk_edit_move_or_destroy, :selected_charges => {'2' => '1'},
+    post :bulk_edit_move_or_destroy, :selected_charges => {
+       charges(:mouse2).id  => '1'
+     },
          :field_name => "chip_cost", :field_value => "adsf",
          :commit => "Set Field"
 
@@ -131,14 +135,16 @@ class ChargesControllerTest < Test::Unit::TestCase
     assert_flash_warning
     
     # assert non-selected charge didn't change
-    assert_equal 400, Charge.find(1).chip_cost
+    assert_equal 400, Charge.find( charges(:mouse1).id ).chip_cost
     # assert selected charge didn't change
-    assert_equal 0, Charge.find(2).chip_cost
+    assert_equal 0, Charge.find( charges(:mouse2).id ).chip_cost
   end
 
   def test_bulk_move
-    post :bulk_edit_move_or_destroy, :move_charge_set_id => 2, :selected_charges => {'2' => '1'},
-         :commit => "Move Charges To This Charge Set"
+    post :bulk_edit_move_or_destroy,
+      :move_charge_set_id => charge_sets(:alligator_jan).id,
+      :selected_charges => { charges(:mouse2).id  => '1'},
+      :commit => "Move Charges To This Charge Set"
     
     assert_response :success
     assert_template 'list_within_charge_set'
@@ -146,16 +152,21 @@ class ChargesControllerTest < Test::Unit::TestCase
     assert_select "h2", expected_heading
 
     # assert non-selected charge doesn't move    
-    assert_equal 1, Charge.find(1).charge_set_id
+    assert_equal charge_sets(:mouse_jan).id,
+      Charge.find( charges(:mouse1).id ).charge_set_id
     # assert selected charge does move
-    assert_equal 2, Charge.find(2).charge_set_id
+    assert_equal charge_sets(:alligator_jan).id,
+      Charge.find( charges(:mouse2).id ).charge_set_id
   end
 
   def test_bulk_destroy
-    get :list_within_charge_set, :charge_set_id => 1
+    get :list_within_charge_set, :charge_set_id => charge_sets(:mouse_jan).id
     
-    post :bulk_edit_move_or_destroy, :selected_charges => {'1' => '1', '2' => '1'},
-         :move_charge_set_id => 2, :commit => "Delete Charges"
+    post :bulk_edit_move_or_destroy, :selected_charges => {
+       charges(:mouse1).id  => '1',  charges(:mouse2).id  => '1'
+      },
+      :move_charge_set_id => charge_sets(:alligator_jan).id,
+      :commit => "Delete Charges"
     
     assert_response :success
     assert_template 'list_within_charge_set'
@@ -164,22 +175,22 @@ class ChargesControllerTest < Test::Unit::TestCase
 
     # assert that destroys have taken place
     assert_raise(ActiveRecord::RecordNotFound) {
-      Charge.find(1)
+      Charge.find( charges(:mouse1).id )
     }
     assert_raise(ActiveRecord::RecordNotFound) {
-      Charge.find(2)
+      Charge.find(  charges(:mouse2).id )
     }
   end
 
   def test_destroy
-    assert_not_nil Charge.find(1)
+    assert_not_nil Charge.find( charges(:mouse1).id )
 
-    post :destroy, :id => 1
+    post :destroy, :id => charges(:mouse1).id
     assert_response :redirect
     assert_redirected_to :action => 'list_within_charge_set'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      Charge.find(1)
+      Charge.find( charges(:mouse1).id )
     }
   end
 end

@@ -121,7 +121,9 @@ class Sample < ActiveRecord::Base
         ]
 
         # headings for naming elements
-        scheme.naming_elements.each do |e|
+        naming_elements = 
+          scheme.naming_elements.find(:all, :order => "element_order ASC")
+        naming_elements.each do |e|
           headings << e.name
         end
 
@@ -152,7 +154,7 @@ class Sample < ActiveRecord::Base
             sample.naming_scheme.name
           ]
           # values for naming elements
-          scheme.naming_elements.each do |e|
+          naming_elements.each do |e|
             value = ""
             if(e.free_text == true)
               sample_text = SampleText.find(:first, 
@@ -193,7 +195,7 @@ class Sample < ActiveRecord::Base
         begin
           sample = Sample.find(row[1].to_i)
         rescue
-          return "Sample ID is invalidin row #{row_number}"
+          return "Sample ID is invalid in row #{row_number}"
         end
       
         # check to see if this sample should have a naming scheme
@@ -225,7 +227,8 @@ class Sample < ActiveRecord::Base
             return "Naming scheme #{row[10]} doesn't exist in row #{row_number}"
           end
 
-          naming_elements = naming_scheme.naming_elements
+          naming_elements =
+            naming_scheme.naming_elements.find(:all, :order => "element_order ASC")
 
           expected_columns = 11 + naming_elements.size
           if(row.size != expected_columns)

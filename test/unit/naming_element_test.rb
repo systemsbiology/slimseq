@@ -10,7 +10,7 @@ class NamingElementTest < Test::Unit::TestCase
                        "0 sample text(s)\n" +
                        "Are you sure you want to destroy it?"
   
-    element = NamingElement.find(2)   
+    element = NamingElement.find( naming_elements(:perturbation).id )   
     assert_equal expected_warning, element.destroy_warning
   end
   
@@ -20,7 +20,7 @@ class NamingElementTest < Test::Unit::TestCase
                        "1 sample text(s)\n" +
                        "Are you sure you want to destroy it?"
   
-    element = NamingElement.find(5)   
+    element = NamingElement.find( naming_elements(:subject_number) )   
     assert_equal expected_warning, element.destroy_warning
   end
 
@@ -33,7 +33,7 @@ class NamingElementTest < Test::Unit::TestCase
     # make sure there is no longer a sample text
     # associated with this element
     assert_raise(ActiveRecord::RecordNotFound) {
-      SampleText.find(1)
+      SampleText.find( sample_texts(:sample6_subject_number) )
     }
     
     # check for existence of a naming_term for the previous sample text
@@ -47,7 +47,7 @@ class NamingElementTest < Test::Unit::TestCase
     
     # check for existence of a sample_term for the previous sample text
     assert_not_nil SampleTerm.find(:first, :conditions => {
-                                   :sample_id => 6,
+                                   :sample_id => samples(:sample6).id,
                                    :naming_term_id => nt.id,
                                    :term_order => 0 } )
   end
@@ -68,13 +68,13 @@ class NamingElementTest < Test::Unit::TestCase
     # make sure all the sample term associated with this element
     # is gone
     assert_raise(ActiveRecord::RecordNotFound) {
-        SampleTerm.find(4)
+        SampleTerm.find( sample_terms(:sample6_replicate) )
     }
     
     # check for existence of sample_text for the previous sample term
     assert_not_nil SampleText.find(:first, :conditions => {
       :naming_element_id => element.id,
-      :sample_id => 6,
+      :sample_id => samples(:sample6).id,
       :text => 'B' } )
   end
 end

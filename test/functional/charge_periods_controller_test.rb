@@ -49,7 +49,7 @@ class ChargePeriodsControllerTest < Test::Unit::TestCase
   end
 
   def test_edit
-    get :edit, :id => 1
+    get :edit, :id => charge_periods(:january).id
 
     assert_response :success
     assert_template 'edit'
@@ -59,56 +59,62 @@ class ChargePeriodsControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => 1, :charge_period => { :name => "2006-03-25 to 2006-04-24" }
+    post :update, :id => charge_periods(:january).id,
+         :charge_period => { :name => "2006-03-25 to 2006-04-24" }
     assert_response :redirect
     assert_redirected_to :controller => 'charge_sets', :action => 'list'
   end
 
   def test_update_duplicate_name
-    post :update, :id => 1, :charge_period => { :name => "2006-01-25 to 2006-02-24" }
+    post :update, :id => charge_periods(:january).id,
+         :charge_period => { :name => "2006-01-25 to 2006-02-24" }
     assert_response :success
     assert_template 'edit'
     assert_errors
     
-    assert_equal "2005-12-25 to 2006-01-24", ChargePeriod.find(1).name
+    assert_equal "2005-12-25 to 2006-01-24",
+      ChargePeriod.find( charge_periods(:january).id ).name
   end
 
   def test_update_locked
     # grab the charge period we're going to use twice
-    period1 = ChargePeriod.find(1)
-    period2 = ChargePeriod.find(1)
+    period1 = charge_periods(:january)
+    period2 = charge_periods(:february)
     
     # update it once, which should sucess
-    post :update, :id => 1, :charge_period => { :name => "2006-03-25 to 2006-04-24", 
-                                                :lock_version => period1.lock_version }
+    post :update, :id => charge_periods(:january).id,
+         :charge_period => { :name => "2006-03-25 to 2006-04-24",
+                             :lock_version => period1.lock_version }
 
     # and then update again with stale info, and it should fail
-    post :update, :id => 1, :charge_period => { :name => "name that shouldn't get updated", 
-                                                :lock_version => period2.lock_version }                                               
+    post :update, :id => charge_periods(:january).id,
+         :charge_period => { :name => "name that shouldn't get updated", 
+                             :lock_version => period2.lock_version }                                               
 
     assert_response :success                                                
     assert_template 'edit'
     assert_flash_warning
     
-    assert_equal "2006-03-25 to 2006-04-24", ChargePeriod.find(1).name
+    assert_equal "2006-03-25 to 2006-04-24", 
+      ChargePeriod.find( charge_periods(:january).id ).name
   end
 
   def test_destroy
-    assert_not_nil ChargePeriod.find(2)
+    assert_not_nil ChargePeriod.find( charge_periods(:february).id )
 
-    post :destroy, :id => 2
+    post :destroy, :id => charge_periods(:february).id
     assert_response :redirect
     assert_redirected_to :controller => 'charge_sets', :action => 'list'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      ChargePeriod.find(2)
+      ChargePeriod.find( charge_periods(:february).id )
     }
   end
 
   def test_destroy_with_associated_charge_sets
-    assert_not_nil ChargePeriod.find(1)
+    assert_not_nil ChargePeriod.find( charge_periods(:january).id )
 
-    post :destroy, :id => 1
+    post :destroy, :id => charge_periods(:january).id
     assert_response :redirect
     assert_redirected_to :controller => 'charge_sets', :action => 'list'
 

@@ -23,7 +23,8 @@ class ChipTransactionsControllerTest < Test::Unit::TestCase
   end
 
   def test_list_subset
-    get :list_subset, :lab_group_id => 1, :chip_type_id => 1
+    get :list_subset, :lab_group_id => lab_groups(:gorilla_group).id,
+      :chip_type_id => chip_types(:mouse).id
 
     assert_response :success
     assert_template 'list'
@@ -50,8 +51,8 @@ class ChipTransactionsControllerTest < Test::Unit::TestCase
   def test_create
     num_chip_transactions = ChipTransaction.count
 
-    post :create, :chip_transaction => {  :lab_group_id => '1',
-                                          :chip_type_id => '2',
+    post :create, :chip_transaction => {  :lab_group_id => lab_groups(:gorilla_group).id,
+                                          :chip_type_id => chip_types(:alligator).id,
                                           :date => '2006-02-01',
                                           :description => 'Bought some chips',
                                           :acquired => '180',
@@ -73,8 +74,8 @@ class ChipTransactionsControllerTest < Test::Unit::TestCase
   def test_create_no_description
     num_chip_transactions = ChipTransaction.count
 
-    post :create, :chip_transaction => {  :lab_group_id => '1',
-                                          :chip_type_id => '1',
+    post :create, :chip_transaction => {  :lab_group_id => lab_groups(:gorilla_group).id,
+                                          :chip_type_id => chip_types(:mouse).id,
                                           :date => '2006-02-01',
                                           :acquired => '180',
                                           :used => '0',
@@ -93,7 +94,7 @@ class ChipTransactionsControllerTest < Test::Unit::TestCase
   end
 
   def test_edit
-    get :edit, :id => 1
+    get :edit, :id => chip_transactions(:acquired).id
 
     assert_response :success
     assert_template 'edit'
@@ -103,47 +104,42 @@ class ChipTransactionsControllerTest < Test::Unit::TestCase
   end
 
   def test_update
-    post :update, :id => 1
+    post :update, :id => chip_transactions(:acquired).id
     assert_response :redirect
-    assert_redirected_to :action => 'list_subset', :id => 1
+    assert_redirected_to :action => 'list_subset', :id => chip_transactions(:acquired).id
   end
 
   def test_update_locked
     # grab the chip_transaction we're going to use twice
-    chip_transaction1 = ChipTransaction.find(1)
-    chip_transaction2 = ChipTransaction.find(1)
+    chip_transaction1 = chip_transactions(:acquired)
+    chip_transaction2 = chip_transactions(:acquired)
     
     # update it once, which should sucess
-    post :update, :id => 1, :chip_transaction => { :description => "chip_transaction1", 
+    post :update, :id => chip_transactions(:acquired).id, :chip_transaction => { :description => "chip_transaction1", 
                                                 :lock_version => chip_transaction1.lock_version }
 
     # and then update again with stale info, and it should fail
-    post :update, :id => 1, :chip_transaction => { :description => "chip_transaction2", 
+    post :update, :id => chip_transactions(:acquired).id, :chip_transaction => { :description => "chip_transaction2", 
                                                 :lock_version => chip_transaction2.lock_version }                                            
 
     assert_response :success                                                
     assert_template 'edit'
     assert_flash_warning
     
-    assert_equal "chip_transaction1", ChipTransaction.find(1).description
+    assert_equal "chip_transaction1",
+      ChipTransaction.find( chip_transactions(:acquired).id ).description
   end
 
   def test_destroy
-    assert_not_nil ChipTransaction.find(1)
+    assert_not_nil ChipTransaction.find( chip_transactions(:acquired).id )
 
-    post :destroy, :id => 1
+    post :destroy, :id => chip_transactions(:acquired).id
     assert_response :redirect
     assert_redirected_to :action => 'list_subset'
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      ChipTransaction.find(1)
+      ChipTransaction.find( chip_transactions(:acquired).id )
     }
   end
-  
-#  def teardown
-#    #breakpoint();
-#    ChipTransaction.delete_all
-#    ChipType.delete_all
-#    LabGroup.delete_all
-#  end
+
 end

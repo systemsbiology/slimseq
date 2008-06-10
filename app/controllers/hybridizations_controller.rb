@@ -76,7 +76,7 @@ class HybridizationsController < ApplicationController
         # does user want charge set(s) created based on projects?
         if(@submit_hybridizations.charge_set_id == -1)
           # get latest charge period
-          charge_period = ChargePeriod.find(:first, :order => "id DESC")
+          charge_period = ChargePeriod.find(:first, :order => "name DESC")
 
           # if no charge periods exist, make a default one
           if( charge_period == nil )

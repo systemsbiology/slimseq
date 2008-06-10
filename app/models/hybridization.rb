@@ -1,5 +1,7 @@
 class Hybridization < ActiveRecord::Base
   belongs_to :sample
+  belongs_to :charge_set
+  belongs_to :charge_template
 
   validates_presence_of :hybridization_date
   validates_numericality_of :chip_number

@@ -45,7 +45,7 @@ class BioanalyzerRunsControllerTest < Test::Unit::TestCase
   def test_show_as_admin
     login_as_admin
   
-    get :show, :id => 1
+    get :show, :id => bioanalyzer_runs(:bioanalyzer_run_00001).id
 
     assert_response :success
     assert_template 'show'
@@ -59,9 +59,9 @@ class BioanalyzerRunsControllerTest < Test::Unit::TestCase
   def test_destroy_as_admin
     login_as_admin
   
-    assert_not_nil BioanalyzerRun.find(1)
+    assert_not_nil BioanalyzerRun.find(bioanalyzer_runs(:bioanalyzer_run_00001).id)
 
-    post :destroy, :id => 1
+    post :destroy, :id => bioanalyzer_runs(:bioanalyzer_run_00001).id
     assert_response :redirect
     assert_redirected_to :action => 'list'
 
@@ -101,7 +101,7 @@ class BioanalyzerRunsControllerTest < Test::Unit::TestCase
   def test_show_as_customer
     login_as_customer
   
-    get :show, :id => 2
+    get :show, :id => bioanalyzer_runs(:bioanalyzer_run_00002).id
 
     assert_response :success
     assert_template 'show'
@@ -116,14 +116,14 @@ class BioanalyzerRunsControllerTest < Test::Unit::TestCase
   def test_destroy_as_customer
     login_as_customer
   
-    assert_not_nil BioanalyzerRun.find(1)
+    assert_not_nil BioanalyzerRun.find(bioanalyzer_runs(:bioanalyzer_run_00001).id)
 
-    post :destroy, :id => 1
+    post :destroy, :id => bioanalyzer_runs(:bioanalyzer_run_00001).id
     assert_response :redirect
     assert_redirected_to :controller => 'welcome'
 
     # make sure it didn't get destroyed
-    assert_not_nil BioanalyzerRun.find(1)
+    assert_not_nil BioanalyzerRun.find(bioanalyzer_runs(:bioanalyzer_run_00001).id)
   end
 
 end

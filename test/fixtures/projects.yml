@@ -1,11 +1,9 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-first:
-  id: 1
-  name: MouseGroup
-  budget: 12345678
-  lab_group_id: 1
-another:
-  id: 2
+--- 
+another: 
   name: Bob's Stuff
+  lab_group: gorilla_group
   budget: 12345678
-  lab_group_id: 1
+first: 
+  name: MouseGroup
+  lab_group: gorilla_group
+  budget: 12345678
