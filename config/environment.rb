@@ -63,11 +63,6 @@ end
 
 AUTHENTICATION_SALT = 'mmm_kosher_rocks' unless defined? AUTHENTICATION_SALT
 
-# Set up ActionMailer
-ActionMailer::Base.delivery_method = :sendmail
-ActionMailer::Base.raise_delivery_errors = true
-
-
 # Exception Notifier plugin configuration
 if( ENV["RAILS_ENV"] == "test" )
   ExceptionNotifier.exception_recipients = "admin@example.com"
