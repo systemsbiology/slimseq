@@ -31,6 +31,15 @@ class ChargeSetsControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:charge_periods)
   end
 
+  def test_list_all
+    get :list_all
+
+    assert_response :success
+    assert_template 'list'
+
+    assert_not_nil assigns(:charge_periods)
+  end
+  
   def test_new
     get :new
 

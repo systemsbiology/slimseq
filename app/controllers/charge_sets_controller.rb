@@ -8,7 +8,13 @@ class ChargeSetsController < ApplicationController
   end
 
   def list
+    @charge_periods = ChargePeriod.find(:all, :order => "name DESC",
+                                        :limit => 4)
+  end
+  
+  def list_all
     @charge_periods = ChargePeriod.find(:all, :order => "name DESC")
+    render :action => 'list'
   end
 
   def new
