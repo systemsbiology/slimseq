@@ -166,7 +166,7 @@ class Sample < ActiveRecord::Base
             else
               sample_term = SampleTerm.find(:first,
                 :include => :naming_term,
-                :conditions => ["sample_id = ? AND naming_element_id = ?",
+                :conditions => ["sample_id = ? AND naming_terms.naming_element_id = ?",
                   sample.id, e.id] )
               if(sample_term != nil)
                 value = sample_term.naming_term.term
