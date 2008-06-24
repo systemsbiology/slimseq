@@ -57,6 +57,7 @@ class Charge < ActiveRecord::Base
           contact("/table[1]/tr[1]/td[2]")
           project("/table[1]/tr[2]/td[2]")
           slide_type("/table[1]/tr[4]/td[2]")
+          samples_per_array("/table[1]/tr[6]/td[2]")
           #hybridization_request("/table[1]/tr[7]/td[2]")
           #scanning_request("/table[1]/tr[8]/td[2]")
           request_date("/table[1]/tr[12]/td[2]")
@@ -91,13 +92,18 @@ class Charge < ActiveRecord::Base
     array_cost = slide_type.scan(/.*\(\ \$(\d+)\ \)/)
     array_cost = array_cost[0][0]
 
+    samples_per_array = hash[0]['samples_per_array']
+    
     request_date = hash[0]['request_date']
 
     # sample name info
     sample1_list = hash[0]['sample1']
     sample1_array = sample1_list.split(/,/)
-    sample2_list = hash[0]['sample2']
-    sample2_array = sample2_list.split(/,/)
+    
+    if(samples_per_array == 2)
+      sample2_list = hash[0]['sample2']
+      sample2_array = sample2_list.split(/,/)
+    end
     
     # use the most recently created charge set
     charge_period = ChargePeriod.find(:first, :order => "id DESC")
@@ -121,9 +127,13 @@ class Charge < ActiveRecord::Base
     end
 
     for n in 0..sample1_array.size-1
+      description = sample1_array[n]
+      if(samples_per_array == 2)
+        description += "_v_" + sample2_array[n]
+      end
       charge = Charge.new(:charge_set_id => charge_set.id,
                           :date => request_date,
-                          :description => sample1_array[n] + "_v_" + sample2_array[n],
+                          :description => description,
                           :chips_used => 1,
                           :chip_cost => array_cost,
                           :labeling_cost => 0,
