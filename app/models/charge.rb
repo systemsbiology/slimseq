@@ -92,8 +92,8 @@ class Charge < ActiveRecord::Base
     array_cost = slide_type.scan(/.*\(\ \$(\d+)\ \)/)
     array_cost = array_cost[0][0]
 
-    samples_per_array = hash[0]['samples_per_array']
-    
+    samples_per_array = hash[0]['samples_per_array'].to_i
+
     request_date = hash[0]['request_date']
 
     # sample name info
