@@ -1,6 +1,11 @@
 <h2>Chip Inventory</h2>
 
-<%= link_if_staff_or_admin 'New Chip Transaction', :controller=> 'chip_transactions', :action => 'new' %>
+New Chip Transaction: 
+<%= link_if_staff_or_admin 'Buy', :controller=> 'chip_transactions', :action => 'buy' %> | 
+<%= link_if_staff_or_admin 'Borrow', :controller=> 'chip_transactions', :action => 'borrow' %> | 
+<%= link_if_staff_or_admin 'Return', :controller=> 'chip_transactions', :action => 'return_borrowed' %> | 
+<%= link_if_staff_or_admin 'Custom', :controller=> 'chip_transactions', :action => 'new' %>
+
 <% if(@lab_groups.size > 0) %>
 	<% for lab_group in @lab_groups %>
 		<p><%=h lab_group.name %>:

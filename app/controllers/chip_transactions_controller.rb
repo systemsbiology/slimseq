@@ -51,15 +51,143 @@ class ChipTransactionsController < ApplicationController
     @chip_types = ChipType.find(:all, :order => "name ASC")
   end
 
+  def buy
+    new
+  end
+
+  def borrow
+    new
+  end
+
+  def borrow_create
+    begin
+      @chip_transaction = ChipTransaction.new(params[:chip_transaction])
+      
+      @lab_groups = LabGroup.find(:all)
+      @chip_types = ChipType.find(:all)
+
+      @borrowing_from_group = 
+        LabGroup.find(params[:borrowing_from_lab_group_id])
+
+      # automatically set the description
+      @chip_transaction.description = "Borrowed from " + 
+        @borrowing_from_group.name
+
+      @secondary_transaction = ChipTransaction.new(
+        :date => @chip_transaction.date,
+        :lab_group_id => @borrowing_from_group.id,
+        :chip_type_id => @chip_transaction.chip_type_id,
+        :description => "Borrowed by " +  @chip_transaction.lab_group.name,
+        :borrowed_out => @chip_transaction.borrowed_in
+      )
+
+      if @chip_transaction.save && @secondary_transaction.save
+        # grab lab group and chip type for display of subset
+        session[:lab_group_id] = @chip_transaction.lab_group_id
+        session[:chip_type_id] = @chip_transaction.chip_type_id
+
+        flash[:notice] = 'Chip transaction was successfully created.'
+        redirect_to :action => 'list_subset'
+      else
+        render :action => 'borrow'
+      end
+    rescue
+      flash[:notice] = 'Item could not be saved, probably because date is incorrect.'
+      redirect_to :action => 'borrow'
+    end
+  end
+  
+  def return_borrowed
+    new
+  end
+
+  def return_create
+    begin
+      @chip_transaction = ChipTransaction.new(params[:chip_transaction])
+      
+      @lab_groups = LabGroup.find(:all)
+      @chip_types = ChipType.find(:all)
+
+      @returning_to_group = 
+        LabGroup.find(params[:returning_to_lab_group_id])
+
+      # automatically set the description
+      @chip_transaction.description = "Returned to " + 
+        @returning_to_group.name
+
+      @secondary_transaction = ChipTransaction.new(
+        :date => @chip_transaction.date,
+        :lab_group_id => @returning_to_group.id,
+        :chip_type_id => @chip_transaction.chip_type_id,
+        :description => "Returned by " +  @chip_transaction.lab_group.name,
+        :returned_in => @chip_transaction.returned_out
+      )
+
+      if @chip_transaction.save && @secondary_transaction.save
+        # grab lab group and chip type for display of subset
+        session[:lab_group_id] = @chip_transaction.lab_group_id
+        session[:chip_type_id] = @chip_transaction.chip_type_id
+
+        flash[:notice] = 'Chip transaction was successfully created.'
+        redirect_to :action => 'list_subset'
+      else
+        render :action => 'return_borrowed'
+      end
+    rescue
+      flash[:notice] = 'Item could not be saved, probably because date is incorrect.'
+      redirect_to :action => 'return_borrowed'
+    end
+  end
+  
   def create
     begin
       @chip_transaction = ChipTransaction.new(params[:chip_transaction])
+      
       @lab_groups = LabGroup.find(:all)
       @chip_types = ChipType.find(:all)
+
+      if(params[:transaction_type] == "borrow")
+        @borrowing_from_group = 
+          LabGroup.find(params[:borrowing_from_lab_group_id])
+        
+        # automatically set the description
+        @chip_transaction.description = "Borrowed from " + 
+          @borrowing_from_group.name
+        
+        @secondary_transaction = ChipTransaction.new(
+          :date => @chip_transaction.date,
+          :lab_group_id => @borrowing_from_group.id,
+          :chip_type_id => @chip_transaction.chip_type_id,
+          :description => "Borrowed by " +  @chip_transaction.lab_group.name,
+          :borrowed_out => @chip_transaction.borrowed_in
+        )
+      elsif(params[:transaction_type] == "return")
+        @returning_to_group = 
+          LabGroup.find(params[:returning_to_lab_group_id])
+        
+        # automatically set the description
+        @chip_transaction.description = "Returned to " + 
+          @returning_to_group.name
+        
+        @secondary_transaction = ChipTransaction.new(
+          :date => @chip_transaction.date,
+          :lab_group_id => @returning_to_group.id,
+          :chip_type_id => @chip_transaction.chip_type_id,
+          :description => "Returned by " +  @chip_transaction.lab_group.name,
+          :returned_in => @chip_transaction.returned_out
+        )
+      end
+
       if @chip_transaction.save
         # grab lab group and chip type for display of subset
         session[:lab_group_id] = @chip_transaction.lab_group_id
         session[:chip_type_id] = @chip_transaction.chip_type_id
+
+        # if there's a secondary transaction (e.g. borrow), save that too
+        if(@secondary_transaction != nil)
+          @secondary_transaction.save
+        end
+        
         flash[:notice] = 'Chip transaction was successfully created.'
         redirect_to :action => 'list_subset'
       else

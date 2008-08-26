@@ -48,6 +48,99 @@ class ChipTransactionsControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:chip_transaction)
   end
 
+  def test_buy
+    get :buy
+
+    assert_response :success
+    assert_template 'buy'
+
+    assert_not_nil assigns(:chip_transaction)
+  end
+
+  def test_borrow
+    get :borrow
+
+    assert_response :success
+    assert_template 'borrow'
+
+    assert_not_nil assigns(:chip_transaction)
+  end
+
+  def test_return_borrowed
+    get :return_borrowed
+
+    assert_response :success
+    assert_template 'return_borrowed'
+
+    assert_not_nil assigns(:chip_transaction)
+  end
+
+  def test_borrow_create
+    num_chip_transactions = ChipTransaction.count
+
+    post :borrow_create,
+      :borrowing_from_lab_group_id => lab_groups(:monkey_group).id,
+      :chip_transaction => {
+        :lab_group_id => lab_groups(:gorilla_group).id,
+        :chip_type_id => chip_types(:alligator).id,
+        :date => '2006-02-01',
+        :borrowed_in => '5'
+      }
+
+    assert_response :redirect
+    assert_redirected_to :action => 'list_subset'
+    assert_no_flash_warning
+
+    assert_equal num_chip_transactions + 2, ChipTransaction.count
+    assert_not_nil ChipTransaction.find(:first, :conditions =>
+      { :lab_group_id => lab_groups(:gorilla_group).id,
+       :chip_type_id => chip_types(:alligator).id,
+       :date => '2006-02-01',
+       :borrowed_in => '5',
+       :description => 'Borrowed from Monkeys' }
+    )
+    assert_not_nil ChipTransaction.find(:first, :conditions =>
+      { :lab_group_id => lab_groups(:monkey_group).id,
+        :chip_type_id => chip_types(:alligator).id,
+        :date => '2006-02-01',
+        :borrowed_out => '5',
+        :description => 'Borrowed by Gorillaz' }
+    )
+  end
+
+  def test_return_create
+    num_chip_transactions = ChipTransaction.count
+
+    post :return_create,
+      :returning_to_lab_group_id => lab_groups(:monkey_group).id,
+      :chip_transaction => {
+        :lab_group_id => lab_groups(:gorilla_group).id,
+        :chip_type_id => chip_types(:alligator).id,
+        :date => '2006-02-01',
+        :returned_out => '5'
+      }
+
+    assert_response :redirect
+    assert_redirected_to :action => 'list_subset'
+    assert_no_flash_warning
+
+    assert_equal num_chip_transactions + 2, ChipTransaction.count
+    assert_not_nil ChipTransaction.find(:first, :conditions =>
+      { :lab_group_id => lab_groups(:gorilla_group).id,
+       :chip_type_id => chip_types(:alligator).id,
+       :date => '2006-02-01',
+       :returned_out => '5',
+       :description => 'Returned to Monkeys' }
+    )
+    assert_not_nil ChipTransaction.find(:first, :conditions =>
+      { :lab_group_id => lab_groups(:monkey_group).id,
+        :chip_type_id => chip_types(:alligator).id,
+        :date => '2006-02-01',
+        :returned_in => '5',
+        :description => 'Returned by Gorillaz' }
+    )
+  end
+  
   def test_create
     num_chip_transactions = ChipTransaction.count
 
