@@ -1,6 +1,6 @@
-<h2>New Vendor Purchase</h2>
+<h2>New Inter-group Purchase</h2>
 
-<% form_tag :action => 'create' do -%>
+<% form_tag :action => 'intergroup_buy_create' do -%>
   <p><label for="chip_transaction_date">Date</label><br/>
   <%= date_select 'chip_transaction', 'date', :use_month_numbers => true  %></p>
   
@@ -13,12 +13,13 @@
   <select id="chip_type_id" name="chip_transaction[chip_type_id]">
   <%= options_from_collection_for_select @chip_types, "id", "name",
   @chip_transaction.chip_type_id %></select></p>
+
+  <p><label for="buying_from_lab_group_id">Borrowing From</label><br/>
+  <select id="buying_from_lab_group_id" name="buying_from_lab_group_id">
+  <%= options_from_collection_for_select @lab_groups, "id", "name" %></select></p>
   
   <p><label for="chip_trasaction_acquired">Number of Chips</label><br/>
   <%= text_field 'chip_transaction', 'acquired', 'size' => 25  %></p>
-  
-  <p><label for="chip_trasaction_description">Description</label><br/>
-  <%= text_field 'chip_transaction', 'description', 'size' => 25  %></p>
   
   <input type="hidden" id="transaction_type" name="transaction_type" value="buy"/>
   

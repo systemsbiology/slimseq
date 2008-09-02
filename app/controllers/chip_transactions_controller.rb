@@ -55,6 +55,48 @@ class ChipTransactionsController < ApplicationController
     new
   end
 
+  def intergroup_buy
+    new
+  end
+  
+  def intergroup_buy_create
+    begin
+      @chip_transaction = ChipTransaction.new(params[:chip_transaction])
+      
+      @lab_groups = LabGroup.find(:all)
+      @chip_types = ChipType.find(:all)
+
+      @buying_from_group = 
+        LabGroup.find(params[:buying_from_lab_group_id])
+
+      # automatically set the description
+      @chip_transaction.description = "Purchased from " + 
+        @buying_from_group.name
+
+      @secondary_transaction = ChipTransaction.new(
+        :date => @chip_transaction.date,
+        :lab_group_id => @buying_from_group.id,
+        :chip_type_id => @chip_transaction.chip_type_id,
+        :description => "Purchased by " +  @chip_transaction.lab_group.name,
+        :traded_sold => @chip_transaction.acquired
+      )
+
+      if @chip_transaction.save && @secondary_transaction.save
+        # grab lab group and chip type for display of subset
+        session[:lab_group_id] = @chip_transaction.lab_group_id
+        session[:chip_type_id] = @chip_transaction.chip_type_id
+
+        flash[:notice] = 'Chip transaction was successfully created.'
+        redirect_to :action => 'list_subset'
+      else
+        render :action => 'intergroup_buy'
+      end
+    rescue
+      flash[:notice] = 'Item could not be saved, probably because date is incorrect.'
+      redirect_to :action => 'borrow'
+    end
+  end
+  
   def borrow
     new
   end

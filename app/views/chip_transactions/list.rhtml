@@ -1,7 +1,8 @@
 <h2>Listing Chip Transactions for <%= @lab_group_name%> and <%= @chip_type_name%></h2>
 
 New Chip Transaction: 
-<%= link_if_staff_or_admin 'Buy', :controller=> 'chip_transactions', :action => 'buy' %> | 
+<%= link_if_staff_or_admin 'Vendor Purchase', :controller=> 'chip_transactions', :action => 'buy' %> | 
+<%= link_if_staff_or_admin 'Inter-group Purchase', :controller=> 'chip_transactions', :action => 'intergroup_buy' %> | 
 <%= link_if_staff_or_admin 'Borrow', :controller=> 'chip_transactions', :action => 'borrow' %> | 
 <%= link_if_staff_or_admin 'Return', :controller=> 'chip_transactions', :action => 'return_borrowed' %> | 
 <%= link_if_staff_or_admin 'Custom', :controller=> 'chip_transactions', :action => 'new' %><br>
