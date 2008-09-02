@@ -19,13 +19,14 @@
             <br>
             <%#=h @quality_traces[i].sample_type + ": " + @quality_traces[i].name %>
             <% if @quality_traces[i].sample_type == "total" %>
-                <b>RIN= <%=h @quality_traces[i].quality_rating %></b>
-                <BR>
+                <b>RIN= <%=h @quality_traces[i].quality_rating %></b><br>
+                <b>28S/18S ratio= <%=h @quality_traces[i].ribosomal_ratio %></b><br>            
             <% end %>
-            <% if @quality_traces[i].sample_type != "ladder" %>
+            <b>Concentration= <%=h @quality_traces[i].concentration %>ng/uL</b><br>
+            <!--<% if @quality_traces[i].sample_type != "ladder" %>
                 <%= check_box 'selected_traces', @quality_traces[i].id %> <b>Select</b>
                 <br>
-            <% end %>
+            <% end %>-->
             <br>
         </td>
     <% if (i+1) % 2 == 0 %>
@@ -36,16 +37,16 @@
     </tr>
 </table>
 
-<p>
+<!--<p>
 <input type="button" name="CheckAll" value="Check All"
 onClick="checkAll(document.traces)">
 <input type="button" name="UnCheckAll" value="Uncheck All"
 onClick="uncheckAll(document.traces)">
 </p>
 
-  <%= submit_tag "Request Labeling" %> |
-  <%= submit_tag "Request Hybridization" %> |
-  <%= submit_tag "Match to Hybridized Samples" %>
-<% end -%>
+  <%#= submit_tag "Request Labeling" %> |
+  <%#= submit_tag "Request Hybridization" %> |
+  <%#= submit_tag "Match to Hybridized Samples" %>
+<% end -%> -->
 
 <%= link_to 'Back', :action => 'list' %>
