@@ -2,65 +2,58 @@
 
 <h2>Enter Samples</h2>
 
-<%#= start_form_tag :action => 'add' %>
-    <%#= render :partial => 'form' %>
-  <%#= submit_tag "Add to Sample Table" %>
-<%#= end_form_tag %>
-
 <% if @samples.size > 0 %>
-	<% form_tag :action => 'create' do -%>
-	<table class="table">
-	  <th>Date</th>
-	  <th>Short Name</th>
-	  <% if @add_samples.naming_scheme_id == nil %>
+  <% form_tag :action => 'create' do -%>
+    <table class="table">
+      <th>Date</th>
+      <th>Short Name</th>
+      <% if @add_samples.naming_scheme_id == nil %>
         <th>Full Sample Name</th>
-	    <th>Sample Group Name</th>
-	  <% else %>
-	    <% for element in @naming_elements %>
-        <th><%=h element.name %></th>
+        <th>Sample Group Name</th>
+      <% else %>
+        <% for element in @naming_elements %>
+          <th><%=h element.name %></th>
         <% end %>
-	  <% end %>
-	  <th>Organism</th>
-	  <th>Chip Type</th>
-	  <th>Project</th>
-	  <% if SiteConfig.create_gcos_files? %>
-		  <th>SBEAMS User</th>
-	  <% end %>
-	  <% for @n in 0..@samples.size-1 %>
-	  <tr>
-	    <% @sample = @samples[@n] %>
-	    <td><%= @sample.submission_date %></td>
-	    <td><input id="sample-<%=@n%>_short_sample_name" 
-	        name="sample-<%=@n%>[short_sample_name]" size="10" type="text"
-	        value="<%= @sample.short_sample_name %>" /></td>
-	    
-	    <% if @add_samples.naming_scheme_id == nil %>
-            <td>
-                <input id="sample-<%=@n%>_sample_name" 
-                    name="sample-<%=@n%>[sample_name]" size="30" type="text"
-                    value="<%= @sample.sample_name %>" />
-            </td>
-            <td>
-                <input id="sample-<%=@n%>_sample_group_name" 
-            	   name="sample-<%=@n%>[sample_group_name]" size="30" type="text"
-            	   value="<%= @sample.sample_group_name %>" />
-            </td>
-        <% else %>
-	           <%= render :partial => 'schemed_sample_name' %>
-	    <% end %>
-	        
-	    <td><select id="sample-<%=@n%>_organism_id" name="sample-<%=@n%>[organism_id]">
-	    <%= options_from_collection_for_select @organisms, "id", "name", selected_value=@sample.organism_id %></select></td>
-	    <td><%= ChipType.find(@sample.chip_type_id).name %></td>
-	    <td><%= @sample.project.name %></td>
-	    <% if SiteConfig.create_gcos_files? %>
-	        <td><%= @sample.sbeams_user %></td>
-	    <% end %>
-	  </tr>
-	  <% end %>
-	</table>
-	  <p><%= submit_tag "Create Sample Records" %></p>
-	<% end -%>
-	
-	<%= link_to 'Clear Samples', :action => 'clear' %> | <%= link_to 'Back to List of Samples', :action => 'list' %>
+      <% end %>
+      <th>Organism</th>
+      <th>Chip Type</th>
+      <th>Project</th>
+      <% if SiteConfig.create_gcos_files? %>
+        <th>SBEAMS User</th>
+      <% end %>
+      <% for @n in 0..@samples.size-1 %>
+        <tr>
+          <% @sample = @samples[@n] %>
+          <td><%=h @sample.submission_date %>
+              <%= hidden_field :sample, :submission_date, :index =>@n %></td>
+          <td><%= text_field :sample, :short_sample_name, :index =>@n,
+                  :size => 10 %></td>
+    
+          <% if @add_samples.naming_scheme_id == nil %>
+            <td><%= text_field :sample, :sample_name, :index =>@n,
+                    :size => 30 %></td>
+            <td><%= text_field :sample, :sample_group_name, :index =>@n,
+                    :size => 30 %></td>
+          <% else %>
+            <%= render :partial => 'schemed_sample_name' %>
+          <% end %>
+             
+          <td><%= collection_select :sample, :organism_id, @organisms, :id,
+                  :name, {}, { :index => @n } %></td>
+          <td><%=h @sample.chip_type.name %>
+              <%= hidden_field :sample, :chip_type_id, :index =>@n %></td>
+          <td><%=h @sample.project.name %>
+              <%= hidden_field :sample, :project_id, :index =>@n %></td>
+          <% if SiteConfig.create_gcos_files? %>
+            <td><%= @sample.sbeams_user %>
+                <%= hidden_field :sample, :sbeams_user, :index =>@n %></td>
+          <% end %>
+          <%= hidden_field :sample, :status, :index =>@n %>
+        </tr>
+      <% end %>
+    </table>
+    <p><%= submit_tag "Create Sample Records" %></p>
+  <% end -%>
+
+  <%= link_to 'Clear Samples', :action => 'new' %> | <%= link_to 'Back to List of Samples', :action => 'list' %>
 <% end %>

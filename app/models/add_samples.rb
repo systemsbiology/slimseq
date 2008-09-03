@@ -12,7 +12,7 @@ class AddSamples < ActiveRecord::Base
   column :project_id, :integer
   column :naming_scheme_id, :integer
   
-  validates_numericality_of :number
+  validates_numericality_of :number, :greater_than_or_equal_to => 1
   if SiteConfig.using_affy_arrays? && SiteConfig.create_gcos_files?
     validates_presence_of :sbeams_user, :project_id
   end

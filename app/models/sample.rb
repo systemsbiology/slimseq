@@ -19,14 +19,13 @@ class Sample < ActiveRecord::Base
   
   validates_associated :chip_type, :project
   validates_presence_of :sample_name, :short_sample_name, :submission_date, :project_id
-  #  validates_uniqueness_of :sample_name
   validates_length_of :short_sample_name, :maximum => 20
   validates_length_of :sample_name, :maximum => 59
   validates_length_of :sbeams_user, :maximum => 20
   validates_length_of :status, :maximum => 50
 
   attr_accessor :naming_element_selections, :naming_element_visibility,
-    :text_values
+    :text_values, :schemed_name
   
   def validate_on_create
     # make sure date/short_sample_name/sample_name combo is unique

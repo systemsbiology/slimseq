@@ -1,7 +1,9 @@
 <% for @m in 0..@naming_elements.size-1 
-   @element = @naming_elements[@m] %>
+   @element = @naming_elements[@m]
+   @dependent_elements = NamingElement.find(:all,
+     :conditions => ["dependent_element_id = ?", @element.id]) %>
     <td>
-        <div id="sample-<%=@n%>_schemed_name_<%=@element.name%>_block">
+        <div id="sample_<%=@n%>_schemed_name_<%=@element.name%>_block">
             <% if @sample.naming_element_visibility[@m] == true %>
                 <%= render :partial => 'shown_naming_element' %>
             <% else %>
@@ -10,8 +12,15 @@
         </div>
     </td>
     
-    <%= observe_field "sample-#{@n}_schemed_name_#{@element.name}", :url => { :action => 'update_add_form',
-                                                                            :sample_number => @n,
-                                                                            :dependent_id => @element.id },
-                                                                            :with => "'choice=' + value" %>
+    <%= observe_field "sample_#{@n}_schemed_name_#{@element.name}",
+      :function => update_page { |page|
+        @dependent_elements.each do |dependent_element|
+          page << "if(value == -1) {"
+            page["sample_#{@n}_schemed_name_#{dependent_element.name}"].hide
+          page << "} else {"
+            page["sample_#{@n}_schemed_name_#{dependent_element.name}"].show
+          page << "}"
+        end
+      }
+    %>
 <% end %>

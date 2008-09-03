@@ -1,5 +1,9 @@
 class SamplesController < ApplicationController
   before_filter :login_required
+  before_filter :populate_arrays_from_tables,
+    :only => [:index, :list, :new, :add, :create, :edit, :submit_traces,
+              :new_from_traces, :create_traces, :match_traces,
+              :submit_matched_traces]
   
   def index
     list
@@ -7,8 +11,6 @@ class SamplesController < ApplicationController
   end
 
   def list
-    populate_arrays_from_tables
-
     if(@lab_groups != nil && @lab_groups.size > 0)
       # make an array of the accessible project ids, and use this
       # to find the current user's accessible samples in a nice sorted list
@@ -27,32 +29,26 @@ class SamplesController < ApplicationController
   end
   
   def new
-    populate_arrays_from_tables
-    
     @naming_schemes = NamingScheme.find(:all)
     
-    # clear out sample table since this is a 'new' set
-    session[:samples] = Array.new
-    session[:sample_number] = 0
-
     @add_samples = AddSamples.new
     @project = Project.new
   end
 
   def add
-    populate_arrays_from_tables
-
     @add_samples = AddSamples.new(params[:add_samples])
+
+    # change current naming scheme to whatever was selected   
     if( @add_samples.naming_scheme_id != nil )
-      # change current naming scheme to whatever was selected
       current_user.update_attribute('current_naming_scheme_id', @add_samples.naming_scheme_id )
       populate_sample_naming_scheme_choices( NamingScheme.find(@add_samples.naming_scheme_id) )
+    else
+      current_user.update_attribute('current_naming_scheme_id', nil)
     end
  
     @naming_schemes = NamingScheme.find(:all)
     
-    @samples = session[:samples]
-    previous_samples = session[:sample_number]
+    @samples = Array.new
 
     # should a new project be created?
     if(@add_samples.project_id == -1)
@@ -62,9 +58,9 @@ class SamplesController < ApplicationController
       end
     end
 
-    # only add more sample slots if that's what was asked
+    # make sure there's a project and valid sample info
     if(@add_samples.project_id != -1 && @add_samples.valid?) 
-      for sample_number in previous_samples+1..previous_samples+@add_samples.number
+      for sample_number in 1..@add_samples.number
         
         # deal with initial visibility for schemed names
         if( @add_samples.naming_scheme_id == nil )
@@ -97,58 +93,31 @@ class SamplesController < ApplicationController
               :naming_element_visibility => visibility,
               :text_values => text_values)
       end
-      session[:sample_number] = previous_samples + @add_samples.number 
     else
       render :action => 'new'
     end
   end
   
-  def update_add_form
-    # find the number of the sample on the page (this is not the sample id)
-    @n = params['sample_number'].to_i
-
-    # the sample
-    @sample = session[:samples][@n]
-
-    # the element that is depended upon
-    @dependent_element_id = params['dependent_id'].to_i
-
-    # find the elements that are depending upon the altered field
-    @dependent_elements = NamingElement.find(:all, :conditions => ["dependent_element_id = ?", @dependent_element_id])# iterate through naming elements in form
-
-    choice_text = params['choice'].gsub(/\&\_\=/,"")
-    @choice = choice_text.to_i
-
-    populate_sample_naming_scheme_choices(current_user.naming_scheme)
-  end
-  
   def create
-    populate_arrays_from_tables
     populate_sample_naming_scheme_choices(current_user.naming_scheme)
 
-    @samples = session[:samples]
-    sample_number = session[:sample_number]
+    @samples = params[:sample].values.collect { |sample| Sample.new(sample) }
 
     # array of arrays terms per each sample
     sample_terms = Array.new
     sample_texts = Array.new
     
     failed = false
-    for n in 0..sample_number-1
-      form_entries = params['sample-'+n.to_s]
-      # add the user info from the forms
-      @samples[n].short_sample_name = form_entries['short_sample_name']
-      
+    for n in 0..@samples.size-1
       # see if a naming scheme was used
-      schemed_name = params['sample-'+n.to_s+'_schemed_name']
+      schemed_name = params[:sample][n.to_s][:schemed_name]
+
       if(schemed_name != nil)
         @samples[n].naming_scheme_id = current_user.current_naming_scheme_id
         @samples[n].sample_name = ""
         @samples[n].sample_group_name = ""
-        @samples[n].naming_element_selections = Array.new
         sample_terms[n] = Array.new
         sample_texts[n] = Array.new
-        #term_count = 0
 
         for element in @naming_elements
           # put underscores between terms
@@ -161,10 +130,6 @@ class SamplesController < ApplicationController
             end
           end
 
-          # save user's selections in case page needs to be re-rendered
-          @samples[n].naming_element_selections << schemed_name[element.name]
-          
-          
           if( element.free_text )
             sample_text = SampleText.new( :text => schemed_name[element.name],
                                           :naming_element_id => element.id )
@@ -180,7 +145,17 @@ class SamplesController < ApplicationController
               end
             end
           else
-            if( schemed_name[element.name].to_i > 0 )
+            # if this element depends upon another one, and that element
+            # is unselected, then nothing should be recorded for this one
+            unselected_dependent = false
+
+            if(element.dependent_element_id != nil &&
+               element.dependent_element_id > 0)
+              depends_on = NamingElement.find(element.dependent_element_id)
+              unselected_dependent = schemed_name[depends_on.name] == "-1"
+            end
+            if( schemed_name[element.name].to_i > 0 &&
+                unselected_dependent == false )
               naming_term = NamingTerm.find(schemed_name[element.name])
               naming_element = naming_term.naming_element
               sample_term = SampleTerm.new( :term_order => naming_element.element_order,
@@ -198,19 +173,14 @@ class SamplesController < ApplicationController
             end
           end
         end
-      else
-        # if a schemed name was not used, just use the plain text name and group
-        @samples[n].sample_name = form_entries['sample_name']
-        @samples[n].sample_group_name = form_entries['sample_group_name']
       end
-      @samples[n].organism_id = form_entries['organism_id']
-      
+
       # shorten up sample and group names if needed
-      if( @samples[0].sample_name.length > 59 )
-        @samples[0].sample_name = @samples[0].sample_name[0..58]
+      if( @samples[n].sample_name.length > 59 )
+        @samples[n].sample_name = @samples[n].sample_name[0..58]
       end
       if( @samples[0].sample_group_name.length > 59 )
-        @samples[0].sample_group_name = @samples[0].sample_group_name[0..58]
+        @samples[n].sample_group_name = @samples[n].sample_group_name[0..58]
       end
       
       # if any one sample record isn't valid,
@@ -226,7 +196,7 @@ class SamplesController < ApplicationController
       render :action => 'add'
     else
       # save now that all samples have been tested as valid
-      for n in 0..sample_number-1
+      for n in 0..@samples.size-1
         @samples[n].save
 
         # if there are sample terms, save them
@@ -252,27 +222,11 @@ class SamplesController < ApplicationController
       SampleNotifier.deliver_submission_notification(@samples)
       
       flash[:notice] = "Samples created successfully"
-      redirect_to :action => 'show'
+      render :action => 'show'
     end
   end
   
-  def show
-    if session[:samples] == nil
-      @samples = Array.new
-    else
-      @samples = session[:samples]
-    end
-  end
-
-  def clear
-    session[:samples] = Array.new
-    session[:sample_number] = 0
-    redirect_to :action => 'new'
-  end
-
   def edit
-    populate_arrays_from_tables
-    
     @sample = Sample.find(params[:id])
 
     # if a naming scheme was used, populate the necessary fields
@@ -292,7 +246,7 @@ class SamplesController < ApplicationController
         end
       end
       
-      # set sample-specific visibilities
+      # set sample_specific visibilities
       for term in @sample_terms
         # see if there's a naming term for this element,
         # and if so show it
@@ -333,7 +287,7 @@ class SamplesController < ApplicationController
           selections[i] = naming_term.id
         end
       end
-      
+
       @sample.naming_element_selections = selections
       
       @sample.text_values = Hash.new
@@ -342,23 +296,18 @@ class SamplesController < ApplicationController
         @sample.text_values[text.naming_element.name] = text.text
       end
       
-      # put Sample in an array and store it in the session
-      # for update_add_form
-      @samples = Array.new
-      @samples << @sample
-      session[:samples] = @samples
+      # put Sample in an array
+      @samples = [@sample]
     end
     
     populate_arrays_for_edit(@sample)
   end
 
   def update
-    @sample = Sample.find(params[:id])
-    @samples = Array.new
-    @samples << @sample
+    @samples = [ Sample.find(params[:id]) ]
 
     # see if a naming scheme was used
-    schemed_name = params['sample-0_schemed_name']
+    schemed_name = params[:sample]["0"][:schemed_name]
     if(schemed_name != nil)
       naming_scheme = NamingScheme.find(@samples[0].naming_scheme_id)
       populate_sample_naming_scheme_choices(naming_scheme)
@@ -431,7 +380,7 @@ class SamplesController < ApplicationController
     begin
       # update main sample attributes, and if successful go
       # ahead and re-populate sample terms, if applicable
-      if @samples[0].update_attributes(params[:sample])
+      if @samples[0].update_attributes(params[:sample]["0"])
         if(schemed_name != nil)
           # trash existing sample terms
           terms = @samples[0].sample_terms
@@ -470,7 +419,6 @@ class SamplesController < ApplicationController
       end
     rescue ActiveRecord::StaleObjectError
       flash[:warning] = "Unable to update information. Another user has modified this sample."
-      #@sample = Sample.find(params[:id])
       params[:id] = @samples[0].id
       edit
       render :action => 'edit'
@@ -528,7 +476,6 @@ class SamplesController < ApplicationController
   
   # labeling submission, from total RNA traces
   def new_from_traces(traces)
-    populate_arrays_from_tables
     populate_sample_naming_scheme_choices(current_user.naming_scheme)
     
     @add_samples = AddSamples.new
@@ -550,7 +497,6 @@ class SamplesController < ApplicationController
   
   # create samples from total RNA traces
   def create_from_traces
-    populate_arrays_from_tables
     populate_sample_naming_scheme_choices(current_user.naming_scheme)
     
     @samples = session[:samples]
@@ -603,14 +549,12 @@ class SamplesController < ApplicationController
         @samples[n].save
       end
       flash[:notice] = "Samples created successfully"
-      redirect_to :action => 'show'
+      render :action => 'show'
     end
   end
 
   # interface to match up traces and Samples
   def match_traces(traces, sample_status)
-    populate_arrays_from_tables
-    
     lab_group_ids = current_user.get_lab_group_ids
     
     # make an array of the accessible project ids, and use this
@@ -751,8 +695,6 @@ class SamplesController < ApplicationController
   # new samples (if traces were matched to existing, complete samples, OR
   # go to new_from_traces, if user needs to provide further sample info
   def submit_matched_traces
-    populate_arrays_from_tables
-
     num_samples = params['num_samples'].to_i
     
     @samples = Array.new
@@ -806,7 +748,7 @@ class SamplesController < ApplicationController
         @samples[n].save
       end
       flash[:notice] = "Samples created successfully"
-      redirect_to :action => 'show'
+      render :action => 'show'
     else
       @add_samples = AddSamples.new
       populate_sample_naming_scheme_choices(current_user.naming_scheme)
