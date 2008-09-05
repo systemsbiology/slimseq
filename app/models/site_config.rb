@@ -85,4 +85,8 @@ class SiteConfig < ActiveRecord::Base
   def SiteConfig.raw_data_root_path
     return SiteConfig.find(1).raw_data_root_path  
   end
+  
+  def SiteConfig.site_url
+    return SiteConfig.find(1).site_url
+  end
 end

@@ -39,16 +39,22 @@ class BioanalyzerRun < ActiveRecord::Base
         # parse XML
         doc = REXML::Document.new( File.new(xml_file) )
         
-        # find the chip-wide lab group
-        chip_lab_name = doc.elements["Chipset/Chips/Chip/Files/File/FileInformation/Comment"].text
-        puts "Lab name: #{chip_lab_name}" if VERBOSE > 0
-
-        if( chip_lab_name != nil )
-          # get rid of trailing whitespace
-          chip_lab_name = chip_lab_name.scan(/(.*)\n*/)[0]
-          chip_lab_group = LabGroup.find(:first, :conditions => [ "name = ?", chip_lab_name])
+        # find who ran the chip
+        ran_by = doc.elements["Chipset/Chips/Chip/ChipInformation/UserName"].text
+        ran_by_user = User.find(:first, :conditions => {:login => ran_by})
+        if(ran_by_user != nil)
+          ran_by_email = ran_by_user.email
         end
+
+        # find the chip-wide comments
+        chip_comments = doc.elements["Chipset/Chips/Chip/Files/File/FileInformation/Comment"].text
+        puts "Chip-wide comments: #{chip_comments}" if VERBOSE > 0
+
+        chip_lab_group = parse_for_lab_group(chip_comments)
+        email_recipients = parse_for_emails(chip_comments)
+
         puts "SLIMarray lab group: #{chip_lab_group}" if VERBOSE > 0
+        puts "Email recipients: #{email_recipients}" if VERBOSE > 0
         
         # create an array to hold traces
         traces = Array.new
@@ -166,6 +172,10 @@ class BioanalyzerRun < ActiveRecord::Base
               trace.bioanalyzer_run_id = run.id
               trace.save
             end
+            
+            # notification of new Bioanalyzer run
+            Notifier.deliver_bioanalyzer_notification(run, ran_by_email,
+                                                      email_recipients)
           end
         end
       end
@@ -180,4 +190,36 @@ class BioanalyzerRun < ActiveRecord::Base
       "Are you sure you want to destroy it?"
   end
 
+private
+
+  def self.parse_for_lab_group(chip_comments)
+#    if( chip_comments != nil )
+      # split on commas, new lines
+      names = chip_comments.split(/\s*,\s*|\n/)
+      
+      names.each do |name|
+        chip_lab_group = LabGroup.find(:first, :conditions => {:name => name})
+        if(chip_lab_group != nil)
+          return chip_lab_group
+        end
+      end
+#    end
+    
+    return nil
+  end
+  
+  def self.parse_for_emails(chip_comments)  
+    # split on commas, new lines
+    names = chip_comments.split(/\s*,\s*|\n/)
+
+    emails = Array.new
+    names.each do |name|
+      user = User.find(:first, :conditions => {:login => name})
+      if(user != nil && user.email != nil)
+        emails << user.email
+      end
+    end
+    
+    return emails
+  end
 end
