@@ -5,20 +5,20 @@
 
 <% form_tag :action => 'update', :id => @sample do -%>
 
-	<p><label for="sample_submission_date">Date</label><br/>
-	<%= date_select 'sample', 'submission_date'  %></p>
+	<p><label for="sample_0_submission_date">Date</label><br/>
+	<%= date_select 'sample', 'submission_date', :index => 0  %></p>
 	
-	<p><label for="sample_short_sample_name">Short Sample Name</label><br/>
-	<%= text_field 'sample', 'short_sample_name'  %></p>
+	<p><label for="sample_0_short_sample_name">Short Sample Name</label><br/>
+	<%= text_field 'sample', 'short_sample_name', :index => 0  %></p>
 	
     <% if @sample.naming_scheme_id == nil %>
-        <p><label for="sample_sample_name">Sample Name</label><br/>
-            <input id="sample_sample_name" 
-                name="sample[sample_name]" size="30" type="text"
+        <p><label for="sample_0_sample_name">Sample Name</label><br/>
+            <input id="sample_0_sample_name" 
+                name="sample[0][sample_name]" size="30" type="text"
                 value="<%= @sample.sample_name %>" /></p>
-        <p><label for="sample_sample_group_name">Sample Group Name</label><br/>
-            <input id="sample_sample_group_name" 
-        	   name="sample[sample_group_name]" size="30" type="text"
+        <p><label for="sample_0_sample_group_name">Sample Group Name</label><br/>
+            <input id="sample_0_sample_group_name" 
+        	   name="sample[0][sample_group_name]" size="30" type="text"
         	   value="<%= @sample.sample_group_name %>" /></p>
     <% else %>
         <p>Sample Name<br/>
@@ -31,39 +31,39 @@
         </p>
     <% end %>
 
-	<p><label for="sample_starting_quality_trace_id">Total RNA Trace</label><br/>
-    	<select id="sample_starting_quality_trace_id" name="sample[starting_quality_trace_id]">
+	<p><label for="sample_0_starting_quality_trace_id">Total RNA Trace</label><br/>
+    	<select id="sample_0_starting_quality_trace_id" name="sample[0][starting_quality_trace_id]">
     	<option value="">---</option>
         <%= options_from_collection_for_select @total_traces, "id", "name", selected_value=@sample.starting_quality_trace_id %></select></p>
 
-	<p><label for="sample_amplified_quality_trace_id">cRNA Trace</label><br/>
-    	<select id="sample_amplified_quality_trace_id" name="sample[amplified_quality_trace_id]">
+	<p><label for="sample_0_amplified_quality_trace_id">cRNA Trace</label><br/>
+    	<select id="sample_0_amplified_quality_trace_id" name="sample[0][amplified_quality_trace_id]">
     	<option value="">---</option>
         <%= options_from_collection_for_select @cRNA_traces, "id", "name", selected_value=@sample.amplified_quality_trace_id %></select></p>
 
-	<p><label for="sample_fragmented_quality_trace_id">Fragmented cRNA Trace</label><br/>
-    	<select id="sample_fragmented_quality_trace_id" name="sample[fragmented_quality_trace_id]">
+	<p><label for="sample_0_fragmented_quality_trace_id">Fragmented cRNA Trace</label><br/>
+    	<select id="sample_0_fragmented_quality_trace_id" name="sample[0][fragmented_quality_trace_id]">
     	<option value="">---</option>
         <%= options_from_collection_for_select @frag_traces, "id", "name", selected_value=@sample.fragmented_quality_trace_id %></select></p>
 
     <% if( SiteConfig.using_sbeams? ) %>
-    	<p><label for="sample_sample_sbeams_user">SBEAMS User</label><br/>
-    	<%= text_field 'sample', 'sbeams_user', :size => 50  %></p>
+    	<p><label for="sample_0_sample_sbeams_user">SBEAMS User</label><br/>
+    	<%= text_field 'sample', 'sbeams_user', :size => 50, :index => 0 %></p>
     <% end %>
     
-	<p><label for="sample_project_id">Project</label><br>
-	<select id="project_id" name="sample[project_id]">
+	<p><label for="sample_0_project_id">Project</label><br>
+	<select id="sample_0_project_id" name="sample[0][project_id]">
     <%= options_from_collection_for_select @projects, "id", "name", selected_value=@sample.project_id %></select></p>
     
-    <p><label for="sample_chip_type_id">Chip Type</label><br>
-    <select id="chip_type_id" name="sample[chip_type_id]">
+    <p><label for="sample_0_chip_type_id">Chip Type</label><br>
+    <select id="sample_0_chip_type_id" name="sample[0][chip_type_id]">
     <%= options_from_collection_for_select @chip_types, "id", "name", selected_value=@sample.chip_type_id %></select></p>
 
-    <p><label for="sample_organism_id">Organism</label><br>
-    <select id="organism_id" name="sample[organism_id]">
+    <p><label for="sample_0_organism_id">Organism</label><br>
+    <select id="sample_0_organism_id" name="sample[0][organism_id]">
     <%= options_from_collection_for_select @organisms, "id", "name", selected_value=@sample.organism_id %></select></p>
 
-    <%= hidden_field 'sample', 'lock_version' %>
+    <%= hidden_field 'sample', 'lock_version', :index => 0 %>
 	
   <%= submit_tag 'Edit' %>
 <% end -%>

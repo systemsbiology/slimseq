@@ -101,7 +101,11 @@ class SamplesController < ApplicationController
   def create
     populate_sample_naming_scheme_choices(current_user.naming_scheme)
 
-    @samples = params[:sample].values.collect { |sample| Sample.new(sample) }
+    # store the non-naming scheme info in an array of Sample records
+    @samples = Array.new
+    params[:sample].keys.each do |n|
+      @samples[n.to_i] = Sample.new(params[:sample][n])
+    end
 
     # array of arrays terms per each sample
     sample_terms = Array.new

@@ -296,13 +296,13 @@ class SamplesControllerTest < Test::Unit::TestCase
     login_as_admin
     num_samples = Sample.count
 
-    smpl1_schemed = {:'Strain' => naming_terms(:wild_type).id,
+    smpl2_schemed = {:'Strain' => naming_terms(:wild_type).id,
                     :'Perturbation' => naming_terms(:heat).id,
                     :'Perturbation Time' => naming_terms(:time024).id,
                     :'Subject Number' => '42231',
                     :'Replicate' => 'A'
                     }
-    smpl1 = {:submission_date => '2006-02-12',
+    smpl2 = {:submission_date => '2006-02-12',
             :short_sample_name => 'HlthySmp',
             :organism_id => organisms(:first).id,
             :submission_date => "2006-02-12",
@@ -310,15 +310,15 @@ class SamplesControllerTest < Test::Unit::TestCase
             :chip_type_id => chip_types(:alligator).id,
             :sbeams_user => "Bob",
             :status => "submitted",
-            :schemed_name => smpl1_schemed
+            :schemed_name => smpl2_schemed
             }
     
-    smpl2_schemed = {:'Strain' => naming_terms(:mutant).id,
+    smpl1_schemed = {:'Strain' => naming_terms(:mutant).id,
                     :'Perturbation' => -1,
                     :'Subject Number' => '42643',
                     :'Replicate' => 'A'
                     }
-    smpl2 = {:submission_date => '2006-02-12',
+    smpl1 = {:submission_date => '2006-02-12',
             :short_sample_name => 'DisSmpl',
             :organism_id => organisms(:first).id,
             :submission_date => "2006-02-12",
@@ -326,7 +326,7 @@ class SamplesControllerTest < Test::Unit::TestCase
             :chip_type_id => chip_types(:alligator).id,
             :sbeams_user => "Bob",
             :status => "submitted",
-            :schemed_name => smpl2_schemed
+            :schemed_name => smpl1_schemed
             }  
 
     # select a naming scheme for current user
@@ -349,12 +349,12 @@ class SamplesControllerTest < Test::Unit::TestCase
 
     # check sample names to make sure they include and exclude the appropriate
     # info
-    smpl1_record = Sample.find(:first, 
-                               :conditions => "short_sample_name = 'HlthySmp'")
     smpl2_record = Sample.find(:first, 
+                               :conditions => "short_sample_name = 'HlthySmp'")
+    smpl1_record = Sample.find(:first, 
                                :conditions => "short_sample_name = 'DisSmpl'")
-    assert_equal "wt_HT_024_42231", smpl1_record.sample_name
-    assert_equal "mut___42643", smpl2_record.sample_name
+    assert_equal "wt_HT_024_42231", smpl2_record.sample_name
+    assert_equal "mut___42643", smpl1_record.sample_name
   end
 
   def test_create_duplicate_sample_name_as_admin
