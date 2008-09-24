@@ -18,7 +18,8 @@ class Sample < ActiveRecord::Base
   has_many :sample_texts, :dependent => :destroy
   
   validates_associated :chip_type, :project
-  validates_presence_of :sample_name, :short_sample_name, :submission_date, :project_id
+  validates_presence_of :sample_name, :short_sample_name, :submission_date,
+                        :project_id, :sample_group_name
   validates_length_of :short_sample_name, :maximum => 20
   validates_length_of :sample_name, :maximum => 59
   validates_length_of :sbeams_user, :maximum => 20
@@ -27,10 +28,11 @@ class Sample < ActiveRecord::Base
   attr_accessor :naming_element_selections, :naming_element_visibility,
     :text_values, :schemed_name
   
-  def validate_on_create
+  def validate
     # make sure date/short_sample_name/sample_name combo is unique
-    if Sample.find_by_submission_date_and_short_sample_name_and_sample_name(
+    s = Sample.find_by_submission_date_and_short_sample_name_and_sample_name(
         submission_date, short_sample_name, sample_name)
+    if( s != nil && s.id != id )
       errors.add("Duplicate submission date/short_sample_name/sample_name")
     end
     
@@ -327,7 +329,7 @@ class Sample < ActiveRecord::Base
     if(project.nil?)
       return "Project doesn't exist"
     end
-    
+
     if(!update_attributes(
           :submission_date => row[2],
           :short_sample_name => row[3],
@@ -339,7 +341,7 @@ class Sample < ActiveRecord::Base
           :project_id => project.id
         ))
       puts errors.full_messages
-      return "Problem updating values for sample id=#{id}"
+      return "Problem updating values for sample id=#{id}: #{errors.full_messages}"
     end
     
     return ""

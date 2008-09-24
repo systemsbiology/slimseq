@@ -144,7 +144,7 @@ class SampleTest < Test::Unit::TestCase
     csv_file = "#{RAILS_ROOT}/test/fixtures/csv/updated_unschemed_samples.csv"
   
     errors = Sample.from_csv(csv_file)
-    
+
     assert_equal "", errors
     
     # one change was made to sample 1
