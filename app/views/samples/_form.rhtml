@@ -14,13 +14,16 @@
 </p>
 
 <% if SiteConfig.using_affy_arrays? && SiteConfig.create_gcos_files? && SiteConfig.using_sbeams? %>
-	<p><label for="add_samples_sbeams_user">SBEAMS User (e.g. bmarzolf)</label><br/>
-	    <%= text_field 'add_samples', 'sbeams_user'  %></p>
+	<p><label for="add_samples_sbeams_user">SBEAMS User</label><br/>
+            <input type="text" id="add_samples_sbeams_user" name="add_samples[sbeams_user]"
+            size="20" value="<%=h current_user.login%>" /></p>
 <% elsif SiteConfig.using_affy_arrays? && SiteConfig.create_gcos_files? %>
-	<p><label for="add_samples_sbeams_user">Array User Name (e.g. bmarzolf)</label><br/>
-	    <%= text_field 'add_samples', 'sbeams_user' %></p>
+	<p><label for="add_samples_sbeams_user">Array User Name</label><br/>
+	    <input type="text" id="add_samples_sbeams_user" name="add_samples[sbeams_user]"
+            size="20" value="<%=h current_user.login%>" /></p>
 <% else %>
-   	    <%= hidden_field 'add_samples', 'sbeams_user'  %>
+   	    <input type="hidden" id="add_samples_sbeams_user" name="add_samples[sbeams_user]"
+            size="20"/>
 <% end %>
 
 <% if @naming_schemes.size > 0 %>
