@@ -36,6 +36,11 @@ class BioanalyzerRun < ActiveRecord::Base
         # get chip name
         file_root = xml_file.scan(/(.*?)\.xml/i).to_s
 
+        # copy over PDF
+        current_pdf_file = "#{file_root}.pdf"
+        pdf_path = "#{RAILS_ROOT}/public/quality_traces/#{run_name}.pdf"
+        FileUtils.cp( current_pdf_file, pdf_path)
+       
         # parse XML
         doc = REXML::Document.new( File.new(xml_file) )
         
@@ -80,6 +85,7 @@ class BioanalyzerRun < ActiveRecord::Base
               type = elements.pop
               name = elements.join(" ")
             else
+              type = "total"
               name = full_name
             end
 
@@ -155,7 +161,7 @@ class BioanalyzerRun < ActiveRecord::Base
             end
           end
         end
-        
+debugger        
         # only save bioanalyzer_run if there are > 1 samples (more than just ladder)
         if( traces.size > 1 )
           # grab the date from the XML
@@ -163,7 +169,7 @@ class BioanalyzerRun < ActiveRecord::Base
           date = time_date.scan(/(\d{4}\-\d{2}\-\d{2}).*/).to_s
                   
           run = BioanalyzerRun.new(:name => run_name,
-            :date => date
+            :date => date, :pdf_path => pdf_path
           )
           
           # save the traces if the run itself saves
@@ -172,7 +178,7 @@ class BioanalyzerRun < ActiveRecord::Base
               trace.bioanalyzer_run_id = run.id
               trace.save
             end
-            
+
             # notification of new Bioanalyzer run
             Notifier.deliver_bioanalyzer_notification(run, ran_by_email,
                                                       email_recipients)
@@ -193,7 +199,7 @@ class BioanalyzerRun < ActiveRecord::Base
 private
 
   def self.parse_for_lab_group(chip_comments)
-#    if( chip_comments != nil )
+    if( chip_comments != nil )
       # split on commas, new lines
       names = chip_comments.split(/\s*,\s*|\n/)
       
@@ -203,23 +209,27 @@ private
           return chip_lab_group
         end
       end
-#    end
+    end
     
     return nil
   end
   
   def self.parse_for_emails(chip_comments)  
-    # split on commas, new lines
-    names = chip_comments.split(/\s*,\s*|\n/)
+    if( chip_comments != nil )
+      # split on commas, new lines
+      names = chip_comments.split(/\s*,\s*|\n/)
 
-    emails = Array.new
-    names.each do |name|
-      user = User.find(:first, :conditions => {:login => name})
-      if(user != nil && user.email != nil)
-        emails << user.email
+      emails = Array.new
+      names.each do |name|
+        user = User.find(:first, :conditions => {:login => name})
+        if(user != nil && user.email != nil)
+          emails << user.email
+        end
       end
+
+      return emails
+    else
+      return nil
     end
-    
-    return emails
   end
 end

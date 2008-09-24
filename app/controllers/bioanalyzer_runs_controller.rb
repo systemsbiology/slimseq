@@ -30,7 +30,7 @@ class BioanalyzerRunsController < ApplicationController
 
       if(bioanalyzer_run_ids.size > 0)
         @bioanalyzer_run_pages, @bioanalyzer_runs = paginate :bioanalyzer_runs, 
-                                                    :per_page => 10, :order => "date DESC",
+                                                    :per_page => 20, :order => "date DESC",
                                                     :conditions => ["id IN (?)", bioanalyzer_run_ids]
       end      
     end
