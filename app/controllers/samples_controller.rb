@@ -3,7 +3,7 @@ class SamplesController < ApplicationController
   before_filter :populate_arrays_from_tables,
     :only => [:index, :list, :new, :add, :create, :edit, :submit_traces,
               :new_from_traces, :create_traces, :match_traces,
-              :submit_matched_traces]
+              :submit_matched_traces, :update]
   
   def index
     list
