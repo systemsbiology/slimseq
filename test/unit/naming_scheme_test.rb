@@ -1,8 +1,7 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class NamingSchemeTest < Test::Unit::TestCase
-  fixtures :chip_types, :samples, :hybridizations, :inventory_checks,
-    :chip_transactions, :naming_schemes
+  fixtures :samples, :hybridizations, :naming_schemes
 
   def test_destroy_warning
     expected_warning = "Destroying this naming scheme will also destroy:\n" + 

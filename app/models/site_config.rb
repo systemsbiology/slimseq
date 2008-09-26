@@ -1,10 +1,6 @@
 class SiteConfig < ActiveRecord::Base
   set_table_name "site_config"
 
-  def SiteConfig.track_inventory?
-    return SiteConfig.find(1).track_inventory
-  end
-  
   def SiteConfig.track_hybridizations?
     return SiteConfig.find(1).track_hybridizations
   end
