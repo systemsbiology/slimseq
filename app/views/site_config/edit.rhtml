@@ -1,63 +1,37 @@
 <h2>Edit Site Configuration</h2>
 
 <% form_tag :action => 'update' do -%>
-	<p><label for="site_config_site_name">Web Site Title</label><br/>
-	<%= text_field 'site_config', 'site_name'  %></p>
+  <p><label for="site_config_site_name">Web Site Title</label><br/>
+  <%= text_field 'site_config', 'site_name'  %></p>
 
-	<p><label for="site_config_organization_name">Organization Name</label><br/>
-	<%= text_field 'site_config', 'organization_name'  %></p>
+  <p><label for="site_config_organization_name">Organization Name</label><br/>
+  <%= text_field 'site_config', 'organization_name'  %></p>
 
-	<p><label for="site_config_facility_name">Facility Name</label><br/>
-	<%= text_field 'site_config', 'facility_name'  %></p>
-	
-	<p><label for="site_config_array_platform">Array Platform</label><br/>
-	<%= radio_button 'site_config', 'array_platform', 'affy'  %>Affymetrix Only<br>
-    <%= radio_button 'site_config', 'array_platform', 'nonaffy'  %>Non-Affymetrix Only<br>
-    <%= radio_button 'site_config', 'array_platform', 'both'  %>Both Affymetrix and Non-Affymetrix</p>
-	
-	<p><%= check_box 'site_config', 'track_hybridizations'  %>
-	<label for="site_config_track_hybridizations">Track Hybridizations</label></p>
-	
-	<p><%= check_box 'site_config', 'track_charges'  %>
-	<label for="site_config_track_charges">Track Charges</label></p>
+  <p><label for="site_config_facility_name">Facility Name</label><br/>
+  <%= text_field 'site_config', 'facility_name'  %></p>
 
-	<p><%= check_box 'site_config', 'create_gcos_files'  %>
-	<label for="site_config_create_gcos_files">Create files for GCOS (Affymetrix Only)</label></p>
+  <p><%= check_box 'site_config', 'track_charges'  %>
+  <label for="site_config_track_charges">Track Charges</label></p>
 
-	<p><%= check_box 'site_config', 'using_sbeams'  %>
-	<label for="site_config_using_sbeams">Using SBEAMS Downstream (Affymetrix Only, requires GCOS file creation)</label></p>
-	
-    <p><label for="site_config_gcos_output_path">Output Path For GCOS Sample Files (Affymetrix Only)</label><br/>
-	<%= text_field 'site_config', 'gcos_output_path'  %></p>
-	
-    <p><%= check_box 'site_config', 'use_LDAP'  %>
-	<label for="site_config_using_sbeams">Use LDAP to authenticate users</label></p>
-	
-    <p><label for="site_config_LDAP_server">Address of LDAP server (Only needed if LDAP is enabled)</label><br/>
-	<%= text_field 'site_config', 'LDAP_server'  %></p>
+  <p><%= check_box 'site_config', 'use_LDAP'  %>
+  <label for="site_config_using_sbeams">Use LDAP to authenticate users</label></p>
 
-    <p><label for="site_config_LDAP_DN">LDAP DN(distinguished name) string (Only needed if LDAP is enabled)</label><br/>
-	<%= text_field 'site_config', 'LDAP_DN'  %></p>
+  <p><label for="site_config_LDAP_server">Address of LDAP server (Only needed if LDAP is enabled)</label><br/>
+  <%= text_field 'site_config', 'LDAP_server'  %></p>
 
-    <p><label for="site_config_administrator_email">Administrator email</label><br/>
-	<%= text_field 'site_config', 'administrator_email'  %></p>
-	
-	<p><label for="site_config_bioanalyzer_pickup">Bioanalyzer Data Pickup Directory</label><br/>
-	<%= text_field 'site_config', 'bioanalyzer_pickup'  %></p>
+  <p><label for="site_config_LDAP_DN">LDAP DN(distinguished name) string (Only needed if LDAP is enabled)</label><br/>
+  <%= text_field 'site_config', 'LDAP_DN'  %></p>
 
-	<p><label for="site_config_quality_trace_dropoff">Dropoff Directory for Quality Traces for Hybridized Samples</label><br/>
-	<%= text_field 'site_config', 'quality_trace_dropoff'  %></p>
+  <p><label for="site_config_administrator_email">Administrator email</label><br/>
+  <%= text_field 'site_config', 'administrator_email'  %></p>
 
-	<p><label for="site_config_sbeams_address">Web address of your SBEAMS site</label><br/>
-	<%= text_field 'site_config', 'sbeams_address'  %></p>
-	
-	<p><label for="site_config_raw_data_root_path">Root path to raw data</label><br/>
-	<%= text_field 'site_config', 'raw_data_root_path'  %></p>
-        
-        <p><label for="site_config_site_url">URL for SLIMarray</label><br/>
-	<%= text_field 'site_config', 'site_url'  %></p>
-	
-	<%= hidden_field 'site_config', 'lock_version' %>
-	
+  <p><label for="site_config_raw_data_root_path">Root path to raw data</label><br/>
+  <%= text_field 'site_config', 'raw_data_root_path'  %></p>
+
+  <p><label for="site_config_site_url">URL for SLIMseq</label><br/>
+  <%= text_field 'site_config', 'site_url'  %></p>
+
+  <%= hidden_field 'site_config', 'lock_version' %>
+
   <%= submit_tag 'Update Site Configuration' %>
 <% end -%>
