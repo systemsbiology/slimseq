@@ -14,4 +14,9 @@ class NamingScheme < ActiveRecord::Base
            naming_elements.size.to_s + " naming element(s)\n" +
            "Are you sure you want to destroy it?"
   end
+
+  def ordered_naming_elements
+    return NamingElement.find(:all, :conditions => { :naming_scheme_id => id },
+                                            :order => "element_order ASC" )
+  end
 end

@@ -2,7 +2,7 @@
 
 <% if(@samples != nil && @samples.size > 0) %>
   <% form_tag :action => 'bulk_destroy' do -%>
-    <p><%= link_to 'Submit New Samples', :action => 'new' %></p>
+    <p><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></p>
 
     <table class="sortable" id="samples">
     <tr>
@@ -10,14 +10,6 @@
     <th>Date</th>
     <th>Short Sample Name</th>
     <th>Sample Name</th>
-    <th>Sample Group Name</th>
-    <th>Starting</th>
-    <th>Amplified</th>
-    <th>Fragmented</th>
-    <% if @using_sbeams %>
-      <th>SBEAMS User</th>
-    <% end %>
-    <th>Project</th>
     <th>Status</th>
     <th>Edit</th>
     <th>Destroy</th>
@@ -29,29 +21,6 @@
       <td><%=h sample.submission_date %></td>
       <td><%=h sample.short_sample_name %></td>
       <td><%=h sample.sample_name %></td>
-      <td><%=h sample.sample_group_name %></td>
-      <td>
-      <% if sample.starting_quality_trace_id != nil %>
-        <%= link_to 'trace', :controller => 'quality_traces', :action => 'show', 
-        :id => sample.starting_quality_trace_id %>
-      <% end %>
-      </td>
-      <td>
-      <% if sample.amplified_quality_trace_id != nil %>
-        <%= link_to 'trace', :controller => 'quality_traces', :action => 'show', 
-        :id => sample.amplified_quality_trace_id %>
-      <% end %>
-      </td>
-      <td>
-      <% if sample.fragmented_quality_trace_id != nil %>
-        <%= link_to 'trace', :controller => 'quality_traces', :action => 'show', 
-        :id => sample.fragmented_quality_trace_id %>
-      <% end %>
-      </td>
-      <% if @using_sbeams %>
-        <td><%=h sample.sbeams_user %></td>
-      <% end %>
-      <td><%=h sample.project.name %></td>
       <td><%=h sample.status %></td>
       <td><%= link_to 'Edit', :action => 'edit', :id => sample %></td>
       <td><%= link_to 'Destroy', { :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
@@ -64,7 +33,7 @@
 <% else %>
   <% if current_user.staff_or_admin? ||( @lab_groups != nil && @lab_groups.size > 0) %>
     <p>There are currently no samples.</p>
-    <p><%= link_to 'Submit New Samples', :action => 'new' %></p>
+    <p><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></p>
   <% else %>
     <p>You need to belong to one or more lab groups before you can see or submit any samples.<br>
     Please contact your administrator at <a href="mailto:<%=h SiteConfig.administrator_email %>">

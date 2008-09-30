@@ -1,6 +1,6 @@
 production:
   adapter: mysql
-  database: slimarray_production
+  database: slimseq_production
   username: mysql_user_name
   password: mysql_user_password
   socket: /var/lib/mysql/mysql.sock
@@ -8,7 +8,7 @@ production:
 
 development:
   adapter: mysql
-  database: slimarray_development
+  database: slimseq_development
   username: mysql_user_name
   password: mysql_user_password
   socket: /var/lib/mysql/mysql.sock
@@ -16,7 +16,7 @@ development:
   
 test:
   adapter: mysql
-  database: slimarray_test
+  database: slimseq_test
   username: mysql_user_name
   password: mysql_user_password
   socket: /var/lib/mysql/mysql.sock

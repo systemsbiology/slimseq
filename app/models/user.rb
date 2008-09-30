@@ -140,7 +140,7 @@ class User < ActiveRecord::Base
     end
 
   #########################
-  # SLIMarray-specific
+  # SLIMseq-specific
   #########################
 
 public
@@ -164,13 +164,7 @@ public
   
   # Returns an Array of the ids of quality traces the user has access to
   def get_lab_group_ids
-    # Administrators and staff can see all bioanalyzer runs, customers
-    # are restricted to seeing bioanalyzer runs for lab groups they belong to
-    if(self.staff_or_admin?)
-      @lab_groups = LabGroup.find(:all, :order => "name ASC")
-    else
-      @lab_groups = self.lab_groups
-    end
+    @lab_groups = accessible_lab_groups
     
     # gather ids of user's lab groups
     lab_group_ids = Array.new
@@ -181,4 +175,14 @@ public
     
     return lab_group_ids
   end
+  
+  def accessible_lab_groups
+    # Administrators and staff can see all projects, otherwise users
+    # are restricted to seeing only projects for lab groups they belong to
+    if(self.staff_or_admin?)
+      return LabGroup.find(:all, :order => "name ASC")
+    else
+      return self.lab_groups
+    end
+  end  
 end

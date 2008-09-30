@@ -70,4 +70,4 @@ else
   ExceptionNotifier.exception_recipients = SiteConfig.administrator_email
 end  
 ExceptionNotifier.sender_address =
-    %("Application Error" <slimarray@#{`hostname`.strip}>)
+    %("Application Error" <slimseq@#{`hostname`.strip}>)

@@ -1,27 +1,27 @@
 class InitialSchema < ActiveRecord::Migration
   def self.up
     transaction do
-      create_table "add_hybs", :force => true do |t|
-        t.column "number", :integer
-        t.column "lab_group_id", :integer
-        t.column "date", :date
-        t.column "user", :string
-        t.column "charge_template_id", :integer
-        t.column "lock_version", :integer, :default => 0
-      end
-
       create_table "samples", :force => true do |t|
+        t.column "sample_set_id", :integer
         t.column "submitted_by_id", :integer
         t.column "lab_group_id", :integer
         t.column "submission_date", :date
         t.column "short_sample_name", :string
         t.column "sample_name", :string
         t.column "sample_prep_kit_id", :integer
+        t.column "insert_size", :integer
+        t.column "desired_read_length", :integer
         t.column "reference_genome_id", :integer
         t.column "status", :string
         t.column "naming_scheme_id", :string
         t.column "raw_data_path", :string
+        t.column "budget_number", :string
         t.column "lock_version", :integer, :default => 0
+      end
+      
+      create_table "sample_prep_kits", :force => true do |t|
+        t.column "name", :string
+        t.column "hybridization_primer", :string
       end
       
       create_table "flow_cells", :force => true do |t|
@@ -68,12 +68,11 @@ class InitialSchema < ActiveRecord::Migration
         t.column "firstname", :string
         t.column "lastname", :string
         t.column "salt", :string
-        t.column "role", :string
+        t.column "role", :string, :default => "customer"
         t.column "remember_token", :string
         t.column "remember_token_expires_at", :datetime
         t.column "created_at", :datetime
         t.column "updated_at", :datetime
-        t.column "name", :string, :default => 'customer'
         t.column "lock_version", :integer, :default => 0
       end
 
@@ -81,7 +80,6 @@ class InitialSchema < ActiveRecord::Migration
         t.column "site_name", :string
         t.column "organization_name", :string
         t.column "facility_name", :string
-        t.column "track_hybridizations", :boolean
         t.column "track_charges", :boolean
         t.column "use_LDAP", :boolean
         t.column "LDAP_server", :string
@@ -146,12 +144,7 @@ class InitialSchema < ActiveRecord::Migration
         t.column "charge_set_id", :integer
         t.column "date", :date
         t.column "description", :string
-        t.column "chips_used", :integer
-        t.column "chip_cost", :float
-        t.column "labeling_cost", :float      
-        t.column "hybridization_cost", :float
-        t.column "qc_cost", :float
-        t.column "other_cost", :float
+        t.column "cost", :float
         t.column "lock_version", :integer, :default => 0
       end
 
@@ -178,31 +171,36 @@ class InitialSchema < ActiveRecord::Migration
       create_table "charge_templates", :force => true do |t|
         t.column "name", :string
         t.column "description", :string
-        t.column "chips_used", :integer
-        t.column "chip_cost", :float
-        t.column "labeling_cost", :float      
-        t.column "hybridization_cost", :float
-        t.column "qc_cost", :float
-        t.column "other_cost", :float
+        t.column "cost", :float
         t.column "lock_version", :integer, :default => 0
       end
     end
+    
+    # Initial site configuration
+    SiteConfig.create :site_name => "SLIMseq",
+                      :organization_name => "Name of Your Organization Here",
+                      :facility_name => "Your Facility Name Here",
+                      :track_charges => true,
+                      :use_LDAP => false,
+                      :LDAP_server => "",
+                      :LDAP_DN => "",
+                      :administrator_email => "admin@example.com",
+                      :raw_data_root_path => "/tmp/",
+                      :site_url => "http://slim"
   end
 
   def self.down
     transaction do
       drop_table :lab_memberships
-      drop_table :add_hybs
-      drop_table :engine_schema_info
       drop_table :samples
-      drop_table :hybridizations
       drop_table :lab_groups
+      drop_table :reference_genomes
       drop_table :organisms
-      drop_table :permissions
-      drop_table :permissions_roles
-      drop_table :roles
+      drop_table :flow_cells
+      drop_table :flow_cell_lanes
+      drop_table :sequencing_runs
+      drop_table :instruments
       drop_table :users
-      drop_table :users_roles
       drop_table :charges
       drop_table :charge_sets
       drop_table :charge_periods

@@ -1,0 +1,50 @@
+<table class="sortable" id="sample_sets">
+  <tr>
+    <th>Date</th>
+    <th>Name on the sample tube</th>
+    <% if @sample_set.naming_scheme_id == nil %>
+        <th>Sample Description</th>
+      <% else %>
+        <% for element in @naming_elements %>
+          <th><%=h element.name %></th>
+        <% end %>
+      <% end %>
+    <th>Sample Prep Kit</th>
+    <th>Reference Genome</th>
+    <th>Desired Read Length</th>
+    <th>Insert Size</th>
+    <th>Budget Number</th>
+  </tr>
+  <% for @n in 0..@samples.size-1 %>    
+    <tr>
+      <% @sample = @samples[@n] %>
+        <td><%=h @sample.submission_date %>
+            <%= hidden_field :sample, :submission_date, :index =>@n %></td>
+        <td><%= text_field :sample, :short_sample_name, :index =>@n,
+                :size => 10 %></td>
+
+        <% if @naming_scheme == nil %>
+          <td><%= text_field :sample, :sample_name, :index =>@n,
+                  :size => 30 %></td>
+          <td><%= text_field :sample, :sample_group_name, :index =>@n,
+                  :size => 30 %></td>
+        <% else %>
+          <%= render :partial => 'samples/schemed_sample_name' %>
+        <% end %>
+
+        <td><%=h @sample.sample_prep_kit.name %>
+            <%= hidden_field :sample, :sample_prep_kit, :index =>@n %></td>
+        <td><%=h @sample.reference_genome.name %>
+            <%= hidden_field :sample, :reference_genome, :index =>@n %></td>
+        <td><%=h @sample.desired_read_length %>
+            <%= hidden_field :sample, :desired_read_length, :index =>@n %></td>
+        <td><%=h @sample.insert_size %>
+            <%= hidden_field :sample, :insert_size, :index =>@n %></td>
+        <td><%=h @sample.budget_number %>
+            <%= hidden_field :sample, :budget_number, :index =>@n %></td>
+        <%= hidden_field :sample, :status, :index =>@n %>
+    </tr>
+  <% end %>
+</table>
+
+<%= hidden_field :sample, :submission_date, :index =>@n %>

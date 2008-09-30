@@ -1,12 +1,12 @@
 # This is a modification of the railities documentatation rake task
 namespace :doc do
 
-  desc "Generate documentation for SLIMarray"
-  task :slimarray do
+  desc "Generate documentation for SLIMseq"
+  task :slimseq do
     options       = []
     files         = Rake::FileList.new
     options << "-o doc/app"
-    options << "--title 'SLIMarray Documentation'"
+    options << "--title 'SLIMseq Documentation'"
     options << '--line-numbers --inline-source'
     options << '--all' # include protected methods
     options << '-T html'

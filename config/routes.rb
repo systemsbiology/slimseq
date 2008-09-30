@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :reference_genomes
+
   map.resources :users do |users|
     users.resources :lab_memberships, :name_prefix => "user_"
   end

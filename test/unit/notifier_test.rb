@@ -15,7 +15,7 @@ class NotifierTest < ActionMailer::TestCase
 
     sent = ActionMailer::Base.deliveries.first
     assert_equal [ site_config(:first).administrator_email ], sent.to
-    assert_equal "[SLIMarray] Samples recorded", sent.subject
+    assert_equal "[SLIMseq] Samples recorded", sent.subject
     assert sent.body =~ /^New samples have just been submitted/
     assert sent.body =~ /Young/
     assert sent.body =~ /Old/i
@@ -32,7 +32,7 @@ class NotifierTest < ActionMailer::TestCase
     sent = ActionMailer::Base.deliveries.first
     assert_equal ['user1@example.com', 'user2@example.com'], sent.to
     assert_equal ['facility@example.com'], sent.cc
-    assert_equal "[SLIMarray] New Bioanalyzer results", sent.subject
+    assert_equal "[SLIMseq] New Bioanalyzer results", sent.subject
     assert sent.body =~ /^You have new Bioanalyzer results/
     assert sent.body =~ /bioanalyzer_runs\/show\//
   end

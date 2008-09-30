@@ -1,0 +1,12 @@
+<h1>Editing reference_genome</h1>
+
+<%= error_messages_for :reference_genome %>
+
+<% form_for(@reference_genome) do |f| %>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @reference_genome %> |
+<%= link_to 'Back', reference_genomes_path %>

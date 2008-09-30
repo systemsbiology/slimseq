@@ -2,14 +2,14 @@
 
 * Interface to manage naming schemes
 * Fixes for handling samples with naming schemes
-* See Subversion repository for additional bug fixes and optimizations: http://slimarray.systemsbiology.net/svn
+* See Subversion repository for additional bug fixes and optimizations: http://slimseq.systemsbiology.net/svn
 
 *0.3.0*
 
 * Added Bioanalyzer data handling
 * Added naming schemes
 * Added SBEAMS array request importing
-* See Subversion repository for additional bug fixes and optimizations: http://slimarray.systemsbiology.net/svn
+* See Subversion repository for additional bug fixes and optimizations: http://slimseq.systemsbiology.net/svn
 
 *0.2.4*
 

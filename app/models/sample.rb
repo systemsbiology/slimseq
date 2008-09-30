@@ -4,25 +4,17 @@ class Sample < ActiveRecord::Base
   require 'csv'
   include Spreadsheet
   
-  has_one :hybridization, :dependent => :destroy
-
-  belongs_to :chip_type
-  belongs_to :project
   belongs_to :organism
-  belongs_to :starting_quality_trace, :class_name => "QualityTrace", :foreign_key => "starting_quality_trace_id"
-  belongs_to :amplified_quality_trace, :class_name => "QualityTrace", :foreign_key => "amplified_quality_trace_id"
-  belongs_to :fragmented_quality_trace, :class_name => "QualityTrace", :foreign_key => "fragmented_quality_trace_id"
   belongs_to :naming_scheme
+  belongs_to :sample_prep_kit
+  belongs_to :reference_genome
   
   has_many :sample_terms, :dependent => :destroy
   has_many :sample_texts, :dependent => :destroy
   
-  validates_associated :chip_type, :project
-  validates_presence_of :sample_name, :short_sample_name, :submission_date,
-                        :project_id, :sample_group_name
+  validates_presence_of :sample_name, :short_sample_name, :submission_date
   validates_length_of :short_sample_name, :maximum => 20
   validates_length_of :sample_name, :maximum => 59
-  validates_length_of :sbeams_user, :maximum => 20
   validates_length_of :status, :maximum => 50
 
   attr_accessor :naming_element_selections, :naming_element_visibility,
@@ -113,11 +105,7 @@ class Sample < ActiveRecord::Base
           "Submission Date",
           "Short Sample Name",
           "Sample Name",
-          "Sample Group Name",
-          "Chip Type",
           "Organism",
-          "SBEAMS User",
-          "Project",
           "Naming Scheme"
         ]
 
@@ -147,11 +135,7 @@ class Sample < ActiveRecord::Base
             sample.submission_date.to_s,
             sample.short_sample_name,
             sample.sample_name,
-            sample.sample_group_name,
-            sample.chip_type.name,
             sample.organism.name,
-            sample.sbeams_user,
-            sample.project.name,
             sample.naming_scheme.name
           ]
           # values for naming elements
@@ -334,11 +318,7 @@ class Sample < ActiveRecord::Base
           :submission_date => row[2],
           :short_sample_name => row[3],
           :sample_name => row[4],
-          :sample_group_name => row[5],
-          :chip_type_id => chip_type.id,
-          :organism_id => organism.id,
-          :sbeams_user => row[8],
-          :project_id => project.id
+          :organism_id => organism.id
         ))
       puts errors.full_messages
       return "Problem updating values for sample id=#{id}: #{errors.full_messages}"

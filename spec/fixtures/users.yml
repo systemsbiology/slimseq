@@ -1,0 +1,25 @@
+--- 
+another_customer_user: 
+  salt: bf3c47e71c0bfeb6288c9b6b5e24e15256a0e407
+  crypted_password: b1de1d1d2aec05df2be6f02995537c1783f08490
+  role: customer
+  lastname: Ho-Tep
+  firstname: Bubba
+  login: another_customer
+  email: another_customer@company.com
+customer_user: 
+  salt: bf3c47e71c0bfeb6288c9b6b5e24e15256a0e407
+  crypted_password: b1de1d1d2aec05df2be6f02995537c1783f08490
+  role: customer
+  lastname: Customer
+  firstname: Joe
+  login: customer
+  email: customerr@company.com
+admin_user: 
+  salt: bf3c47e71c0bfeb6288c9b6b5e24e15256a0e407
+  crypted_password: b1de1d1d2aec05df2be6f02995537c1783f08490
+  role: admin
+  lastname: User
+  firstname: Admin
+  login: admin
+  email: admin@company.com
