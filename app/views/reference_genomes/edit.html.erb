@@ -1,12 +1,17 @@
-<h1>Editing reference_genome</h1>
+<h1>Editing Reference Genome</h1>
 
 <%= error_messages_for :reference_genome %>
 
 <% form_for(@reference_genome) do |f| %>
   <p>
+    <p><label>Name</label><br>
+    <%= f.text_field 'name' %></p>
+    
+    <p><label>Organism</label><br>
+    <%= f.collection_select 'organism_id', @organisms, 'id', 'name' %></p>
+
     <%= f.submit "Update" %>
   </p>
 <% end %>
 
-<%= link_to 'Show', @reference_genome %> |
 <%= link_to 'Back', reference_genomes_path %>

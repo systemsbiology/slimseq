@@ -1,4 +1,7 @@
 class ReferenceGenomesController < ApplicationController
+  before_filter :populate_organism_dropdown,
+    :only => [:new, :create, :edit, :update]
+
   # GET /reference_genomes
   # GET /reference_genomes.xml
   def index
@@ -7,17 +10,6 @@ class ReferenceGenomesController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @reference_genomes }
-    end
-  end
-
-  # GET /reference_genomes/1
-  # GET /reference_genomes/1.xml
-  def show
-    @reference_genome = ReferenceGenome.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @reference_genome }
     end
   end
 
@@ -82,4 +74,10 @@ class ReferenceGenomesController < ApplicationController
       format.xml  { head :ok }
     end
   end
+end
+
+private
+
+def populate_organism_dropdown
+  @organisms = Organism.find(:all, :order => "name ASC")
 end

@@ -1,10 +1,16 @@
-<h1>New reference_genome</h1>
+<h1>New Reference Genome</h1>
 
 <%= error_messages_for :reference_genome %>
 
 <% form_for(@reference_genome) do |f| %>
   <p>
-    <%= f.submit "Create" %>
+    <p><label>Name</label><br>
+    <%= f.text_field 'name' %></p>
+    
+    <p><label>Organism</label><br>
+    <%= f.collection_select 'organism_id', @organisms, 'id', 'name' %></p>
+    
+    <%= f.submit "Update" %>
   </p>
 <% end %>
 

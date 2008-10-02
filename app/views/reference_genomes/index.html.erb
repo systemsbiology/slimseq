@@ -1,18 +1,21 @@
-<h1>Listing reference_genomes</h1>
+<h1>Listing Reference Genomes</h1>
 
-<table>
+<table class="sortable">
   <tr>
+    <td>Name</td>
+    <td>Organism</td>
+    <td>Edit</td>
+    <td>Destroy</td>
   </tr>
 
 <% for reference_genome in @reference_genomes %>
   <tr>
-    <td><%= link_to 'Show', reference_genome %></td>
+    <td><%=h reference_genome.name %></td>
+    <td><%=h reference_genome.organism.name %></td>
     <td><%= link_to 'Edit', edit_reference_genome_path(reference_genome) %></td>
     <td><%= link_to 'Destroy', reference_genome, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
 
-<br />
-
-<%= link_to 'New reference_genome', new_reference_genome_path %>
+<%= link_to 'New Reference Genome', new_reference_genome_path %>
