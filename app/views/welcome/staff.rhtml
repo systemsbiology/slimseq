@@ -4,10 +4,10 @@
 software for <%= SiteConfig.organization_name %>.<br>Please visit the <a href="http://slimseq.systemsbiology.net">
 SLIMseq web site</a> for documentation and additional information.</p>
 
-<% if @lab_groups.size == 0 || @chip_types.size == 0 %>
+<% if @lab_groups.size == 0 %>
 <p>It appears there isn't much information in the database yet.<br>
-Start by <%= link_to 'creating some lab groups', :controller => 'lab_groups', :action => 'new' %> 
-and <%= link_to 'creating some chip types', :controller => 'chip_types', :action => 'new' %></p>
+Start by <%= link_to 'creating some lab groups', :controller => 'lab_groups', :action => 'new' %>
+.</p>
 <% end %>
 
 <h3>Samples Submitted for Hybridization</h3>
