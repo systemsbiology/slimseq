@@ -6,24 +6,32 @@ class SampleSetsController < ApplicationController
       @sample_set = SampleSet.new(params[:sample_set])
 
       if(@sample_set.valid?)
-        @samples = Array.new
-        params[:sample_set][:number_of_samples].to_i.times do
-          @samples << Sample.new(
-            :submission_date => @sample_set.submission_date,
-            :naming_scheme_id => @sample_set.naming_scheme_id,
-            :sample_prep_kit_id => @sample_set.sample_prep_kit_id,
-            :reference_genome_id =>@sample_set.reference_genome_id,
-            :budget_number => @sample_set.budget_number,
-            :submitted_by_id => current_user.id
-          )
-        end
-        
         if(@sample_set.naming_scheme_id != nil)
           @naming_scheme = NamingScheme.find(@sample_set.naming_scheme_id)
           @naming_elements = @naming_scheme.ordered_naming_elements
         end
+
+        @samples = Array.new
+        params[:sample_set][:number_of_samples].to_i.times do
+          sample = Sample.new(
+            :submission_date => @sample_set.submission_date,
+            :naming_scheme_id => @sample_set.naming_scheme_id,
+            :sample_prep_kit_id => @sample_set.sample_prep_kit_id,
+            :reference_genome_id => @sample_set.reference_genome_id,
+            :desired_read_length => @sample_set.desired_read_length,
+            :insert_size => @sample_set.insert_size,
+            :budget_number => @sample_set.budget_number,
+            :submitted_by_id => current_user.id
+          )
+
+          # default visibility and text per naming element for naming schemes
+          sample.populate_default_visibilities_and_texts
+
+          @samples << sample
+        end        
       else
-        
+        # if the sample set info is invalid, kick back to step 1
+        params[:step] = "1"
       end
     else
       @sample_set = SampleSet.new

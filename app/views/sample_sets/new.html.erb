@@ -3,43 +3,11 @@
 <%= error_messages_for 'sample_set' %>
 
 <% if(@lab_groups.size > 0 || current_user.staff_or_admin?) %>
-  <% form_tag :action => 'new' do -%>
-    <%= hidden_field_tag 'step', '2' %>
-    
-    <p><label for="sample_set_submission_date">Date Samples will be submitted</label><br/>
-    <%= date_select 'sample_set', 'submission_date'  %></p>
-    
-    <p><label for="sample_set_number_of_samples">Number of samples</label><br/>
-    <%= text_field 'sample_set', 'number_of_samples', :size => 4 %></p>
-    
-    <p><label for="sample_set_sample_prep_kit_id">Sample Prep Kit</label><br/>
-    <%= collection_select 'sample_set', 'sample_prep_kit_id',
-      @sample_prep_kits, 'id', 'name', {:prompt => true} %></p>
-    
-    <p><label for="sample_set_reference_genome_id">Reference Genome</label><br/>
-    <%= collection_select 'sample_set', 'reference_genome_id',
-      @reference_genomes, 'id', 'name', {:prompt => true} %></p>
-    
-    <p><label for="sample_set_desired_read_length">Desired read length</label><br/>
-    <%= select 'sample_set', 'desired_read_length', ["Please select",18,26,36],
-      {:selected => "Please select"}, { :include_blank => true } %></p>
-    
-    <p><label for="sample_set_insert_size">Insert Size</label><br/>
-    <%= text_field 'sample_set', 'insert_size', :size => 8 %></p>
-    
-    <% if @naming_schemes.size > 0 %>
-      <p><label for="sample_set_naming_scheme_id">Naming Scheme</label><br/>
-      <select id='sample_set_naming_scheme_id' name='sample_set[naming_scheme_id]'>
-        <option value="">- None -</option>
-        <%= options_from_collection_for_select @naming_schemes, "id", "name" %>
-      </select></p>
-    <% end %>
-    
-    <p><label for="sample_set_budget_number">Budget Number</label><br/>
-    <%= text_field 'sample_set', 'budget_number' %></p>
-    
-    <%= submit_tag "Next ->" %>
-  <% end -%>
+  <% if params[:step] == "2" %>
+    <%= render :partial => 'step2' %>
+  <% else %>
+    <%= render :partial => 'step1' %>
+  <% end %>
 <% else %>
   <p>You need to belong to one or more lab groups before you can see or submit any samples.
   Please contact your administrator at <a href="mailto:<%=h SiteConfig.administrator_email %>">

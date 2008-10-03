@@ -19,4 +19,31 @@ class NamingScheme < ActiveRecord::Base
     return NamingElement.find(:all, :conditions => { :naming_scheme_id => id },
                                             :order => "element_order ASC" )
   end
+  
+  def default_visibilities
+    visibility = Array.new
+    
+    for element in ordered_naming_elements
+      if( element.dependent_element_id > 0 )
+        visibility << false
+      else
+        visibility << true
+      end
+    end
+    
+    return visibility
+  end
+  
+  def default_texts
+    text_values = Hash.new
+
+    for element in ordered_naming_elements
+      # free text
+      if( element.free_text )
+        text_values[element.name] = ""
+      end
+    end
+    
+    return text_values
+  end
 end

@@ -1,6 +1,7 @@
 class SampleSet < ActiveRecord::BaseWithoutTable
   column :submission_date, :date
   column :number_of_samples, :string
+  column :lab_group_id, :integer
   column :naming_scheme_id, :integer
   column :sample_prep_kit_id, :integer
   column :budget_number, :string
@@ -9,7 +10,7 @@ class SampleSet < ActiveRecord::BaseWithoutTable
   column :insert_size, :integer
 
   validates_numericality_of :number_of_samples, :greater_than_or_equal_to => 1
-  validates_numericality_of :desired_read_length, :insert_size,
-    :naming_scheme_id, :sample_prep_kit_id, :reference_genome_id
-  validates_presence_of :budget_number
+  validates_numericality_of :insert_size
+  validates_presence_of :budget_number, :reference_genome_id,
+    :sample_prep_kit_id, :desired_read_length, :lab_group_id
 end

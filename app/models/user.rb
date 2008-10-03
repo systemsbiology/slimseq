@@ -147,6 +147,7 @@ public
     
   has_many :lab_memberships, :dependent => :destroy
   has_many :lab_groups, :through => :lab_memberships
+  has_many :samples, :foreign_key => "submitted_by_id"
   belongs_to :naming_scheme, :foreign_key => "current_naming_scheme_id"
 
   # Returns the full name of this user.

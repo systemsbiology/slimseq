@@ -4,6 +4,7 @@ class Sample < ActiveRecord::Base
   require 'csv'
   include Spreadsheet
   
+  belongs_to :user, :foreign_key => "submitted_by_id"
   belongs_to :organism
   belongs_to :naming_scheme
   belongs_to :sample_prep_kit
@@ -46,6 +47,13 @@ class Sample < ActiveRecord::Base
     end
   end
   
+  def populate_default_visibilities_and_texts
+    if(naming_scheme_id != nil)
+      self.naming_element_visibility = naming_scheme.default_visibilities
+      self.text_values = naming_scheme.default_texts
+    end
+  end
+  
   def self.to_csv(naming_scheme = "")
     ###########################################
     # set up spreadsheet
@@ -62,16 +70,12 @@ class Sample < ActiveRecord::Base
           "Submission Date",
           "Short Sample Name",
           "Sample Name",
-          "Sample Group Name",
-          "Chip Type",
           "Organism",
-          "SBEAMS User",
-          "Project",
           "Naming Scheme"
         ]
 
         samples = Sample.find( :all, :conditions => {:naming_scheme_id => nil},
-          :include => [:project, :chip_type, :organism], :order => "samples.id ASC" )
+          :include => [:organism], :order => "samples.id ASC" )
 
         for sample in samples
           if(sample.hybridization != nil)
@@ -84,11 +88,7 @@ class Sample < ActiveRecord::Base
             sample.submission_date.to_s,
             sample.short_sample_name,
             sample.sample_name,
-            sample.sample_group_name,
-            sample.chip_type.name,
             sample.organism.name,
-            sample.sbeams_user,
-            sample.project.name,
             "None"
           ]
         end
@@ -120,7 +120,7 @@ class Sample < ActiveRecord::Base
 
         samples = Sample.find( :all, 
           :conditions => {:naming_scheme_id => scheme.id},
-          :include => [:project, :chip_type, :organism],
+          :include => [:organism],
           :order => "samples.id ASC" )
 
         current_row = 0
@@ -298,12 +298,6 @@ class Sample < ActiveRecord::Base
   end
 
   def update_unschemed_columns(row)  
-    chip_type = ChipType.find(:first, 
-      :conditions => [ "name = ? OR short_name = ?", row[6], row[6] ])
-    if(chip_type.nil?)
-      return "Chip type doesn't exist"
-    end
-    
     organism = Organism.find(:first, :conditions => { :name => row[7] })
     if(organism.nil?)
       organism = Organism.create(:name => row[7])

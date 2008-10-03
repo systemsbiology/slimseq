@@ -1,50 +1,41 @@
-<table class="sortable" id="sample_sets">
-  <tr>
-    <th>Date</th>
-    <th>Name on the sample tube</th>
-    <% if @sample_set.naming_scheme_id == nil %>
-        <th>Sample Description</th>
-      <% else %>
-        <% for element in @naming_elements %>
-          <th><%=h element.name %></th>
-        <% end %>
-      <% end %>
-    <th>Sample Prep Kit</th>
-    <th>Reference Genome</th>
-    <th>Desired Read Length</th>
-    <th>Insert Size</th>
-    <th>Budget Number</th>
-  </tr>
-  <% for @n in 0..@samples.size-1 %>    
-    <tr>
-      <% @sample = @samples[@n] %>
-        <td><%=h @sample.submission_date %>
-            <%= hidden_field :sample, :submission_date, :index =>@n %></td>
-        <td><%= text_field :sample, :short_sample_name, :index =>@n,
-                :size => 10 %></td>
+<% form_tag :action => 'new' do -%>
+  <%= hidden_field_tag 'step', '2' %>
 
-        <% if @naming_scheme == nil %>
-          <td><%= text_field :sample, :sample_name, :index =>@n,
-                  :size => 30 %></td>
-          <td><%= text_field :sample, :sample_group_name, :index =>@n,
-                  :size => 30 %></td>
-        <% else %>
-          <%= render :partial => 'samples/schemed_sample_name' %>
-        <% end %>
+  <p><label for="sample_set_submission_date">Date Samples will be submitted</label><br/>
+  <%= date_select 'sample_set', 'submission_date'  %></p>
 
-        <td><%=h @sample.sample_prep_kit.name %>
-            <%= hidden_field :sample, :sample_prep_kit, :index =>@n %></td>
-        <td><%=h @sample.reference_genome.name %>
-            <%= hidden_field :sample, :reference_genome, :index =>@n %></td>
-        <td><%=h @sample.desired_read_length %>
-            <%= hidden_field :sample, :desired_read_length, :index =>@n %></td>
-        <td><%=h @sample.insert_size %>
-            <%= hidden_field :sample, :insert_size, :index =>@n %></td>
-        <td><%=h @sample.budget_number %>
-            <%= hidden_field :sample, :budget_number, :index =>@n %></td>
-        <%= hidden_field :sample, :status, :index =>@n %>
-    </tr>
+  <p><label for="sample_set_number_of_samples">Number of samples</label><br/>
+  <%= text_field 'sample_set', 'number_of_samples', :size => 4 %></p>
+
+  <p><label for="sample_set_lab_group_id">Lab Group</label><br/>
+  <%= collection_select 'sample_set', 'lab_group_id',
+    @lab_groups, 'id', 'name', {:prompt => true} %></p>
+  
+  <p><label for="sample_set_sample_prep_kit_id">Sample Prep Kit</label><br/>
+  <%= collection_select 'sample_set', 'sample_prep_kit_id',
+    @sample_prep_kits, 'id', 'name', {:prompt => true} %></p>
+
+  <p><label for="sample_set_reference_genome_id">Reference Genome</label><br/>
+  <%= collection_select 'sample_set', 'reference_genome_id',
+    @reference_genomes, 'id', 'name', {:prompt => true} %></p>
+
+  <p><label for="sample_set_desired_read_length">Desired read length</label><br/>
+  <%= select 'sample_set', 'desired_read_length',
+    [ ["Please select",""], ["18",18], ["26",26], ["36",36] ] %></p>
+
+  <p><label for="sample_set_insert_size">Insert Size</label><br/>
+  <%= text_field 'sample_set', 'insert_size', :size => 8 %></p>
+
+  <% if @naming_schemes.size > 0 %>
+    <p><label for="sample_set_naming_scheme_id">Naming Scheme</label><br/>
+    <select id='sample_set_naming_scheme_id' name='sample_set[naming_scheme_id]'>
+      <option value="">- None -</option>
+      <%= options_from_collection_for_select @naming_schemes, "id", "name" %>
+    </select></p>
   <% end %>
-</table>
 
-<%= hidden_field :sample, :submission_date, :index =>@n %>
+  <p><label for="sample_set_budget_number">Budget Number</label><br/>
+  <%= text_field 'sample_set', 'budget_number' %></p>
+
+  <%= submit_tag "Next ->" %>
+<% end -%>

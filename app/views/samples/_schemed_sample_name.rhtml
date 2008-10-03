@@ -5,9 +5,9 @@
     <td>
         <div id="sample_<%=@n%>_schemed_name_<%=@element.name%>_block">
             <% if @sample.naming_element_visibility[@m] == true %>
-                <%= render :partial => 'shown_naming_element' %>
+                <%= render :partial => 'samples/shown_naming_element' %>
             <% else %>
-                <%= render :partial => 'hidden_naming_element' %>
+                <%= render :partial => 'samples/hidden_naming_element' %>
             <% end %>
         </div>
     </td>
