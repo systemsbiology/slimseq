@@ -6,8 +6,8 @@ class SampleSetsController < ApplicationController
       @sample_set = SampleSet.new(params[:sample_set])
 
       if(@sample_set.valid?)
-        if(@sample_set.naming_scheme_id != nil)
-          @naming_scheme = NamingScheme.find(@sample_set.naming_scheme_id)
+        @naming_scheme = @sample_set.naming_scheme
+        if(@naming_scheme != nil)
           @naming_elements = @naming_scheme.ordered_naming_elements
         end
 
