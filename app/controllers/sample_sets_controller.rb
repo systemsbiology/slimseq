@@ -19,9 +19,12 @@ class SampleSetsController < ApplicationController
             :sample_prep_kit_id => @sample_set.sample_prep_kit_id,
             :reference_genome_id => @sample_set.reference_genome_id,
             :desired_read_length => @sample_set.desired_read_length,
+            :alignment_start_position => @sample_set.alignment_start_position,
+            :alignment_end_position => @sample_set.alignment_end_position,
             :insert_size => @sample_set.insert_size,
             :budget_number => @sample_set.budget_number,
-            :submitted_by_id => current_user.id
+            :submitted_by_id => current_user.id,
+            :sample_set => @sample_set
           )
 
           # default visibility and text per naming element for naming schemes
@@ -39,6 +42,8 @@ class SampleSetsController < ApplicationController
   end
 
   def create
+#    @sample_set = SampleSet.new(params[:sample_set])
+#    params[:sample].each_value { |sample| @sample_set.samples.build(sample) }
   end
 
 private

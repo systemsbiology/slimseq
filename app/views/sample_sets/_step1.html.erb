@@ -23,7 +23,17 @@
   <%= select 'sample_set', 'desired_read_length',
     [ ["Please select",""], ["18",18], ["26",26], ["36",36] ] %></p>
 
-  <p><label for="sample_set_insert_size">Insert Size</label><br/>
+  <p>Alignment bases</p>
+  <p><label for="sample_set_alignment_start_position">Start</label>
+    <%= text_field 'sample_set', 'alignment_start_position', :size => 4, :default => 1 %> 
+
+    <label for="sample_set_alignment_end_position">End</label>
+    <%= text_field 'sample_set', 'alignment_end_position', :size => 4 %></p>
+
+  <%= observe_field :sample_set_desired_read_length,
+    :function => "$('sample_set_alignment_end_position').value = value;" %>
+  
+      <p><label for="sample_set_insert_size">Insert Size</label><br/>
   <%= text_field 'sample_set', 'insert_size', :size => 8 %></p>
 
   <% if @naming_schemes.size > 0 %>

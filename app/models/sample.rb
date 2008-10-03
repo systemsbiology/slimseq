@@ -14,12 +14,15 @@ class Sample < ActiveRecord::Base
   has_many :sample_texts, :dependent => :destroy
   
   validates_presence_of :sample_name, :short_sample_name, :submission_date
-  validates_length_of :short_sample_name, :maximum => 20
-  validates_length_of :sample_name, :maximum => 59
-  validates_length_of :status, :maximum => 50
-
+  validates_numericality_of :alignment_start_position, :greater_than_or_equal_to => 1
+  validates_numericality_of :alignment_end_position, :greater_than_or_equal_to => 1
+  
   attr_accessor :naming_element_selections, :naming_element_visibility,
     :text_values, :schemed_name
+  
+  # temporarily associates with a sample set, which doesn't get stored in db
+  attr_accessor :sample_set_id
+  belongs_to :sample_set
   
   def validate
     # make sure date/short_sample_name/sample_name combo is unique

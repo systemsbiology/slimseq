@@ -11,6 +11,8 @@ class InitialSchema < ActiveRecord::Migration
         t.column "sample_prep_kit_id", :integer
         t.column "insert_size", :integer
         t.column "desired_read_length", :integer
+        t.column "alignment_start_position", :integer, :default => 1
+        t.column "alignment_end_position", :integer
         t.column "reference_genome_id", :integer
         t.column "status", :string
         t.column "naming_scheme_id", :string
