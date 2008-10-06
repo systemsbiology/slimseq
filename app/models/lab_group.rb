@@ -1,10 +1,9 @@
 class LabGroup < ActiveRecord::Base
   has_many :lab_memberships, :dependent => :destroy
   has_many :users, :through => :lab_memberships
-
+  has_many :projects, :dependent => :destroy
   has_many :charge_sets, :dependent => :destroy
 
-  validates_length_of :name, :within => 1..250
   validates_uniqueness_of :name
 
   def destroy_warning

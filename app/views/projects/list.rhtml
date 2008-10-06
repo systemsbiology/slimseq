@@ -1,0 +1,21 @@
+<h1>Listing projects</h1>
+
+<table class="sortable" id="samples">
+  <tr>
+  <% for column in ["Name", "File Folder", "Lab Group", "Edit", "Destroy"] %>
+    <th><%= column %></th>
+  <% end %>
+  </tr>
+  
+<% for project in @projects %>
+  <tr>
+    <td><%=h project.name %></td>
+    <td><%=h project.file_folder %></td>
+    <td><%=h project.lab_group.name %></td>
+    <td><%= link_to 'Edit', :action => 'edit', :id => project %></td>
+    <td><%= link_to 'Destroy', { :action => 'destroy', :id => project }, :confirm => 'Are you sure?', :post => true %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'New project', :action => 'new' %>

@@ -27,6 +27,7 @@
           <% if current_user.staff_or_admin? %>
             <li class="category">Administration</li>
             <li><%= link_to 'Lab Groups', {:controller => 'lab_groups', :action => 'list'} %></li>
+            <li><%= link_to 'Projects', {:controller => 'projects', :action => 'list'} %></li>
             <li><%= link_to 'Organisms', {:controller => 'organisms', :action => 'list'} %></li>
             <li><%= link_to 'Reference Genomes', {:controller => 'reference_genomes'} %></li>
             <li><%= link_to 'Naming Schemes', {:controller => 'naming_schemes', :action => 'list'} %></li>

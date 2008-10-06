@@ -1,0 +1,14 @@
+<%= error_messages_for 'project' %>
+
+<!--[form:project]-->
+<p><label for="project_name">Name</label><br/>
+<%= text_field 'project', 'name'  %></p>
+
+<p><label for="project_file_folder">File Folder</label><br/>
+<%= text_field 'project', 'file_folder'  %></p>
+
+<p>Lab Group<br>
+<select id="project_lab_group_id" name="project[lab_group_id]">
+<%= options_from_collection_for_select @lab_groups, "id", "name" %></select></p>
+<!--[eoform:project]-->
+

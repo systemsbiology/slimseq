@@ -50,9 +50,17 @@ class InitialSchema < ActiveRecord::Migration
       
       create_table "lab_groups", :force => true do |t|
         t.column "name", :string
+        t.column "file_folder", :string
         t.column "lock_version", :integer, :default => 0
       end
-    
+
+      create_table "projects", :force => true do |t|
+        t.column "name", :string
+        t.column "file_folder", :string
+        t.column "lab_group_id", :integer
+        t.column "lock_version", :integer, :default => 0
+      end
+      
       create_table "reference_genomes", :force => true do |t|
         t.column "name", :string
         t.column "organism_id", :integer

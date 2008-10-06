@@ -3,7 +3,7 @@
 <% if @lab_groups.size > 0 %>
 	<table class="sortable" id="lab_groups">
 	  <tr>
-	  <% for name in ['Name'] %>
+	  <% for name in ['Name', 'File Folder'] %>
 	    <th><%=h name %></th>
 	  <% end %>
 	    <th>Edit</th>
@@ -12,7 +12,7 @@
 	  
 	<% for lab_group in @lab_groups %>
 	  <tr>
-	  <% for column in ['name'] %>
+	  <% for column in ['name', 'file_folder'] %>
 	    <td><%=h lab_group.send(column) %></td>
 	  <% end %>
 	    <td><%= link_to 'Edit', :action => 'edit', :id => lab_group %></td>
