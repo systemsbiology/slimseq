@@ -19,4 +19,6 @@ class SampleSet < ActiveRecord::BaseWithoutTable
   validates_numericality_of :alignment_end_position, :greater_than_or_equal_to => 1
   
   has_many :samples
+  
+  belongs_to :naming_scheme
 end
