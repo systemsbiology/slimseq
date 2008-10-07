@@ -1,0 +1,16 @@
+<h1>New Sample Prep Kits</h1>
+
+<%= error_messages_for :sample_prep_kit %>
+
+<% form_for(@sample_prep_kit) do |f| %>
+  <p>
+    <b>Name</b><br />
+    <%= f.text_field :name %>
+  </p>
+
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', sample_prep_kits_path %>

@@ -1,0 +1,21 @@
+<h1>Listing Sample Prep Kits</h1>
+
+<table class="sortable">
+  <tr>
+    <th>Name</th>
+    <td>Edit</td>
+    <td>Destroy</td>
+  </tr>
+
+<% for sample_prep_kit in @sample_prep_kits %>
+  <tr>
+    <td><%=h sample_prep_kit.name %></td>
+    <td><%= link_to 'Edit', edit_sample_prep_kit_path(sample_prep_kit) %></td>
+    <td><%= link_to 'Destroy', sample_prep_kit, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New sample prep kit', new_sample_prep_kit_path %>
