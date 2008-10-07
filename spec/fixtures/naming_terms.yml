@@ -1,0 +1,41 @@
+--- 
+replicateA: 
+  term: A
+  term_order: 0
+  abbreviated_term: A
+  naming_element: replicate
+replicateB: 
+  term: B
+  term_order: 1
+  abbreviated_term: B
+  naming_element: replicate
+heavy_metals: 
+  term: heavy metals
+  term_order: 1
+  abbreviated_term: HM
+  naming_element: perturbation
+heat: 
+  term: heat
+  term_order: 0
+  abbreviated_term: HT
+  naming_element: perturbation
+time000: 
+  term: "000"
+  term_order: 0
+  abbreviated_term: "000"
+  naming_element: perturbation_time
+wild_type: 
+  term: wild-type
+  term_order: 0
+  abbreviated_term: wt
+  naming_element: strain
+time024: 
+  term: "024"
+  term_order: 1
+  abbreviated_term: "024"
+  naming_element: perturbation_time
+mutant: 
+  term: mutant
+  term_order: 1
+  abbreviated_term: mut
+  naming_element: strain
