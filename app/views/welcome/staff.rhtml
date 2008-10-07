@@ -10,7 +10,7 @@ Start by <%= link_to 'creating some lab groups', :controller => 'lab_groups', :a
 .</p>
 <% end %>
 
-<h3>Samples Submitted for Hybridization</h3>
+<h3>Samples Submitted for Sequencing</h3>
 
 <% if @samples != nil && @samples.size > 0 %>
   <table class="sortable" id="samples">
@@ -36,6 +36,6 @@ Start by <%= link_to 'creating some lab groups', :controller => 'lab_groups', :a
   </table>
 
 <% else %>
-  <p>There are no samples submitted for hybridization.</p>  
+  <p>There are no samples submitted for sequencing.</p>  
 <% end %>
   <p><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></p>
