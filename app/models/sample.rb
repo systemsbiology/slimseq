@@ -25,7 +25,7 @@ class Sample < ActiveRecord::Base
   # temporarily associates with a sample set, which doesn't get stored in db
   attr_accessor :sample_set_id
   belongs_to :sample_set
-  
+
   # override new method to handle naming scheme stuff
   def self.new(attributes=nil)
     sample = super(attributes)
@@ -42,6 +42,8 @@ class Sample < ActiveRecord::Base
         sample.naming_element_visibility = scheme.visibilities(schemed_params)
         sample.text_values = scheme.texts(schemed_params)
         sample.naming_element_selections = scheme.element_selections(schemed_params)
+        sample.sample_terms = sample.terms_for(schemed_params)
+        sample.sample_texts = sample.texts_for(schemed_params)
         sample.sample_name = scheme.generate_sample_name(schemed_params)
       end
     end
@@ -339,5 +341,33 @@ class Sample < ActiveRecord::Base
     end
     
     return ""
+  end
+
+  def terms_for(schemed_params)
+    terms = Array.new
+    
+    count = 1
+    for element in naming_scheme.ordered_naming_elements
+      if( !element.free_text )
+        terms << SampleTerm.new( :sample_id => id, :term_order => count,
+          :naming_term_id => NamingTerm.find(schemed_params[element.name]).id )
+        count += 1
+      end
+    end
+    
+    return terms
+  end
+
+  def texts_for(schemed_params)
+    texts = Array.new
+    
+    for element in naming_scheme.ordered_naming_elements
+      if( element.free_text )
+        texts << SampleText.new( :sample_id => id, :naming_element_id => element.id,
+          :text => schemed_params[element.name] )
+      end
+    end
+    
+    return texts
   end
 end

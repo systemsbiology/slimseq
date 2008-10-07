@@ -23,9 +23,9 @@ class NamingScheme < ActiveRecord::Base
   
   def default_visibilities
     visibility = Array.new
-    
+
     for element in ordered_naming_elements
-      if( element.dependent_element_id > 0 )
+      if( element.dependent_element_id != nil && element.dependent_element_id > 0 )
         visibility << false
       else
         visibility << true
