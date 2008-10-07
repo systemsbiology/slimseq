@@ -4,7 +4,7 @@ class InitialSchema < ActiveRecord::Migration
       create_table "samples", :force => true do |t|
         t.column "sample_set_id", :integer
         t.column "submitted_by_id", :integer
-        t.column "lab_group_id", :integer
+        t.column "project_id", :integer
         t.column "submission_date", :date
         t.column "short_sample_name", :string
         t.column "sample_name", :string
@@ -23,7 +23,6 @@ class InitialSchema < ActiveRecord::Migration
       
       create_table "sample_prep_kits", :force => true do |t|
         t.column "name", :string
-        t.column "hybridization_primer", :string
       end
       
       create_table "flow_cells", :force => true do |t|
