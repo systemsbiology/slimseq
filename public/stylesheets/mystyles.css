@@ -1,4 +1,4 @@
-body { background-color: #fff; color: #333; }
+body { background-color: #fff; color: #111; }
 
 #title_bar {
     padding: 3ex 10ex 1ex 4ex;
@@ -51,9 +51,9 @@ pre {
   font-size: 11px;
 }
 
-a { color: #5b84a5; text-decoration: none;}
-a:visited { color: #5b84a5; text-decoration: none;}
-a:hover { color: #5b84a5;  text-decoration: underline;}
+a { color: #2b4475; text-decoration: none;}
+a:visited { color: #2b4475; text-decoration: none;}
+a:hover { color: #2b4475;  text-decoration: underline;}
 
 p.flash{
 	font-size: 14px; background-color:#FFFF99; color: #000000; padding:5px; width:95%;
@@ -236,4 +236,10 @@ table#quality_traces {
 
 table#quality_traces td {
     padding: 15px;
+}
+
+#new_project_box {
+    border: 1px solid;
+    padding: 5px;
+    width: 30em;
 }

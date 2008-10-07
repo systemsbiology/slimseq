@@ -5,8 +5,8 @@ describe SampleSetsController do
   before(:each) do
     login_as_user
     
-    lab_groups = [mock_model(LabGroup), mock_model(LabGroup)]
-    @current_user.stub!(:accessible_lab_groups).and_return(lab_groups)
+    projects = [mock_model(Project), mock_model(Project)]
+    @current_user.stub!(:accessible_projects).and_return(projects)
     NamingScheme.stub!(:find).and_return(
       [mock_model(NamingScheme), mock_model(NamingScheme)]
     )
@@ -95,6 +95,7 @@ describe SampleSetsController do
         before(:each) do
           @sample_set.stub!(:valid?).and_return(true)
           @sample_set.stub!(:submission_date).and_return('2008-02-01')
+          @sample_set.stub!(:project_id).and_return(1)
           @sample_set.stub!(:sample_prep_kit_id).and_return(1)
           @sample_set.stub!(:budget_number).and_return("1234")
           @sample_set.stub!(:reference_genome_id).and_return(1)

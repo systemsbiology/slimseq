@@ -1,7 +1,7 @@
 <% form_tag :action => 'create' do -%>
   <%= hidden_field 'sample_set', 'submission_date'  %>
   <%= hidden_field 'sample_set', 'number_of_samples' %>
-  <%= hidden_field 'sample_set', 'lab_group_id' %>
+  <%= hidden_field 'sample_set', 'project_id' %>
   <%= hidden_field 'sample_set', 'sample_prep_kit_id' %>
   <%= hidden_field 'sample_set', 'reference_genome_id' %>
   <%= hidden_field 'sample_set', 'desired_read_length' %>
@@ -59,7 +59,7 @@
           <td><%=h @sample.budget_number %>
               <%= hidden_field :sample, :budget_number, :index =>@n %></td>
           <%= hidden_field :sample, :status, :index =>@n %>
-          <%= hidden_field :sample, :lab_group_id, :index =>@n %>
+          <%= hidden_field :sample, :project_id, :index =>@n %>
           <%= hidden_field :sample, :naming_scheme_id, :index =>@n %>
           <%= hidden_field :sample, :submitted_by_id, :index =>@n %>
       </tr>

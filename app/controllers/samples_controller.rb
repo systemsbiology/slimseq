@@ -11,8 +11,9 @@ class SamplesController < ApplicationController
   def list
     if(@lab_groups != nil && @lab_groups.size > 0)
       @sample_pages, @samples =
-        paginate :samples, :conditions => [ "lab_group_id IN (?)", current_user.get_lab_group_ids ], :per_page => 40,
-                 :order => "submission_date DESC, samples.id ASC"
+        paginate :samples, :include => 'project',
+          :conditions => [ "projects.lab_group_id IN (?)", current_user.get_lab_group_ids ],
+          :per_page => 40, :order => "submission_date DESC, samples.id ASC"
     end
   end
   

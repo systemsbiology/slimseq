@@ -1,7 +1,8 @@
 class ProjectsController < ApplicationController
   before_filter :login_required
   before_filter :staff_or_admin_required
-  before_filter :load_dropdown_selections, :only => [:new, :create, :edit, :update]
+  before_filter :load_dropdown_selections, :only => [:new, :new_inline, :create, :create_inline,
+                                                     :edit, :update]
   
   def index
     list
@@ -16,6 +17,11 @@ class ProjectsController < ApplicationController
     @project = Project.new
   end
 
+  def new_inline
+    @project = Project.new
+    render :partial => 'new_inline'
+  end
+  
   def create
     @project = Project.new(params[:project])
     if @project.save
@@ -26,6 +32,17 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def create_inline
+    @project = Project.new(params[:project])
+    if @project.save
+      @projects = current_user.accessible_projects
+      @sample_set = SampleSet.new(:project_id => @project.id)
+      render :partial => 'sample_sets/projects'
+    else
+      render :partial => 'new_inline'
+    end
+  end
+  
   def edit
     @project = Project.find(params[:id])
   end

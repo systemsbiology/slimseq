@@ -9,9 +9,7 @@
   <p><label for="sample_set_number_of_samples">Number of samples</label><br/>
   <%= text_field 'sample_set', 'number_of_samples', :size => 4 %></p>
 
-  <p><label for="sample_set_lab_group_id">Lab Group</label><br/>
-  <%= collection_select 'sample_set', 'lab_group_id',
-    @lab_groups, 'id', 'name', {:prompt => true} %></p>
+  <%= render :partial => 'projects' %>
   
   <p><label for="sample_set_sample_prep_kit_id">Sample Prep Kit</label><br/>
   <%= collection_select 'sample_set', 'sample_prep_kit_id',

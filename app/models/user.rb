@@ -186,4 +186,9 @@ public
       return self.lab_groups
     end
   end  
+  
+  def accessible_projects
+    lab_group_ids = get_lab_group_ids
+    return Project.find(:all, :conditions => ["lab_group_id IN (?)", lab_group_ids])
+  end
 end

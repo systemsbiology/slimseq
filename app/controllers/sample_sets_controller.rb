@@ -15,7 +15,7 @@ class SampleSetsController < ApplicationController
         params[:sample_set][:number_of_samples].to_i.times do
           sample = Sample.new(
             :submission_date => @sample_set.submission_date,
-            :lab_group_id => @sample_set.lab_group_id,
+            :project_id => @sample_set.project_id,
             :naming_scheme_id => @sample_set.naming_scheme_id,
             :sample_prep_kit_id => @sample_set.sample_prep_kit_id,
             :reference_genome_id => @sample_set.reference_genome_id,
@@ -61,10 +61,14 @@ class SampleSetsController < ApplicationController
     end
   end
 
+  def cancel_new_project
+    render :partial => 'projects'
+  end
+  
 private
 
   def load_dropdown_selections
-    @lab_groups = current_user.accessible_lab_groups
+    @projects = current_user.accessible_projects
     @naming_schemes = NamingScheme.find(:all, :order => "name ASC")
     @sample_prep_kits = SamplePrepKit.find(:all, :order => "name ASC")
     @reference_genomes = ReferenceGenome.find(:all, :order => "name ASC")

@@ -9,12 +9,13 @@ class Sample < ActiveRecord::Base
   belongs_to :naming_scheme
   belongs_to :sample_prep_kit
   belongs_to :reference_genome
+  belongs_to :project
   
   has_many :sample_terms, :dependent => :destroy
   has_many :sample_texts, :dependent => :destroy
   
   validates_presence_of :sample_name, :short_sample_name, :submission_date, :budget_number,
-    :reference_genome_id, :sample_prep_kit_id, :desired_read_length, :lab_group_id
+    :reference_genome_id, :sample_prep_kit_id, :desired_read_length, :project_id
   validates_numericality_of :alignment_start_position, :greater_than_or_equal_to => 1
   validates_numericality_of :alignment_end_position, :greater_than_or_equal_to => 1
   validates_numericality_of :insert_size
