@@ -188,4 +188,54 @@ describe SampleSetsController do
       end
     end
   end
+  
+#  describe "handling POST /sample_sets" do
+#
+#    before(:each) do
+#      @sample_set = mock_model(SampleSet, :to_param => "1")
+#      SampleSet.stub!(:new).and_return(@sample_set)
+#    end
+#    
+#    describe "with successful save" do
+#  
+#      def do_post
+#        @sample_set.should_receive(:save).and_return(true)
+#        post :create,
+#          :sample_set => {"submission_date(2i)"=>"10", "naming_scheme_id"=>"",
+#                          "sample_prep_kit_id"=>"1", "number_of_samples"=>"2",
+#                          "submission_date(3i)"=>"6", "alignment_end_position"=>"18",
+#                          "desired_read_length"=>"18", "reference_genome_id"=>"2",
+#                          "alignment_start_position"=>"1", "lab_group_id"=>"1",
+#                          "budget_number"=>"1234", "insert_size"=>"150",
+#                          "submission_date(1i)"=>"2008"},
+#           :sample => {}
+#      end
+#  
+#      it "should create a new sample_set" do
+#        SampleSet.should_receive(:new).with({}).and_return(@sample_set)
+#        do_post
+#      end
+#
+#      it "should redirect to the list of samples" do
+#        do_post
+#        response.should redirect_to('samples/list')
+#      end
+#      
+#    end
+#    
+#    describe "with failed save" do
+#
+#      def do_post
+#        @sample_set.should_receive(:save).and_return(false)
+#        post :create, :sample_set => {}
+#      end
+#  
+#      it "should re-render 'new' template at step 2" do
+#        do_post
+#        response.should render_template('new')
+#      end
+#      
+#    end
+#  end
+
 end
