@@ -1,0 +1,12 @@
+<h1>Editing flow_cell</h1>
+
+<%= error_messages_for :flow_cell %>
+
+<% form_for(@flow_cell) do |f| %>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @flow_cell %> |
+<%= link_to 'Back', flow_cells_path %>
