@@ -15,6 +15,7 @@ class SampleSetsController < ApplicationController
         params[:sample_set][:number_of_samples].to_i.times do
           sample = Sample.new(
             :submission_date => @sample_set.submission_date,
+            :lab_group_id => @sample_set.lab_group_id,
             :naming_scheme_id => @sample_set.naming_scheme_id,
             :sample_prep_kit_id => @sample_set.sample_prep_kit_id,
             :reference_genome_id => @sample_set.reference_genome_id,
@@ -26,9 +27,6 @@ class SampleSetsController < ApplicationController
             :submitted_by_id => current_user.id,
             :sample_set => @sample_set
           )
-
-          # default visibility and text per naming element for naming schemes
-          sample.populate_default_visibilities_and_texts
 
           @samples << sample
         end        
@@ -42,8 +40,25 @@ class SampleSetsController < ApplicationController
   end
 
   def create
-#    @sample_set = SampleSet.new(params[:sample_set])
-#    params[:sample].each_value { |sample| @sample_set.samples.build(sample) }
+    @sample_set = SampleSet.new(params[:sample_set])
+
+    @samples = Array.new
+    params[:sample].each_value { |sample| @samples << Sample.new(sample) }
+    @sample_set.samples = @samples
+    if @sample_set.valid?
+      @samples.each do |s|
+        s.save
+      end
+      flash[:notice] = 'Samples were successfully created.'
+      redirect_to :controller => 'samples', :action => 'list' 
+    else
+      @naming_scheme = @sample_set.naming_scheme
+      if(@naming_scheme != nil)
+        @naming_elements = @naming_scheme.ordered_naming_elements
+      end
+      params[:step] = '2'
+      render :action => 'new'
+    end
   end
 
 private

@@ -1,7 +1,5 @@
 <h2>Enter Samples</h2>
 
-<%= error_messages_for 'sample_set' %>
-
 <% if(@lab_groups.size > 0 || current_user.staff_or_admin?) %>
   <% if params[:step] == "2" %>
     <%= render :partial => 'step2' %>

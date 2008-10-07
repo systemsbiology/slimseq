@@ -13,9 +13,11 @@ class Sample < ActiveRecord::Base
   has_many :sample_terms, :dependent => :destroy
   has_many :sample_texts, :dependent => :destroy
   
-  validates_presence_of :sample_name, :short_sample_name, :submission_date
+  validates_presence_of :sample_name, :short_sample_name, :submission_date, :budget_number,
+    :reference_genome_id, :sample_prep_kit_id, :desired_read_length, :lab_group_id
   validates_numericality_of :alignment_start_position, :greater_than_or_equal_to => 1
   validates_numericality_of :alignment_end_position, :greater_than_or_equal_to => 1
+  validates_numericality_of :insert_size
   
   attr_accessor :naming_element_selections, :naming_element_visibility,
     :text_values, :schemed_name
@@ -23,6 +25,28 @@ class Sample < ActiveRecord::Base
   # temporarily associates with a sample set, which doesn't get stored in db
   attr_accessor :sample_set_id
   belongs_to :sample_set
+  
+  # override new method to handle naming scheme stuff
+  def self.new(attributes=nil)
+    sample = super(attributes)
+
+    # handle naming scheme if there is one
+    scheme = NamingScheme.find(sample.naming_scheme_id)
+    if(scheme != nil)
+      schemed_params = attributes[:schemed_name]
+      if(schemed_params.nil?)
+        # use default selections if none are provided
+        sample.naming_element_visibility = scheme.default_visibilities
+        sample.text_values = scheme.default_texts
+      else
+        sample.naming_element_visibility = scheme.visibilities(schemed_params)
+        sample.text_values = scheme.texts(schemed_params)
+        sample.naming_element_selections = scheme.element_selections(schemed_params)
+        sample.sample_name = scheme.generate_sample_name(schemed_params)
+      end
+    end
+    return sample
+  end
   
   def validate
     # make sure date/short_sample_name/sample_name combo is unique
@@ -47,13 +71,6 @@ class Sample < ActiveRecord::Base
         sample_name[/\//] != nil ||
         sample_name[/\\/] != nil
       errors.add("Sample name must contain only letters, numbers, underscores and dashes or it")
-    end
-  end
-  
-  def populate_default_visibilities_and_texts
-    if(naming_scheme_id != nil)
-      self.naming_element_visibility = naming_scheme.default_visibilities
-      self.text_values = naming_scheme.default_texts
     end
   end
   

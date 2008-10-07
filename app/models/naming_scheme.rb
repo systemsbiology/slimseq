@@ -47,4 +47,74 @@ class NamingScheme < ActiveRecord::Base
     
     return text_values
   end
+
+  def visibilities(schemed_params)
+    visibility = Array.new
+    
+    for element in ordered_naming_elements
+      if( schemed_params[element.name] == nil )
+        visibility << false
+      else
+        visibility << true
+      end
+    end
+    
+    return visibility
+  end
+  
+  def texts(schemed_params)
+    text_values = Hash.new
+
+    for element in ordered_naming_elements
+      # free text
+      if( element.free_text )
+        if(schemed_params[element.name] == nil)
+          text_values[element.name] = ""
+        else
+          text_values[element.name] = schemed_params[element.name]
+        end
+      end
+    end
+    
+    return text_values
+  end
+
+  def element_selections(schemed_params)
+    selections = Array.new
+    
+    for n in 0..naming_elements.size-1
+      element = naming_elements[n]
+      if( !element.free_text )
+        if( schemed_params[element.name] == nil )
+          selections[n] = nil
+        else
+          selections[n] = schemed_params[element.name]
+        end
+      end
+    end
+    
+    return selections
+  end
+  
+  def generate_sample_name(schemed_params)
+    name = ""
+    
+    for element in ordered_naming_elements
+      # put an underscore between terms
+      if(name.length > 0)
+        name += "_"
+      end
+      
+      if( schemed_params[element.name] != nil )
+        # free text
+        if( element.free_text )
+          name += schemed_params[element.name]
+        else
+          name += NamingTerm.find(schemed_params[element.name]).abbreviated_term
+        end
+      end
+    end
+    
+    return name
+  end
 end

@@ -1,4 +1,16 @@
 <% form_tag :action => 'create' do -%>
+  <%= hidden_field 'sample_set', 'submission_date'  %>
+  <%= hidden_field 'sample_set', 'number_of_samples' %>
+  <%= hidden_field 'sample_set', 'lab_group_id' %>
+  <%= hidden_field 'sample_set', 'sample_prep_kit_id' %>
+  <%= hidden_field 'sample_set', 'reference_genome_id' %>
+  <%= hidden_field 'sample_set', 'desired_read_length' %>
+  <%= hidden_field 'sample_set', 'alignment_start_position' %> 
+  <%= hidden_field 'sample_set', 'alignment_end_position' %>
+  <%= hidden_field 'sample_set', 'insert_size' %>
+  <%= hidden_field 'sample_set', 'naming_scheme_id' %>
+  <%= hidden_field 'sample_set', 'budget_number' %>
+
   <table class="sortable" id="sample_sets">
     <tr>
       <th>Date</th>
@@ -13,12 +25,14 @@
       <th>Sample Prep Kit</th>
       <th>Reference Genome</th>
       <th>Desired Read Length</th>
+      <th>Alignment Bases</th>
       <th>Insert Size</th>
       <th>Budget Number</th>
     </tr>
     <% for @n in 0..@samples.size-1 %>    
       <tr>
         <% @sample = @samples[@n] %>
+        <%= error_messages_for 'sample' %>
             <td><%=h @sample.submission_date %>
               <%= hidden_field :sample, :submission_date, :index =>@n %></td>
           <td><%= text_field :sample, :short_sample_name, :index =>@n,
@@ -32,16 +46,22 @@
           <% end %>
 
           <td><%=h @sample.sample_prep_kit.name %>
-              <%= hidden_field :sample, :sample_prep_kit, :index =>@n %></td>
+              <%= hidden_field :sample, :sample_prep_kit_id, :index =>@n %></td>
           <td><%=h @sample.reference_genome.name %>
-              <%= hidden_field :sample, :reference_genome, :index =>@n %></td>
+              <%= hidden_field :sample, :reference_genome_id, :index =>@n %></td>
           <td><%=h @sample.desired_read_length %>
               <%= hidden_field :sample, :desired_read_length, :index =>@n %></td>
+          <td><%=h @sample.alignment_start_position %> - <%=h @sample.alignment_end_position %>
+              <%= hidden_field :sample, :alignment_start_position, :index =>@n %>
+              <%= hidden_field :sample, :alignment_end_position, :index =>@n %></td>
           <td><%=h @sample.insert_size %>
               <%= hidden_field :sample, :insert_size, :index =>@n %></td>
           <td><%=h @sample.budget_number %>
               <%= hidden_field :sample, :budget_number, :index =>@n %></td>
           <%= hidden_field :sample, :status, :index =>@n %>
+          <%= hidden_field :sample, :lab_group_id, :index =>@n %>
+          <%= hidden_field :sample, :naming_scheme_id, :index =>@n %>
+          <%= hidden_field :sample, :submitted_by_id, :index =>@n %>
       </tr>
     <% end %>
   </table>
