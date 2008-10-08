@@ -28,6 +28,10 @@ class Sample < ActiveRecord::Base
   attr_accessor :sample_set_id
   belongs_to :sample_set
 
+  def short_and_long_name
+    "#{short_sample_name} (#{sample_name})"
+  end
+  
   # override new method to handle naming scheme stuff
   def self.new(attributes=nil)
     sample = super(attributes)
