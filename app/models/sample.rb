@@ -10,7 +10,7 @@ class Sample < ActiveRecord::Base
   belongs_to :sample_prep_kit
   belongs_to :reference_genome
   belongs_to :project
-  belongs_to :flow_cell_lane
+  has_and_belongs_to_many :flow_cell_lanes
   
   has_many :sample_terms, :dependent => :destroy
   has_many :sample_texts, :dependent => :destroy

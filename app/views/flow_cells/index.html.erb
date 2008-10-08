@@ -1,11 +1,18 @@
-<h1>Listing flow_cells</h1>
+<h1>Listing Flow Cells</h1>
 
-<table>
+<table class="sortable">
   <tr>
+    <th>Date</th>
+    <th>Name</th>
+    <th>Show</th>
+    <th>Edit</th>
+    <th>Destroy</th>
   </tr>
 
 <% for flow_cell in @flow_cells %>
   <tr>
+    <td><%=h flow_cell.date_generated %></td>
+    <td><%=h flow_cell.name %></td>
     <td><%= link_to 'Show', flow_cell %></td>
     <td><%= link_to 'Edit', edit_flow_cell_path(flow_cell) %></td>
     <td><%= link_to 'Destroy', flow_cell, :confirm => 'Are you sure?', :method => :delete %></td>
@@ -15,4 +22,4 @@
 
 <br />
 
-<%= link_to 'New flow_cell', new_flow_cell_path %>
+<%= link_to 'New Flow Cell', new_flow_cell_path %>

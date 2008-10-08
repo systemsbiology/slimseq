@@ -1,4 +1,4 @@
-<h1>New flow_cell</h1>
+<h1>New Flow Cell</h1>
 
 <%= error_messages_for :flow_cell %>
 
@@ -20,7 +20,7 @@
     <% fields_for "flow_cell[lane_attributes][]", lane do |lane_form| %>
       <td><%=h lane.lane_number %>
           <%= lane_form.hidden_field :lane_number %></td>
-      <td><%= lane_form.collection_select :sample_id, @samples, :id, :short_sample_name %></td>
+      <td><%= lane_form.collection_select :sample_ids, @samples, :id, :short_sample_name %></td>
       <td><%= lane_form.text_field :starting_concentration %></td>
       <td><%= lane_form.text_field :loaded_concentration %></td>
       <td></td>

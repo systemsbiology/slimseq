@@ -1,11 +1,35 @@
-<h1>Editing flow_cell</h1>
+<h1>Editing Flow Cell</h1>
 
 <%= error_messages_for :flow_cell %>
 
 <% form_for(@flow_cell) do |f| %>
-  <p>
-    <%= f.submit "Update" %>
-  </p>
+  <p><label>Date Flow Cell Generated</label><br>
+     <%= f.date_select :date_generated %></p>
+  <p><label>Flow Cell Name</label><br>
+     <%= f.text_field :name %></p>
+
+  <table>
+    <tr>
+      <th>Lane Number</th>
+      <th>Sample</th>
+      <th>Starting Concentration (ng/mL)</th>
+      <th>Loaded Concentration (pM)</th>
+    </tr>
+  <% for lane in @flow_cell.flow_cell_lanes %>
+    <tr>
+    <% fields_for "flow_cell[lane_attributes][]", lane do |lane_form| %>
+      <td><%=h lane.lane_number %>
+          <%= lane_form.hidden_field :lane_number %></td>
+      <td><%= lane_form.collection_select :sample_ids, @samples, :id, :short_sample_name %></td>
+      <td><%= lane_form.text_field :starting_concentration %></td>
+      <td><%= lane_form.text_field :loaded_concentration %></td>
+      <td></td>
+    <% end %>
+    </tr>
+  <% end %>
+  </table>
+
+   <%= f.submit "Update" %>
 <% end %>
 
 <%= link_to 'Show', @flow_cell %> |

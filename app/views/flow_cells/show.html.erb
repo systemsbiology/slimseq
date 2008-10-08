@@ -1,3 +1,27 @@
+Flow Cell: <%=h @flow_cell.name %>
+Date Generated: <%=h @flow_cell.date_generated %>
+
+<table>
+  <tr>
+    <th>Lane Number</th>
+    <th>Sample</th>
+    <th>Starting Concentration (ng/mL)</th>
+    <th>Loaded Concentration (pM)</th>
+  </tr>
+<% for lane in @flow_cell.flow_cell_lanes %>
+  <tr>
+    <td><%=h lane.lane_number %></td>
+    <td>
+      <% lane.samples.each do |sample| %>
+        <%=h sample.short_sample_name %> (<%=h sample.sample_name %>)
+      <% end %>
+    </td>
+    <td><%=h lane.starting_concentration %> ng/mL</td>
+    <td><%=h lane.loaded_concentration %> pM</td>
+    <td></td>
+  </tr>
+<% end %>
+</table>
 
 <%= link_to 'Edit', edit_flow_cell_path(@flow_cell) %> |
 <%= link_to 'Back', flow_cells_path %>

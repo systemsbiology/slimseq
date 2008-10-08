@@ -33,10 +33,14 @@ class InitialSchema < ActiveRecord::Migration
       
       create_table "flow_cell_lanes", :force => true do |t|
         t.column "flow_cell_id", :integer
-        t.column "sample_id", :integer
         t.column "lane_number", :integer
         t.column "starting_concentration", :string
         t.column "loaded_concentration", :string
+      end
+      
+      create_table "flow_cell_lanes_samples", :id => false, :force => true do |t|
+        t.column "sample_id", :integer
+        t.column "flow_cell_lane_id", :integer
       end
       
       create_table "sequencing_runs", :force => true do |t|
