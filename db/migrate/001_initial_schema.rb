@@ -14,7 +14,7 @@ class InitialSchema < ActiveRecord::Migration
         t.column "alignment_start_position", :integer, :default => 1
         t.column "alignment_end_position", :integer
         t.column "reference_genome_id", :integer
-        t.column "status", :string
+        t.column "status", :string, :default => 'submitted'
         t.column "naming_scheme_id", :string
         t.column "raw_data_path", :string
         t.column "budget_number", :string
