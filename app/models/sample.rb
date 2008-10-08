@@ -32,22 +32,24 @@ class Sample < ActiveRecord::Base
   def self.new(attributes=nil)
     sample = super(attributes)
 
-    # handle naming scheme if there is one
-    scheme = NamingScheme.find(sample.naming_scheme_id)
-    if(scheme != nil)
-      schemed_params = attributes[:schemed_name]
-      if(schemed_params.nil?)
-        # use default selections if none are provided
-        sample.naming_element_visibility = scheme.default_visibilities
-        sample.text_values = scheme.default_texts
-      else
-        sample.naming_element_visibility = scheme.visibilities(schemed_params)
-        sample.text_values = scheme.texts(schemed_params)
-        sample.naming_element_selections = scheme.element_selections(schemed_params)
-        sample.sample_terms = sample.terms_for(schemed_params)
-        sample.sample_texts = sample.texts_for(schemed_params)
-        sample.sample_name = scheme.generate_sample_name(schemed_params)
-      end
+    # see if there's a naming scheme
+    begin
+      scheme = NamingScheme.find(sample.naming_scheme_id)
+    rescue
+      return sample
+    end
+    schemed_params = attributes[:schemed_name]
+    if(schemed_params.nil?)
+      # use default selections if none are provided
+      sample.naming_element_visibility = scheme.default_visibilities
+      sample.text_values = scheme.default_texts
+    else
+      sample.naming_element_visibility = scheme.visibilities(schemed_params)
+      sample.text_values = scheme.texts(schemed_params)
+      sample.naming_element_selections = scheme.element_selections(schemed_params)
+      sample.sample_terms = sample.terms_for(schemed_params)
+      sample.sample_texts = sample.texts_for(schemed_params)
+      sample.sample_name = scheme.generate_sample_name(schemed_params)
     end
     return sample
   end
