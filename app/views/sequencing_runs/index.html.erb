@@ -1,0 +1,23 @@
+<h1>Listing Sequencing Runs</h1>
+
+<table class="sortable">
+  <tr>
+    <th>Date</th>
+    <th>Flow Cell</th>
+    <th>Instrument</th>
+    <th>Edit</th>
+    <th>Destroy</th>
+  </tr>
+
+<% for sequencing_run in @sequencing_runs %>
+  <tr>
+    <td><%=h sequencing_run.date %></td>
+    <td><%=h sequencing_run.flow_cell.name %></td>
+    <td><%=h sequencing_run.instrument.name %></td>
+    <td><%= link_to 'Edit', edit_sequencing_run_path(sequencing_run) %></td>
+    <td><%= link_to 'Destroy', sequencing_run, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'New Sequencing Run', new_sequencing_run_path %>

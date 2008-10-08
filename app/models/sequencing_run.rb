@@ -1,3 +1,4 @@
 class SequencingRun < ActiveRecord::Base
-  has_one :flow_cell
+  belongs_to :flow_cell
+  belongs_to :instrument
 end

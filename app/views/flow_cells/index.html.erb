@@ -4,6 +4,7 @@
   <tr>
     <th>Date</th>
     <th>Name</th>
+    <th>Status</th>
     <th>Show</th>
     <th>Edit</th>
     <th>Destroy</th>
@@ -13,13 +14,12 @@
   <tr>
     <td><%=h flow_cell.date_generated %></td>
     <td><%=h flow_cell.name %></td>
+    <td><%=h flow_cell.status %></td>
     <td><%= link_to 'Show', flow_cell %></td>
     <td><%= link_to 'Edit', edit_flow_cell_path(flow_cell) %></td>
     <td><%= link_to 'Destroy', flow_cell, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
-
-<br />
 
 <%= link_to 'New Flow Cell', new_flow_cell_path %>

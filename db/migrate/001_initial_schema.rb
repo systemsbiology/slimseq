@@ -28,7 +28,7 @@ class InitialSchema < ActiveRecord::Migration
       create_table "flow_cells", :force => true do |t|
         t.column "name", :string
         t.column "date_generated", :date
-        t.column "sequencing_run_id", :integer
+        t.column "status", :string, :default => 'clustered'
       end
       
       create_table "flow_cell_lanes", :force => true do |t|

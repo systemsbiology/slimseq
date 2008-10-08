@@ -1,7 +1,10 @@
-Flow Cell: <%=h @flow_cell.name %>
-Date Generated: <%=h @flow_cell.date_generated %>
+<h1>Flow Cell</h1>
 
-<table>
+<p>Name: <%=h @flow_cell.name %></p>
+<p>Date Generated: <%=h @flow_cell.date_generated %></p>
+<p>Status: <%=h @flow_cell.status %></p>
+
+<table class="sortable">
   <tr>
     <th>Lane Number</th>
     <th>Sample</th>
@@ -18,7 +21,6 @@ Date Generated: <%=h @flow_cell.date_generated %>
     </td>
     <td><%=h lane.starting_concentration %> ng/mL</td>
     <td><%=h lane.loaded_concentration %> pM</td>
-    <td></td>
   </tr>
 <% end %>
 </table>

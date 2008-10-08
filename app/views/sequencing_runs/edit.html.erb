@@ -1,0 +1,18 @@
+<h1>Editing Sequencing Run</h1>
+
+<%= error_messages_for :sequencing_run %>
+
+<% form_for(@sequencing_run) do |f| %>
+  <p><label>Date</label><br>
+  <%= f.date_select 'date' %></p>
+
+  <p><label>Flow Cell</label><br>
+  <%= f.collection_select 'flow_cell_id', @flow_cells, :id, :name %></p>
+
+  <p><label>Instrument</label><br>
+  <%= f.collection_select 'instrument_id', @instruments, :id, :name %></p>
+    
+  <p><%= f.submit "Update" %></p>
+<% end %>
+
+<%= link_to 'Back', sequencing_runs_path %>
