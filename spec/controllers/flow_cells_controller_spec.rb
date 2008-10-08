@@ -4,6 +4,8 @@ require File.expand_path(File.dirname(__FILE__) + '/controller_spec_helper.rb')
 describe FlowCellsController do
   before(:each) do
     login_as_user
+    
+    Sample.stub!(:find).and_return([mock_model(Sample)])
   end
 
   def mock_flow_cell(stubs={})
