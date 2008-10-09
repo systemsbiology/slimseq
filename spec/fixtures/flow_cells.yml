@@ -1,0 +1,4 @@
+flow_cell_1:
+  name: 123ABC
+  date_generated: 2008-10-08
+  status: clustered
