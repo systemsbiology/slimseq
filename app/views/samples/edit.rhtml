@@ -31,34 +31,11 @@
         </p>
     <% end %>
 
-	<p><label for="sample_0_starting_quality_trace_id">Total RNA Trace</label><br/>
-    	<select id="sample_0_starting_quality_trace_id" name="sample[0][starting_quality_trace_id]">
-    	<option value="">---</option>
-        <%= options_from_collection_for_select @total_traces, "id", "name", selected_value=@sample.starting_quality_trace_id %></select></p>
-
-	<p><label for="sample_0_amplified_quality_trace_id">cRNA Trace</label><br/>
-    	<select id="sample_0_amplified_quality_trace_id" name="sample[0][amplified_quality_trace_id]">
-    	<option value="">---</option>
-        <%= options_from_collection_for_select @cRNA_traces, "id", "name", selected_value=@sample.amplified_quality_trace_id %></select></p>
-
-	<p><label for="sample_0_fragmented_quality_trace_id">Fragmented cRNA Trace</label><br/>
-    	<select id="sample_0_fragmented_quality_trace_id" name="sample[0][fragmented_quality_trace_id]">
-    	<option value="">---</option>
-        <%= options_from_collection_for_select @frag_traces, "id", "name", selected_value=@sample.fragmented_quality_trace_id %></select></p>
-
-    <% if( SiteConfig.using_sbeams? ) %>
-    	<p><label for="sample_0_sample_sbeams_user">SBEAMS User</label><br/>
-    	<%= text_field 'sample', 'sbeams_user', :size => 50, :index => 0 %></p>
-    <% end %>
     
-	<p><label for="sample_0_project_id">Project</label><br>
-	<select id="sample_0_project_id" name="sample[0][project_id]">
+    <p><label for="sample_0_project_id">Project</label><br>
+    <select id="sample_0_project_id" name="sample[0][project_id]">
     <%= options_from_collection_for_select @projects, "id", "name", selected_value=@sample.project_id %></select></p>
     
-    <p><label for="sample_0_chip_type_id">Chip Type</label><br>
-    <select id="sample_0_chip_type_id" name="sample[0][chip_type_id]">
-    <%= options_from_collection_for_select @chip_types, "id", "name", selected_value=@sample.chip_type_id %></select></p>
-
     <p><label for="sample_0_organism_id">Organism</label><br>
     <select id="sample_0_organism_id" name="sample[0][organism_id]">
     <%= options_from_collection_for_select @organisms, "id", "name", selected_value=@sample.organism_id %></select></p>
