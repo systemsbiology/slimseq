@@ -1,4 +1,10 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :sequencing_runs
+
+  map.resources :flow_cells
+
+  map.resources :sample_prep_kits
+
   map.resources :reference_genomes
 
   map.resources :users do |users|
