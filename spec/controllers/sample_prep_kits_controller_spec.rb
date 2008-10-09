@@ -30,12 +30,6 @@ describe SamplePrepKitsController do
 
   describe "responding to GET show" do
 
-    it "should expose the requested sample_prep_kit as @sample_prep_kit" do
-      SamplePrepKit.should_receive(:find).with("37").and_return(mock_sample_prep_kit)
-      get :show, :id => "37"
-      assigns[:sample_prep_kit].should equal(mock_sample_prep_kit)
-    end
-    
     describe "with mime type of xml" do
 
       it "should render the requested sample_prep_kit as xml" do
@@ -83,7 +77,7 @@ describe SamplePrepKitsController do
       it "should redirect to the created sample_prep_kit" do
         SamplePrepKit.stub!(:new).and_return(mock_sample_prep_kit(:save => true))
         post :create, :sample_prep_kit => {}
-        response.should redirect_to(sample_prep_kit_url(mock_sample_prep_kit))
+        response.should redirect_to(sample_prep_kits_url)
       end
       
     end
@@ -125,7 +119,7 @@ describe SamplePrepKitsController do
       it "should redirect to the sample_prep_kit" do
         SamplePrepKit.stub!(:find).and_return(mock_sample_prep_kit(:update_attributes => true))
         put :update, :id => "1"
-        response.should redirect_to(sample_prep_kit_url(mock_sample_prep_kit))
+        response.should redirect_to(sample_prep_kits_url)
       end
 
     end

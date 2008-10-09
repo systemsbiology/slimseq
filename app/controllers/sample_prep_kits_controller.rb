@@ -16,7 +16,6 @@ class SamplePrepKitsController < ApplicationController
     @sample_prep_kit = SamplePrepKit.find(params[:id])
 
     respond_to do |format|
-      format.html # show.html.erb
       format.xml  { render :xml => @sample_prep_kit }
     end
   end
@@ -45,7 +44,7 @@ class SamplePrepKitsController < ApplicationController
     respond_to do |format|
       if @sample_prep_kit.save
         flash[:notice] = 'SamplePrepKit was successfully created.'
-        format.html { redirect_to(@sample_prep_kit) }
+        format.html { redirect_to(sample_prep_kits_url) }
         format.xml  { render :xml => @sample_prep_kit, :status => :created, :location => @sample_prep_kit }
       else
         format.html { render :action => "new" }
@@ -62,7 +61,7 @@ class SamplePrepKitsController < ApplicationController
     respond_to do |format|
       if @sample_prep_kit.update_attributes(params[:sample_prep_kit])
         flash[:notice] = 'SamplePrepKit was successfully updated.'
-        format.html { redirect_to(@sample_prep_kit) }
+        format.html { redirect_to(sample_prep_kits_url) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
