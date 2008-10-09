@@ -17,6 +17,7 @@ class SequencingRun < ActiveRecord::Base
     flow_cell.update_attribute('status', status)
     flow_cell.flow_cell_lanes.each do |l|
       l.samples.each do |sample|
+        sample = Sample.find(sample.id)
         sample.update_attribute('status', status)
       end
     end
