@@ -1,0 +1,57 @@
+--- 
+sample5: 
+  status: submitted
+  short_sample_name: bb
+  naming_scheme_id: 
+  project: another
+  sample_name: BobB
+  submission_date: 2006-09-10
+  reference_genome: weevil_v1
+  desired_read_length: 36
+  budget_number: 1234
+  insert_size: 150
+  sample_prep_kit: chipseq
+  alignment_start_position: 1
+  alignment_end_position: 22
+sample6: 
+  status: submitted
+  short_sample_name: a1
+  project: another
+  sample_name: wt_HT_024_B_32234
+  submission_date: 2007-05-31
+  naming_scheme: yeast_scheme
+  reference_genome: weevil_v1
+  desired_read_length: 36
+  budget_number: 1234
+  insert_size: 150
+  sample_prep_kit: chipseq
+  alignment_start_position: 1
+  alignment_end_position: 22
+sample1: 
+  status: submitted
+  short_sample_name: yng
+  naming_scheme_id: 
+  project: first
+  sample_name: Young
+  submission_date: 2006-02-10
+sample2: 
+  status: sequenced
+  short_sample_name: old
+  naming_scheme_id: 
+  project: first
+  sample_name: Old
+  submission_date: 2006-02-10
+sample3: 
+  status: submitted
+  short_sample_name: vold
+  naming_scheme_id: 
+  project: first
+  sample_name: Very Old
+  submission_date: 2006-02-10
+sample4: 
+  status: sequenced
+  short_sample_name: vvold
+  naming_scheme_id: 
+  project: first
+  sample_name: Very Very Old
+  submission_date: 2006-02-10

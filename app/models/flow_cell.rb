@@ -5,7 +5,7 @@ class FlowCell < ActiveRecord::Base
   
   validates_presence_of :name, :date_generated
   validates_uniqueness_of :name
-  
+    
   def lane_attributes=(lane_attributes)
     lane_attributes.each do |attributes|
       flow_cell_lanes.build(attributes)
