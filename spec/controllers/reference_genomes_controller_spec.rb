@@ -62,66 +62,66 @@ describe ReferenceGenomesController do
     end
   end
 
-  describe "handling GET /reference_genomes/1" do
-
-    before(:each) do
-      @reference_genome = mock_model(ReferenceGenome)
-      ReferenceGenome.stub!(:find).and_return(@reference_genome)
-    end
-  
-    def do_get
-      get :show, :id => "1"
-    end
-
-    it "should be successful" do
-      do_get
-      response.should be_success
-    end
-  
-    it "should render show template" do
-      do_get
-      response.should render_template('show')
-    end
-  
-    it "should find the reference_genome requested" do
-      ReferenceGenome.should_receive(:find).with("1").and_return(@reference_genome)
-      do_get
-    end
-  
-    it "should assign the found reference_genome for the view" do
-      do_get
-      assigns[:reference_genome].should equal(@reference_genome)
-    end
-  end
-
-  describe "handling GET /reference_genomes/1.xml" do
-
-    before(:each) do
-      @reference_genome = mock_model(ReferenceGenome, :to_xml => "XML")
-      ReferenceGenome.stub!(:find).and_return(@reference_genome)
-    end
-  
-    def do_get
-      @request.env["HTTP_ACCEPT"] = "application/xml"
-      get :show, :id => "1"
-    end
-
-    it "should be successful" do
-      do_get
-      response.should be_success
-    end
-  
-    it "should find the reference_genome requested" do
-      ReferenceGenome.should_receive(:find).with("1").and_return(@reference_genome)
-      do_get
-    end
-  
-    it "should render the found reference_genome as xml" do
-      @reference_genome.should_receive(:to_xml).and_return("XML")
-      do_get
-      response.body.should == "XML"
-    end
-  end
+#  describe "handling GET /reference_genomes/1" do
+#
+#    before(:each) do
+#      @reference_genome = mock_model(ReferenceGenome)
+#      ReferenceGenome.stub!(:find).and_return(@reference_genome)
+#    end
+#  
+#    def do_get
+#      get :show, :id => "1"
+#    end
+#
+#    it "should be successful" do
+#      do_get
+#      response.should be_success
+#    end
+#  
+#    it "should render show template" do
+#      do_get
+#      response.should render_template('show')
+#    end
+#  
+#    it "should find the reference_genome requested" do
+#      ReferenceGenome.should_receive(:find).with("1").and_return(@reference_genome)
+#      do_get
+#    end
+#  
+#    it "should assign the found reference_genome for the view" do
+#      do_get
+#      assigns[:reference_genome].should equal(@reference_genome)
+#    end
+#  end
+#
+#  describe "handling GET /reference_genomes/1.xml" do
+#
+#    before(:each) do
+#      @reference_genome = mock_model(ReferenceGenome, :to_xml => "XML")
+#      ReferenceGenome.stub!(:find).and_return(@reference_genome)
+#    end
+#  
+#    def do_get
+#      @request.env["HTTP_ACCEPT"] = "application/xml"
+#      get :show, :id => "1"
+#    end
+#
+#    it "should be successful" do
+#      do_get
+#      response.should be_success
+#    end
+#  
+#    it "should find the reference_genome requested" do
+#      ReferenceGenome.should_receive(:find).with("1").and_return(@reference_genome)
+#      do_get
+#    end
+#  
+#    it "should render the found reference_genome as xml" do
+#      @reference_genome.should_receive(:to_xml).and_return("XML")
+#      do_get
+#      response.body.should == "XML"
+#    end
+#  end
 
   describe "handling GET /reference_genomes/new" do
 
@@ -211,9 +211,9 @@ describe ReferenceGenomesController do
         do_post
       end
 
-      it "should redirect to the new reference_genome" do
+      it "should redirect to the reference_genome index" do
         do_post
-        response.should redirect_to(reference_genome_url("1"))
+        response.should redirect_to(reference_genomes_url)
       end
       
     end
@@ -262,9 +262,9 @@ describe ReferenceGenomesController do
         assigns(:reference_genome).should equal(@reference_genome)
       end
 
-      it "should redirect to the reference_genome" do
+      it "should redirect to the reference_genome index" do
         do_put
-        response.should redirect_to(reference_genome_url("1"))
+        response.should redirect_to(reference_genomes_url)
       end
 
     end

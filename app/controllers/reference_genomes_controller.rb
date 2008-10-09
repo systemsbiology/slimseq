@@ -37,7 +37,7 @@ class ReferenceGenomesController < ApplicationController
     respond_to do |format|
       if @reference_genome.save
         flash[:notice] = 'ReferenceGenome was successfully created.'
-        format.html { redirect_to(@reference_genome) }
+        format.html { redirect_to(reference_genomes_url) }
         format.xml  { render :xml => @reference_genome, :status => :created, :location => @reference_genome }
       else
         format.html { render :action => "new" }
@@ -54,7 +54,7 @@ class ReferenceGenomesController < ApplicationController
     respond_to do |format|
       if @reference_genome.update_attributes(params[:reference_genome])
         flash[:notice] = 'ReferenceGenome was successfully updated.'
-        format.html { redirect_to(@reference_genome) }
+        format.html { redirect_to(reference_genomes_url) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
