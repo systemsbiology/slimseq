@@ -26,21 +26,24 @@
               <li class="category">Charges</li>
               <li><%= link_to 'Charges', {:controller => 'charge_sets', :action => 'list'} %></li>
               <li><%= link_to 'Charge Templates', {:controller => 'charge_templates', :action => 'list'} %></li>
-            <% end %>    
+            <% end %>
           <% end %>
           <% if current_user.staff_or_admin? %>
-            <li class="category">Administration</li>
+            <li class="category">Facility</li>
+            <li><%= link_to 'Sample Prep Kits', sample_prep_kits_path %></li>
+            <li><%= link_to 'Reference Genomes', {:controller => 'reference_genomes'} %></li>
+            <li><%= link_to 'Organisms', {:controller => 'organisms', :action => 'list'} %></li>
+            <li class="category">Users</li>
+            <li><%= link_to 'Users', users_path %></li>
             <li><%= link_to 'Lab Groups', {:controller => 'lab_groups', :action => 'list'} %></li>
             <li><%= link_to 'Projects', {:controller => 'projects', :action => 'list'} %></li>
-            <li><%= link_to 'Sample Prep Kits', sample_prep_kits_path %></li>
-            <li><%= link_to 'Organisms', {:controller => 'organisms', :action => 'list'} %></li>
-            <li><%= link_to 'Reference Genomes', {:controller => 'reference_genomes'} %></li>
-            <li><%= link_to 'Naming Schemes', {:controller => 'naming_schemes', :action => 'list'} %></li>
-            <li><%= link_to 'Users', users_path %></li>
+            <li><%= link_to 'Naming Schemes', {:controller => 'naming_schemes', :action => 'list'} %></li>            
           <% end %>
           <% if current_user.admin? %>
+            <li class="category">Admin</li>
             <li><%= link_to 'Site Config', {:controller => 'site_config', :action => 'edit'} %></li>
           <% end %>
+          <br/>
           <li><%= link_to 'Log Out', {:controller => 'sessions', :action => 'destroy'} %></li>
         <% end %>    
       </div>
