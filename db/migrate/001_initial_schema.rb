@@ -16,19 +16,21 @@ class InitialSchema < ActiveRecord::Migration
         t.column "reference_genome_id", :integer
         t.column "status", :string, :default => 'submitted'
         t.column "naming_scheme_id", :string
-        t.column "raw_data_path", :string
         t.column "budget_number", :string
+        t.column "control", :boolean, :default => false
         t.column "lock_version", :integer, :default => 0
       end
       
       create_table "sample_prep_kits", :force => true do |t|
         t.column "name", :string
+        t.column "lock_version", :integer, :default => 0
       end
       
       create_table "flow_cells", :force => true do |t|
         t.column "name", :string
         t.column "date_generated", :date
         t.column "status", :string, :default => 'clustered'
+        t.column "lock_version", :integer, :default => 0
       end
       
       create_table "flow_cell_lanes", :force => true do |t|
@@ -36,21 +38,26 @@ class InitialSchema < ActiveRecord::Migration
         t.column "lane_number", :integer
         t.column "starting_concentration", :string
         t.column "loaded_concentration", :string
+        t.column "raw_data_path", :string
+        t.column "lock_version", :integer, :default => 0
       end
       
       create_table "flow_cell_lanes_samples", :id => false, :force => true do |t|
         t.column "sample_id", :integer
         t.column "flow_cell_lane_id", :integer
+        t.column "lock_version", :integer, :default => 0
       end
       
       create_table "sequencing_runs", :force => true do |t|
         t.column "flow_cell_id", :integer
         t.column "instrument_id", :integer
         t.column "date", :date
+        t.column "lock_version", :integer, :default => 0
       end
       
       create_table "instruments", :force => true do |t|
         t.column "name", :string
+        t.column "lock_version", :integer, :default => 0
       end
       
       create_table "lab_groups", :force => true do |t|
@@ -69,6 +76,7 @@ class InitialSchema < ActiveRecord::Migration
       create_table "reference_genomes", :force => true do |t|
         t.column "name", :string
         t.column "organism_id", :integer
+        t.column "lock_version", :integer, :default => 0
       end
       
       create_table "organisms", :force => true do |t|
@@ -127,7 +135,6 @@ class InitialSchema < ActiveRecord::Migration
         t.column "naming_scheme_id", :integer
         t.column "free_text", :boolean
         t.column "include_in_sample_name", :boolean, :default => true
-
         t.column "lock_version", :integer, :default => 0
       end
 
@@ -145,6 +152,7 @@ class InitialSchema < ActiveRecord::Migration
         t.column "term_order", :integer
         t.column "sample_id", :integer
         t.column "naming_term_id", :integer
+        t.column "lock_version", :integer, :default => 0
       end
       
       # sample-specific free text
@@ -153,6 +161,7 @@ class InitialSchema < ActiveRecord::Migration
         t.column "lock_version", :integer, :default => 0
         t.column "sample_id", :integer
         t.column "naming_element_id", :integer
+        t.column "lock_version", :integer, :default => 0
       end
       
       create_table "charges", :force => true do |t|
@@ -202,6 +211,27 @@ class InitialSchema < ActiveRecord::Migration
                       :administrator_email => "admin@example.com",
                       :raw_data_root_path => "/tmp/",
                       :site_url => "http://slim"
+    # For PhiX control
+    organism = Organism.create(:name => "PhiX")
+    reference_genome = ReferenceGenome.create(:name => "PhiX", :organism => organism)
+    sample_prep_kit = SamplePrepKit.create(:name => "PhiX Control")
+    lab_group = LabGroup.create(:name => "Sequencing Facility", :file_folder => "facility")
+    project = Project.create(:name => "Facility Controls", :file_folder => "",
+                             :lab_group => lab_group)
+
+    Sample.create(:submission_date => "2008-10-10",
+                  :project => project,
+                  :short_sample_name => "PhiX",
+                  :sample_name => "PhiX_Control",
+                  :sample_prep_kit => sample_prep_kit,
+                  :insert_size => 100,
+                  :desired_read_length => 18,
+                  :alignment_start_position => 1,
+                  :alignment_end_position => 18,
+                  :reference_genome => reference_genome,
+                  :budget_number => '00000000',
+                  :control => true
+                 )
   end
 
   def self.down

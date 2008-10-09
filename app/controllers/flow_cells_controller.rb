@@ -90,6 +90,8 @@ class FlowCellsController < ApplicationController
 private
 
   def load_dropdown_selections
-    @samples = Sample.find(:all, :order => "short_sample_name ASC")
+    @samples = Sample.find_all_by_control(true, :order => "short_sample_name ASC")
+    @samples += Sample.find_all_by_control_and_status(false, 'submitted',
+      :order => "short_sample_name ASC")
   end
 end

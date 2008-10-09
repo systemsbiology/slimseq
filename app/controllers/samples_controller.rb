@@ -12,7 +12,8 @@ class SamplesController < ApplicationController
     if(@lab_groups != nil && @lab_groups.size > 0)
       @sample_pages, @samples =
         paginate :samples, :include => 'project',
-          :conditions => [ "projects.lab_group_id IN (?)", current_user.get_lab_group_ids ],
+          :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
+          current_user.get_lab_group_ids, false ],
           :per_page => 40, :order => "submission_date DESC, samples.id ASC"
     end
   end
