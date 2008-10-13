@@ -1,7 +1,7 @@
 class FlowCell < ActiveRecord::Base
   has_many :flow_cell_lanes, :dependent => :destroy
   
-  has_one :sequencing_run
+  has_one :sequencing_run, :dependent => :destroy
   
   validates_presence_of :name, :date_generated
   validates_uniqueness_of :name
