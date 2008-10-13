@@ -18,6 +18,7 @@ class FlowCellLane < ActiveRecord::Base
   
   def mark_samples_as(status)
     samples.each do |sample|
+      sample = Sample.find(sample.id)
       sample.update_attribute('status', status)
     end
   end
