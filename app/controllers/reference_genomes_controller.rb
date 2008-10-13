@@ -10,6 +10,7 @@ class ReferenceGenomesController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @reference_genomes }
+      format.json  { render :json => @reference_genomes }
     end
   end
 
@@ -21,6 +22,7 @@ class ReferenceGenomesController < ApplicationController
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @reference_genome }
+      format.json  { render :json => @reference_genome }
     end
   end
 
@@ -39,9 +41,11 @@ class ReferenceGenomesController < ApplicationController
         flash[:notice] = 'ReferenceGenome was successfully created.'
         format.html { redirect_to(reference_genomes_url) }
         format.xml  { render :xml => @reference_genome, :status => :created, :location => @reference_genome }
+        format.json  { render :json => @reference_genome, :status => :created, :location => @reference_genome }
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @reference_genome.errors, :status => :unprocessable_entity }
+        format.json  { render :json => @reference_genome.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -56,9 +60,11 @@ class ReferenceGenomesController < ApplicationController
         flash[:notice] = 'ReferenceGenome was successfully updated.'
         format.html { redirect_to(reference_genomes_url) }
         format.xml  { head :ok }
+        format.json  { head :ok }
       else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @reference_genome.errors, :status => :unprocessable_entity }
+        format.json  { render :json => @reference_genome.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -72,6 +78,7 @@ class ReferenceGenomesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(reference_genomes_url) }
       format.xml  { head :ok }
+      format.json  { head :ok }
     end
   end
 end
