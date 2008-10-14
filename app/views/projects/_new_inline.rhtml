@@ -1,10 +1,8 @@
 <div id="new_project_box">
   Project
-  <% form_tag :action => 'create_inline' do -%>
-    <%= render :partial => 'form' %>
-    <%= submit_to_remote "submit_button", "Create", :url => {:action => 'create_inline'},
-        :update => 'projects' %> or 
-    <%= link_to_remote "Cancel", :url => {:controller => 'sample_sets', :action => 'cancel_new_project'},
-        :update => 'projects' %>
-  <% end -%>
+  <%= render :partial => 'form' %>
+  <%= submit_to_remote "submit_button", "Create", :url => {:action => 'create_inline'},
+      :update => 'projects' %> or 
+  <%= link_to_remote "Cancel", :url => {:controller => 'sample_sets', :action => 'cancel_new_project'},
+      :update => 'projects' %>
 </div>
