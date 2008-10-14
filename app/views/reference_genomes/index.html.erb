@@ -4,6 +4,7 @@
   <tr>
     <td>Name</td>
     <td>Organism</td>
+    <td>FASTA File</td>
     <td>Edit</td>
     <td>Destroy</td>
   </tr>
@@ -12,6 +13,7 @@
   <tr>
     <td><%=h reference_genome.name %></td>
     <td><%=h reference_genome.organism.name %></td>
+    <td><%=h reference_genome.fasta_path %></td>
     <td><%= link_to 'Edit', edit_reference_genome_path(reference_genome) %></td>
     <td><%= link_to 'Destroy', reference_genome, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>

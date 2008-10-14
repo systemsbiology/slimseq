@@ -10,6 +10,9 @@
     <p><label>Organism</label><br>
     <%= f.collection_select 'organism_id', @organisms, 'id', 'name' %></p>
     
+    <p><label>FASTA File Path (e.g. /sequencing/genomes/mouse.fasta)</label><br>
+    <%= f.text_field 'fasta_path' %></p>
+    
     <%= f.submit "Create" %>
   </p>
 <% end %>
