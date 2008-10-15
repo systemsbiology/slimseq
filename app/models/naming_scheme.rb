@@ -48,7 +48,7 @@ class NamingScheme < ActiveRecord::Base
     return text_values
   end
 
-  def visibilities(schemed_params)
+  def visibilities_from_params(schemed_params)
     visibility = Array.new
     
     for element in ordered_naming_elements
@@ -62,7 +62,7 @@ class NamingScheme < ActiveRecord::Base
     return visibility
   end
   
-  def texts(schemed_params)
+  def texts_from_params(schemed_params)
     text_values = Hash.new
 
     for element in ordered_naming_elements
@@ -79,11 +79,11 @@ class NamingScheme < ActiveRecord::Base
     return text_values
   end
 
-  def element_selections(schemed_params)
+  def element_selections_from_params(schemed_params)
     selections = Array.new
     
-    for n in 0..naming_elements.size-1
-      element = naming_elements[n]
+    for n in 0..ordered_naming_elements.size-1
+      element = ordered_naming_elements[n]
       if( !element.free_text )
         if( schemed_params[element.name] == nil )
           selections[n] = nil
@@ -116,5 +116,65 @@ class NamingScheme < ActiveRecord::Base
     end
     
     return name
+  end
+  
+  def visibilities_from_terms(sample_terms)
+    # get default visibilities
+    visibility = default_visibilities
+    
+    # modify visibilities based on actual selections
+    for term in sample_terms
+      # see if there's a naming term for this element,
+      # and if so show it
+      i = ordered_naming_elements.index( term.naming_term.naming_element )
+      if( i != nil)
+        visibility[i] = true
+      end        
+    end
+
+    # find dependent elements, and show them
+    # if the element they depend upon is shown
+    for i in (0..ordered_naming_elements.size-1)
+      element = ordered_naming_elements[i]
+
+      # does this element depend upon another?
+      if( element.dependent_element_id != nil && element.dependent_element_id > 0 )
+        dependent_element = NamingElement.find(element.dependent_element_id)
+        # check each term to see if the dependent is used
+        for term in sample_terms
+          if(term.naming_term.naming_element == dependent_element)
+            visibility[i] = true
+          end
+        end
+      end
+    end
+    
+    return visibility
+  end
+  
+  def texts_from_terms(sample_texts)
+    text_values = Hash.new
+    # set sample texts
+    for text in sample_texts
+      text_values[text.naming_element.name] = text.text
+    end
+    
+    return text_values
+  end
+  
+  def element_selections_from_terms(sample_terms)
+    selections = Array.new(ordered_naming_elements.size, -1)
+    
+    for term in sample_terms
+      # see if there's a naming term for this element,
+      # and if so record selection
+      naming_term = term.naming_term
+      i = ordered_naming_elements.index( naming_term.naming_element )
+      if( i != nil)
+        selections[i] = naming_term.id
+      end
+    end
+    
+    return selections
   end
 end
