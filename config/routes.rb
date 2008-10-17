@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :instruments
+
   map.resources :sequencing_runs
 
   map.resources :flow_cells
@@ -10,8 +12,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users do |users|
     users.resources :lab_memberships, :name_prefix => "user_"
   end
-  
-
 
   # The priority is based upon order of creation: first created -> highest priority.
 
