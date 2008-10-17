@@ -21,11 +21,22 @@ describe NamingScheme do
     it "should provide a string of the abbreviated terms and free text values" do
       schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => naming_terms(:heat).id,
-        "Replicate" => naming_terms(:replicateA), "Perturbation Time" => naming_terms(:time024),
+        "Replicate" => naming_terms(:replicateA).id, "Perturbation Time" => naming_terms(:time024).id,
         "Subject Number" => "3283"
       }
       
       @naming_scheme.generate_sample_name(schemed_params).should == "wt_HT_024_A_3283"
+    end
+  end
+
+  describe "generating a sample name from schemed parameters, with a hidden element" do
+    it "should provide a string of the abbreviated terms and free text values" do
+      schemed_params = {
+        "Strain" => naming_terms(:wild_type).id, "Perturbation" => "-1",
+        "Replicate" => naming_terms(:replicateA).id, "Subject Number" => "3283"
+      }
+      
+      @naming_scheme.generate_sample_name(schemed_params).should == "wt___A_3283"
     end
   end
   
@@ -40,7 +51,7 @@ describe NamingScheme do
   it "should provide the correct visibilities from parameters" do
     schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => naming_terms(:heat).id,
-        "Replicate" => naming_terms(:replicateA), "Perturbation Time" => naming_terms(:time024),
+        "Replicate" => naming_terms(:replicateA).id, "Perturbation Time" => naming_terms(:time024).id,
         "Subject Number" => "3283"
       }
     
@@ -53,7 +64,7 @@ describe NamingScheme do
   it "should provide the correct texts from parameters" do
     schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => naming_terms(:heat).id,
-        "Replicate" => naming_terms(:replicateA), "Perturbation Time" => naming_terms(:time024),
+        "Replicate" => naming_terms(:replicateA).id, "Perturbation Time" => naming_terms(:time024).id,
         "Subject Number" => "3283"
       }
     

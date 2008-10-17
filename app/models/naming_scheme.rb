@@ -109,7 +109,7 @@ class NamingScheme < ActiveRecord::Base
         # free text
         if( element.free_text )
           name += schemed_params[element.name]
-        else
+        elsif( schemed_params[element.name].to_i > 0 )
           name += NamingTerm.find(schemed_params[element.name]).abbreviated_term
         end
       end
