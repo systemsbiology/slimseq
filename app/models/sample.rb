@@ -21,8 +21,7 @@ class Sample < ActiveRecord::Base
   validates_numericality_of :alignment_end_position, :greater_than_or_equal_to => 1
   validates_numericality_of :insert_size
   
-  attr_accessor :naming_element_selections, :naming_element_visibility,
-    :text_values, :schemed_name
+  attr_accessor :schemed_name
   
   # temporarily associates with a sample set, which doesn't get stored in db
   attr_accessor :sample_set_id
@@ -45,18 +44,42 @@ class Sample < ActiveRecord::Base
     schemed_params = attributes[:schemed_name]
     if(schemed_params.nil?)
       # use default selections if none are provided
-      sample.naming_element_visibility = scheme.default_visibilities
-      sample.text_values = scheme.default_texts
+      @naming_element_visibility = scheme.default_visibilities
+      @text_values = scheme.default_texts
     else
-      sample.naming_element_visibility = scheme.visibilities(schemed_params)
-      sample.text_values = scheme.texts(schemed_params)
-      sample.naming_element_selections = scheme.element_selections(schemed_params)
+      @naming_element_visibility = scheme.visibilities_from_params(schemed_params)
+      @text_values = scheme.texts_from_params(schemed_params)
+      @naming_element_selections = scheme.element_selections_from_params(schemed_params)
       sample.sample_terms = sample.terms_for(schemed_params)
       sample.sample_texts = sample.texts_for(schemed_params)
       sample.sample_name = scheme.generate_sample_name(schemed_params)
     end
     return sample
   end
+
+  def naming_element_visibility
+    if(naming_scheme != nil)
+      return @naming_element_visibility || naming_scheme.visibilities_from_terms(sample_terms)
+    else
+      return nil
+    end
+  end
+  
+  def text_values
+    if(naming_scheme != nil)
+      return @text_values || naming_scheme.texts_from_terms(sample_texts)
+    else
+      return nil
+    end
+  end
+  
+  def naming_element_selections
+    if(naming_scheme != nil)
+      return @naming_element_selections || naming_scheme.element_selections_from_terms(sample_terms)
+    else
+      return nil
+    end
+  end  
   
   def validate
     # make sure date/short_sample_name/sample_name combo is unique

@@ -1,10 +1,49 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Sample do
-#  describe "making a new sample" do
-#    
-#  end
+  describe "getting naming element visibility" do
+    fixtures :samples, :naming_schemes, :naming_elements, :naming_terms, :sample_terms,
+             :sample_texts
+    
+    it "should return nil with no naming scheme" do
+      samples(:sample5).naming_element_visibility.should == nil
+    end
+    
+    it "should return the correct visibility settings with a naming scheme" do
+      expected_visibilities = [true, true, true, true, true]
+      samples(:sample6).naming_element_visibility.should == expected_visibilities
+    end
+  end
 
+  describe "getting naming scheme text values" do
+    fixtures :samples, :naming_schemes, :naming_elements, :naming_terms, :sample_terms,
+             :sample_texts
+    
+    it "should return nil with no naming scheme" do
+      samples(:sample5).text_values.should == nil
+    end
+    
+    it "should return the correct text values with a naming scheme" do
+      expected_texts = {"Subject Number" => "32234"}
+      samples(:sample6).text_values.should == expected_texts
+    end
+  end
+
+  describe "getting naming scheme element selections" do
+    fixtures :samples, :naming_schemes, :naming_elements, :naming_terms, :sample_terms,
+             :sample_texts
+    
+    it "should return nil with no naming scheme" do
+      samples(:sample5).text_values.should == nil
+    end
+    
+    it "should return the correct selections with a naming scheme" do
+      expected_selections = [naming_terms(:wild_type).id, naming_terms(:heat).id,
+                             naming_terms(:time024).id, naming_terms(:replicateB).id, -1 ]
+      samples(:sample6).naming_element_selections.should == expected_selections
+    end
+  end
+  
   describe "making sample terms from schemed parameters" do
     fixtures :naming_schemes, :naming_elements, :naming_terms
     
