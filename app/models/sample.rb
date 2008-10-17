@@ -385,10 +385,19 @@ class Sample < ActiveRecord::Base
     
     count = 1
     for element in naming_scheme.ordered_naming_elements
+      depends_upon_element_with_no_selection = false
+      depends_upon_element = element.depends_upon_element
+      if(depends_upon_element != nil && schemed_params[depends_upon_element.name].to_i <= 0)
+        depends_upon_element_with_no_selection = true
+      end
+      
       # the element must:
       # 1) not be a free text element
       # 2) have a selection
-      if( !element.free_text && schemed_params[element.name].to_i > 0 )
+      # 3) not be dependent on an element with no selection
+      if( !element.free_text &&
+          schemed_params[element.name].to_i > 0 &&
+          !depends_upon_element_with_no_selection )
         terms << SampleTerm.new( :sample_id => id, :term_order => count,
           :naming_term_id => NamingTerm.find(schemed_params[element.name]).id )
         count += 1
@@ -402,7 +411,17 @@ class Sample < ActiveRecord::Base
     texts = Array.new
     
     for element in naming_scheme.ordered_naming_elements
-      if( element.free_text )
+      depends_upon_element_with_no_selection = false
+      depends_upon_element = element.depends_upon_element
+      if(depends_upon_element != nil && schemed_params[depends_upon_element.name].to_i <= 0)
+        depends_upon_element_with_no_selection = true
+      end
+      
+      # the element must:
+      # 1) be a free text element
+      # 3) not be dependent on an element with no selection
+      if( element.free_text &&
+          !depends_upon_element_with_no_selection )
         texts << SampleText.new( :sample_id => id, :naming_element_id => element.id,
           :text => schemed_params[element.name] )
       end

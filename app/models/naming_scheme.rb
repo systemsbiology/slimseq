@@ -100,12 +100,18 @@ class NamingScheme < ActiveRecord::Base
     name = ""
     
     for element in ordered_naming_elements
+      depends_upon_element_with_no_selection = false
+      depends_upon_element = element.depends_upon_element
+      if(depends_upon_element != nil && schemed_params[depends_upon_element.name].to_i <= 0)
+        depends_upon_element_with_no_selection = true
+      end
+
       # put an underscore between terms
       if(name.length > 0)
         name += "_"
       end
       
-      if( schemed_params[element.name] != nil )
+      if( schemed_params[element.name] != nil && !depends_upon_element_with_no_selection )
         # free text
         if( element.free_text )
           name += schemed_params[element.name]

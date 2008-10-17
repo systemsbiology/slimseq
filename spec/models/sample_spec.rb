@@ -78,6 +78,7 @@ describe Sample do
       
       schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => "-1",
+        "Perturbation Time" => naming_terms(:time024).id,
         "Replicate" => naming_terms(:replicateA).id, "Subject Number" => "3283"
       }
       

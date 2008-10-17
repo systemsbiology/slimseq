@@ -33,7 +33,8 @@ describe NamingScheme do
     it "should provide a string of the abbreviated terms and free text values" do
       schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => "-1",
-        "Replicate" => naming_terms(:replicateA).id, "Subject Number" => "3283"
+        "Replicate" => naming_terms(:replicateA).id, "Perturbation Time" => naming_terms(:time024).id,
+        "Subject Number" => "3283"
       }
       
       @naming_scheme.generate_sample_name(schemed_params).should == "wt___A_3283"
