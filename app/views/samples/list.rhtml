@@ -28,7 +28,7 @@
     <% end %>
     </table>
     <p>Page: <%= pagination_links @sample_pages, :link_to_current_page => true %></p>
-    <p><%= submit_tag 'Delete Samples' %></p>
+    <p><%= submit_tag 'Delete Selected Samples' %></p>
   <% end -%>	
 <% else %>
   <% if current_user.staff_or_admin? ||( @lab_groups != nil && @lab_groups.size > 0) %>
