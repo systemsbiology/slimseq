@@ -5,42 +5,75 @@
 
 <% form_tag :action => 'update', :id => @sample do -%>
 
-	<p><label for="sample_0_submission_date">Date</label><br/>
-	<%= date_select 'sample', 'submission_date', :index => 0  %></p>
-	
-	<p><label for="sample_0_short_sample_name">Short Sample Name</label><br/>
-	<%= text_field 'sample', 'short_sample_name', :index => 0  %></p>
-	
-    <% if @sample.naming_scheme_id == nil %>
-        <p><label for="sample_0_sample_name">Sample Name</label><br/>
-            <input id="sample_0_sample_name" 
-                name="sample[0][sample_name]" size="30" type="text"
-                value="<%= @sample.sample_name %>" /></p>
-        <p><label for="sample_0_sample_group_name">Sample Group Name</label><br/>
-            <input id="sample_0_sample_group_name" 
-        	   name="sample[0][sample_group_name]" size="30" type="text"
-        	   value="<%= @sample.sample_group_name %>" /></p>
+  <p><label for="sample_0_submission_date">Date</label><br/>
+  <%= date_select 'sample', 'submission_date', :index => 0 %></p>
+
+  <p><label for="sample_0_short_sample_name">Short Sample Name</label><br/>
+  <%= text_field 'sample', 'short_sample_name', :index => 0 %></p>
+
+  <p>Sample Description<br/>
+    <% if @sample.naming_scheme != nil %>
+      <% @n = 0 %>
+      <table class="sortable" id="samples">
+        <tr>      
+          <% for element in @naming_elements %>
+            <th><%=h element.name %></th>
+          <% end %>
+        </tr>
+          <tr>
+            <%= render :partial => 'samples/schemed_sample_name' %>
+          </tr>
+      </table>
     <% else %>
-        <p>Sample Name<br/>
-        <table>
-            <tr>
-                <% @n = 0 %>
-                <%= render :partial => 'schemed_sample_name' %>
-            </tr>
-        </table>
-        </p>
+      <%= text_field :sample, :sample_name, :index => 0,
+                    :size => 30 %>
     <% end %>
+  </p>
+  
+  <p><label for="sample_0_project_id">Project</label><br>
+  <select id="sample_0_project_id" name="sample[0][project_id]">
+  <%= options_from_collection_for_select @projects, "id", "name", selected_value=@sample.project_id %></select></p>
 
-    
-    <p><label for="sample_0_project_id">Project</label><br>
-    <select id="sample_0_project_id" name="sample[0][project_id]">
-    <%= options_from_collection_for_select @projects, "id", "name", selected_value=@sample.project_id %></select></p>
-    
-    <p><label for="sample_0_organism_id">Organism</label><br>
-    <select id="sample_0_organism_id" name="sample[0][organism_id]">
-    <%= options_from_collection_for_select @organisms, "id", "name", selected_value=@sample.organism_id %></select></p>
+    <p><label for="sample_0_set_sample_prep_kit_id">Sample Prep Kit</label><br/>
+  <%= collection_select 'sample', 'sample_prep_kit_id',
+    @sample_prep_kits, 'id', 'name', {:prompt => true}, {:index => 0} %></p>
 
-    <%= hidden_field 'sample', 'lock_version', :index => 0 %>
+  <p><label for="sample_0_reference_genome_id">Reference Genome</label><br/>
+  <%= collection_select 'sample', 'reference_genome_id',
+    @reference_genomes, 'id', 'name', {:prompt => true}, {:index => 0} %><br/>
+    * Contact the facility to add a new reference genome</p>
+
+  <p><label for="sample_0_desired_read_length">Desired read length</label><br/>
+  <%= select 'sample', 'desired_read_length',
+    [ ["Please select",""], ["18",18], ["26",26], ["36",36] ], {}, {:index => 0} %></p>
+
+  <p>Alignment bases</p>
+  <p><label for="sample_0_alignment_start_position">Start</label>
+    <%= text_field 'sample', 'alignment_start_position', :size => 4,
+      :default => 1, :index => 0 %> 
+
+  <label for="sample_0_alignment_end_position">End</label>
+  <%= text_field 'sample', 'alignment_end_position', :size => 4, :index => 0 %></p>
+
+  <%= observe_field :sample_desired_read_length,
+    :function => "$('sample_0_alignment_end_position').value = value;" %>
+  
+  <p><label for="sample_insert_size">Insert Size</label><br/>
+  <%= text_field 'sample', 'insert_size', :size => 8, :index => 0 %></p>
+
+  <% if @naming_schemes.size > 0 %>
+    <p><label for="sample_0_naming_scheme_id">Naming Scheme</label><br/>
+    <select id='sample_0_naming_scheme_id' name='sample[0][naming_scheme_id]'>
+      <option value="">- None -</option>
+      <%= options_from_collection_for_select @naming_schemes, "id", "name",
+         @sample.naming_scheme_id %>
+    </select></p>
+  <% end %>
+
+  <p><label for="sample_0_budget_number">Budget Number</label><br/>
+  <%= text_field 'sample', 'budget_number', :index => 0 %></p>
+    
+  <%= hidden_field 'sample', 'lock_version', :index => 0 %>
 	
   <%= submit_tag 'Edit' %>
 <% end -%>
