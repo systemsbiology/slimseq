@@ -52,7 +52,7 @@ describe Sample do
       
       schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => naming_terms(:heat).id,
-        "Replicate" => naming_terms(:replicateA), "Perturbation Time" => naming_terms(:time024),
+        "Replicate" => naming_terms(:replicateA).id, "Perturbation Time" => naming_terms(:time024).id,
         "Subject Number" => "3283"
       }
       
@@ -73,7 +73,7 @@ describe Sample do
   describe "making sample texts from schemed parameters" do
     fixtures :naming_schemes, :naming_elements, :naming_terms
     
-    it "should provide an array of the sample terms" do
+    it "should provide a hash of the sample texts" do
       @sample = Sample.new(:naming_scheme_id => naming_schemes(:yeast_scheme))
       
       schemed_params = {
@@ -83,13 +83,57 @@ describe Sample do
       }
       
       expected_texts = [
-        @sample.sample_texts.build(:naming_element_id => naming_elements(:subject_number).id,
-                                   :text => "3283"),
+        SampleText.new(:sample_id => @sample.id,
+                       :naming_element_id => naming_elements(:subject_number).id,
+                       :text => "3283"),
       ]
 
       @sample.texts_for(schemed_params).each do |observed_text|
         expected_text = expected_texts.shift
         observed_text.attributes.should == expected_text.attributes
+      end
+    end
+  end
+  
+  describe "setting the schemed name attribute for a sample" do
+    fixtures :all
+    
+    def do_set
+      @sample = samples(:sample6)
+      schemed_params = {
+        "Strain" => naming_terms(:wild_type).id, "Perturbation" => naming_terms(:heat).id,
+        "Replicate" => naming_terms(:replicateA).id, "Perturbation Time" => naming_terms(:time024).id,
+        "Subject Number" => "3283"
+      }
+      @sample.schemed_name = schemed_params
+    end
+    
+    it "should create the appropriate sample terms" do
+      do_set
+
+      expected_attribute_sets = [
+        { :term_order => 1, :naming_term_id => naming_terms(:wild_type).id },
+        { :term_order => 2, :naming_term_id => naming_terms(:heat).id },
+        { :term_order => 3, :naming_term_id => naming_terms(:time024).id },
+        { :term_order => 4, :naming_term_id => naming_terms(:replicateA).id }
+      ]
+
+      @sample.sample_terms.find(:all, :order => "term_order ASC").each do |term|
+        attribute_set = expected_attribute_sets.shift
+        attribute_set.each do |key, value|
+          term[key].should == value
+        end
+      end
+    end
+    
+    it "should create the appropriate sample texts" do       
+      do_set
+
+      attribute_set = { :naming_element_id => naming_elements(:subject_number).id, :text => "3283" }
+
+      text = @sample.sample_texts.find(:all)[0]
+      attribute_set.each do |key, value|
+        text[key].should == value
       end
     end
   end

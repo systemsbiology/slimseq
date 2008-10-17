@@ -57,6 +57,17 @@ class Sample < ActiveRecord::Base
     return sample
   end
 
+  def schemed_name=(attributes)
+    # clear out old naming scheme records
+    sample_terms.each {|t| t.destroy}
+    sample_texts.each {|t| t.destroy}
+
+    # create the new records
+    self.sample_terms = terms_for(attributes)
+    self.sample_texts = texts_for(attributes)
+    self.sample_name = naming_scheme.generate_sample_name(attributes)   
+  end
+  
   def naming_element_visibility
     if(naming_scheme != nil)
       return @naming_element_visibility || naming_scheme.visibilities_from_terms(sample_terms)
