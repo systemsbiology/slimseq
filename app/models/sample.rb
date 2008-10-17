@@ -41,19 +41,14 @@ class Sample < ActiveRecord::Base
     rescue
       return sample
     end
+    
     schemed_params = attributes[:schemed_name]
     if(schemed_params.nil?)
       # use default selections if none are provided
       @naming_element_visibility = scheme.default_visibilities
       @text_values = scheme.default_texts
-    else
-      @naming_element_visibility = scheme.visibilities_from_params(schemed_params)
-      @text_values = scheme.texts_from_params(schemed_params)
-      @naming_element_selections = scheme.element_selections_from_params(schemed_params)
-      sample.sample_terms = sample.terms_for(schemed_params)
-      sample.sample_texts = sample.texts_for(schemed_params)
-      sample.sample_name = scheme.generate_sample_name(schemed_params)
     end
+    
     return sample
   end
 
