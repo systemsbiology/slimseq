@@ -1,0 +1,18 @@
+<h1>Editing instrument</h1>
+
+<% form_for(@instrument) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <p><label>Name</label><br>
+    <%= f.text_field 'name' %></p>
+    
+    <p><label>Serial Number</label><br>
+    <%= f.text_field 'serial_number' %></p>
+
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @instrument %> |
+<%= link_to 'Back', instruments_path %>
