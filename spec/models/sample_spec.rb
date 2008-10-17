@@ -70,6 +70,29 @@ describe Sample do
     end
   end
 
+  describe "making sample terms from schemed parameters, with a hidden dependent element" do
+    fixtures :naming_schemes, :naming_elements, :naming_terms
+    
+    it "should provide an array of the sample terms" do
+      @sample = Sample.new(:naming_scheme_id => naming_schemes(:yeast_scheme))
+      
+      schemed_params = {
+        "Strain" => naming_terms(:wild_type).id, "Perturbation" => "-1",
+        "Replicate" => naming_terms(:replicateA).id, "Subject Number" => "3283"
+      }
+      
+      expected_terms = [
+        @sample.sample_terms.build(:term_order => 1, :naming_term_id => naming_terms(:wild_type).id),
+        @sample.sample_terms.build(:term_order => 2, :naming_term_id => naming_terms(:replicateA).id)
+      ]
+
+      @sample.terms_for(schemed_params).each do |observed_term|
+        expected_term = expected_terms.shift
+        observed_term.attributes.should == expected_term.attributes
+      end
+    end
+  end
+  
   describe "making sample texts from schemed parameters" do
     fixtures :naming_schemes, :naming_elements, :naming_terms
     

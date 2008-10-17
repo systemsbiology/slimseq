@@ -385,7 +385,10 @@ class Sample < ActiveRecord::Base
     
     count = 1
     for element in naming_scheme.ordered_naming_elements
-      if( !element.free_text )
+      # the element must:
+      # 1) not be a free text element
+      # 2) have a selection
+      if( !element.free_text && schemed_params[element.name].to_i > 0 )
         terms << SampleTerm.new( :sample_id => id, :term_order => count,
           :naming_term_id => NamingTerm.find(schemed_params[element.name]).id )
         count += 1
