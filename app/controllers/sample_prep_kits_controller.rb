@@ -1,4 +1,6 @@
 class SamplePrepKitsController < ApplicationController
+  before_filter :login_required
+  
   # GET /sample_prep_kits
   # GET /sample_prep_kits.xml
   def index

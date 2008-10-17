@@ -1,7 +1,11 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/controller_spec_helper.rb')
 
 describe SamplePrepKitsController do
-
+  before(:each) do
+    login_as_user
+  end
+  
   def mock_sample_prep_kit(stubs={})
     @mock_sample_prep_kit ||= mock_model(SamplePrepKit, stubs)
   end

@@ -1,6 +1,11 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/controller_spec_helper.rb')
 
 describe ReferenceGenomesController do
+  before(:each) do
+    login_as_user
+  end
+  
   describe "handling GET /reference_genomes" do
 
     before(:each) do

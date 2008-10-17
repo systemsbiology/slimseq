@@ -1,4 +1,5 @@
 class ReferenceGenomesController < ApplicationController
+  before_filter :login_required
   before_filter :populate_organism_dropdown,
     :only => [:new, :create, :edit, :update]
 
