@@ -93,36 +93,65 @@ describe ReferenceGenomesController do
 #      assigns[:reference_genome].should equal(@reference_genome)
 #    end
 #  end
-#
-#  describe "handling GET /reference_genomes/1.xml" do
-#
-#    before(:each) do
-#      @reference_genome = mock_model(ReferenceGenome, :to_xml => "XML")
-#      ReferenceGenome.stub!(:find).and_return(@reference_genome)
-#    end
-#  
-#    def do_get
-#      @request.env["HTTP_ACCEPT"] = "application/xml"
-#      get :show, :id => "1"
-#    end
-#
-#    it "should be successful" do
-#      do_get
-#      response.should be_success
-#    end
-#  
-#    it "should find the reference_genome requested" do
-#      ReferenceGenome.should_receive(:find).with("1").and_return(@reference_genome)
-#      do_get
-#    end
-#  
-#    it "should render the found reference_genome as xml" do
-#      @reference_genome.should_receive(:to_xml).and_return("XML")
-#      do_get
-#      response.body.should == "XML"
-#    end
-#  end
 
+  describe "handling GET /reference_genomes/1.xml" do
+
+    before(:each) do
+      @reference_genome = mock_model(ReferenceGenome, :to_xml => "XML")
+      ReferenceGenome.stub!(:find).and_return(@reference_genome)
+    end
+  
+    def do_get
+      @request.env["HTTP_ACCEPT"] = "application/xml"
+      get :show, :id => "1"
+    end
+
+    it "should be successful" do
+      do_get
+      response.should be_success
+    end
+  
+    it "should find the reference_genome requested" do
+      ReferenceGenome.should_receive(:find).with("1").and_return(@reference_genome)
+      do_get
+    end
+  
+    it "should render the found reference_genome as xml" do
+      @reference_genome.should_receive(:to_xml).and_return("XML")
+      do_get
+      response.body.should == "XML"
+    end
+  end
+
+  describe "handling GET /reference_genomes/1.json" do
+
+    before(:each) do
+      @reference_genome = mock_model(ReferenceGenome, :to_json => "JSON")
+      ReferenceGenome.stub!(:find).and_return(@reference_genome)
+    end
+  
+    def do_get
+      @request.env["HTTP_ACCEPT"] = "application/json"
+      get :show, :id => "1"
+    end
+
+    it "should be successful" do
+      do_get
+      response.should be_success
+    end
+  
+    it "should find the reference_genome requested" do
+      ReferenceGenome.should_receive(:find).with("1").and_return(@reference_genome)
+      do_get
+    end
+  
+    it "should render the found reference_genome as json" do
+      @reference_genome.should_receive(:to_json).and_return("JSON")
+      do_get
+      response.body.should == "JSON"
+    end
+  end
+  
   describe "handling GET /reference_genomes/new" do
 
     before(:each) do

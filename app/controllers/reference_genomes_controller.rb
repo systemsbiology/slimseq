@@ -14,6 +14,17 @@ class ReferenceGenomesController < ApplicationController
     end
   end
 
+  # GET /reference_genomes/1
+  # GET /reference_genomes/1.xml
+  def show
+    @reference_genome = ReferenceGenome.find(params[:id])
+
+    respond_to do |format|
+      format.xml  { render :xml => @reference_genome }
+      format.json  { render :json => @reference_genome }
+    end
+  end
+  
   # GET /reference_genomes/new
   # GET /reference_genomes/new.xml
   def new
