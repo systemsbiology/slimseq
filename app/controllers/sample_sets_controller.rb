@@ -50,7 +50,7 @@ class SampleSetsController < ApplicationController
         s.save
       end
       flash[:notice] = 'Samples were successfully created.'
-      redirect_to :controller => 'samples', :action => 'list' 
+      redirect_to(samples_url)
     else
       @naming_scheme = @sample_set.naming_scheme
       if(@naming_scheme != nil)

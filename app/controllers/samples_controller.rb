@@ -2,11 +2,6 @@ class SamplesController < ApplicationController
   before_filter :load_dropdown_selections, :login_required
   
   def index
-    list
-    render :action => 'list'
-  end
-
-  def list
     if(@lab_groups != nil && @lab_groups.size > 0)
       @sample_pages, @samples =
         paginate :samples, :include => 'project',
@@ -34,7 +29,7 @@ class SamplesController < ApplicationController
     respond_to do |format|
       if @sample.update_attributes(params[:sample]["0"])
         flash[:notice] = 'Sample was successfully updated.'
-        format.html { redirect_to(:action => 'list') }
+        format.html { redirect_to(samples_url) }
         format.xml  { head :ok }
         format.json  { head :ok }
       else
@@ -66,7 +61,7 @@ class SamplesController < ApplicationController
         sample.destroy
       end
     end
-    redirect_to :action => 'list'
+    redirect_to(samples_url)
   end
   
 private

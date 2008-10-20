@@ -1,0 +1,43 @@
+<h2>Samples</h2>
+
+<% if(@samples != nil && @samples.size > 0) %>
+  <% form_tag :action => 'bulk_destroy' do -%>
+    <p><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></p>
+
+    <table class="sortable" id="samples">
+    <tr>
+    <th>Select</th>
+    <th>Date</th>
+    <th>Short Sample Name</th>
+    <th>Sample Name</th>
+    <th>Status</th>
+    <th>Edit</th>
+    <th>Destroy</th>
+    </tr>
+
+    <% for sample in @samples %>
+      <tr>
+      <td><%= check_box 'selected_samples', sample.id %></td>
+      <td><%=h sample.submission_date %></td>
+      <td><%=h sample.short_sample_name %></td>
+      <td><%=h sample.sample_name %></td>
+      <td><%=h sample.status %></td>
+      <td><%= link_to 'Edit', :action => 'edit', :id => sample %></td>
+      <td><%= link_to 'Destroy', { :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
+      </tr>
+    <% end %>
+    </table>
+    <p>Page: <%= pagination_links @sample_pages, :link_to_current_page => true %></p>
+    <p><%= submit_tag 'Delete Selected Samples' %></p>
+  <% end -%>	
+<% else %>
+  <% if current_user.staff_or_admin? ||( @lab_groups != nil && @lab_groups.size > 0) %>
+    <p>There are currently no samples.</p>
+    <p><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></p>
+  <% else %>
+    <p>You need to belong to one or more lab groups before you can see or submit any samples.<br>
+    Please contact your administrator at <a href="mailto:<%=h SiteConfig.administrator_email %>">
+    <%=h SiteConfig.administrator_email %></a>
+    if you need<br>to be added to any lab groups.</p>
+  <% end %>
+<% end %>

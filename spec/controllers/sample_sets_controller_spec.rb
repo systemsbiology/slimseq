@@ -240,7 +240,7 @@ describe SampleSetsController do
 
       it "should redirect to the list of samples" do
         do_post
-        response.should redirect_to('samples/list')
+        response.should redirect_to(samples_url)
       end
     end
     

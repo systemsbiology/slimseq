@@ -16,7 +16,7 @@
         <% if logged_in? %>
           <%= link_to 'Home', {:controller => 'welcome', :action => 'home'} %>
             <li class="category">Samples</li>
-            <li><%= link_to 'Samples', {:controller => 'samples', :action => 'list'} %></li>
+            <li><%= link_to 'Samples', samples_path %></li>
             <% if current_user.staff_or_admin? %>
               <li><%= link_to 'Flow Cells', flow_cells_path %></li>
               <li><%= link_to 'Sequencing Runs', sequencing_runs_path %></li>

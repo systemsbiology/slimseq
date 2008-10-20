@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :samples
+  
   map.resources :instruments
 
   map.resources :sequencing_runs
