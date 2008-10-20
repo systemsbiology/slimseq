@@ -28,8 +28,10 @@ class WelcomeController < ApplicationController
         lab_group_ids << lab_group.id
       end
 
-      @samples = Sample.find(:all, :conditions => [ "lab_group_id IN (?) AND status = ?", lab_group_ids, 'submitted' ],
-                                :order => "samples.id ASC")
+      @samples = Sample.find(:all,
+        :conditions => [ "lab_group_id IN (?) AND status = ? AND control = ?",
+          lab_group_ids, 'submitted', false],
+        :order => "samples.id ASC")
     end
   end
 
@@ -40,7 +42,7 @@ class WelcomeController < ApplicationController
     # Make an array of the accessible lab group ids, and use this
     # to find the current user's accessible samples in a nice sorted list
     @lab_groups = LabGroup.find(:all, :order => "name ASC")
-    @samples = Sample.find(:all, :conditions => [ "status = ?", 'submitted' ],
+    @samples = Sample.find(:all, :conditions => [ "status = ? AND control = ?", 'submitted', false],
                               :order => "samples.id ASC")
   end
 
