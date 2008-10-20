@@ -65,8 +65,8 @@
     <p><label for="sample_0_naming_scheme_id">Naming Scheme</label><br/>
     <select id='sample_0_naming_scheme_id' name='sample[0][naming_scheme_id]'>
       <option value="">- None -</option>
-      <%= options_from_collection_for_select @naming_schemes, "id", "name",
-         @sample.naming_scheme_id %>
+    <%= options_from_collection_for_select @naming_schemes, "id", "name",
+         @sample.naming_scheme_id.to_i %>
     </select></p>
   <% end %>
 
