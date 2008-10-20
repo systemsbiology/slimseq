@@ -1,5 +1,6 @@
 class SamplesController < ApplicationController
   before_filter :load_dropdown_selections, :login_required
+  before_filter :staff_or_admin_required, :only => [:bulk_destroy]
   
   def index
     if(@lab_groups != nil && @lab_groups.size > 0)
@@ -8,6 +9,12 @@ class SamplesController < ApplicationController
           :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
           current_user.get_lab_group_ids, false ],
           :per_page => 40, :order => "submission_date DESC, samples.id ASC"
+    end
+    
+    respond_to do |format|
+      format.html  #index.html
+      format.xml   { render :xml => @samples }
+      format.json  { render :json => @samples }
     end
   end
   
@@ -45,22 +52,23 @@ class SamplesController < ApplicationController
 
     if(current_user.staff_or_admin? || sample.status == "submitted")
       sample.destroy
-      redirect_to :back
     else
       flash[:warning] = "Unable to destroy samples that have already been clustered or sequenced."
-      list
-      render :action => 'list'
     end
+    
+    redirect_to :back
   end
   
   def bulk_destroy
     selected_samples = params[:selected_samples]
+    
     for sample_id in selected_samples.keys
       if selected_samples[sample_id] == '1'
         sample = Sample.find(sample_id)
         sample.destroy
       end
     end
+    
     redirect_to(samples_url)
   end
   
