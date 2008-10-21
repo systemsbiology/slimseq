@@ -10,8 +10,8 @@ class FlowCellLane < ActiveRecord::Base
 
   acts_as_state_machine :initial => :clustered, :column => 'status'
   
-  state :clustered, :after => :unsequence_samples
-  state :sequenced, :after => :sequence_samples
+  state :clustered, :after => [:unsequence_samples, :clear_path]
+  state :sequenced, :after => [:sequence_samples, :generate_path]
   
   event :sequence do
     transitions :from => :clustered, :to => :sequenced    
@@ -48,5 +48,16 @@ class FlowCellLane < ActiveRecord::Base
       sample.uncluster!
     end
   end
+  
+  def generate_path
+    path = "#{SiteConfig.raw_data_root_path}/#{samples[0].project.lab_group.file_folder}/" +
+           "#{samples[0].project.file_folder}/#{flow_cell.sequencing_run.date_yymmdd}_" +
+           "#{flow_cell.sequencing_run.instrument.serial_number}_#{flow_cell.name}"
+    update_attribute("raw_data_path", path)
+  end
 
+  def clear_path
+    update_attribute("raw_data_path", "")
+  end
+  
 end

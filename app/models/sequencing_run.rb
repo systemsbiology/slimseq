@@ -12,4 +12,8 @@ class SequencingRun < ActiveRecord::Base
   def mark_flow_cell_as_clustered
     flow_cell.unsequence!
   end
+  
+  def date_yymmdd
+    date.strftime("%y%m%d")
+  end
 end
