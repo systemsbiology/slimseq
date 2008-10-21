@@ -45,6 +45,7 @@ class FlowCellLane < ActiveRecord::Base
   def mark_samples_as_submitted
     samples.each do |sample|
       sample = Sample.find(sample.id)
+      sample.unsequence!
       sample.uncluster!
     end
   end
