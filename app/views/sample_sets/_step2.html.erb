@@ -22,6 +22,7 @@
             <th><%=h element.name %></th>
           <% end %>
         <% end %>
+      <th>Sample Comment</th>
       <th>Sample Prep Kit</th>
       <th>Reference Genome</th>
       <th>Desired Read Length</th>
@@ -33,7 +34,7 @@
       <tr>
         <% @sample = @samples[@n] %>
         <%= error_messages_for 'sample' %>
-            <td><%=h @sample.submission_date %>
+          <td><%=h @sample.submission_date %>
               <%= hidden_field :sample, :submission_date, :index =>@n %></td>
           <td><%= text_field :sample, :short_sample_name, :index =>@n,
                   :size => 10 %></td>
@@ -44,7 +45,9 @@
           <% else %>
             <%= render :partial => 'samples/schemed_sample_name' %>
           <% end %>
-
+          
+          <td><%= text_field :sample, :comment, :index =>@n %></td>
+          
           <td><%=h @sample.sample_prep_kit.name %>
               <%= hidden_field :sample, :sample_prep_kit_id, :index =>@n %></td>
           <td><%=h @sample.reference_genome.name %>

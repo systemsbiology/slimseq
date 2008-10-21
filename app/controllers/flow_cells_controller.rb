@@ -1,6 +1,7 @@
 class FlowCellsController < ApplicationController
   before_filter :login_required
-  before_filter :load_dropdown_selections
+  before_filter :load_dropdown_selections_only_submitted, :only => [:new, :create]
+  before_filter :load_dropdown_selections_all, :only => [:edit, :update]
   
   # GET /flow_cells
   # GET /flow_cells.xml
@@ -89,9 +90,14 @@ class FlowCellsController < ApplicationController
   
 private
 
-  def load_dropdown_selections
+  def load_dropdown_selections_only_submitted
     @samples = Sample.find_all_by_control(true, :order => "short_sample_name ASC")
     @samples += Sample.find_all_by_control_and_status(false, 'submitted',
       :order => "short_sample_name ASC")
+  end
+  
+  def load_dropdown_selections_all
+    @samples = Sample.find_all_by_control(true, :order => "short_sample_name ASC")
+    @samples += Sample.find_all_by_control(false, :order => "short_sample_name ASC")
   end
 end

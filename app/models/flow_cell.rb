@@ -31,9 +31,19 @@ class FlowCell < ActiveRecord::Base
     end
   end
   
-  def lane_attributes=(lane_attributes)
+  def new_lane_attributes=(lane_attributes)
     lane_attributes.each do |attributes|
       flow_cell_lanes.build(attributes)
+    end
+  end
+  
+  def existing_lane_attributes=(lane_attributes)
+    flow_cell_lanes.reject(&:new_record?).each do |lane|
+      attributes = lane_attributes[lane.id.to_s]
+      if attributes
+        lane.attributes = attributes
+        lane.save
+      end
     end
   end
 end

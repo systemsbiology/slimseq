@@ -1,7 +1,8 @@
 <h1>Flow Cell</h1>
 
-<p>Name: <%=h @flow_cell.name %></p>
 <p>Date Generated: <%=h @flow_cell.date_generated %></p>
+<p>Name: <%=h @flow_cell.name %></p>
+<p>Flow Cell Comment: <%=h @flow_cell.comment %></p>
 <p>Status: <%=h @flow_cell.status %></p>
 
 <table class="sortable">
@@ -10,6 +11,7 @@
     <th>Sample</th>
     <th>Starting Concentration (ng/mL)</th>
     <th>Loaded Concentration (pM)</th>
+    <th>Lane Comment</th>
   </tr>
 <% for lane in @flow_cell.flow_cell_lanes %>
   <tr>
@@ -21,6 +23,7 @@
     </td>
     <td><%=h lane.starting_concentration %> ng/mL</td>
     <td><%=h lane.loaded_concentration %> pM</td>
+    <td><%=h lane.comment %></td>
   </tr>
 <% end %>
 </table>

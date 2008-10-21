@@ -5,6 +5,7 @@
     <th>Date</th>
     <th>Flow Cell</th>
     <th>Instrument</th>
+    <th>Comment</th>
     <th>Edit</th>
     <th>Destroy</th>
   </tr>
@@ -14,6 +15,7 @@
     <td><%=h sequencing_run.date %></td>
     <td><%=h sequencing_run.flow_cell.name %></td>
     <td><%=h sequencing_run.instrument.name %></td>
+    <td><%=h sequencing_run.comment %></td>
     <td><%= link_to 'Edit', edit_sequencing_run_path(sequencing_run) %></td>
     <td><%= link_to 'Destroy', sequencing_run, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
