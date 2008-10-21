@@ -65,7 +65,7 @@ class SequencingRunsController < ApplicationController
     respond_to do |format|
       if @sequencing_run.update_attributes(params[:sequencing_run])
         flash[:notice] = 'SequencingRun was successfully updated.'
-        format.html { redirect_to(@sequencing_run) }
+        format.html { redirect_to(sequencing_runs_url) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

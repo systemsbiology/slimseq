@@ -132,7 +132,7 @@ describe SequencingRunsController do
       it "should redirect to the sequencing_run" do
         SequencingRun.stub!(:find).and_return(mock_sequencing_run(:update_attributes => true))
         put :update, :id => "1"
-        response.should redirect_to(sequencing_run_url(mock_sequencing_run))
+        response.should redirect_to(sequencing_runs_url)
       end
 
     end
