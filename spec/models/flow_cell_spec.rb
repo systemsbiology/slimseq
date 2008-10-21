@@ -16,15 +16,17 @@ describe FlowCell do
     ]
   end
   
-  it "should change associated sample statuses to 'clustered' after creation of flow cell" do
+  it "should change associated lane and sample statuses to 'clustered' after creation of flow cell" do
     create_flow_cell
     Sample.find(@sample_1.id).status.should == "clustered"
     Sample.find(@sample_2.id).status.should == "clustered"
+    lanes = @flow_cell.flow_cell_lanes
+    lanes[0].status.should == "clustered"
+    lanes[1].status.should == "clustered"
   end
 
   it "should change associated sample statuses to 'submitted' after destroying flow cell" do
     create_flow_cell
-    #@flow_cell = FlowCell.find(@flow_cell.id)
     @flow_cell.destroy
     Sample.find(@sample_1.id).status.should == "submitted"
     Sample.find(@sample_2.id).status.should == "submitted"

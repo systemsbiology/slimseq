@@ -8,18 +8,44 @@ class FlowCellLane < ActiveRecord::Base
   after_create :mark_samples_as_clustered
   before_destroy :mark_samples_as_submitted
 
+  acts_as_state_machine :initial => :clustered, :column => 'status'
+  
+  state :clustered, :after => :unsequence_samples
+  state :sequenced, :after => :sequence_samples
+  
+  event :sequence do
+    transitions :from => :clustered, :to => :sequenced    
+  end
+
+  event :unsequence do
+    transitions :from => :sequenced, :to => :clustered
+  end
+  
+  def sequence_samples
+    samples.each do |s|
+      s = Sample.find(s.id)
+      s.sequence!
+    end
+  end
+  
+  def unsequence_samples
+    samples.each do |s|
+      s = Sample.find(s.id)
+      s.unsequence!
+    end
+  end
+  
   def mark_samples_as_clustered
-    mark_samples_as('clustered')
+    samples.each do |sample|
+      sample = Sample.find(sample.id)
+      sample.cluster!
+    end
   end
   
   def mark_samples_as_submitted
-    mark_samples_as('submitted')
-  end
-  
-  def mark_samples_as(status)
     samples.each do |sample|
       sample = Sample.find(sample.id)
-      sample.update_attribute('status', status)
+      sample.uncluster!
     end
   end
 

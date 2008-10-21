@@ -27,6 +27,28 @@ class Sample < ActiveRecord::Base
   attr_accessor :sample_set_id
   belongs_to :sample_set
 
+  acts_as_state_machine :initial => :submitted, :column => 'status'
+  
+  state :submitted
+  state :clustered
+  state :sequenced
+
+  event :cluster do
+    transitions :from => :submitted, :to => :clustered
+  end
+
+  event :uncluster do
+    transitions :from => :clustered, :to => :submitted
+  end
+  
+  event :sequence do
+    transitions :from => :clustered, :to => :sequenced
+  end
+
+  event :unsequence do
+    transitions :from => :sequenced, :to => :clustered
+  end
+  
   def short_and_long_name
     "#{short_sample_name} (#{sample_name})"
   end

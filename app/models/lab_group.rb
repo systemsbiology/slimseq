@@ -11,6 +11,7 @@ class LabGroup < ActiveRecord::Base
     
     return "Destroying this lab group will also destroy:\n" + 
            charge_sets.size.to_s + " charge set(s)\n" +
+           projects.size.to_s + " project(s)\n" +
            "Are you sure you want to destroy it?"
   end
 end

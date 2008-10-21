@@ -42,14 +42,14 @@ sample2:
   sample_name: Old
   submission_date: 2006-02-10
 sample3: 
-  status: submitted
+  status: clustered
   short_sample_name: vold
   naming_scheme_id: 
   project: first
   sample_name: Very Old
   submission_date: 2006-02-10
 sample4: 
-  status: sequenced
+  status: clustered
   short_sample_name: vvold
   naming_scheme_id: 
   project: first
