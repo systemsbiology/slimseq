@@ -27,8 +27,8 @@ describe FlowCell do
                                       "sample_ids"=>samples(:sample4).id.to_s, "lane_number"=>"2"}
     }
     
-    flow_cell.flow_cell_lanes[1].starting_concentration.should == "234"
-    flow_cell.flow_cell_lanes[0].starting_concentration.should == "0987"
+    FlowCellLane.find(flow_cell_lanes(:lane_1).id).starting_concentration.should == "234"
+    FlowCellLane.find(flow_cell_lanes(:lane_2).id).starting_concentration.should == "0987"
   end
   
   it "should change associated lane and sample statuses to 'clustered' after creation of flow cell" do
