@@ -1,5 +1,7 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-weevil_1:
-  name: weevil v1
-  organism: weevil
+# one:
+#   column: value
+#
+# two:
+#   column: value
