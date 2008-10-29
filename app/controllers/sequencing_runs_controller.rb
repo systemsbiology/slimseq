@@ -5,7 +5,7 @@ class SequencingRunsController < ApplicationController
   # GET /sequencing_runs
   # GET /sequencing_runs.xml
   def index
-    @sequencing_runs = SequencingRun.find(:all)
+    @sequencing_runs = SequencingRun.find(:all, "date DESC")
 
     respond_to do |format|
       format.html # index.html.erb
