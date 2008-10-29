@@ -146,30 +146,30 @@ class Sample < ActiveRecord::Base
     csv_file = File.open(csv_file_name, 'wb')
     CSV::Writer.generate(csv_file) do |csv|
       if(naming_scheme == "")
-        csv << [ "CEL File",
+        csv << [
           "Sample ID",
           "Submission Date",
           "Short Sample Name",
           "Sample Name",
-          "Organism",
+          "Reference Genome",
           "Naming Scheme"
         ]
 
         samples = Sample.find( :all, :conditions => {:naming_scheme_id => nil},
-          :include => [:organism], :order => "samples.id ASC" )
+          :include => [:reference_genome], :order => "samples.id ASC" )
 
         for sample in samples
-          if(sample.hybridization != nil)
-            cel_file = sample.hybridization.raw_data_path
-          else
-            cel_file = ""
-          end
-          csv << [ cel_file,
+#          if(sample.hybridization != nil)
+#            cel_file = sample.hybridization.raw_data_path
+#          else
+#            cel_file = ""
+#          end
+          csv << [ # cel_file,
             sample.id,
             sample.submission_date.to_s,
             sample.short_sample_name,
             sample.sample_name,
-            sample.organism.name,
+            sample.reference_genome.name,
             "None"
           ]
         end
@@ -181,12 +181,12 @@ class Sample < ActiveRecord::Base
         end
         
         # stock headings
-        headings = [ "CEL File",
+        headings = [ #"CEL File",
           "Sample ID",
           "Submission Date",
           "Short Sample Name",
           "Sample Name",
-          "Organism",
+          "Reference Genome",
           "Naming Scheme"
         ]
 
@@ -201,22 +201,22 @@ class Sample < ActiveRecord::Base
 
         samples = Sample.find( :all, 
           :conditions => {:naming_scheme_id => scheme.id},
-          :include => [:organism],
+          :include => [:reference_genome],
           :order => "samples.id ASC" )
 
         current_row = 0
         for sample in samples
-          if(sample.hybridization != nil)
-            cel_file = sample.hybridization.raw_data_path
-          else
-            cel_file = ""
-          end
-          column_values = [ cel_file,
+#          if(sample.hybridization != nil)
+#            cel_file = sample.hybridization.raw_data_path
+#          else
+#            cel_file = ""
+#          end
+          column_values = [ # cel_file,
             sample.id,
             sample.submission_date.to_s,
             sample.short_sample_name,
             sample.sample_name,
-            sample.organism.name,
+            sample.reference_genome.name,
             sample.naming_scheme.name
           ]
           # values for naming elements
@@ -379,9 +379,9 @@ class Sample < ActiveRecord::Base
   end
 
   def update_unschemed_columns(row)  
-    organism = Organism.find(:first, :conditions => { :name => row[7] })
-    if(organism.nil?)
-      organism = Organism.create(:name => row[7])
+    reference_genome = ReferenceGenome.find(:first, :conditions => { :name => row[7] })
+    if(reference_genome.nil?)
+      reference_genome = ReferenceGenome.create(:name => row[7])
     end
     
     project = Project.find(:first, :conditions => { :name => row[9] })
@@ -393,7 +393,7 @@ class Sample < ActiveRecord::Base
           :submission_date => row[2],
           :short_sample_name => row[3],
           :sample_name => row[4],
-          :organism_id => organism.id
+          :reference_genome_id => reference_genome.id
         ))
       puts errors.full_messages
       return "Problem updating values for sample id=#{id}: #{errors.full_messages}"
