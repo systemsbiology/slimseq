@@ -6,7 +6,7 @@ class FlowCellsController < ApplicationController
   # GET /flow_cells
   # GET /flow_cells.xml
   def index
-    @flow_cells = FlowCell.find(:all)
+    @flow_cells = FlowCell.find(:all, :order => "date_generated DESC")
 
     respond_to do |format|
       format.html # index.html.erb
