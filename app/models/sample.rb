@@ -151,7 +151,15 @@ class Sample < ActiveRecord::Base
           "Submission Date",
           "Short Sample Name",
           "Sample Name",
+          "Project",
+          "Sample Prep Kit",
           "Reference Genome",
+          "Desired Read Length",
+          "Alignment Start Position",
+          "Alignment End Position",
+          "Insert Size",
+          "Budget Number",
+          "Comment",
           "Naming Scheme"
         ]
 
@@ -169,7 +177,15 @@ class Sample < ActiveRecord::Base
             sample.submission_date.to_s,
             sample.short_sample_name,
             sample.sample_name,
+            sample.project.name,
+            sample.sample_prep_kit.name,
             sample.reference_genome.name,
+            sample.desired_read_length,
+            sample.alignment_start_position,
+            sample.alignment_end_position,
+            sample.insert_size,
+            sample.budget_number,
+            sample.comment,
             "None"
           ]
         end
@@ -186,7 +202,15 @@ class Sample < ActiveRecord::Base
           "Submission Date",
           "Short Sample Name",
           "Sample Name",
+          "Project",
+          "Sample Prep Kit",
           "Reference Genome",
+          "Desired Read Length",
+          "Alignment Start Position",
+          "Alignment End Position",
+          "Insert Size",
+          "Budget Number",
+          "Comment",
           "Naming Scheme"
         ]
 
@@ -216,7 +240,15 @@ class Sample < ActiveRecord::Base
             sample.submission_date.to_s,
             sample.short_sample_name,
             sample.sample_name,
+            sample.project.name,
+            sample.sample_prep_kit.name,
             sample.reference_genome.name,
+            sample.desired_read_length,
+            sample.alignment_start_position,
+            sample.alignment_end_position,
+            sample.insert_size,
+            sample.budget_number,
+            sample.comment,
             sample.naming_scheme.name
           ]
           # values for naming elements
