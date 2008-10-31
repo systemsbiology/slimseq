@@ -328,4 +328,82 @@ describe Sample do
     end
   end
 
+  describe "importing sample info from a CSV" do
+    fixtures :all
+
+    it "should update unschemed samples from a CSV" do
+      csv_file = "#{RAILS_ROOT}/spec/fixtures/csv/updated_unschemed_samples.csv"
+
+      errors = Sample.from_csv(csv_file)
+
+      errors.should == ""
+
+      # one change was made to sample 1
+      sample_1 = Sample.find( samples(:sample1).id )
+      sample_1.short_sample_name.should == "yng1"
+
+      # multiple changes to sample 2
+      sample_2 = Sample.find( samples(:sample2).id )
+      sample_2.submission_date.to_s.should == "2006-02-11"
+      sample_2.short_sample_name.should == "old1"
+      sample_2.sample_name.should == "Old1"
+      sample_2.project_id.should == projects(:another).id
+      sample_2.sample_prep_kit_id.should == sample_prep_kits(:tag_count).id
+      sample_2.reference_genome_id.should == reference_genomes(:weevil_2).id
+      sample_2.desired_read_length.should == 26
+      sample_2.alignment_start_position.should == 2
+      sample_2.alignment_end_position.should == 36
+      sample_2.insert_size.should == 200
+      sample_2.budget_number.should == "5678"
+      sample_2.comment.should == "lots of updates"
+    end
+
+    it "should update schemed samples from a CSV" do
+      csv_file = "#{RAILS_ROOT}/spec/fixtures/csv/updated_yeast_scheme_samples.csv"
+
+      errors = Sample.from_csv(csv_file)
+
+      errors.should == ""
+
+      # changes to schemed sample
+      SampleTerm.find(:first, :conditions => {
+        :sample_id => samples(:sample6).id,
+        :naming_term_id => naming_terms(:mutant).id } ).should_not == nil
+      SampleTerm.find(:first, :conditions => {
+        :sample_id => samples(:sample6).id,
+        :naming_term_id => naming_terms(:replicateA).id } ).should_not == nil
+      sample_6_number = SampleText.find(:first, :conditions => {
+        :sample_id => samples(:sample6).id,
+        :naming_element_id => naming_elements(:subject_number).id } )
+      sample_6_number.text.should == "32236"
+      Sample.find( samples(:sample6) ).naming_scheme.id.should == naming_schemes(:yeast_scheme).id
+    end
+    
+    it "should update unschemed samples to being schemed from a CSV" do
+      csv_file = "#{RAILS_ROOT}/spec/fixtures/csv/no_scheme_to_scheme.csv"
+
+      errors = Sample.from_csv(csv_file)
+
+      errors.should == ""
+
+      # changes to schemed sample
+      SampleTerm.find(:first, :conditions => {
+        :sample_id => samples(:sample3).id,
+        :naming_term_id => naming_terms(:wild_type).id } ).should_not == nil
+      SampleTerm.find(:first, :conditions => {
+        :sample_id => samples(:sample3).id,
+        :naming_term_id => naming_terms(:heat).id } ).should_not == nil
+      SampleTerm.find(:first, :conditions => {
+        :sample_id => samples(:sample3).id,
+        :naming_term_id => naming_terms(:replicateB).id } ).should_not == nil
+      sample_6_number = SampleText.find(:first, :conditions => {
+        :sample_id => samples(:sample3).id,
+        :naming_element_id => naming_elements(:subject_number).id } )
+      sample_6_number.text.should == "234"
+      Sample.find( samples(:sample3).id ).naming_scheme_id.to_i.should ==
+        naming_schemes(:yeast_scheme).id
+    end
+    
+  end
 end
+

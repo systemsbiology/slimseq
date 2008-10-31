@@ -291,20 +291,20 @@ class Sample < ActiveRecord::Base
       # don't process header row
       if(row_number > 0)
         begin
-          sample = Sample.find(row[1].to_i)
+          sample = Sample.find(row[0].to_i)
         rescue
           return "Sample ID is invalid in row #{row_number}"
         end
       
         # check to see if this sample should have a naming scheme
-        if(row[10] == "None")
+        if(row[13] == "None")
           ###########################################
           # non-naming schemed sample
           ###########################################
         
-          # there should be 10 cells in each row
-          if(row.size != 11)
-            return "Wrong number of columns in row #{row_number}. Expected 11"
+          # there should be 14 cells in each row
+          if(row.size != 14)
+            return "Wrong number of columns in row #{row_number}. Expected 14"
           end
 
           sample.destroy_existing_naming_scheme_info
@@ -319,16 +319,16 @@ class Sample < ActiveRecord::Base
           ###########################################
 
           naming_scheme = NamingScheme.find(:first, 
-            :conditions => {:name => row[10]})
+            :conditions => {:name => row[13]})
           # make sure this sample has a naming scheme
           if(naming_scheme.nil?)
-            return "Naming scheme #{row[10]} doesn't exist in row #{row_number}"
+            return "Naming scheme #{row[13]} doesn't exist in row #{row_number}"
           end
 
           naming_elements =
             naming_scheme.naming_elements.find(:all, :order => "element_order ASC")
 
-          expected_columns = 11 + naming_elements.size
+          expected_columns = 14 + naming_elements.size
           if(row.size != expected_columns)
             return "Wrong number of columns in row #{row_number}. " +
               "Expected #{expected_columns}"
@@ -343,7 +343,7 @@ class Sample < ActiveRecord::Base
           end
 
           # update the naming scheme records
-          current_column_index = 11
+          current_column_index = 14
           naming_elements.each do |e|
             # do nothing if there's nothing in the cell
             if(row[current_column_index] != nil)
@@ -411,21 +411,34 @@ class Sample < ActiveRecord::Base
   end
 
   def update_unschemed_columns(row)  
-    reference_genome = ReferenceGenome.find(:first, :conditions => { :name => row[7] })
+    reference_genome = ReferenceGenome.find(:first, :conditions => { :name => row[6] })
     if(reference_genome.nil?)
-      reference_genome = ReferenceGenome.create(:name => row[7])
+      reference_genome = ReferenceGenome.create(:name => row[6])
     end
     
-    project = Project.find(:first, :conditions => { :name => row[9] })
+    project = Project.find(:first, :conditions => { :name => row[4] })
     if(project.nil?)
       return "Project doesn't exist"
     end
+    
+    sample_prep_kit = SamplePrepKit.find(:first, :conditions => { :name => row[5] })
+    if(sample_prep_kit.nil?)
+      return "Sample prep kit doesn't exist"
+    end
 
     if(!update_attributes(
-          :submission_date => row[2],
-          :short_sample_name => row[3],
-          :sample_name => row[4],
-          :reference_genome_id => reference_genome.id
+          :submission_date => row[1],
+          :short_sample_name => row[2],
+          :sample_name => row[3],
+          :project_id => project.id,
+          :sample_prep_kit_id => sample_prep_kit.id,
+          :reference_genome_id => reference_genome.id,
+          :desired_read_length => row[7],
+          :alignment_start_position => row[8],
+          :alignment_end_position => row[9],
+          :insert_size => row[10],
+          :budget_number => row[11],
+          :comment => row[12]
         ))
       puts errors.full_messages
       return "Problem updating values for sample id=#{id}: #{errors.full_messages}"
@@ -433,7 +446,7 @@ class Sample < ActiveRecord::Base
     
     return ""
   end
-
+  
   def terms_for(schemed_params)
     terms = Array.new
     

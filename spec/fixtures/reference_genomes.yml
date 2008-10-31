@@ -3,3 +3,7 @@
 weevil_1:
   name: weevil v1
   organism: weevil
+
+weevil_2:
+  name: weevil v2
+  organism: weevil
