@@ -4,7 +4,23 @@ class NamingSchemesController < ApplicationController
   
   def index
     list
-    render :action => 'list'
+
+    respond_to do |format|
+      format.html { render :action => 'list' }
+      format.json { render :json => @naming_schemes.to_json(
+        :only => :name,
+        :include => {
+          :naming_elements => {
+            :only => :name,
+            :include => {
+              :naming_terms => {
+                :only => :term
+              }
+            }
+          }
+        }
+      ) }
+    end
   end
 
   def list
