@@ -185,7 +185,7 @@ class Sample < ActiveRecord::Base
             sample.alignment_end_position,
             sample.insert_size,
             sample.budget_number,
-            sample.comment,
+            sample.comment || "",
             "None"
           ]
         end
@@ -248,7 +248,7 @@ class Sample < ActiveRecord::Base
             sample.alignment_end_position,
             sample.insert_size,
             sample.budget_number,
-            sample.comment,
+            sample.comment || "",
             sample.naming_scheme.name
           ]
           # values for naming elements

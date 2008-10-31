@@ -161,4 +161,171 @@ describe Sample do
       end
     end
   end
+  
+  describe "exporting sample info to a CSV" do
+    fixtures :all
+
+    it "should export all non-naming scheme samples when given no naming scheme" do
+      csv_file_name = Sample.to_csv
+    
+      csv = CSV.open(csv_file_name, 'r')
+
+      # heading
+      csv.shift.should eql([
+        "Sample ID",
+        "Submission Date",
+        "Short Sample Name",
+        "Sample Name",
+        "Project",
+        "Sample Prep Kit",
+        "Reference Genome",
+        "Desired Read Length",
+        "Alignment Start Position",
+        "Alignment End Position",
+        "Insert Size",
+        "Budget Number",
+        "Comment",
+        "Naming Scheme"
+      ])
+      
+      # samples
+      csv.shift.should eql([
+        samples(:sample1).id.to_s,
+        "2006-02-10",
+        "yng",
+        "Young",
+        "MouseGroup",
+        "ChIP-Seq",
+        "weevil v1",
+        "36",
+        "1",
+        "22",
+        "150",
+        "1234",
+        "",
+        "None"
+      ])
+
+      csv.shift.should eql([
+        samples(:sample2).id.to_s,
+        "2006-02-10",
+        "old",
+        "Old",
+        "MouseGroup",
+        "ChIP-Seq",
+        "weevil v1",
+        "36",
+        "1",
+        "22",
+        "150",
+        "1234",
+        "",
+        "None"
+      ])
+
+      csv.shift.should eql([
+        samples(:sample3).id.to_s,
+        "2006-02-10",
+        "vold",
+        "Very Old",
+        "MouseGroup",
+        "ChIP-Seq",
+        "weevil v1",
+        "36",
+        "1",
+        "22",
+        "150",
+        "1234",
+        "",
+        "None"
+      ])
+
+      csv.shift.should eql([
+        samples(:sample4).id.to_s,
+        "2006-02-10",
+        "vvold",
+        "Very Very Old",
+        "MouseGroup",
+        "ChIP-Seq",
+        "weevil v1",
+        "36",
+        "1",
+        "22",
+        "150",
+        "1234",
+        "",
+        "None"
+      ])
+
+      csv.shift.should eql([
+        samples(:sample5).id.to_s,
+        "2006-09-10",
+        "bb",
+        "BobB",
+        "Bob's Stuff",
+        "ChIP-Seq",
+        "weevil v1",
+        "36",
+        "1",
+        "22",
+        "150",
+        "1234",
+        "",
+        "None"
+      ])      
+    end
+    
+    it "should export all non-naming scheme samples when given no naming scheme" do
+      csv_file_name = Sample.to_csv("Yeast Scheme")
+    
+      csv = CSV.open(csv_file_name, 'r')
+      
+      # heading
+      csv.shift.should eql([
+        "Sample ID",
+        "Submission Date",
+        "Short Sample Name",
+        "Sample Name",
+        "Project",
+        "Sample Prep Kit",
+        "Reference Genome",
+        "Desired Read Length",
+        "Alignment Start Position",
+        "Alignment End Position",
+        "Insert Size",
+        "Budget Number",
+        "Comment",
+        "Naming Scheme",
+        "Strain",
+        "Perturbation",
+        "Perturbation Time",
+        "Replicate",
+        "Subject Number"
+      ])
+      
+      # samples
+      csv.shift.should eql([
+        samples(:sample6).id.to_s,
+        "2007-05-31",
+        "a1",
+        "wt_HT_024_B_32234",
+        "Bob's Stuff",
+        "ChIP-Seq",
+        "weevil v1",
+        "36",
+        "1",
+        "22",
+        "150",
+        "1234",
+        "",
+        "Yeast Scheme",
+        "wild-type",
+        "heat",
+        "024",
+        "B",
+        "32234"
+      ])    
+    end
+  end
+
 end
