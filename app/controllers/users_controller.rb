@@ -16,7 +16,7 @@ class UsersController < ApplicationController
     @user.save
     if @user.errors.empty?
       self.current_user = @user
-      redirect_back_or_default('/welcome')
+      redirect_back_or_default(SiteConfig.site_url)
       flash[:notice] = "Thanks for signing up!"
     else
       render :action => 'new'
