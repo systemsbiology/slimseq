@@ -4,17 +4,55 @@ class SamplesController < ApplicationController
   
   def index
     if(@lab_groups != nil && @lab_groups.size > 0)
-      @sample_pages, @samples =
-        paginate :samples, :include => 'project',
-          :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
+      @samples = Sample.find(:all, 
+         :include => 'project',
+         :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
           current_user.get_lab_group_ids, false ],
-          :per_page => 40, :order => "submission_date DESC, samples.id ASC"
+         :order => "submission_date DESC, samples.id ASC")
+      @paged_samples = Sample.paginate :page => params[:page],
+        :include => 'project',
+        :order => 'submission_date DESC, samples.id ASC',
+        :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
+          current_user.get_lab_group_ids, false ]
     end
     
     respond_to do |format|
       format.html  #index.html
       format.xml   { render :xml => @samples }
-      format.json  { render :json => @samples }
+      format.json  { render :json => @samples.to_json(
+        :except => [:lock_version, :sample_prep_kit_id, :project_id, :naming_scheme_id,
+                    :submitted_by_id, :sample_set_id, :reference_genome_id],
+        :include => {
+          :project => {
+            :only => :name
+          },
+          :sample_prep_kit => {
+            :only => :name
+          },
+          :user => {
+            :only => :login
+          },
+          :reference_genome => {
+            :only => :name
+          },
+          :sample_texts => {
+            :only => :text
+          },
+          :sample_terms => {
+            :only => :naming_term,
+            :include => {
+              :naming_term => {
+                :only => [:term, :naming_element],
+                :include => {
+                  :naming_element => {
+                    :only => :name
+                  }
+                }
+              }
+            }
+          }
+        }
+      ) }
     end
   end
   

@@ -1,6 +1,6 @@
 <h2>Samples</h2>
 
-<% if(@samples != nil && @samples.size > 0) %>
+<% if(@paged_samples != nil && @samples.size > 0) %>
   <% form_tag :action => 'bulk_destroy' do -%>
     <p><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></p>
 
@@ -15,7 +15,7 @@
     <th>Destroy</th>
     </tr>
 
-    <% for sample in @samples %>
+    <% for sample in @paged_samples %>
       <tr>
       <td><%= check_box 'selected_samples', sample.id %></td>
       <td><%=h sample.submission_date %></td>
@@ -27,7 +27,8 @@
       </tr>
     <% end %>
     </table>
-    <p>Page: <%= pagination_links @sample_pages, :link_to_current_page => true %></p>
+    <%= will_paginate @paged_samples %>
+
     <p><%= submit_tag 'Delete Selected Samples' %></p>
   <% end -%>	
 <% else %>
