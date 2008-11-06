@@ -44,6 +44,7 @@ class WelcomeController < ApplicationController
     @lab_groups = LabGroup.find(:all, :order => "name ASC")
     @samples = Sample.find(:all, :conditions => [ "status = ? AND control = ?", 'submitted', false],
                               :order => "samples.id ASC")
+    @flow_cells = FlowCell.find(:all, :conditions => "status = 'clustered'")
   end
 
 end

@@ -10,7 +10,9 @@ Start by <%= link_to 'creating some lab groups', :controller => 'lab_groups', :a
 .</p>
 <% end %>
 
-<h3>Samples Submitted for Sequencing</h3>
+<p><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></p>
+
+<h3>Samples Submitted</h3>
 
 <% if @samples != nil && @samples.size > 0 %>
   <table class="sortable" id="samples">
@@ -35,7 +37,39 @@ Start by <%= link_to 'creating some lab groups', :controller => 'lab_groups', :a
   <% end %>
   </table>
 
+  <%= link_to 'Cluster samples on a flow cell', new_flow_cell_path %>
 <% else %>
   <p>There are no samples submitted for sequencing.</p>  
 <% end %>
-  <p><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></p>
+
+<h3>Flow cells ready for Sequencing</h3>
+
+<% if @flow_cells != nil && @flow_cells.size > 0 %>
+  <table class="sortable">
+    <tr>
+      <th>Date</th>
+      <th>Name</th>
+      <th>Status</th>
+      <th>Comment</th>
+      <th>Show</th>
+      <th>Edit</th>
+      <th>Destroy</th>
+    </tr>
+
+  <% for flow_cell in @flow_cells %>
+    <tr>
+      <td><%=h flow_cell.date_generated %></td>
+      <td><%=h flow_cell.name %></td>
+      <td><%=h flow_cell.status %></td>
+      <td><%=h flow_cell.comment %></td>
+      <td><%= link_to 'Show', flow_cell %></td>
+      <td><%= link_to 'Edit', edit_flow_cell_path(flow_cell) %></td>
+      <td><%= link_to 'Destroy', flow_cell, :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
+  </table>
+
+  <%= link_to 'Sequence flow cell', new_sequencing_run_path %>
+<% else %>
+  <p>There are no flow cells for sequencing.</p>  
+<% end %>
