@@ -404,6 +404,29 @@ describe Sample do
         naming_schemes(:yeast_scheme).id
     end
     
+    it "should create schemed samples from a CSV" do
+      csv_file = "#{RAILS_ROOT}/spec/fixtures/csv/new_yeast_scheme_sample.csv"
+
+      errors = Sample.from_csv(csv_file)
+
+      errors.should == ""
+
+      # changes to schemed sample
+      sample = Sample.find(:first, :conditions => "short_sample_name = 's12'")
+      sample.should_not be_nil
+      SampleTerm.find(:first, :conditions => {
+        :sample_id => sample.id,
+        :naming_term_id => naming_terms(:wild_type).id } ).should_not == nil
+      SampleTerm.find(:first, :conditions => {
+        :sample_id => sample.id,
+        :naming_term_id => naming_terms(:replicateA).id } ).should_not == nil
+      sample_number = SampleText.find(:first, :conditions => {
+        :sample_id => sample.id,
+        :naming_element_id => naming_elements(:subject_number).id } )
+      sample_number.text.should == "32236"
+      Sample.find( sample ).naming_scheme.id.should == naming_schemes(:yeast_scheme).id
+    end
+    
   end
 end
 
