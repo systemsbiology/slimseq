@@ -6,13 +6,24 @@ class FlowCellLanesController < ApplicationController
 
     respond_to do |format|
       format.xml  { render :xml => @flow_cell_lanes }
-      format.json { render :json => @flow_cell_lanes.to_json(
-          :include => {
-            :samples => {
-              :include => [:sample_terms, :sample_texts]
+      format.json { render :json => @flow_cell_lanes[0].to_json(
+        :except => [:lock_version, :flow_cell_id],
+        :include => {
+          :flow_cell => {
+            :except => :id,
+            :include => {
+              :sequencing_run => {
+                :except => :instrument_id,
+                :include => {
+                  :instrument => {
+                    :only => [:name, :serial_number]
+                  }
+                }
+              }
             }
           }
-        ) }
+        }
+      ) }
     end
   end
 

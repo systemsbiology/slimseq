@@ -11,7 +11,10 @@ class ReferenceGenomesController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @reference_genomes }
-      format.json  { render :json => @reference_genomes }
+      format.json { render :json => @reference_genomes.to_json(
+          :only => :name,
+          :include => { :organism => {:only => :name} } ) 
+      }
     end
   end
 
