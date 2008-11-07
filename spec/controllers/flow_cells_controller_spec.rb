@@ -15,7 +15,7 @@ describe FlowCellsController do
   describe "responding to GET index" do
 
     it "should expose all flow_cells as @flow_cells" do
-      FlowCell.should_receive(:find).with(:all).and_return([mock_flow_cell])
+      FlowCell.should_receive(:find).with(:all, {:order=>"date_generated DESC"}).and_return([mock_flow_cell])
       get :index
       assigns[:flow_cells].should == [mock_flow_cell]
     end
@@ -24,7 +24,7 @@ describe FlowCellsController do
   
       it "should render all flow_cells as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        FlowCell.should_receive(:find).with(:all).and_return(flow_cells = mock("Array of FlowCells"))
+        FlowCell.should_receive(:find).with(:all, {:order=>"date_generated DESC"}).and_return(flow_cells = mock("Array of FlowCells"))
         flow_cells.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"

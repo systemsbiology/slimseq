@@ -9,6 +9,7 @@ describe GeraldConfigurationsController do
       @flow_cell_lanes = [ mock_model(FlowCellLane), mock_model(FlowCellLane) ]
       SequencingRun.stub!(:find).and_return(@sequencing_run)
       @sequencing_run.stub!(:flow_cell).and_return(@flow_cell)
+      @sequencing_run.stub!(:run_name).and_return("ASDF_WERT_RTYU")
       @flow_cell.stub!(:flow_cell_lanes).and_return(@flow_cell_lanes)
     end
     
@@ -55,6 +56,7 @@ describe GeraldConfigurationsController do
   describe "GET 'create'" do
     before(:each) do
       @sequencing_run = mock_model(SequencingRun)
+      @sequencing_run.stub!(:run_name).and_return("ASDF_WERT_RTYU")
       SequencingRun.stub!(:find).and_return(@sequencing_run)
       @lanes_hash = {
         "1" => {
