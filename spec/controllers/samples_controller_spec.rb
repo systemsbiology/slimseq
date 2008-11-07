@@ -37,7 +37,9 @@ describe SamplesController do
 
     it "should expose all samples accessible by the user as @samples" do
       @current_user.should_receive(:get_lab_group_ids).and_return(@accessible_lab_group_ids)
-      controller.should_receive(:paginate).and_return(["Samples Pages", @accessible_samples])
+      Sample.should_receive(:find).and_return(@accessible_samples)
+      # TODO: test pagination
+      Sample.should_receive(:paginate)
       get :index
       assigns[:samples].should == @accessible_samples
     end
@@ -47,7 +49,9 @@ describe SamplesController do
         request.env["HTTP_ACCEPT"] = "application/xml"
         @current_user.should_receive(:get_lab_group_ids).and_return(@accessible_lab_group_ids)
         @accessible_samples.should_receive(:to_xml).and_return("generated XML")
-        controller.should_receive(:paginate).and_return(["Samples Pages", @accessible_samples])
+        Sample.should_receive(:find).and_return(@accessible_samples)
+        # TODO: test pagination
+        Sample.should_receive(:paginate)
         get :index
         response.body.should == "generated XML"
       end
@@ -175,30 +179,9 @@ describe SamplesController do
       @current_user.stub!(:staff_or_admin?).and_return(false)
     end
     
-    describe "as staff or admin user with clustered samples" do
-
-      it "should destroy the requested sample" do
-        @current_user.should_receive(:staff_or_admin?).and_return(true)
-        @sample = mock_sample
-        Sample.should_receive(:find).with("37").and_return(@sample)
-        @sample.should_receive(:destroy)
-        delete :destroy, :id => "37"
-      end
-
-      it "should redirect back" do
-        @current_user.should_receive(:staff_or_admin?).and_return(true)
-        @sample = mock_sample(:destroy => true)
-        Sample.stub!(:find).and_return(@sample)
-        delete :destroy, :id => "1"
-        response.should redirect_to("http://test.host/refering_url")
-      end
-
-    end
-    
-    describe "as a non-staff user, but with submitted samples" do
+    describe "with submitted samples" do
       
       it "should destroy the requested sample" do
-        @current_user.should_receive(:staff_or_admin?).and_return(false)
         @sample = mock_sample
         @sample.should_receive(:status).and_return("submitted")
         Sample.should_receive(:find).with("37").and_return(@sample)
@@ -207,7 +190,6 @@ describe SamplesController do
       end
 
       it "should redirect back" do
-        @current_user.should_receive(:staff_or_admin?).and_return(false)
         @sample = mock_sample(:destroy => true)
         @sample.should_receive(:status).and_return("submitted")
         Sample.stub!(:find).and_return(@sample)
@@ -217,10 +199,9 @@ describe SamplesController do
 
     end
 
-    describe "as a non-staff user with 'clustered' samples" do
+    describe "with clustered samples" do
 
-      it "should destroy the requested sample" do
-        @current_user.should_receive(:staff_or_admin?).and_return(false)
+      it "should not destroy the requested sample" do
         @sample = mock_sample
         @sample.should_receive(:status).and_return("clustered")
         Sample.should_receive(:find).with("37").and_return(@sample)
@@ -229,7 +210,6 @@ describe SamplesController do
       end
 
       it "should redirect back" do
-        @current_user.should_receive(:staff_or_admin?).and_return(false)
         @sample = mock_sample(:destroy => true)
         @sample.should_receive(:status).and_return("clustered")
         Sample.stub!(:find).and_return(@sample)

@@ -88,7 +88,7 @@ class SamplesController < ApplicationController
   def destroy
     sample = Sample.find(params[:id])
 
-    if(current_user.staff_or_admin? || sample.status == "submitted")
+    if(sample.status == "submitted")
       sample.destroy
     else
       flash[:warning] = "Unable to destroy samples that have already been clustered or sequenced."
