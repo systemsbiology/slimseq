@@ -425,8 +425,27 @@ describe Sample do
         :naming_element_id => naming_elements(:subject_number).id } )
       sample_number.text.should == "32236"
       Sample.find( sample ).naming_scheme.id.should == naming_schemes(:yeast_scheme).id
+    end    
+  end
+  
+  describe "turning the alignment start and stop into a USE_BASES string for Gerald" do
+    it "should return 'all' if the alignment start and stop span the full desired read" do
+      @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 1,
+                  :alignment_end_position => 36)
+      @sample.use_bases_string.should == "all"
     end
     
+    it "should return 'Y25n11' for the first 25 of 36 bases of the desired read length" do
+      @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 1,
+                  :alignment_end_position => 25)
+      @sample.use_bases_string.should == "Y25n11"
+    end
+    
+    it "should return 'n2Y34' for the last 34 of 36 bases of the desired read length" do
+      @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 3,
+                  :alignment_end_position => 36)
+      @sample.use_bases_string.should == "n2Y34"
+    end
   end
 end
 

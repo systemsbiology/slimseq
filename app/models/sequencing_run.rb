@@ -16,4 +16,9 @@ class SequencingRun < ActiveRecord::Base
   def date_yymmdd
     date.strftime("%y%m%d")
   end
+  
+  def run_name
+    "#{date_yymmdd}_" +
+    "#{instrument.serial_number}_#{flow_cell.name}"
+  end
 end

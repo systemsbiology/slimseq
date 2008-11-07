@@ -8,6 +8,7 @@
     <th>Comment</th>
     <th>Edit</th>
     <th>Destroy</th>
+    <th>Create Config File</th>
   </tr>
 
 <% for sequencing_run in @sequencing_runs %>
@@ -18,6 +19,8 @@
     <td><%=h sequencing_run.comment %></td>
     <td><%= link_to 'Edit', edit_sequencing_run_path(sequencing_run) %></td>
     <td><%= link_to 'Destroy', sequencing_run, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to 'Create Config File',
+            new_sequencing_run_gerald_configuration_path(sequencing_run) %></td>
   </tr>
 <% end %>
 </table>

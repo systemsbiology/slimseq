@@ -1,0 +1,27 @@
+<h1>Gerald Configuration Generator: <%=h @sequencing_run.run_name %></h1>
+
+<% form_tag :action => 'create' do -%>
+  <table class="sortable">
+    <tr>
+      <th>Lane</th>
+      <th>Reference Genome</th>
+      <th>ELAND Seed Length</th>
+      <th>ELAND Max Matches</th>
+      <th>Use Bases</th>
+    </tr>
+    <% for n in 0..@flow_cell_lanes.size-1 %>
+      <% lane = @flow_cell_lanes[n] %>
+      <tr>
+        <td><%=h lane.lane_number %>
+            <%= hidden_field_tag "lanes[#{n}][lane_number]", lane.lane_number %></td>
+        <td><%= text_field_tag "lanes[#{n}][eland_genome]",
+                               lane.samples[0].reference_genome.fasta_path, :size => 50 %></td>
+        <td><%= text_field_tag "lanes[#{n}][eland_seed_length]", 20 %></td>
+        <td><%= text_field_tag "lanes[#{n}][eland_max_matches]", 1 %></td>
+        <td><%= text_field_tag "lanes[#{n}][use_bases]", lane.samples[0].use_bases_string %></td>
+      </tr>
+    <% end %>
+  </table>
+  
+  <%= submit_tag "Create Config File" %>
+<% end -%>

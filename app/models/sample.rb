@@ -542,4 +542,25 @@ class Sample < ActiveRecord::Base
     
     return texts
   end
+  
+  def use_bases_string
+    # starting at the beginning
+    if(alignment_start_position == 1)
+      if(alignment_end_position == desired_read_length)
+        return "all"
+      else
+        return "Y#{alignment_end_position}" + 
+               "n#{desired_read_length-alignment_end_position}"
+      end
+    # or starting later than the beginning, but going to the end
+    elsif(alignment_end_position == desired_read_length)
+      return "n#{alignment_start_position-1}" +
+             "Y#{desired_read_length-alignment_start_position+1}"
+    # or in the middle
+    else
+      return "n#{alignment_start_position-1}" +
+             "Y#{alignment_end_position-alignment_start_position}" +
+             "n#{desired_read_length-alignment_end_position}"
+    end
+  end
 end

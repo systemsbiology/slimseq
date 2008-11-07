@@ -22,6 +22,16 @@ describe SequencingRun do
     Sample.find(samples(:sample4).id).status.should == "clustered"
   end
   
+  it "should provide the formatted date" do
+    create_sequencing_run
+    @sequencing_run.date_yymmdd.should == "081010"
+  end
+  
+  it "should provide the 'run name'" do
+    create_sequencing_run
+    @sequencing_run.run_name.should == "081010_HWI-EAS123_123ABC"
+  end
+  
   def create_sequencing_run
     @sequencing_run = SequencingRun.create(:date => '2008-10-10',
                                            :flow_cell_id => flow_cells(:flow_cell_1).id,
