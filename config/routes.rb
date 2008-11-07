@@ -5,7 +5,9 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :instruments
 
-  map.resources :sequencing_runs
+  map.resources :sequencing_runs do |sequencing_runs|
+    sequencing_runs.resources :gerald_configurations, :name_prefix => "sequencing_run_"
+  end
 
   map.resources :flow_cells
 
