@@ -42,21 +42,11 @@ class ChargesController < ApplicationController
       template = ChargeTemplate.find(params[:charge_template_id])
       @charge = Charge.new(:charge_set => @charge_set,
                            :description => template.description,
-                           :chips_used => template.chips_used,
-                           :chip_cost => template.chip_cost,
-                           :labeling_cost => template.labeling_cost,
-                           :hybridization_cost => template.hybridization_cost,
-                           :qc_cost => template.qc_cost,
-                           :other_cost => template.other_cost)      
+                           :cost => template.cost)      
     # if no template is givin, show a blank charge form                           
     else
       @charge = Charge.new(:charge_set => @charge_set,
-                           :chips_used => 0,
-                           :chip_cost => 0,
-                           :labeling_cost => 0,
-                           :hybridization_cost => 0,
-                           :qc_cost => 0,
-                           :other_cost => 0)
+                           :cost => 0)
     end
                                
     @charge_templates = ChargeTemplate.find(:all, :order => "name ASC")
@@ -141,30 +131,6 @@ class ChargesController < ApplicationController
     
     list_within_charge_set
     render :action => 'list_within_charge_set'
-  end
-
-  def select_from_sbeams
-    @lab_groups = LabGroup.find(:all, :order => "name ASC")
-  end
-
-  def import_from_sbeams
-    username = params[:username]
-    password = params[:password]
-    request_id = params[:request_id]
-    lab_group_id = params[:lab_group_id]
-
-    begin
-      Charge.scrape_array_request(username, password, request_id, lab_group_id)
-      flash[:notice] = "Import complete"
-      redirect_to :controller => 'charge_sets', :action => 'list'
-    rescue
-      flash[:warning] = "Unable to import array request. Check SBEAMS " +
-        "address in site configuration, and ensure that the array request " +
-        "has been set to 'finished'."
-      select_from_sbeams
-      render 'charges/select_from_sbeams'
-    end
-
   end
 
   def destroy

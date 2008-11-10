@@ -4,16 +4,14 @@ class ChargeSet < ActiveRecord::Base
   
   has_many :charges, :dependent => :destroy
   
-  def get_totals
-    totals = Hash.new(0)
+  def total_cost
+    total = 0
     charges = Charge.find(:all, :conditions => ["charge_set_id = ?", id])
     for charge in charges
-      totals['cost'] += charge.cost
+      total += charge.cost
     end
     
-    totals['total_cost'] = totals['cost']
-    
-    return totals
+    return total
   end
 
   def destroy_warning

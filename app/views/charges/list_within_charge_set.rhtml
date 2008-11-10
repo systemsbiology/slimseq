@@ -8,12 +8,7 @@
 	    <th>Select</th>
 	    <th>Date</th>
 	    <th>Description</th>
-	    <th>Chips Used</th>
-	    <th>Chip Cost</th>
-	    <th>Labeling Cost</th>
-	    <th>Hybridization Cost</th>
-	    <th>QC Cost</th>
-	    <th>Other Cost</th>
+	    <th>Cost</th>
 	    <th>Edit</th>
 	    <th>Destroy</th>
 	  </tr>
@@ -23,12 +18,7 @@
 	    <td><%= check_box 'selected_charges', charge.id %></td>
 	    <td><%= charge.date %></td>
 	    <td><%= charge.description %></td>
-	    <td><%= charge.chips_used %></td>
-	    <td><%= fmt_dollars(charge.chip_cost) %></td>
-	    <td><%= fmt_dollars(charge.labeling_cost) %></td>
-	    <td><%= fmt_dollars(charge.hybridization_cost) %></td>
-	    <td><%= fmt_dollars(charge.qc_cost) %></td>
-	    <td><%= fmt_dollars(charge.other_cost) %></td>
+	    <td><%= fmt_dollars(charge.cost) %></td>
 	    <td><%= link_to 'Edit', :action => 'edit', :id => charge %></td>
 	    <td><%= link_to 'Destroy', { :action => 'destroy', :id => charge }, :confirm => 'Are you sure?' %></td>
 	  </tr>
@@ -43,12 +33,7 @@
     <p>
     <%= submit_tag 'Set Field' %> 
         <select id="field_name" name="field_name">
-            <option value="chips_used">Chips Used</option>
-            <option value="chip_cost">Chip Cost</option>
-            <option value="labeling_cost">Labeling Cost</option>
-            <option value="hybridization_cost">Hybridization Cost</option>
-            <option value="qc_cost">QC Cost</option>
-            <option value="other_cost">Other Cost</option>
+            <option value="cost">Cost</option>
         </select>
         To 
         <input type="text" id="field_value" name="field_value" size="20"/>

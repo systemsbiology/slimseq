@@ -13,7 +13,7 @@
 	  <tr>
             <td><%=h charge_template.name %></td>
             <td><%=h charge_template.description %></td>
-            <td><%=h charge_template.cost %></td>
+            <td><%=h fmt_dollars(charge_template.cost) %></td>
             <td><%=h charge_template.default ? "Yes" : "No" %>
 	    <td><%= link_to 'Edit', :action => 'edit', :id => charge_template %></td>
 	    <td><%= link_to 'Destroy', { :action => 'destroy', :id => charge_template }, :confirm => 'Are you sure?' %></td>

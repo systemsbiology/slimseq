@@ -73,35 +73,19 @@ class ChargePeriodsController < ApplicationController
     table.heading_font_size = 8
     charge_sets = ChargeSet.find(:all, :conditions => [ "charge_period_id = ?", period.id ],
 		                         :order => "name ASC")
-    set_totals = Hash.new(0)
+    grand_total = 0
     for set in charge_sets
-      totals = set.get_totals
-      set_totals['chips'] += totals['chips']
-      set_totals['chip_cost'] += totals['chip_cost']
-      set_totals['labeling_cost'] += totals['labeling_cost']
-      set_totals['hybridization_cost'] += totals['hybridization_cost']
-      set_totals['qc_cost'] += totals['qc_cost']
-      set_totals['other_cost'] += totals['other_cost']
-      set_totals['total_cost'] += totals['total_cost']
+      set_total = set.total_cost
+      grand_total += set_total
       table.data << {"Charge Set" => set.name, "Budget/PO" => set.budget,
-                     "Chips" => totals['chips'], "Chip Charge" => fmt_dollars(totals['chip_cost']),
-                     "Labeling Charge" => fmt_dollars(totals['labeling_cost']),
-                     "Hyb/Wash/Stain/\nScan Charge" => fmt_dollars(totals['hybridization_cost']),
-                     "QC Cost" => fmt_dollars(totals['qc_cost']), "Other Cost" => fmt_dollars(totals['other_cost']),
-                     "Total Cost" => fmt_dollars(totals['total_cost'])}
+                     "Cost" => fmt_dollars(set_total)}
     end
     
-    # show totals
+    # show grand totals
     table.data << {"Charge Set" => "TOTALS", "Budget/PO" => "",
-               "Chips" => set_totals['chips'], "Chip Charge" => fmt_dollars(set_totals['chip_cost']),
-               "Labeling Charge" => fmt_dollars(set_totals['labeling_cost']),
-               "Hyb/Wash/Stain/\nScan Charge" => fmt_dollars(set_totals['hybridization_cost']),
-               "QC Cost" => fmt_dollars(set_totals['qc_cost']), "Other Cost" => fmt_dollars(set_totals['other_cost']),
-               "Total Cost" => fmt_dollars(set_totals['total_cost'])}
+                   "Cost" => fmt_dollars(grand_total)}
     
-    table.column_order = [ "Charge Set", "Budget/PO", "Chips", "Chip Charge",
-                           "Labeling Charge", "Hyb/Wash/Stain/\nScan Charge",
-                           "QC Cost", "Other Cost", "Total Cost" ]
+    table.column_order = [ "Charge Set", "Budget/PO", "Cost" ]
     table.render_on(_pdf)
     
     ############### 
@@ -146,24 +130,12 @@ class ChargePeriodsController < ApplicationController
         table.heading_font_size = 8
         
         for charge in charges
-          line_total = charge.chip_cost + charge.labeling_cost + charge.hybridization_cost +
-                       charge.qc_cost + charge.other_cost
-          total = total + line_total
+          total = total + charge.cost
           table.data << { "Date" => charge.date, "Description" => charge.description,
-                       "Chip Charge" => fmt_dollars(charge.chip_cost),
-                       "Labeling Charge" => fmt_dollars(charge.labeling_cost),
-                       "Hyb/Wash/Stain/\nScan Charge" => fmt_dollars(charge.hybridization_cost),
-                       "QC Cost" => fmt_dollars(charge.qc_cost),
-                       "Other Cost" => fmt_dollars(charge.other_cost),
-                       "Sample Total" => fmt_dollars(line_total) }
+                       "Cost" => fmt_dollars(charge.cost) }
         end
-        table.column_order = [ "Date", "Description", "Chip Charge",
-                       "Labeling Charge", "Hyb/Wash/Stain/\nScan Charge",
-                       "QC Cost", "Other Cost", "Sample Total" ]
-        table.columns["Other Cost"] = PDF::SimpleTable::Column.new("Other Cost") { |col|
-          col.width = 60
-        }
-        table.columns["Sample Total"] = PDF::SimpleTable::Column.new("Sample Total") { |col|
+        table.column_order = [ "Date", "Description", "Cost" ]
+        table.columns["Cost"] = PDF::SimpleTable::Column.new("Cost") { |col|
           col.width = 60
         }      
         table.render_on(_pdf)
@@ -226,32 +198,19 @@ class ChargePeriodsController < ApplicationController
     summary = workbook.add_worksheet("summary")
 
     current_row = 0
-    summary.write_row current_row+=1, 1, [ "Charge Set", "Budget/PO", "Chips", "Chip Charge",
-                              "Labeling Charge", "Hyb/Wash/Stain/\nScan Charge",
-                              "QC Cost", "Other Cost", "Total Cost" ], bordered
+    summary.write_row current_row+=1, 1, [ "Charge Set", "Budget/PO", "Cost" ], bordered
     charge_sets = ChargeSet.find(:all, :conditions => [ "charge_period_id = ?", @period.id ],
 		                         :order => "name ASC")
-    set_totals = Hash.new(0)
+    grand_total = 0
     for set in charge_sets
-      totals = set.get_totals
-      set_totals['chips'] += totals['chips']
-      set_totals['chip_cost'] += totals['chip_cost']
-      set_totals['labeling_cost'] += totals['labeling_cost']
-      set_totals['hybridization_cost'] += totals['hybridization_cost']
-      set_totals['qc_cost'] += totals['qc_cost']
-      set_totals['other_cost'] += totals['other_cost']
-      set_totals['total_cost'] += totals['total_cost']
-      summary.write_row current_row+=1, 1, [ set.name, set.budget, totals['chips'], fmt_dollars(totals['chip_cost']),
-                     fmt_dollars(totals['labeling_cost']), fmt_dollars(totals['hybridization_cost']),
-                     fmt_dollars(totals['qc_cost']), fmt_dollars(totals['other_cost']),
-                     fmt_dollars(totals['total_cost']) ], bordered
+      grand_total = set.total_cost
+      summary.write_row current_row+=1, 1, [ set.name, set.budget,
+        fmt_dollars(set.total_cost) ], bordered
     end
     
     # totals
-    summary.write_row current_row+=2, 2, [ "TOTALS", set_totals['chips'],
-               fmt_dollars(set_totals['chip_cost']), fmt_dollars(set_totals['labeling_cost']),
-               fmt_dollars(set_totals['hybridization_cost']),fmt_dollars(set_totals['qc_cost']),
-               fmt_dollars(set_totals['other_cost']), fmt_dollars(set_totals['total_cost']) ], bordered_bold
+    summary.write_row current_row+=2, 2, [ "TOTALS",
+      fmt_dollars(grand_total) ], bordered_bold
     
     ############### 
     # DETAIL PAGES
@@ -276,25 +235,19 @@ class ChargePeriodsController < ApplicationController
       end
       
       # charge headings
-      detail[set.name].write row+=3, 1, [ "Date", "Description", "Chip Charge",
-                     "Labeling Charge", "Hyb/Wash/Stain/\nScan Charge",
-                     "QC Cost", "Other Cost", "Sample Total" ], bordered
+      detail[set.name].write row+=3, 1, [ "Date", "Description", "Cost" ], bordered
                      
       # print line item charges      
       charges = Charge.find(:all, :conditions => ["charge_set_id = ?", set.id], :order => "date ASC")     
       total = 0;
       for charge in charges
-        line_total = charge.chip_cost + charge.labeling_cost + charge.hybridization_cost +
-                     charge.qc_cost + charge.other_cost
-        total = total + line_total
-        detail[set.name].write row+=1, 1, [ charge.date.to_s, charge.description, fmt_dollars(charge.chip_cost),
-                     fmt_dollars(charge.labeling_cost), fmt_dollars(charge.hybridization_cost),
-                     fmt_dollars(charge.qc_cost), fmt_dollars(charge.other_cost),
-                     fmt_dollars(line_total) ], bordered
+        total = total + charge.cost
+        detail[set.name].write row+=1, 1, [ charge.date.to_s, charge.description,
+          fmt_dollars(charge.cost) ], bordered
       end
     
       # totals
-      detail[set.name].write row+=1, 7, [ "TOTAL", fmt_dollars(total) ], bordered_bold
+      detail[set.name].write row+=1, 2, [ "TOTAL", fmt_dollars(total) ], bordered_bold
     end
     workbook.close
     
