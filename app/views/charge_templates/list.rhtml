@@ -3,7 +3,8 @@
 <% if @charge_templates.size > 0 %>
 	<table class="sortable" id="charge_template">
 	  <tr>
-	  <% ["Name", "Default Description", "Cost", "Edit", "Destroy"].each do |heading| %>
+	  <% ["Name", "Default Description", "Cost", "Default", "Edit",
+              "Destroy"].each do |heading| %>
 	    <th><%= heading %></th>
 	  <% end %>
 	  </tr>
@@ -13,6 +14,7 @@
             <td><%=h charge_template.name %></td>
             <td><%=h charge_template.description %></td>
             <td><%=h charge_template.cost %></td>
+            <td><%=h charge_template.default ? "Yes" : "No" %>
 	    <td><%= link_to 'Edit', :action => 'edit', :id => charge_template %></td>
 	    <td><%= link_to 'Destroy', { :action => 'destroy', :id => charge_template }, :confirm => 'Are you sure?' %></td>
 	  </tr>
