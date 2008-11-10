@@ -28,10 +28,11 @@ class WelcomeController < ApplicationController
         lab_group_ids << lab_group.id
       end
 
-      @samples = Sample.find(:all,
-        :conditions => [ "lab_group_id IN (?) AND status = ? AND control = ?",
-          lab_group_ids, 'submitted', false],
-        :order => "samples.id ASC")
+      @samples = Sample.find(:all, 
+         :include => 'project',
+         :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
+          current_user.get_lab_group_ids, false ],
+         :order => "samples.id ASC")
     end
   end
 
