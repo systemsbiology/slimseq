@@ -6,11 +6,14 @@ module FixtureReplacement
 #  attributes_for :charge_set do |a|
 #    
 #  end
-#
-#  attributes_for :charge_template do |a|
-#    
-#  end
-#
+
+  attributes_for :charge_template do |ct|
+    ct.name = String.random
+    ct.description = String.random(20)
+    ct.cost = 100
+    ct.default = false
+  end
+
 #  attributes_for :charge do |a|
 #    
 #  end

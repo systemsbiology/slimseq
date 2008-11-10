@@ -3,18 +3,16 @@
 <% if @charge_templates.size > 0 %>
 	<table class="sortable" id="charge_template">
 	  <tr>
-	  <% for column in ChargeTemplate.content_columns %>
-	    <th><%= column.human_name %></th>
+	  <% ["Name", "Default Description", "Cost", "Edit", "Destroy"].each do |heading| %>
+	    <th><%= heading %></th>
 	  <% end %>
-	    <th>Edit</th>
-	    <th>Destroy</th>
 	  </tr>
 	  
 	<% for charge_template in @charge_templates %>
 	  <tr>
-	  <% for column in ChargeTemplate.content_columns %>
-	    <td><%=h charge_template.send(column.name) %></td>
-	  <% end %>
+            <td><%=h charge_template.name %></td>
+            <td><%=h charge_template.description %></td>
+            <td><%=h charge_template.cost %></td>
 	    <td><%= link_to 'Edit', :action => 'edit', :id => charge_template %></td>
 	    <td><%= link_to 'Destroy', { :action => 'destroy', :id => charge_template }, :confirm => 'Are you sure?' %></td>
 	  </tr>
@@ -24,4 +22,4 @@
     <p>There are currently no charge templates.</p>
 <% end %>
 
-<%= link_to 'New charge_template', :action => 'new' %>
+<%= link_to 'New Charge Template', :action => 'new' %>
