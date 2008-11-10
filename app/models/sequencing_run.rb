@@ -4,15 +4,7 @@ class SequencingRun < ActiveRecord::Base
   
   after_create :mark_flow_cell_as_sequenced
   before_destroy :mark_flow_cell_as_clustered
-  
-  def mark_flow_cell_as_sequenced
-    flow_cell.sequence!
-  end
-  
-  def mark_flow_cell_as_clustered
-    flow_cell.unsequence!
-  end
-  
+   
   def date_yymmdd
     date.strftime("%y%m%d")
   end
@@ -21,4 +13,15 @@ class SequencingRun < ActiveRecord::Base
     "#{date_yymmdd}_" +
     "#{instrument.serial_number}_#{flow_cell.name}"
   end
+  
+private
+
+  def mark_flow_cell_as_sequenced
+    flow_cell.sequence!
+  end
+  
+  def mark_flow_cell_as_clustered
+    flow_cell.unsequence!
+  end
+
 end

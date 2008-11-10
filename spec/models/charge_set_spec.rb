@@ -4,11 +4,8 @@ describe "ChargeSet" do
   fixtures :charge_sets, :charges
 
   it "get totals" do
-    expected_totals = Hash.new(0)
-    expected_totals = { "cost" => 150, "total_cost" => 150}
-
     set = charge_sets(:mouse_jan)
-    set.get_totals.should == expected_totals
+    set.total_cost.should == 150
   end
 
   it "destroy warning" do
@@ -18,5 +15,24 @@ describe "ChargeSet" do
   
     set = charge_sets(:mouse_jan)
     set.destroy_warning.should == expected_warning
+  end
+
+  it "should find or create a charge set that doesn't exist" do
+    charge_period = create_charge_period
+    project = create_project
+    set = ChargeSet.find_or_create_for_latest_charge_period(project, "1234")
+    set.budget.should == "1234"
+    set.charge_period.should == charge_period
+    set.name.should == project.name
+    set.lab_group.should == project.lab_group
+  end
+
+  it "should find or create a charge set that does exist" do
+    charge_period = create_charge_period
+    project = create_project
+    charge_set = create_charge_set(:budget => "1234", :lab_group => project.lab_group,
+                                   :name => project.name, :charge_period => charge_period)
+    found_set = ChargeSet.find_or_create_for_latest_charge_period(project, "1234")
+    found_set.should == charge_set
   end
 end

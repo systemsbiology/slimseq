@@ -11,4 +11,7 @@ class ChargePeriod < ActiveRecord::Base
            "Are you sure you want to destroy it?"
   end
 
+  def self.latest
+    ChargePeriod.find(:first, :order => "id DESC")
+  end
 end

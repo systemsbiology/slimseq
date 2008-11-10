@@ -18,19 +18,7 @@ class FlowCell < ActiveRecord::Base
   event :unsequence do
     transitions :from => :sequenced, :to => :clustered    
   end
-  
-  def sequence_lanes
-    flow_cell_lanes.each do |l|
-      l.sequence!
-    end
-  end
 
-  def unsequence_lanes
-    flow_cell_lanes.each do |l|
-      l.unsequence!
-    end
-  end
-  
   def new_lane_attributes=(lane_attributes)
     lane_attributes.each do |attributes|
       flow_cell_lanes.build(attributes)
@@ -44,6 +32,20 @@ class FlowCell < ActiveRecord::Base
         lane.attributes = attributes
         lane.save
       end
+    end
+  end
+  
+private
+  
+  def sequence_lanes
+    flow_cell_lanes.each do |l|
+      l.sequence!
+    end
+  end
+
+  def unsequence_lanes
+    flow_cell_lanes.each do |l|
+      l.unsequence!
     end
   end
 end

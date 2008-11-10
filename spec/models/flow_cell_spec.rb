@@ -30,31 +30,26 @@ describe FlowCell do
     FlowCellLane.find(flow_cell_lanes(:lane_1).id).starting_concentration.should == "234"
     FlowCellLane.find(flow_cell_lanes(:lane_2).id).starting_concentration.should == "0987"
   end
-  
-  it "should change associated lane and sample statuses to 'clustered' after creation of flow cell" do
-    create_flow_cell
-    Sample.find(@sample_1.id).status.should == "clustered"
-    Sample.find(@sample_2.id).status.should == "clustered"
-    lanes = @flow_cell.flow_cell_lanes
-    lanes[0].status.should == "clustered"
-    lanes[1].status.should == "clustered"
-  end
 
-  it "should change associated sample statuses to 'submitted' after destroying flow cell" do
-    create_flow_cell
-    @flow_cell.destroy
-    Sample.find(@sample_1.id).status.should == "submitted"
-    Sample.find(@sample_2.id).status.should == "submitted"
+  it "should mark the associated flow cell lanes as sequenced when the flow cell is sequenced" do
+    flow_cell_lane_1 = create_flow_cell_lane
+    flow_cell_lane_2 = create_flow_cell_lane
+    flow_cell_lane_1.should_receive(:sequence!).and_return(true)
+    flow_cell_lane_2.should_receive(:sequence!).and_return(true)
+    flow_cell = create_flow_cell(:flow_cell_lanes => [flow_cell_lane_1, flow_cell_lane_2])
+    flow_cell.sequence!
   end
   
-  def create_flow_cell
-    @flow_cell = FlowCell.new(:name => "flobot", :date_generated => '2008-10-07')
-    @sample_1 = samples(:sample5)
-    @sample_2 = samples(:sample6)
-    @flow_cell.flow_cell_lanes.build(:sample_ids => [@sample_1.id], :lane_number => 1,
-      :starting_concentration => 1234, :loaded_concentration => 2)
-    @flow_cell.flow_cell_lanes.build(:sample_ids => [@sample_2.id], :lane_number => 2,
-      :starting_concentration => 4232, :loaded_concentration => 2)
-    @flow_cell.save!
+  it "should mark the associated flow cell lanes as clustered when the flow cell is 'unsequenced'" do
+    flow_cell_lane_1 = create_flow_cell_lane
+    flow_cell_lane_2 = create_flow_cell_lane
+    flow_cell_lane_1.stub!(:sequence!).and_return(true)
+    flow_cell_lane_2.stub!(:sequence!).and_return(true)
+    flow_cell = create_flow_cell(:flow_cell_lanes => [flow_cell_lane_1, flow_cell_lane_2])
+    flow_cell.sequence!
+    
+    flow_cell_lane_1.stub!(:unsequence!).and_return(true)
+    flow_cell_lane_2.stub!(:unsequence!).and_return(true)
+    flow_cell.unsequence!
   end
 end

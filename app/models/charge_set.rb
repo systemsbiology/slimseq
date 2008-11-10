@@ -22,4 +22,23 @@ class ChargeSet < ActiveRecord::Base
            "Are you sure you want to destroy it?"
   end
 
+  def self.find_or_create_for_latest_charge_period(project, budget)
+    set = ChargeSet.find(:first, :conditions => {
+        :charge_period_id => ChargePeriod.latest.id,
+        :lab_group_id => project.lab_group_id,
+        :budget => budget
+      })
+
+    # create a new set only if an existing one isn't found
+    if(set.nil?)
+      set = ChargeSet.create(
+        :charge_period_id => ChargePeriod.latest.id,
+        :lab_group_id => project.lab_group_id,
+        :budget => budget,
+        :name => project.name
+      )
+    end
+    
+    return set
+  end
 end

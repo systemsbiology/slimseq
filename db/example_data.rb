@@ -1,11 +1,15 @@
 module FixtureReplacement
-#  attributes_for :charge_period do |a|
-#    
-#  end
-#
-#  attributes_for :charge_set do |a|
-#    
-#  end
+  attributes_for :charge_period do |cp|
+    cp.name = String.random
+  end
+
+  attributes_for :charge_set do |cs|
+    cs.lab_group = default_lab_group
+    cs.charge_period = default_charge_period
+    cs.name = String.random
+    cs.budget_manager = String.random
+    cs.budget = String.random
+  end
 
   attributes_for :charge_template do |ct|
     ct.name = String.random
