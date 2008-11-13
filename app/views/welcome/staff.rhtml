@@ -14,27 +14,7 @@ Start by <%= link_to 'creating some lab groups', :controller => 'lab_groups', :a
 <h3>Samples Submitted</h3>
 
 <% if @samples != nil && @samples.size > 0 %>
-  <table class="sortable" id="samples">
-    <tr>
-      <th>Date</th>
-      <th>Short Sample Name</th>
-      <th>Sample Name</th>
-      <th>Status</th>
-      <th>Edit</th>
-      <th>Destroy</th>
-    </tr>
-
-  <% for sample in @samples %>
-    <tr>
-      <td><%=h sample.submission_date %></td>
-      <td><%=h sample.name_on_tube %></td>
-      <td><%=h sample.sample_description %></td>
-      <td><%=h sample.status %></td>
-      <td><%= link_to 'Edit', :controller => 'samples', :action => 'edit', :id => sample %></td>
-      <td><%= link_to 'Destroy', { :controller => 'samples', :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
-    </tr>
-  <% end %>
-  </table>
+  <%= render :partial => 'sample_table' %>
 
   <%= link_to 'Cluster samples on a flow cell', new_flow_cell_path %>
 <% else %>

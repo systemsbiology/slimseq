@@ -77,9 +77,6 @@ class User < ActiveRecord::Base
       # LDAP isn't working
     end
 
-    # if login exists, grab first and last name for LDAP table
-    full_name = "#{firstname} #{lastname}"
-
     # Try to find use in LDAP
     conn = LDAP::Conn.new(SiteConfig.LDAP_server, 389)
     conn.set_option( LDAP::LDAP_OPT_PROTOCOL_VERSION, 3 )
@@ -90,6 +87,10 @@ class User < ActiveRecord::Base
     rescue
       return false
     end
+  end
+  
+  def full_name
+    "#{firstname} #{lastname}"
   end
   
   def remember_token?
@@ -186,6 +187,12 @@ public
       return self.lab_groups
     end
   end  
+  
+  def accessible_users
+    lab_group_ids = get_lab_group_ids
+    return User.find(:all, :include => :lab_memberships,
+      :conditions => ["lab_memberships.lab_group_id IN (?)", lab_group_ids])    
+  end
   
   def accessible_projects
     lab_group_ids = get_lab_group_ids
