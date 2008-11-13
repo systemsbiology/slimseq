@@ -17,7 +17,7 @@
 
   <p><label for="sample_set_reference_genome_id">Reference Genome</label><br/>
   <%= collection_select 'sample_set', 'reference_genome_id',
-    @reference_genomes, 'id', 'name', {:prompt => true} %><br/>
+    @reference_genomes, 'id', 'description', {:prompt => true} %><br/>
     * Contact the facility to add a new reference genome</p>
 
   <p><label for="sample_set_desired_read_length">Desired Number of Cycles</label><br/>

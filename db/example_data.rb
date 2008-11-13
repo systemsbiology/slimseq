@@ -78,6 +78,7 @@ module FixtureReplacement
 
   attributes_for :reference_genome do |r|
     r.name = String.random
+    r.description = String.random
     r.organism = default_organism
     r.fasta_path = "/path/to/fasta"
   end

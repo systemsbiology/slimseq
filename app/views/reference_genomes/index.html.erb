@@ -2,7 +2,8 @@
 
 <table class="sortable">
   <tr>
-    <td>Name</td>
+    <td>Description</td>
+    <td>Shorthand Name</td>
     <td>Organism</td>
     <td>FASTA File</td>
     <td>Edit</td>
@@ -11,6 +12,7 @@
 
 <% for reference_genome in @reference_genomes %>
   <tr>
+    <td><%=h reference_genome.description %></td>
     <td><%=h reference_genome.name %></td>
     <td><%=h reference_genome.organism.name %></td>
     <td><%=h reference_genome.fasta_path %></td>

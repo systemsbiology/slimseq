@@ -4,6 +4,9 @@
 
 <% form_for(@reference_genome) do |f| %>
   <p>
+    <p><label>Description</label><br>
+    <%= f.text_field 'description' %></p>
+
     <p><label>Name</label><br>
     <%= f.text_field 'name' %></p>
     
