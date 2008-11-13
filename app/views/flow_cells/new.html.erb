@@ -3,6 +3,9 @@
 <%= error_messages_for :flow_cell %>
 
 <% form_for(@flow_cell) do |f| %>
+  <%= link_to 'Show Samples That Have Already Been Processed',
+    new_flow_cell_path(:show_all_samples => true) %>
+
   <p><label>Date Flow Cell Generated</label><br>
      <%= f.date_select :date_generated %></p>
   <p><label>Flow Cell Name</label><br>

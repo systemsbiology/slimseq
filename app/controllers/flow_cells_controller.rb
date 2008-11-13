@@ -28,6 +28,10 @@ class FlowCellsController < ApplicationController
   # GET /flow_cells/new
   # GET /flow_cells/new.xml
   def new
+    if(params[:show_all_samples] == "true")
+      load_dropdown_selections_all
+    end
+    
     @flow_cell = FlowCell.new
     (1..8).to_a.each{ |n| @flow_cell.flow_cell_lanes.build(:lane_number => n) }
 
@@ -39,6 +43,10 @@ class FlowCellsController < ApplicationController
 
   # GET /flow_cells/1/edit
   def edit
+    if(params[:show_all_samples] == "true")
+      load_dropdown_selections_all
+    end
+    
     @flow_cell = FlowCell.find(params[:id])
   end
 
