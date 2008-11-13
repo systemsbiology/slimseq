@@ -1,4 +1,4 @@
-"Sample ID","Submission Date","Short Sample Name","Sample Name","Project","Sample Prep Kit","Reference Genome","Desired Read Length","Alignment Start Position","Alignment End Position","Insert Size","Budget Number","Comment","Naming Scheme"
+"Sample ID","Submission Date","Name On Tube","Sample Description","Project","Sample Prep Kit","Reference Genome","Desired Read Length","Alignment Start Position","Alignment End Position","Insert Size","Budget Number","Comment","Naming Scheme"
 420467329,02/10/2006,"yng1","Young","MouseGroup","ChIP-Seq","weevil v1",36,1,22,150,1234,,"None"
 420467330,02/11/2006,"old1","Old1","Bob's Stuff","Tag Counting","weevil v2",26,2,36,200,5678,"lots of updates","None"
 420467331,02/10/2006,"vold","Very_Old","MouseGroup","ChIP-Seq","weevil v1",36,1,22,150,1234,,"None"

@@ -1,2 +1,2 @@
-"Sample ID","Submission Date","Short Sample Name","Sample Name","Project","Sample Prep Kit","Reference Genome","Desired Read Length","Alignment Start Position","Alignment End Position","Insert Size","Budget Number","Comment","Naming Scheme","Strain","Perturbation","Perturbation Time","Replicate","Subject Number"
+"Sample ID","Submission Date","Name On Tube","Sample Description","Project","Sample Prep Kit","Reference Genome","Desired Read Length","Alignment Start Position","Alignment End Position","Insert Size","Budget Number","Comment","Naming Scheme","Strain","Perturbation","Perturbation Time","Replicate","Subject Number"
 ,11/05/2008,"s12","wt_heat_24_A_32236","Bob's Stuff","ChIP-Seq","weevil v1",36,1,22,150,1234,,"Yeast Scheme","wild-type","heat",24,"A",32236

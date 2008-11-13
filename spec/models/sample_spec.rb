@@ -174,8 +174,8 @@ describe Sample do
       csv.shift.should eql([
         "Sample ID",
         "Submission Date",
-        "Short Sample Name",
-        "Sample Name",
+        "Name On Tube",
+        "Sample Description",
         "Project",
         "Sample Prep Kit",
         "Reference Genome",
@@ -284,8 +284,8 @@ describe Sample do
       csv.shift.should eql([
         "Sample ID",
         "Submission Date",
-        "Short Sample Name",
-        "Sample Name",
+        "Name On Tube",
+        "Sample Description",
         "Project",
         "Sample Prep Kit",
         "Reference Genome",
