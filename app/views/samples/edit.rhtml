@@ -8,8 +8,8 @@
   <p><label for="sample_0_submission_date">Date</label><br/>
   <%= date_select 'sample', 'submission_date', :index => 0 %></p>
 
-  <p><label for="sample_0_short_sample_name">Short Sample Name</label><br/>
-  <%= text_field 'sample', 'short_sample_name', :index => 0 %></p>
+  <p><label for="sample_0_name_on_tube">Short Sample Name</label><br/>
+  <%= text_field 'sample', 'name_on_tube', :index => 0 %></p>
 
   <p>Sample Description<br/>
     <% if @sample.naming_scheme != nil %>
@@ -21,11 +21,11 @@
           <% end %>
         </tr>
           <tr>
-            <%= render :partial => 'samples/schemed_sample_name' %>
+            <%= render :partial => 'samples/schemed_sample_description' %>
           </tr>
       </table>
     <% else %>
-      <%= text_field :sample, :sample_name, :index => 0,
+      <%= text_field :sample, :sample_description, :index => 0,
                     :size => 30 %>
     <% end %>
   </p>

@@ -1,8 +1,7 @@
 <h2>Home</h2>
 
 <p>This is <b><%= SiteConfig.site_name %></b>, an instance of the SLIMseq
-software for <%= SiteConfig.organization_name %>.<br>Please visit the <a href="http://slimseq.systemsbiology.net">
-SLIMseq web site</a> for documentation and additional information.</p>
+software for <%= SiteConfig.organization_name %>.</p>
 
 <h3>Samples Submitted</h3>
 
@@ -20,8 +19,8 @@ SLIMseq web site</a> for documentation and additional information.</p>
         <% for sample in @samples %>
           <tr>
             <td><%=h sample.submission_date %></td>
-            <td><%=h sample.short_sample_name %></td>
-            <td><%=h sample.sample_name %></td>
+            <td><%=h sample.name_on_tube %></td>
+            <td><%=h sample.sample_description %></td>
             <td><%=h sample.status %></td>
             <td><%= link_to 'Edit', :controller => 'samples', :action => 'edit', :id => sample %></td>
             <td><%= link_to 'Destroy', { :controller => 'samples', :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>

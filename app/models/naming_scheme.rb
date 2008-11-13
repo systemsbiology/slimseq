@@ -96,7 +96,7 @@ class NamingScheme < ActiveRecord::Base
     return selections
   end
   
-  def generate_sample_name(schemed_params)
+  def generate_sample_description(schemed_params)
     name = ""
     
     for element in ordered_naming_elements

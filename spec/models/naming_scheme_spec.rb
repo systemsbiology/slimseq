@@ -25,7 +25,7 @@ describe NamingScheme do
         "Subject Number" => "3283"
       }
       
-      @naming_scheme.generate_sample_name(schemed_params).should == "wt_HT_024_A_3283"
+      @naming_scheme.generate_sample_description(schemed_params).should == "wt_HT_024_A_3283"
     end
   end
 
@@ -37,7 +37,7 @@ describe NamingScheme do
         "Subject Number" => "3283"
       }
       
-      @naming_scheme.generate_sample_name(schemed_params).should == "wt___A_3283"
+      @naming_scheme.generate_sample_description(schemed_params).should == "wt___A_3283"
     end
   end
   

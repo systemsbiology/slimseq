@@ -71,9 +71,9 @@ private
         samples[0].budget_number
       )
 
-      description = samples[0].short_sample_name
+      description = samples[0].name_on_tube
       (1..samples.size-1).each do |i|
-        description << ", #{samples[i].short_sample_name}"
+        description << ", #{samples[i].name_on_tube}"
       end
 
       Charge.create(

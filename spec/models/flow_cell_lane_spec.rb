@@ -77,7 +77,7 @@ describe FlowCellLane do
       Charge.should_receive(:create).with(
         :charge_set => @charge_set,
         :date => Date.today,
-        :description => "#{@sample_1.short_sample_name}, #{@sample_2.short_sample_name}",
+        :description => "#{@sample_1.name_on_tube}, #{@sample_2.name_on_tube}",
         :cost => @charge_template.cost)
       
       @flow_cell_lane.sequence!

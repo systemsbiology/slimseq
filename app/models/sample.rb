@@ -15,7 +15,7 @@ class Sample < ActiveRecord::Base
   has_many :sample_terms, :dependent => :destroy
   has_many :sample_texts, :dependent => :destroy
   
-  validates_presence_of :sample_name, :short_sample_name, :submission_date, :budget_number,
+  validates_presence_of :sample_description, :name_on_tube, :submission_date, :budget_number,
     :reference_genome_id, :sample_prep_kit_id, :desired_read_length, :project_id
   validates_numericality_of :alignment_start_position, :greater_than_or_equal_to => 1
   validates_numericality_of :alignment_end_position, :greater_than_or_equal_to => 1
@@ -50,7 +50,7 @@ class Sample < ActiveRecord::Base
   end
   
   def short_and_long_name
-    "#{short_sample_name} (#{sample_name})"
+    "#{name_on_tube} (#{sample_description})"
   end
   
   # override new method to handle naming scheme stuff
@@ -82,7 +82,7 @@ class Sample < ActiveRecord::Base
     # create the new records
     self.sample_terms = terms_for(attributes)
     self.sample_texts = texts_for(attributes)
-    self.sample_name = naming_scheme.generate_sample_name(attributes)   
+    self.sample_description = naming_scheme.generate_sample_description(attributes)   
   end
   
   def naming_element_visibility
@@ -110,27 +110,27 @@ class Sample < ActiveRecord::Base
   end  
   
   def validate
-    # make sure date/short_sample_name/sample_name combo is unique
-    s = Sample.find_by_submission_date_and_short_sample_name_and_sample_name(
-        submission_date, short_sample_name, sample_name)
+    # make sure date/name_on_tube/sample_description combo is unique
+    s = Sample.find_by_submission_date_and_name_on_tube_and_sample_description(
+        submission_date, name_on_tube, sample_description)
     if( s != nil && s.id != id )
-      errors.add("Duplicate submission date/short_sample_name/sample_name")
+      errors.add("Duplicate submission date/name_on_tube/sample_description")
     end
     
     # look for all the things that infuriate GCOS or SBEAMS:
     # * non-existent sample name
     # * spaces
     # * characters other than underscores and dashes
-    if sample_name == nil
+    if sample_description == nil
       errors.add("Sample name must be supplied")
-    elsif sample_name[/\ /] != nil ||
-        sample_name[/\+/] != nil ||
-        sample_name[/\&/] != nil ||
-        sample_name[/\#/] != nil ||
-        sample_name[/\(/] != nil ||
-        sample_name[/\)/] != nil ||
-        sample_name[/\//] != nil ||
-        sample_name[/\\/] != nil
+    elsif sample_description[/\ /] != nil ||
+        sample_description[/\+/] != nil ||
+        sample_description[/\&/] != nil ||
+        sample_description[/\#/] != nil ||
+        sample_description[/\(/] != nil ||
+        sample_description[/\)/] != nil ||
+        sample_description[/\//] != nil ||
+        sample_description[/\\/] != nil
       errors.add("Sample name must contain only letters, numbers, underscores and dashes or it")
     end
   end
@@ -175,8 +175,8 @@ class Sample < ActiveRecord::Base
           csv << [ # cel_file,
             sample.id,
             sample.submission_date.to_s,
-            sample.short_sample_name,
-            sample.sample_name,
+            sample.name_on_tube,
+            sample.sample_description,
             sample.project.name,
             sample.sample_prep_kit.name,
             sample.reference_genome.name,
@@ -238,8 +238,8 @@ class Sample < ActiveRecord::Base
           column_values = [ # cel_file,
             sample.id,
             sample.submission_date.to_s,
-            sample.short_sample_name,
-            sample.sample_name,
+            sample.name_on_tube,
+            sample.sample_description,
             sample.project.name,
             sample.sample_prep_kit.name,
             sample.reference_genome.name,
@@ -355,7 +355,7 @@ class Sample < ActiveRecord::Base
                   :optional => true,
                   :naming_scheme_id => naming_scheme.id,
                   :free_text => false,
-                  :include_in_sample_name => true,
+                  :include_in_sample_description => true,
                   :dependent_element_id => 0)
                 current_element_order += 1
               end
@@ -474,8 +474,8 @@ class Sample < ActiveRecord::Base
 
     if(!update_attributes(
           :submission_date => row[1],
-          :short_sample_name => row[2],
-          :sample_name => row[3],
+          :name_on_tube => row[2],
+          :sample_description => row[3],
           :project_id => project.id,
           :sample_prep_kit_id => sample_prep_kit.id,
           :reference_genome_id => reference_genome.id,

@@ -1,6 +1,6 @@
 --- 
 strain: 
-  include_in_sample_name: true
+  include_in_sample_description: true
   free_text: false
   element_order: 1
   name: Strain
@@ -9,7 +9,7 @@ strain:
   group_element: true
   depends_upon_element: 
 perturbation: 
-  include_in_sample_name: true
+  include_in_sample_description: true
   free_text: false
   element_order: 2
   name: Perturbation
@@ -18,7 +18,7 @@ perturbation:
   group_element: true
   depends_upon_element: 
 replicate: 
-  include_in_sample_name: false
+  include_in_sample_description: false
   free_text: false
   element_order: 4
   name: Replicate
@@ -27,7 +27,7 @@ replicate:
   group_element: false
   depends_upon_element: 
 perturbation_time: 
-  include_in_sample_name: true
+  include_in_sample_description: true
   free_text: false
   element_order: 3
   name: Perturbation Time
@@ -36,7 +36,7 @@ perturbation_time:
   group_element: true
   depends_upon_element: perturbation
 subject_number: 
-  include_in_sample_name: true
+  include_in_sample_description: true
   free_text: true
   element_order: 5
   name: Subject Number

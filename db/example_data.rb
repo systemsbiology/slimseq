@@ -98,8 +98,8 @@ module FixtureReplacement
     s.user = default_user
     s.project = default_project
     s.submission_date = Date.today
-    s.short_sample_name = String.random(5)
-    s.sample_name = String.random(30)
+    s.name_on_tube = String.random(5)
+    s.sample_description = String.random(30)
     s.sample_prep_kit = default_sample_prep_kit
     s.insert_size = 200
     s.desired_read_length = 36

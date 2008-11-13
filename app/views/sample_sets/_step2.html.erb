@@ -36,14 +36,14 @@
         <%= error_messages_for 'sample' %>
           <td><%=h @sample.submission_date %>
               <%= hidden_field :sample, :submission_date, :index =>@n %></td>
-          <td><%= text_field :sample, :short_sample_name, :index =>@n,
+          <td><%= text_field :sample, :name_on_tube, :index =>@n,
                   :size => 10 %></td>
 
           <% if @naming_scheme == nil %>
-            <td><%= text_field :sample, :sample_name, :index =>@n,
+            <td><%= text_field :sample, :sample_description, :index =>@n,
                     :size => 30 %></td>
           <% else %>
-            <%= render :partial => 'samples/schemed_sample_name' %>
+            <%= render :partial => 'samples/schemed_sample_description' %>
           <% end %>
           
           <td><%= text_field :sample, :comment, :index =>@n %></td>

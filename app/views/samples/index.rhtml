@@ -19,8 +19,8 @@
       <tr>
       <td><%= check_box 'selected_samples', sample.id %></td>
       <td><%=h sample.submission_date %></td>
-      <td><%=h sample.short_sample_name %></td>
-      <td><%=h sample.sample_name %></td>
+      <td><%=h sample.name_on_tube %></td>
+      <td><%=h sample.sample_description %></td>
       <td><%=h sample.status %></td>
       <td><%= link_to 'Edit', edit_sample_path(sample) %></td>
       <td><%= link_to 'Destroy', sample, :confirm => 'Are you sure?', :method => :delete %></td>

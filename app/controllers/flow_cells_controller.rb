@@ -91,13 +91,13 @@ class FlowCellsController < ApplicationController
 private
 
   def load_dropdown_selections_only_submitted
-    @samples = Sample.find_all_by_control(true, :order => "short_sample_name ASC")
+    @samples = Sample.find_all_by_control(true, :order => "name_on_tube ASC")
     @samples += Sample.find_all_by_control_and_status(false, 'submitted',
-      :order => "short_sample_name ASC")
+      :order => "name_on_tube ASC")
   end
   
   def load_dropdown_selections_all
-    @samples = Sample.find_all_by_control(true, :order => "short_sample_name ASC")
-    @samples += Sample.find_all_by_control(false, :order => "short_sample_name ASC")
+    @samples = Sample.find_all_by_control(true, :order => "name_on_tube ASC")
+    @samples += Sample.find_all_by_control(false, :order => "name_on_tube ASC")
   end
 end

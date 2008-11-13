@@ -340,13 +340,13 @@ describe Sample do
 
       # one change was made to sample 1
       sample_1 = Sample.find( samples(:sample1).id )
-      sample_1.short_sample_name.should == "yng1"
+      sample_1.name_on_tube.should == "yng1"
 
       # multiple changes to sample 2
       sample_2 = Sample.find( samples(:sample2).id )
       sample_2.submission_date.to_s.should == "2006-02-11"
-      sample_2.short_sample_name.should == "old1"
-      sample_2.sample_name.should == "Old1"
+      sample_2.name_on_tube.should == "old1"
+      sample_2.sample_description.should == "Old1"
       sample_2.project_id.should == projects(:another).id
       sample_2.sample_prep_kit_id.should == sample_prep_kits(:tag_count).id
       sample_2.reference_genome_id.should == reference_genomes(:weevil_2).id
@@ -412,7 +412,7 @@ describe Sample do
       errors.should == ""
 
       # changes to schemed sample
-      sample = Sample.find(:first, :conditions => "short_sample_name = 's12'")
+      sample = Sample.find(:first, :conditions => "name_on_tube = 's12'")
       sample.should_not be_nil
       SampleTerm.find(:first, :conditions => {
         :sample_id => sample.id,

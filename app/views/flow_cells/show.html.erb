@@ -18,7 +18,7 @@
     <td><%=h lane.lane_number %></td>
     <td>
       <% lane.samples.each do |sample| %>
-        <%=h sample.short_sample_name %> (<%=h sample.sample_name %>)
+        <%=h sample.name_on_tube %> (<%=h sample.sample_description %>)
       <% end %>
     </td>
     <td><%=h lane.starting_concentration %> ng/mL</td>
