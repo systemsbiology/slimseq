@@ -5,6 +5,10 @@
 
 <% form_tag sample_path(@sample), :method => :put do -%>
 
+  <p><label for="sample_0_set_sample_prep_kit_id">Submitted By</label><br/>
+  <%= collection_select 'sample', 'submitted_by_id',
+    @users, 'id', 'full_name', {:prompt => true}, {:index => 0} %></p>
+
   <p><label for="sample_0_submission_date">Date</label><br/>
   <%= date_select 'sample', 'submission_date', :index => 0 %></p>
 
