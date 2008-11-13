@@ -16,7 +16,7 @@ describe SequencingRunsController do
   describe "responding to GET index" do
 
     it "should expose all sequencing_runs as @sequencing_runs" do
-      SequencingRun.should_receive(:find).with(:all, "date DESC").and_return([mock_sequencing_run])
+      SequencingRun.should_receive(:find).with(:all, :order => "date DESC").and_return([mock_sequencing_run])
       get :index
       assigns[:sequencing_runs].should == [mock_sequencing_run]
     end
@@ -25,7 +25,7 @@ describe SequencingRunsController do
   
       it "should render all sequencing_runs as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        SequencingRun.should_receive(:find).with(:all, "date DESC").and_return(sequencing_runs = mock("Array of SequencingRuns"))
+        SequencingRun.should_receive(:find).with(:all, :order => "date DESC").and_return(sequencing_runs = mock("Array of SequencingRuns"))
         sequencing_runs.should_receive(:to_xml).and_return("generated XML")
         get :index
         response.body.should == "generated XML"

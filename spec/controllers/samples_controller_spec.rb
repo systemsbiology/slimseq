@@ -15,6 +15,8 @@ describe SamplesController do
     @current_user.stub!(:accessible_lab_groups).and_return(lab_groups)
     projects = [mock_model(Project), mock_model(Project)]
     @current_user.stub!(:accessible_projects).and_return(projects)
+    users = [mock_model(User), mock_model(User)]
+    @current_user.stub!(:accessible_users).and_return(users)
     NamingScheme.stub!(:find).and_return(
       [mock_model(NamingScheme), mock_model(NamingScheme)]
     )
