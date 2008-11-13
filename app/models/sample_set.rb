@@ -21,4 +21,11 @@ class SampleSet < ActiveRecord::BaseWithoutTable
   has_many :samples
   
   belongs_to :naming_scheme
+  
+  def self.new(attributes=nil)
+    sample_set = super(attributes)
+    sample_set.alignment_end_position = 36
+    
+    return sample_set
+  end
 end
