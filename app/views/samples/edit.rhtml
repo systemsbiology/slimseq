@@ -44,13 +44,14 @@
 
   <p><label for="sample_0_reference_genome_id">Reference Genome</label><br/>
   <%= collection_select 'sample', 'reference_genome_id',
-    @reference_genomes, 'id', 'name', {:prompt => true}, {:index => 0} %><br/>
+    @reference_genomes, 'id', 'description', {:prompt => true}, {:index => 0} %><br/>
     * Contact the facility to add a new reference genome</p>
 
   <p><label for="sample_0_desired_read_length">Desired Number of Cycles</label><br/>
     <select id='sample_0_desired_read_length' name='sample[0][desired_read_length]'>
       <option value="">Please select</option>
-      <%= options_from_collection_for_select (1..36).to_a, "to_i", "to_s", selected = 36 %>
+      <%= options_from_collection_for_select (1..36).to_a, "to_i", "to_s",
+        selected = @sample.desired_read_length %>
     </select></p>
 
   <p>Alignment bases</p>
