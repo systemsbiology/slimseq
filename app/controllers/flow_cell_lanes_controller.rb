@@ -6,7 +6,7 @@ class FlowCellLanesController < ApplicationController
 
     respond_to do |format|
       format.xml  { render :xml => @flow_cell_lanes }
-      format.json { render :json => @flow_cell_lanes[0].to_json(
+      format.json { render :json => @flow_cell_lanes.to_json(
         :except => [:lock_version, :flow_cell_id],
         :include => {
           :flow_cell => {
