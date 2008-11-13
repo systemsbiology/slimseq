@@ -4,6 +4,7 @@
   <table class="sortable">
     <tr>
       <th>Lane</th>
+      <th>Sample</th>
       <th>Reference Genome</th>
       <th>ELAND Seed Length</th>
       <th>ELAND Max Matches</th>
@@ -14,6 +15,7 @@
       <tr>
         <td><%=h lane.lane_number %>
             <%= hidden_field_tag "lanes[#{n}][lane_number]", lane.lane_number %></td>
+        <td><%=h lane.samples[0].short_and_long_name %></td>
         <td><%= text_field_tag "lanes[#{n}][eland_genome]",
                                lane.samples[0].reference_genome.fasta_path, :size => 50 %></td>
         <td><%= text_field_tag "lanes[#{n}][eland_seed_length]", 20 %></td>
