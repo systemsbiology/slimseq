@@ -191,11 +191,16 @@ public
   def accessible_users
     lab_group_ids = get_lab_group_ids
     return User.find(:all, :include => :lab_memberships,
-      :conditions => ["lab_memberships.lab_group_id IN (?)", lab_group_ids])    
+      :conditions => ["lab_memberships.lab_group_id IN (?)", lab_group_ids],
+      :order => "lastname ASC"
+    )    
   end
   
   def accessible_projects
     lab_group_ids = get_lab_group_ids
-    return Project.find(:all, :conditions => ["lab_group_id IN (?)", lab_group_ids])
+    return Project.find(:all,
+      :conditions => ["lab_group_id IN (?)", lab_group_ids],
+      :order => "name ASC"
+    )
   end
 end
