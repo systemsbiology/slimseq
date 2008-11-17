@@ -3,28 +3,24 @@ class NamingSchemesController < ApplicationController
   before_filter :staff_or_admin_required
   
   def index
-    list
+    @naming_schemes = NamingScheme.find(:all, :order => "name ASC")
 
     respond_to do |format|
-      format.html { render :action => 'list' }
-      format.json { render :json => @naming_schemes.to_json(
-        :only => :name,
-        :include => {
-          :naming_elements => {
-            :only => :name,
-            :include => {
-              :naming_terms => {
-                :only => :term
-              }
-            }
-          }
-        }
-      ) }
+      format.html # index.rhtml
+      format.xml  { render :xml => @naming_schemes }
+      format.json  { render :json => @naming_schemes.
+        collect{|x| x.summary_hash}.to_json 
+      }
     end
   end
 
-  def list
-    @naming_schemes = NamingScheme.find(:all, :order => "name ASC")
+  def show
+    @naming_scheme = NamingScheme.find(params[:id])
+    
+    respond_to do |format|
+      format.xml  { render :xml => @naming_scheme }
+      format.json  { render :json => @naming_scheme.detail_hash.to_json }
+    end    
   end
 
   def new
@@ -35,7 +31,7 @@ class NamingSchemesController < ApplicationController
     @naming_scheme = NamingScheme.new(params[:naming_scheme])
     if @naming_scheme.save
       flash[:notice] = 'Naming scheme was successfully created.'
-      redirect_to :action => 'list'
+      redirect_to naming_schemes_url
     else
       render :action => 'new'
     end
@@ -52,7 +48,7 @@ class NamingSchemesController < ApplicationController
     begin
       if @naming_scheme.update_attributes(params[:naming_scheme])  
         flash[:notice] = 'Naming scheme was successfully updated.'
-        redirect_to :action => 'list'
+        redirect_to naming_schemes_url
       else
         render :action => 'rename'
       end
@@ -66,7 +62,7 @@ class NamingSchemesController < ApplicationController
   def destroy
     begin
       NamingScheme.find(params[:id]).destroy
-      redirect_to :action => 'list'
+      redirect_to naming_schemes_url
     rescue
       flash[:warning] = "Cannot delete naming scheme due to association " +
                         "with naming elements."

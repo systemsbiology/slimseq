@@ -38,7 +38,7 @@
             <li><%= link_to 'Users', users_path %></li>
             <li><%= link_to 'Lab Groups', {:controller => 'lab_groups', :action => 'list'} %></li>
             <li><%= link_to 'Projects', {:controller => 'projects', :action => 'list'} %></li>
-            <li><%= link_to 'Naming Schemes', {:controller => 'naming_schemes', :action => 'list'} %></li>            
+            <li><%= link_to 'Naming Schemes', naming_schemes_path %></li>            
           <% end %>
           <% if current_user.admin? %>
             <li class="category">Admin</li>

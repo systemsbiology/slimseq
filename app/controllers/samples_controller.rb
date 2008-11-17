@@ -1,5 +1,6 @@
 class SamplesController < ApplicationController
-  before_filter :load_dropdown_selections, :login_required
+  before_filter :login_required
+  before_filter :load_dropdown_selections
   before_filter :staff_or_admin_required, :only => [:bulk_destroy]
   
   def index
@@ -19,41 +20,19 @@ class SamplesController < ApplicationController
     respond_to do |format|
       format.html  #index.html
       format.xml   { render :xml => @samples }
-      format.json  { render :json => @samples.to_json(
-        :except => [:lock_version, :sample_prep_kit_id, :project_id, :naming_scheme_id,
-                    :submitted_by_id, :sample_set_id, :reference_genome_id],
-        :include => {
-          :project => {
-            :only => :name
-          },
-          :sample_prep_kit => {
-            :only => :name
-          },
-          :user => {
-            :only => :login
-          },
-          :reference_genome => {
-            :only => :name
-          },
-          :sample_texts => {
-            :only => :text
-          },
-          :sample_terms => {
-            :only => :naming_term,
-            :include => {
-              :naming_term => {
-                :only => [:term, :naming_element],
-                :include => {
-                  :naming_element => {
-                    :only => :name
-                  }
-                }
-              }
-            }
-          }
-        }
-      ) }
+      format.json  { render :json => @samples.
+        collect{|x| x.summary_hash}.to_json 
+      }
     end
+  end
+  
+  def show
+    @sample = Sample.find(params[:id])
+    
+    respond_to do |format|
+      format.xml   { render :xml => @sample }
+      format.json  { render :json => @sample.detail_hash.to_json }
+    end    
   end
   
   def edit

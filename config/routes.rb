@@ -4,6 +4,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :samples
   
   map.resources :instruments
+  
+  map.resources :naming_schemes
 
   map.resources :sequencing_runs do |sequencing_runs|
     sequencing_runs.resources :gerald_configurations, :name_prefix => "sequencing_run_"

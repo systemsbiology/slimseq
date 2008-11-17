@@ -60,29 +60,60 @@ describe SamplesController do
       
     end
 
+    describe "with mime type of json" do
+  
+      it "should render sample lane summaries as json" do
+        sample_1 = mock_model(Sample)
+        sample_2 = mock_model(Sample)
+        sample_1.should_receive(:summary_hash).and_return( {:n => 1} )
+        sample_2.should_receive(:summary_hash).and_return( {:n => 2} )
+        samples = [sample_1, sample_2]
+        
+        request.env["HTTP_ACCEPT"] = "application/json"
+        Sample.should_receive(:find).twice.and_return(samples)
+        get :index
+        response.body.should == "[{\"n\": 1}, {\"n\": 2}]"
+      end
+    
+    end
+    
   end
 
-#  describe "responding to GET show" do
-#
-#    it "should expose the requested sample as @sample" do
-#      Sample.should_receive(:find).with("37").and_return(mock_sample)
-#      get :show, :id => "37"
-#      assigns[:sample].should equal(mock_sample)
-#    end
-#    
-#    describe "with mime type of xml" do
-#
-#      it "should render the requested sample as xml" do
-#        request.env["HTTP_ACCEPT"] = "application/xml"
-#        Sample.should_receive(:find).with("37").and_return(mock_sample)
-#        mock_sample.should_receive(:to_xml).and_return("generated XML")
-#        get :show, :id => "37"
-#        response.body.should == "generated XML"
-#      end
-#
-#    end
-#    
-#  end
+  describe "responding to GET show" do
+
+    it "should expose the requested sample as @sample" do
+      Sample.should_receive(:find).with("37").and_return(mock_sample)
+      get :show, :id => "37"
+      assigns[:sample].should equal(mock_sample)
+    end
+    
+    describe "with mime type of xml" do
+
+      it "should render the requested sample as xml" do
+        request.env["HTTP_ACCEPT"] = "application/xml"
+        Sample.should_receive(:find).with("37").and_return(mock_sample)
+        mock_sample.should_receive(:to_xml).and_return("generated XML")
+        get :show, :id => "37"
+        response.body.should == "generated XML"
+      end
+
+    end
+
+    describe "with mime type of json" do
+  
+      it "should render the flow cell lane detail as json" do
+        sample = mock_model(Sample)
+        sample.should_receive(:detail_hash).and_return( {:n => 1} )
+        
+        request.env["HTTP_ACCEPT"] = "application/json"
+        Sample.should_receive(:find).with("37").and_return(sample)
+        get :show, :id => 37
+        response.body.should == "{\"n\": 1}"
+      end
+    
+    end
+    
+  end
 
   describe "responding to GET edit" do
 

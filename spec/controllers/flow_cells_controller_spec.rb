@@ -32,6 +32,24 @@ describe FlowCellsController do
     
     end
 
+    describe "with mime type of json" do
+  
+      it "should render flow cell summaries as json" do
+        flow_cell_1 = mock_model(FlowCell)
+        flow_cell_2 = mock_model(FlowCell)
+        flow_cell_1.should_receive(:summary_hash).and_return( {:n => 1} )
+        flow_cell_2.should_receive(:summary_hash).and_return( {:n => 2} )
+        flow_cells = [flow_cell_1, flow_cell_2]
+        
+        request.env["HTTP_ACCEPT"] = "application/json"
+        FlowCell.should_receive(:find).with(:all, {:order=>"date_generated DESC"}).
+          and_return(flow_cells)
+        get :index
+        response.body.should == "[{\"n\": 1}, {\"n\": 2}]"
+      end
+    
+    end
+    
   end
 
   describe "responding to GET show" do
@@ -52,6 +70,20 @@ describe FlowCellsController do
         response.body.should == "generated XML"
       end
 
+    end
+
+    describe "with mime type of json" do
+  
+      it "should render the flow cell detail as json" do
+        flow_cell = mock_model(FlowCell)
+        flow_cell.should_receive(:detail_hash).and_return( {:n => 1} )
+        
+        request.env["HTTP_ACCEPT"] = "application/json"
+        FlowCell.should_receive(:find).with("37").and_return(flow_cell)
+        get :show, :id => 37
+        response.body.should == "{\"n\": 1}"
+      end
+    
     end
     
   end

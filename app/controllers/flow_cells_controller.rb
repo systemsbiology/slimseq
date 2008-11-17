@@ -11,6 +11,9 @@ class FlowCellsController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @flow_cells }
+      format.json  { render :json => @flow_cells.
+        collect{|x| x.summary_hash}.to_json
+      }
     end
   end
 
@@ -22,6 +25,7 @@ class FlowCellsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @flow_cell }
+      format.json  { render :json => @flow_cell.detail_hash }
     end
   end
 
