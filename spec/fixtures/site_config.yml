@@ -6,3 +6,4 @@ first:
   organization_name: Test Organization
   site_name: Test Site
   administrator_email: admin@example.com
+  site_url: http://example.com
