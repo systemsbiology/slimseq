@@ -1,4 +1,6 @@
 class NamingScheme < ActiveRecord::Base
+  require 'csv'
+  
   has_many :naming_elements, :dependent => :destroy
   has_many :samples, :dependent => :destroy
   has_many :sample_sets
@@ -215,5 +217,23 @@ class NamingScheme < ActiveRecord::Base
       :name => name,
       :naming_elements => naming_element_array
     }
+  end
+  
+  def to_csv
+    csv_file_name = "#{RAILS_ROOT}/tmp/csv/#{SiteConfig.site_name}_naming_scheme_" +
+      "#{name}-#{Date.today.to_s}.csv"
+    
+    csv_file = File.open(csv_file_name, 'wb')
+    CSV::Writer.generate(csv_file) do |csv|
+      naming_elements.each do |ne|
+        if(ne.free_text == true)
+          csv << [ne.name, "FREE TEXT"]
+        else
+          csv << [ne.name] + ne.naming_terms.collect {|nt| nt.term}
+        end
+      end
+    end
+    
+    csv_file.close
   end
 end
