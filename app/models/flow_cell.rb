@@ -35,6 +35,25 @@ class FlowCell < ActiveRecord::Base
     end
   end
   
+  def summary_hash
+    return {
+      :id => id,
+      :name => name,
+      :date_generated => date_generated,
+      :uri => "#{SiteConfig.site_url}/flow_cells/#{id}"
+    }
+  end
+  
+  def detail_hash
+    return {
+      :id => id,
+      :name => name,
+      :date_generated => date_generated,
+      :comment => comment,
+      :status => status
+    }
+  end
+  
 private
   
   def sequence_lanes
