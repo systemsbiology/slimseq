@@ -93,13 +93,15 @@ module FixtureReplacement
     spk.name = String.random
   end
 
-#  attributes_for :sample_term do |a|
-#    
-#  end
-#
-#  attributes_for :sample_text do |a|
-#    
-#  end
+  attributes_for :sample_term do |st|
+    st.sample = default_sample
+    st.naming_term = default_naming_term
+  end
+
+  attributes_for :sample_text do |st|
+    st.sample = default_sample
+    st.naming_element = default_naming_element
+  end
 
   attributes_for :sample do |s|
     s.user = default_user
