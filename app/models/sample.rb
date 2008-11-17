@@ -563,4 +563,55 @@ class Sample < ActiveRecord::Base
              "n#{desired_read_length-alignment_end_position}"
     end
   end
+  
+  def summary_hash
+    return {
+      :id => id,
+      :sample_description => sample_description,
+      :submission_date => submission_date,
+      :uri => "#{SiteConfig.site_url}/samples/#{id}"
+    }
+  end
+  
+  def detail_hash
+    sample_term_array = Array.new
+    sample_terms.each do |st|
+      sample_term_array << {
+        st.naming_term.naming_element.name => st.naming_term.term
+      }
+    end
+    
+    sample_text_array = Array.new
+    sample_texts.each do |st|
+      sample_text_array << {
+        st.naming_element.name => st.text
+      }
+    end
+    
+    return {
+      :id => id,
+      :submitted_by => user ? user.full_name : "",
+      :name_on_tube => name_on_tube,
+      :sample_description => sample_description,
+      :project => project.name,
+      :submission_date => submission_date,
+      :sample_prep_kit => sample_prep_kit.name,
+      :insert_size => insert_size,
+      :desired_number_of_cycles => desired_read_length,
+      :alignment_start_position => alignment_start_position,
+      :alignment_end_position => alignment_end_position,
+      :reference_genome => {
+        :name => reference_genome.name,
+        :organism => reference_genome.organism.name
+      },
+      :status => status,
+      :naming_scheme => naming_scheme ? naming_scheme.name : "",
+      :budget_number => budget_number,
+      :comment => comment,
+      :sample_terms => sample_term_array,
+      :sample_texts => sample_text_array,
+      :flow_cell_lane_uris => flow_cell_lane_ids.
+        collect {|x| "#{SiteConfig.site_url}/flow_cell_lanes/#{x}" }
+    }
+  end
 end
