@@ -108,4 +108,42 @@ describe FlowCellLane do
     sample_1.reload.status.should == "clustered"
     sample_2.reload.status.should == "clustered"
   end
+  
+  it "should provide a hash of summary attributes" do
+    flow_cell_lane = create_flow_cell_lane(:lane_number => 1)
+    
+    flow_cell_lane.summary_hash.should == {
+      :id => flow_cell_lane.id,
+      :lane_number => 1,
+      :flow_cell_uri => "http://example.com/flow_cells/#{flow_cell_lane.flow_cell_id}",
+      :uri => "http://example.com/flow_cell_lanes/#{flow_cell_lane.id}"
+    }
+  end
+
+  it "should provide a hash of detailed attributes" do
+    sample_1 = create_sample
+    sample_2 = create_sample
+    
+    flow_cell_lane = create_flow_cell_lane(
+      :lane_number => 1,
+      :comment => "failed",
+      :starting_concentration => 1000,
+      :loaded_concentration => 2,
+      :raw_data_path => "/path/to/data",
+      :samples => [sample_1, sample_2]
+    )   
+
+    flow_cell_lane.detail_hash.should == {
+      :id => flow_cell_lane.id,
+      :lane_number => 1,
+      :flow_cell_uri => "http://example.com/flow_cells/#{flow_cell_lane.flow_cell_id}",
+      :comment => "failed",
+      :status => "clustered",
+      :starting_concentration => 1000,
+      :loaded_concentration => 2,
+      :raw_data_path => "",
+      :sample_uris => ["http://example.com/samples/#{sample_1.id}",
+                       "http://example.com/samples/#{sample_2.id}"]
+    }
+  end
 end

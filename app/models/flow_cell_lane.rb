@@ -34,6 +34,29 @@ class FlowCellLane < ActiveRecord::Base
     end
   end
   
+  def summary_hash
+    return {
+      :id => id,
+      :flow_cell_uri => "#{SiteConfig.site_url}/flow_cells/#{flow_cell_id}",
+      :lane_number => lane_number,
+      :uri => "#{SiteConfig.site_url}/flow_cell_lanes/#{id}"
+    }
+  end
+  
+  def detail_hash
+    return {
+      :id => id,
+      :flow_cell_uri => "#{SiteConfig.site_url}/flow_cells/#{flow_cell_id}",
+      :lane_number => lane_number,
+      :starting_concentration => starting_concentration,
+      :loaded_concentration => loaded_concentration,
+      :raw_data_path => raw_data_path,
+      :status => status,
+      :comment => comment,
+      :sample_uris => sample_ids.collect {|x| "#{SiteConfig.site_url}/samples/#{x}" }
+    }
+  end
+  
 private
   
   def sequence_samples
