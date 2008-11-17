@@ -183,4 +183,37 @@ class NamingScheme < ActiveRecord::Base
     
     return selections
   end
+  
+  def summary_hash
+    return {
+      :id => id,
+      :name => name,
+      :uri => "#{SiteConfig.site_url}/naming_schemes/#{id}"
+    }
+  end
+  
+  def detail_hash
+    naming_element_array = Array.new
+    naming_elements.find(:all, :order => "element_order ASC").each do |ne|
+      naming_term_array = Array.new
+      ne.naming_terms.find(:all, :order => "term_order ASC").each do |nt|
+        naming_term_array << nt.term
+      end
+      
+      naming_element_array << {
+        :name => ne.name,
+        :group_element => ne.group_element,
+        :optional => ne.optional,
+        :free_text => ne.free_text,
+        :depends_on => ne.depends_upon_element,
+        :naming_terms => naming_term_array
+      }
+    end
+    
+    return {
+      :id => id,
+      :name => name,
+      :naming_elements => naming_element_array
+    }
+  end
 end

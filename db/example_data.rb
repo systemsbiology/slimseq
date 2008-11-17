@@ -53,18 +53,24 @@ module FixtureReplacement
 #  attributes_for :lab_membership do |a|
 #    
 #  end
-#
-#  attributes_for :naming_element do |a|
-#    
-#  end
-#
-#  attributes_for :naming_scheme do |a|
-#    
-#  end
-#
-#  attributes_for :naming_term do |a|
-#    
-#  end
+
+  attributes_for :naming_element do |ne|
+    ne.name = String.random
+    ne.group_element = true
+    ne.optional = true
+    ne.free_text = false
+    ne.dependent_element_id = nil
+  end
+
+  attributes_for :naming_scheme do |ns|
+    ns.name = String.random
+  end
+
+  attributes_for :naming_term do |nt|
+    nt.naming_element = default_naming_element
+    nt.term = String.random
+    nt.abbreviated_term = String.random(3)
+  end
 
   attributes_for :organism do |o|
     o.name = String.random

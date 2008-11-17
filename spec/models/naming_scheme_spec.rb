@@ -118,4 +118,60 @@ describe NamingScheme do
     naming_schemes(:yeast_scheme).element_selections_from_terms(sample_terms).
       should == expected_selections
   end 
+  
+  it "should provide a hash of summary attributes" do
+    naming_scheme = create_naming_scheme(:name => "Beast Scheme")
+    
+    naming_scheme.summary_hash.should == {
+      :id => naming_scheme.id,
+      :name => "Beast Scheme",
+      :uri => "http://example.com/naming_schemes/#{naming_scheme.id}"
+    }
+  end
+
+  it "should provide a hash of detailed attributes" do
+    naming_scheme = create_naming_scheme(:name => "Beast Scheme")
+    
+    naming_element_1 = create_naming_element(
+      :naming_scheme => naming_scheme,
+      :name => "Age"
+    )
+    naming_element_2 = create_naming_element(
+      :naming_scheme => naming_scheme,
+      :name => "Subject Number",
+      :free_text => true
+    )
+    
+    create_naming_term(
+      :naming_element => naming_element_1,
+      :term => "Young"
+    )
+    create_naming_term(
+      :naming_element => naming_element_1,
+      :term => "Old"
+    )
+    
+    naming_scheme.detail_hash.should == {
+      :id => naming_scheme.id,
+      :name => "Beast Scheme",
+      :naming_elements => [
+        {
+          :name => "Age",
+          :group_element => true,
+          :optional => true,
+          :free_text => false,
+          :depends_on => nil,
+          :naming_terms => ["Young", "Old"]
+        },
+        {
+          :name => "Subject Number",
+          :group_element => true,
+          :optional => true,
+          :free_text => true,
+          :depends_on => nil,
+          :naming_terms => []
+        }
+      ]
+    }
+  end
 end
