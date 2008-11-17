@@ -1,6 +1,0 @@
-"CEL File","Sample ID","Submission Date","Short Sample Name","Sample Name","Sample Group Name","Chip Type","Organism","SBEAMS User","Project","Naming Scheme"
-,420467329,"2006-02-10","yng1","Young","Young","Alligator 670 2.0","Mouse","bob","MouseGroup","None"
-"/tmp/20060210_01_Old.CEL",420467330,"2006-02-11","old1","Old1","Old","Mouse 430 2.0","Hyena","robert","Bob's Stuff","None"
-,420467331,"2006-02-10","vold","Very_Old","Old","Alligator 670 2.0","Mouse","bob","MouseGroup","None"
-"/tmp/20060210_02_Very_Very_Old.CEL",420467332,"2006-02-10","vvold","Very_Very_Old","Old","Alligator 670 2.0","Mouse","bob","MouseGroup","None"
-,420467333,"2006-09-10","bb","Bob_B","Bob","Alligator 670 2.0","Mouse","bob","Bob's Stuff","None"

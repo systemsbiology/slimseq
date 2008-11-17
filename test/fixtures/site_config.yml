@@ -1,9 +1,0 @@
---- 
-first: 
-  id: 1
-  track_charges: 1
-  facility_name: Test Facility
-  track_hybridizations: 1
-  organization_name: Test Organization
-  site_name: Test Site
-  administrator_email: admin@example.com
