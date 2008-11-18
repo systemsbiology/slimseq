@@ -95,4 +95,15 @@ class NamingElement < ActiveRecord::Base
       end
     end
   end
+  
+  def sort_terms
+    terms = naming_terms.find(:all, :order => "term ASC")
+
+    count = 1
+    terms.each do |nt|
+      nt.term_order = count
+      nt.save
+      count += 1
+    end
+  end
 end
