@@ -11,6 +11,12 @@ class NamingTermsController < ApplicationController
     # for new naming term form
     @naming_term = NamingTerm.new(:naming_element_id => @naming_element.id)
   end
+  
+  def sort_for_naming_element
+    @naming_element = NamingElement.find(params[:id])
+    @naming_element.sort_terms
+    redirect_to :action => 'list_for_naming_element', :id => @naming_element.id
+  end
 
   def create
     @naming_term = NamingTerm.new(params[:naming_term])

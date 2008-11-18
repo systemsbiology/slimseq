@@ -55,6 +55,7 @@ module FixtureReplacement
 #  end
 
   attributes_for :naming_element do |ne|
+    ne.naming_scheme = default_naming_scheme
     ne.name = String.random
     ne.group_element = true
     ne.optional = true

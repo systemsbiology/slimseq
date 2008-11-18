@@ -38,7 +38,9 @@
 </table>
 
 <%= link_to 'Back to naming elements', :controller => 'naming_elements',
-    :action => 'list_for_naming_scheme', :id => @naming_element.naming_scheme_id %>
+    :action => 'list_for_naming_scheme', :id => @naming_element.naming_scheme_id %> | 
+<%= link_to 'Sort terms alphanumerically', :action => 'sort_for_naming_element',
+    :id => @naming_element.id %>
 
 <hr>
 
