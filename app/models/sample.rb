@@ -569,6 +569,7 @@ class Sample < ActiveRecord::Base
       :id => id,
       :sample_description => sample_description,
       :submission_date => submission_date,
+      :updated_at => updated_at,
       :uri => "#{SiteConfig.site_url}/samples/#{id}"
     }
   end
@@ -595,6 +596,7 @@ class Sample < ActiveRecord::Base
       :sample_description => sample_description,
       :project => project.name,
       :submission_date => submission_date,
+      :updated_at => updated_at,
       :sample_prep_kit => sample_prep_kit.name,
       :insert_size => insert_size,
       :desired_number_of_cycles => desired_read_length,

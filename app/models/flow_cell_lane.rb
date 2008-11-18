@@ -39,6 +39,7 @@ class FlowCellLane < ActiveRecord::Base
       :id => id,
       :flow_cell_uri => "#{SiteConfig.site_url}/flow_cells/#{flow_cell_id}",
       :lane_number => lane_number,
+      :updated_at => updated_at,
       :uri => "#{SiteConfig.site_url}/flow_cell_lanes/#{id}"
     }
   end
@@ -48,6 +49,7 @@ class FlowCellLane < ActiveRecord::Base
       :id => id,
       :flow_cell_uri => "#{SiteConfig.site_url}/flow_cells/#{flow_cell_id}",
       :lane_number => lane_number,
+      :updated_at => updated_at,
       :starting_concentration => starting_concentration,
       :loaded_concentration => loaded_concentration,
       :raw_data_path => raw_data_path,

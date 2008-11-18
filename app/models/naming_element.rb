@@ -10,6 +10,14 @@ class NamingElement < ActiveRecord::Base
   has_many :dependent_elements, :foreign_key => 'dependent_element_id',
              :class_name => 'NamingElement'
   
+  def after_save
+    naming_scheme.update_attributes(:updated_at => Time.now)
+  end
+  
+  def after_destroy
+    naming_scheme.update_attributes(:updated_at => Time.now)
+  end
+  
   def destroy_warning
     naming_terms = NamingTerm.find(:all, :conditions => ["naming_element_id = ?", id])
     sample_texts = SampleText.find(:all, :conditions => ["naming_element_id = ?", id])

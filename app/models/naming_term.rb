@@ -3,6 +3,14 @@ class NamingTerm < ActiveRecord::Base
 
   has_many :sample_terms, :dependent => :destroy
 
+  def after_save
+    naming_element.update_attributes(:updated_at => Time.now)
+  end
+
+  def after_destroy
+    naming_element.update_attributes(:updated_at => Time.now)
+  end
+  
   def destroy_warning
     sample_terms = SampleTerm.find(:all, :conditions => ["naming_term_id = ?", id])
     

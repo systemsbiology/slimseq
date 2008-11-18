@@ -40,6 +40,7 @@ class FlowCell < ActiveRecord::Base
       :id => id,
       :name => name,
       :date_generated => date_generated,
+      :updated_at => updated_at,
       :uri => "#{SiteConfig.site_url}/flow_cells/#{id}"
     }
   end
@@ -49,6 +50,7 @@ class FlowCell < ActiveRecord::Base
       :id => id,
       :name => name,
       :date_generated => date_generated,
+      :updated_at => updated_at,
       :comment => comment,
       :status => status
     }

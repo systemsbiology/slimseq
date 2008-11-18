@@ -190,6 +190,7 @@ class NamingScheme < ActiveRecord::Base
     return {
       :id => id,
       :name => name,
+      :updated_at => updated_at,
       :uri => "#{SiteConfig.site_url}/naming_schemes/#{id}"
     }
   end
@@ -215,6 +216,7 @@ class NamingScheme < ActiveRecord::Base
     return {
       :id => id,
       :name => name,
+      :updated_at => updated_at,
       :naming_elements => naming_element_array
     }
   end
