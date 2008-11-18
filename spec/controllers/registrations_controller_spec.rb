@@ -2,12 +2,10 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe RegistrationsController do
 
-  #Delete these examples and add some real ones
-  it "should use RegistrationsController" do
-    controller.should be_an_instance_of(RegistrationsController)
+  before(:each) do
+    login_as_user
   end
-
-
+  
   describe "GET 'new'" do
     before(:each) do
       @user = mock_model(User)
