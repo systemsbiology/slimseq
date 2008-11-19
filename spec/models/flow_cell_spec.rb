@@ -64,6 +64,7 @@ describe FlowCell do
       :id => flow_cell.id,
       :name => "20WERT",
       :date_generated => Date.today,
+      :updated_at => flow_cell.updated_at,
       :uri => "http://example.com/flow_cells/#{flow_cell.id}"
     }
   end
@@ -79,6 +80,7 @@ describe FlowCell do
       :id => flow_cell.id,
       :name => "20WERT",
       :date_generated => Date.today,
+      :updated_at => flow_cell.updated_at,
       :comment => "failed",
       :status => "clustered"
     }

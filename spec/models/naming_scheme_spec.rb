@@ -125,6 +125,7 @@ describe NamingScheme do
     naming_scheme.summary_hash.should == {
       :id => naming_scheme.id,
       :name => "Beast Scheme",
+      :updated_at => naming_scheme.updated_at,
       :uri => "http://example.com/naming_schemes/#{naming_scheme.id}"
     }
   end
@@ -150,10 +151,11 @@ describe NamingScheme do
       :naming_element => naming_element_1,
       :term => "Old"
     )
-    
-    naming_scheme.detail_hash.should == {
+
+    expected_hash = {
       :id => naming_scheme.id,
       :name => "Beast Scheme",
+      :updated_at => naming_scheme.reload.updated_at,
       :naming_elements => [
         {
           :name => "Age",
@@ -173,5 +175,7 @@ describe NamingScheme do
         }
       ]
     }
+    
+    naming_scheme.detail_hash.should == expected_hash
   end
 end

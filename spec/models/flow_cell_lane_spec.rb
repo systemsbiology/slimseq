@@ -116,6 +116,7 @@ describe FlowCellLane do
       :id => flow_cell_lane.id,
       :lane_number => 1,
       :flow_cell_uri => "http://example.com/flow_cells/#{flow_cell_lane.flow_cell_id}",
+      :updated_at => flow_cell_lane.updated_at,
       :uri => "http://example.com/flow_cell_lanes/#{flow_cell_lane.id}"
     }
   end
@@ -137,6 +138,7 @@ describe FlowCellLane do
       :id => flow_cell_lane.id,
       :lane_number => 1,
       :flow_cell_uri => "http://example.com/flow_cells/#{flow_cell_lane.flow_cell_id}",
+      :updated_at => flow_cell_lane.updated_at,
       :comment => "failed",
       :status => "clustered",
       :starting_concentration => 1000,

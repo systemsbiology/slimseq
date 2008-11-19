@@ -455,17 +455,8 @@ describe Sample do
       :id => sample.id,
       :sample_description => "mutant_yeast",
       :submission_date => Date.today,
+      :updated_at => sample.updated_at,
       :uri => "http://example.com/samples/#{sample.id}"
-    }
-  end
-
-  it "should provide a hash of detailed attributes" do
-    naming_scheme = create_naming_scheme(:name => "Beast Scheme")
-    
-    naming_scheme.summary_hash.should == {
-      :id => naming_scheme.id,
-      :name => "Beast Scheme",
-      :uri => "http://example.com/naming_schemes/#{naming_scheme.id}"
     }
   end
 
@@ -473,18 +464,16 @@ describe Sample do
 
 
     naming_scheme = create_naming_scheme(
-      :name => "Beast Scheme",
-      :naming_elements => [
-        naming_element_1 = create_naming_element(
-          :naming_scheme => naming_scheme,
-          :name => "Age"
-        ),
-        naming_element_2 = create_naming_element(
-          :naming_scheme => naming_scheme,
-          :name => "Subject Number",
-          :free_text => true
-        )
-      ]
+      :name => "Beast Scheme"
+    )
+    naming_element_1 = create_naming_element(
+      :naming_scheme => naming_scheme,
+      :name => "Age"
+    )
+    naming_element_2 = create_naming_element(
+      :naming_scheme => naming_scheme,
+      :name => "Subject Number",
+      :free_text => true
     )
     naming_term_1 = create_naming_term(
       :term => "Young",
@@ -520,6 +509,7 @@ describe Sample do
     sample.detail_hash.should == {
       :id => sample.id,
       :submission_date => Date.today,
+      :updated_at => sample.updated_at,
       :comment => "failed",
       :status => "submitted",
       :submitted_by => "Joe User",
@@ -545,48 +535,3 @@ describe Sample do
     }
   end
 end
-
-#{
-#  :insert_size=>250, 
-#  :project=>"Mutant Yeast", 
-#  :name_on_tube=>"mut", 
-#  :budget_number=>"1234", 
-#  :naming_scheme=>"Beast Scheme", 
-#  :comment=>"failed", 
-#  :date_generated=>Mon, 17 Nov 2008, 
-#  :status=>"submitted", 
-#  :sample_prep_kit=>"yeast kit", 
-#  :submission_date=>Mon, 17 Nov 2008, 
-#  :submitted_by=>"Joe User", 
-#  :sample_terms=>[{"Age"=>"Young"}], 
-#  :alignment_start_position=>2, 
-#  :desired_number_of_cycles=>36, 
-#  :sample_description=>"mutant_yeast", 
-#  :flow_cell_lane_uris=>[], 
-#  :sample_texts=>[{"Subject Number"=>"345"}], 
-#  :reference_genome=>{:organism=>"Yeast", 
-#    :name=>"Yeast 5.0"}, 
-#  :alignment_end_position=>30, 
-#  :id=>420467622
-#}
-#{
-#  :insert_size=>250, 
-#  :project=>"Mutant Yeast", 
-#  :name_on_tube=>"mut", 
-#  :budget_number=>"1234", 
-#  :naming_scheme=>"Beast Scheme", 
-#  :comment=>"failed", 
-#  :submission_date=>Mon, 17 Nov 2008, 
-#  :status=>"submitted", 
-#  :sample_prep_kit=>"yeast kit", 
-#  :submitted_by=>"Joe User", 
-#  :sample_terms=>[{"Age"=>"Young"}], 
-#  :alignment_start_position=>2, 
-#  :desired_number_of_cycles=>36, 
-#  :sample_description=>"mutant_yeast", 
-#  :flow_cell_lane_uris=>[], 
-#  :sample_texts=>[{"Subject Number"=>"345"}], 
-#  :reference_genome=>{:organism=>"Yeast", :name=>"Yeast 5.0"}, 
-#  :alignment_end_position=>30, 
-#  :id=>420467622
-#}
