@@ -10,7 +10,7 @@
   <%= f.collection_select 'flow_cell_id', @flow_cells, :id, :name %></p>
 
   <p><label>Instrument</label><br>
-  <%= f.collection_select 'instrument_id', @instruments, :id, :name %></p>
+  <%= f.collection_select 'instrument_id', @instruments, :id, :name_with_version %></p>
   
   <p><label>Comment</label><br>
   <%= f.text_field :comment %></p>

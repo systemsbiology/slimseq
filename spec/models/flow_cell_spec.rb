@@ -74,7 +74,7 @@ describe FlowCell do
       :name => "20WERT",
       :comment => "failed",
       :status => "clustered"
-    )   
+    )
     
     flow_cell.detail_hash.should == {
       :id => flow_cell.id,
@@ -82,7 +82,8 @@ describe FlowCell do
       :date_generated => Date.today,
       :updated_at => flow_cell.updated_at,
       :comment => "failed",
-      :status => "clustered"
+      :status => "clustered",
+      :sequencer => {}
     }
   end
 end

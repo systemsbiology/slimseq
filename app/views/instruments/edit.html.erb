@@ -9,6 +9,12 @@
     
     <p><label>Serial Number</label><br>
     <%= f.text_field 'serial_number' %></p>
+    
+    <p><label>Instrument Version</label><br>
+    <%= f.text_field 'instrument_version' %></p>
+    
+    <p><label>Active Instrument</label><br>
+    <%= f.check_box 'active' %></p>
 
     <%= f.submit "Update" %>
   </p>

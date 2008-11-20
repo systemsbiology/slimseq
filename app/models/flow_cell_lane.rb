@@ -47,6 +47,16 @@ class FlowCellLane < ActiveRecord::Base
   end
   
   def detail_hash
+    if(flow_cell.sequencing_run.nil?)
+      sequencer_hash = {}
+    else
+      sequencer_hash = {
+        :name => flow_cell.sequencing_run.instrument.name,
+        :serial_number => flow_cell.sequencing_run.instrument.serial_number,
+        :instrument_version => flow_cell.sequencing_run.instrument.instrument_version
+      }
+    end
+    
     return {
       :id => id,
       :flow_cell_uri => "#{SiteConfig.site_url}/flow_cells/#{flow_cell_id}",
@@ -57,6 +67,7 @@ class FlowCellLane < ActiveRecord::Base
       :raw_data_path => raw_data_path,
       :status => status,
       :comment => comment,
+      :sequencer => sequencer_hash,
       :sample_uris => sample_ids.collect {|x| "#{SiteConfig.site_url}/samples/#{x}" }
     }
   end

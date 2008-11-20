@@ -46,13 +46,24 @@ class FlowCell < ActiveRecord::Base
   end
   
   def detail_hash
+    if(sequencing_run.nil?)
+      sequencer_hash = {}
+    else
+      sequencer_hash = {
+        :name => sequencing_run.instrument.name,
+        :serial_number => sequencing_run.instrument.serial_number,
+        :instrument_version => sequencing_run.instrument.instrument_version
+      }
+    end
+    
     return {
       :id => id,
       :name => name,
       :date_generated => date_generated,
       :updated_at => updated_at,
       :comment => comment,
-      :status => status
+      :status => status,
+      :sequencer => sequencer_hash
     }
   end
   

@@ -1,6 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe FlowCellLane do
+  fixtures :site_config
+  
   it "should mark samples as clustered" do
     sample_1 = create_sample
     sample_2 = create_sample
@@ -144,6 +146,7 @@ describe FlowCellLane do
       :starting_concentration => 1000,
       :loaded_concentration => 2,
       :raw_data_path => "",
+      :sequencer => {},
       :sample_uris => ["http://example.com/samples/#{sample_1.id}",
                        "http://example.com/samples/#{sample_2.id}"]
     }

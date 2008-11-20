@@ -7,6 +7,11 @@ describe SequencingRunsController do
     
     FlowCell.stub!(:find_all_by_status).and_return([mock_model(FlowCell)])
     Instrument.stub!(:find).and_return([mock_model(Instrument)])
+    
+    # deal with named scope
+    mock_scope = mock("Named Scope")
+    Instrument.stub!(:active).and_return(mock_scope)
+    mock_scope.stub!(:find).and_return([mock_model(Instrument)])
   end
   
   def mock_sequencing_run(stubs={})

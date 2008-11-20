@@ -4,6 +4,8 @@
   <tr>
     <td>Name</td>
     <td>Serial Number</td>
+    <td>Instrument Version</td>
+    <td>Active Instrument</td>
     <td>Edit</td>
     <td>Destroy</td>
   </tr>
@@ -12,6 +14,8 @@
   <tr>
     <td><%=h instrument.name %></td>
     <td><%=h instrument.serial_number %></td>
+    <td><%=h instrument.instrument_version %></td>
+    <td><%= instrument.active ? "Yes" : "No" %></td>
     <td><%= link_to 'Edit', edit_instrument_path(instrument) %></td>
     <td><%= link_to 'Destroy', instrument, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>

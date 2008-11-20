@@ -28,6 +28,9 @@ class SequencingRunsController < ApplicationController
   # GET /sequencing_runs/new.xml
   def new
     @sequencing_run = SequencingRun.new
+    
+    # only show active instruments
+    @instruments = Instrument.active.find(:all, :order => "name ASC")
 
     respond_to do |format|
       format.html # new.html.erb
@@ -44,13 +47,16 @@ class SequencingRunsController < ApplicationController
   # POST /sequencing_runs.xml
   def create
     @sequencing_run = SequencingRun.new(params[:sequencing_run])
-
+    
     respond_to do |format|
       if @sequencing_run.save
         flash[:notice] = 'SequencingRun was successfully created.'
         format.html { redirect_to(sequencing_runs_url) }
         format.xml  { render :xml => @sequencing_run, :status => :created, :location => @sequencing_run }
       else
+        # only show active instruments when re-rendering 'new'
+        @instruments = Instrument.active.find(:all, :order => "name ASC")
+        
         format.html { render :action => "new" }
         format.xml  { render :xml => @sequencing_run.errors, :status => :unprocessable_entity }
       end

@@ -1,12 +1,9 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Instrument do
-  before(:each) do
-    @valid_attributes = {
-    }
-  end
-
-  it "should create a new instance given valid attributes" do
-    Instrument.create!(@valid_attributes)
+  it "should provide the instrument name with the version" do
+    instrument = create_instrument(:name => "Megasequencer",
+      :instrument_version => "G8")
+    instrument.name_with_version.should == "Megasequencer (G8)"
   end
 end
