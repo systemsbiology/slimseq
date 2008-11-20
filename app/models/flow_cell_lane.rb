@@ -23,13 +23,15 @@ class FlowCellLane < ActiveRecord::Base
 
   def mark_samples_as_clustered
     samples.each do |sample|
-      sample.reload.cluster!
+      sample = Sample.find(sample.id)
+      sample.cluster!
     end
   end
   
   def mark_samples_as_submitted
     samples.each do |sample|
-      sample.reload.unsequence!
+      sample = Sample.find(sample.id)
+      sample.unsequence!
       sample.uncluster!
     end
   end
