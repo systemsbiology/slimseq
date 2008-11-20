@@ -534,4 +534,14 @@ describe Sample do
       :flow_cell_lane_uris => []
     }
   end
+  
+  it "should provide the raw data path(s)" do
+    sample = create_sample
+    flow_cell = create_flow_cell
+    lane_1 = create_flow_cell_lane(:samples => [sample], :flow_cell => flow_cell)
+    lane_2 = create_flow_cell_lane(:samples => [sample], :flow_cell => flow_cell)
+    create_sequencing_run(:flow_cell => flow_cell)
+    
+    sample.raw_data_paths.should == "#{lane_1.raw_data_path}, #{lane_2.raw_data_path}"
+  end
 end

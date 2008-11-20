@@ -616,4 +616,8 @@ class Sample < ActiveRecord::Base
         collect {|x| "#{SiteConfig.site_url}/flow_cell_lanes/#{x}" }
     }
   end
+  
+  def raw_data_paths
+    flow_cell_lanes.collect{|x| x.raw_data_path}.join(", ")
+  end
 end
