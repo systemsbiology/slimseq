@@ -75,6 +75,10 @@ describe FlowCell do
       :comment => "failed",
       :status => "clustered"
     )
+    lane = create_flow_cell_lane(:flow_cell => flow_cell)
+
+    # reload flow cell to get lane association
+    flow_cell.reload
     
     flow_cell.detail_hash.should == {
       :id => flow_cell.id,
@@ -83,6 +87,7 @@ describe FlowCell do
       :updated_at => flow_cell.updated_at,
       :comment => "failed",
       :status => "clustered",
+      :flow_cell_lane_uris => ["http://example.com/flow_cell_lanes/#{lane.id}"],
       :sequencer => {}
     }
   end

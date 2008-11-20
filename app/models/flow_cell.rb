@@ -63,7 +63,10 @@ class FlowCell < ActiveRecord::Base
       :updated_at => updated_at,
       :comment => comment,
       :status => status,
-      :sequencer => sequencer_hash
+      :sequencer => sequencer_hash,
+      :flow_cell_lane_uris => flow_cell_lane_ids.collect {
+        |x| "#{SiteConfig.site_url}/flow_cell_lanes/#{x}"
+      }
     }
   end
   
