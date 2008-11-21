@@ -4,6 +4,7 @@
     <th>Sample</th>
     <th>Submitted By</th>
     <th>Status</th>
+    <th>Comment</th>
     <th>Edit</th>
     <th>Destroy</th>
   </tr>
@@ -16,8 +17,9 @@
       <%=h sample.user ? sample.user.full_name : "" %>
     </td>
     <td><%=h sample.status %></td>
-    <td><%= link_to 'Edit', :controller => 'samples', :action => 'edit', :id => sample %></td>
-    <td><%= link_to 'Destroy', { :controller => 'samples', :action => 'destroy', :id => sample }, :confirm => 'Are you sure?' %></td>
+    <td><%=h sample.comment %></td>
+    <td><%= link_to 'Edit', edit_sample_path(sample) %></td>
+    <td><%= link_to 'Destroy', sample, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>
