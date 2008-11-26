@@ -82,7 +82,17 @@
   
   <p><label for="sample_0_comment">Sample Comment</label><br/>
   <%= text_field 'sample', 'comment', :index => 0 %></p>
-    
+
+  <p>
+    <label for="sample_0_raw_data_paths"><b>Raw Data Directory/Directories</b></label><br/>
+    <% @sample.flow_cell_lanes.each do |lane| %>
+      <% fields_for "sample[0][lane_paths][]", lane do |lane_form| %>
+        <li>Flow cell <%=h lane.flow_cell.name %>, Lane #<%=h lane.lane_number %>: 
+          <%= lane_form.text_field :raw_data_path, :size => 60 %></li>
+      <% end %>
+    <% end  %>
+  </p>
+
   <%= hidden_field 'sample', 'lock_version', :index => 0 %>
 	
   <%= submit_tag 'Update' %>

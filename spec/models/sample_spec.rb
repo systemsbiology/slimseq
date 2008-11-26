@@ -544,4 +544,19 @@ describe Sample do
     
     sample.raw_data_paths.should == "#{lane_1.raw_data_path}, #{lane_2.raw_data_path}"
   end
+  
+  it "should set the lane paths for associated flow cell lanes" do
+    sample = create_sample
+    flow_cell = create_flow_cell
+    lane_1 = create_flow_cell_lane(:samples => [sample], :flow_cell => flow_cell)
+    lane_2 = create_flow_cell_lane(:samples => [sample], :flow_cell => flow_cell)
+    create_sequencing_run(:flow_cell => flow_cell)
+    
+    sample.lane_paths = {
+      lane_1.id.to_s => {'raw_data_path' => '/new/lane_1/path'},
+      lane_2.id.to_s => {'raw_data_path' => '/new/lane_2/path'}
+    }
+    
+    sample.raw_data_paths.should == "/new/lane_1/path, /new/lane_2/path"
+  end
 end

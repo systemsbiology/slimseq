@@ -8,9 +8,10 @@
     <tr>
     <th>Select</th>
     <th>Date</th>
-    <th>Name On Tube</th>
-    <th>Sample Description</th>
+    <th>Sample</th>
+    <th>Submitted By</th>
     <th>Status</th>
+    <th>Raw Data Directory</th>
     <th>Edit</th>
     <th>Destroy</th>
     </tr>
@@ -19,9 +20,12 @@
       <tr>
       <td><%= check_box 'selected_samples', sample.id %></td>
       <td><%=h sample.submission_date %></td>
-      <td><%=h sample.name_on_tube %></td>
-      <td><%=h sample.sample_description %></td>
+      <td><%=h sample.short_and_long_name %></td>
+      <td>
+        <%=h sample.user ? sample.user.full_name : "" %>
+      </td>
       <td><%=h sample.status %></td>
+      <td><%=h sample.raw_data_paths %></td>
       <td><%= link_to 'Edit', edit_sample_path(sample) %></td>
       <td><%= link_to 'Destroy', sample, :confirm => 'Are you sure?', :method => :delete %></td>
       </tr>

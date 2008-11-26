@@ -620,4 +620,11 @@ class Sample < ActiveRecord::Base
   def raw_data_paths
     flow_cell_lanes.collect{|x| x.raw_data_path}.join(", ")
   end
+  
+  def lane_paths=(lane_paths)
+    lane_paths.each do |lane_id, path_hash|
+      lane = FlowCellLane.find(lane_id)
+      lane.update_attributes(path_hash)
+    end
+  end
 end
