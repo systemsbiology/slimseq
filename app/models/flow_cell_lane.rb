@@ -57,7 +57,7 @@ class FlowCellLane < ActiveRecord::Base
     if(flow_cell.sequencing_runs.size == 0)
       sequencer_hash = {}
     else
-      sequencing_run = flow_cell.sequencing_runs[0]
+      sequencing_run = flow_cell.sequencing_runs.best[0]
       sequencer_hash = {
         :name => sequencing_run.instrument.name,
         :serial_number => sequencing_run.instrument.serial_number,
@@ -90,7 +90,7 @@ class FlowCellLane < ActiveRecord::Base
   
   def raw_data_path=(path)
     if(pipeline_results.size > 0)
-      return pipeline_results.find(:first, :order => "gerald_date DESC").
+      pipeline_results.find(:first, :order => "gerald_date DESC").
         update_attribute('base_directory', path)
     elsif(flow_cell.sequencing_runs.size > 0)
       PipelineResult.create(
@@ -103,13 +103,13 @@ class FlowCellLane < ActiveRecord::Base
   
   def eland_output_file
     if(pipeline_results.size > 0)
-      return pipeline_results[0].eland_output_file
+      return pipeline_results.find(:first, :order => "gerald_date DESC").eland_output_file
     end
   end
 
   def summary_file
     if(pipeline_results.size > 0)
-      return pipeline_results[0].summary_file
+      return pipeline_results.find(:first, :order => "gerald_date DESC").summary_file
     end
   end
   
