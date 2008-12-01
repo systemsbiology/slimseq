@@ -18,6 +18,22 @@ class SequencingRun < ActiveRecord::Base
     "#{instrument.serial_number}_#{flow_cell.name}"
   end
   
+  def update_attributes(attributes)  
+    # handle a change in the best sequencing run
+    if(attributes[:best] == "1" || attributes[:best] == true)
+      sequencing_runs = SequencingRun.find(:all, :conditions => {:flow_cell_id => flow_cell_id})
+      
+      # only applies when there are 2+ sequencing runs per flow cell
+      if(sequencing_runs.size > 1)
+        sequencing_runs.each do |run|
+          run.update_attribute('best', false)
+        end
+      end
+    end
+    
+    super(attributes)
+  end
+  
 private
 
   def set_best_run
