@@ -1,8 +1,11 @@
 class SequencingRun < ActiveRecord::Base
+  named_scope :best, :conditions => {:best => true}
+  
   belongs_to :flow_cell
   belongs_to :instrument
   has_many :pipeline_results
   
+  before_create :set_best_run
   after_create :mark_flow_cell_as_sequenced
   before_destroy :mark_flow_cell_as_clustered
    
@@ -17,6 +20,17 @@ class SequencingRun < ActiveRecord::Base
   
 private
 
+  def set_best_run
+    sequencing_runs = SequencingRun.find(:all, :conditions => {:flow_cell_id => flow_cell_id})
+  
+    # only necessary if other runs exist
+    if(sequencing_runs.size > 0)
+      sequencing_runs.each do |run|
+        run.update_attribute('best', false)
+      end
+    end
+  end
+  
   def mark_flow_cell_as_sequenced
     flow_cell.sequence!
   end
