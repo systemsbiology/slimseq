@@ -1,7 +1,7 @@
 class FlowCell < ActiveRecord::Base
   has_many :flow_cell_lanes, :dependent => :destroy
   
-  has_one :sequencing_run, :dependent => :destroy
+  has_many :sequencing_runs, :dependent => :destroy
   
   validates_presence_of :name, :date_generated
   validates_uniqueness_of :name
@@ -10,6 +10,7 @@ class FlowCell < ActiveRecord::Base
   
   state :clustered, :after => :unsequence_lanes
   state :sequenced, :after => :sequence_lanes
+  state :completed, :after => :complete_lanes
   
   event :sequence do
     transitions :from => :clustered, :to => :sequenced    
@@ -17,6 +18,10 @@ class FlowCell < ActiveRecord::Base
 
   event :unsequence do
     transitions :from => :sequenced, :to => :clustered    
+  end
+  
+  event :complete do
+    transitions :from => :sequenced, :to => :completed    
   end
 
   def new_lane_attributes=(lane_attributes)
@@ -46,9 +51,10 @@ class FlowCell < ActiveRecord::Base
   end
   
   def detail_hash
-    if(sequencing_run.nil?)
+    if(sequencing_runs.size == 0)
       sequencer_hash = {}
     else
+      sequencing_run = sequencing_runs[0]
       sequencer_hash = {
         :name => sequencing_run.instrument.name,
         :serial_number => sequencing_run.instrument.serial_number,
@@ -81,6 +87,12 @@ private
   def unsequence_lanes
     flow_cell_lanes.each do |l|
       l.unsequence!
+    end
+  end
+  
+  def complete_lanes
+    flow_cell_lanes.each do |l|
+      l.complete!
     end
   end
 end

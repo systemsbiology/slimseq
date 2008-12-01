@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :pipeline_runs
+
   map.resources :registrations
   
   map.resources :flow_cell_lanes

@@ -3,6 +3,8 @@ class FlowCellLane < ActiveRecord::Base
   
   has_and_belongs_to_many :samples
   
+  has_many :pipeline_results
+  
   validates_numericality_of :starting_concentration, :loaded_concentration
 
   after_create :mark_samples_as_clustered
@@ -10,8 +12,9 @@ class FlowCellLane < ActiveRecord::Base
 
   acts_as_state_machine :initial => :clustered, :column => 'status'
   
-  state :clustered, :after => [:unsequence_samples, :clear_path]
-  state :sequenced, :after => [:sequence_samples, :generate_path, :create_charge]
+  state :clustered, :after => [:unsequence_samples] #, :clear_path]
+  state :sequenced, :after => [:sequence_samples, :create_charge] #, :generate_path]
+  state :completed, :after => :complete_samples
   
   event :sequence do
     transitions :from => :clustered, :to => :sequenced    
@@ -19,6 +22,10 @@ class FlowCellLane < ActiveRecord::Base
 
   event :unsequence do
     transitions :from => :sequenced, :to => :clustered
+  end
+  
+  event :complete do
+    transitions :from => :sequenced, :to => :completed    
   end
 
   def mark_samples_as_clustered
@@ -47,13 +54,14 @@ class FlowCellLane < ActiveRecord::Base
   end
   
   def detail_hash
-    if(flow_cell.sequencing_run.nil?)
+    if(flow_cell.sequencing_runs.size == 0)
       sequencer_hash = {}
     else
+      sequencing_run = flow_cell.sequencing_runs[0]
       sequencer_hash = {
-        :name => flow_cell.sequencing_run.instrument.name,
-        :serial_number => flow_cell.sequencing_run.instrument.serial_number,
-        :instrument_version => flow_cell.sequencing_run.instrument.instrument_version
+        :name => sequencing_run.instrument.name,
+        :serial_number => sequencing_run.instrument.serial_number,
+        :instrument_version => sequencing_run.instrument.instrument_version
       }
     end
     
@@ -65,11 +73,43 @@ class FlowCellLane < ActiveRecord::Base
       :starting_concentration => starting_concentration,
       :loaded_concentration => loaded_concentration,
       :raw_data_path => raw_data_path,
+      :eland_output_file => eland_output_file,
+      :summary_file => summary_file,
       :status => status,
       :comment => comment,
       :sequencer => sequencer_hash,
       :sample_uris => sample_ids.collect {|x| "#{SiteConfig.site_url}/samples/#{x}" }
     }
+  end
+  
+  def raw_data_path
+    if(pipeline_results.size > 0)
+      return pipeline_results[0].base_directory
+    end
+  end
+  
+  def raw_data_path=(path)
+    if(pipeline_results.size > 0)
+      return pipeline_results[0].update_attribute('base_directory', path)
+    elsif(flow_cell.sequencing_runs.size > 0)
+      PipelineResult.create(
+        :flow_cell_lane => self,
+        :sequencing_run => flow_cell.sequencing_runs[0],
+        :base_directory => path
+      )
+    end
+  end
+  
+  def eland_output_file
+    if(pipeline_results.size > 0)
+      return pipeline_results[0].eland_output_file
+    end
+  end
+
+  def summary_file
+    if(pipeline_results.size > 0)
+      return pipeline_results[0].summary_file
+    end
   end
   
 private
@@ -87,16 +127,12 @@ private
       s.unsequence!
     end
   end
-  
-  def generate_path
-    path = "#{SiteConfig.raw_data_root_path}/#{samples[0].project.lab_group.file_folder}/" +
-           "#{samples[0].project.file_folder}/#{flow_cell.sequencing_run.date_yymmdd}_" +
-           "#{flow_cell.sequencing_run.instrument.serial_number}_#{flow_cell.name}"
-    update_attribute("raw_data_path", path)
-  end
 
-  def clear_path
-    update_attribute("raw_data_path", "")
+  def complete_samples
+    samples.each do |s|
+      s = Sample.find(s.id)
+      s.complete!
+    end
   end
 
   def create_charge

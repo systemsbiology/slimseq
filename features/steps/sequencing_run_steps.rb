@@ -1,7 +1,8 @@
 Given /I am on the new sequencing_run page/i do
   FlowCell.create!(:name => "Flow cell name", :date_generated => "2008-11-04",
     :status => "clustered")
-  Instrument.create!(:name => "Super sequencer", :serial_number => "ABC1234")
+  Instrument.create!(:name => "Super sequencer", :serial_number => "ABC1234",
+                     :active => true, :instrument_version => "GAII")
   visits "/sequencing_runs/new"
 end
 
@@ -9,10 +10,11 @@ Given /there are (\d+) sequencing_runs/i do |n|
   SequencingRun.transaction do
     SequencingRun.destroy_all
     
-    instrument = Instrument.create!(:name => "Super sequencer", :serial_number => "ABC1234")
+    instrument = Instrument.create!(:name => "Super sequencer", :serial_number => "ABC1234",
+                                    :active => true)
     n.to_i.times do |n|
-      SequencingRun.create(
-        :flow_cell => FlowCell.create(:name => "Flow cell #{n}",
+      SequencingRun.create!(
+        :flow_cell => FlowCell.create!(:name => "Flow cell #{n}",
           :date_generated => "2008-11-04", :status => "clustered"),
         :instrument => instrument
       )

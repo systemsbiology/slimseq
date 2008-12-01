@@ -62,17 +62,6 @@ describe FlowCellLane do
       @sample_2.reload.status.should == "sequenced"
     end
     
-    it "should set the raw data path" do
-      @sequencing_run.should_receive(:date_yymmdd).and_return("081010")
-      @sequencing_run.should_receive(:instrument).and_return(@instrument)
-      @flow_cell.should_receive(:name).and_return("123ABC")
-      @flow_cell.should_receive(:sequencing_run).twice.and_return(@sequencing_run)
-      
-      @flow_cell_lane.sequence!
-      
-      @flow_cell_lane.raw_data_path.should == "/Yeast/Genetics/081010_HWI-234234_123ABC"      
-    end
-    
     it "should record the appropriate charge if the sample isn't a control" do
       ChargeSet.should_receive(:find_or_create_for_latest_charge_period).
         with(@sample_1.project, @sample_1.budget_number).and_return(@charge_set)
@@ -99,11 +88,9 @@ describe FlowCellLane do
     sample_1 = create_sample(:status => "sequenced")
     sample_2 = create_sample(:status => "sequenced")
     
-    flow_cell_lane = create_flow_cell_lane(:samples => [sample_1, sample_2],
-                                           :raw_data_path => "/path/to/data")
+    flow_cell_lane = create_flow_cell_lane(:samples => [sample_1, sample_2])
 
     flow_cell_lane.unsequence!
-    flow_cell_lane.raw_data_path.should == ""
     
     # can't figure out how to check that 'sequence!' was called for each sample, so just
     # check the status directly
@@ -132,7 +119,6 @@ describe FlowCellLane do
       :comment => "failed",
       :starting_concentration => 1000,
       :loaded_concentration => 2,
-      :raw_data_path => "/path/to/data",
       :samples => [sample_1, sample_2]
     )   
 
@@ -145,7 +131,9 @@ describe FlowCellLane do
       :status => "clustered",
       :starting_concentration => 1000,
       :loaded_concentration => 2,
-      :raw_data_path => "",
+      :raw_data_path => nil,
+      :eland_output_file => nil,
+      :summary_file => nil,
       :sequencer => {},
       :sample_uris => ["http://example.com/samples/#{sample_1.id}",
                        "http://example.com/samples/#{sample_2.id}"]

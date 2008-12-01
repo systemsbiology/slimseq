@@ -1,6 +1,7 @@
 class SequencingRun < ActiveRecord::Base
   belongs_to :flow_cell
   belongs_to :instrument
+  has_many :pipeline_results
   
   after_create :mark_flow_cell_as_sequenced
   before_destroy :mark_flow_cell_as_clustered

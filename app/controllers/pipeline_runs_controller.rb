@@ -1,0 +1,28 @@
+class PipelineRunsController < ApplicationController
+  before_filter :login_required
+  before_filter :staff_or_admin_required
+  
+  # POST /pipeline_results.xml
+  # POST /pipeline_results.json
+  def create
+    @pipeline_run = PipelineRun.new(
+      :base_directory => params[:run_folder],
+      :summary_files => params[:summary_file],
+      :eland_output_files => params[:eland_output_files]
+    )
+    
+    respond_to do |format|
+      if(@pipeline_run.valid?)
+        @pipeline_run.pipeline_results.each do |result|
+          result.save
+        end
+        
+        format.xml  { render :xml => "Pipeline run(s) recorded", :status => :created, :location => @pipeline_result }
+      else
+        format.xml  { render :xml => "Parameters aren't valid or results have already been recorded",
+          :status => :unprocessable_entity }
+      end
+    end    
+  end
+
+end

@@ -32,6 +32,7 @@ class Sample < ActiveRecord::Base
   state :submitted
   state :clustered
   state :sequenced
+  state :completed
 
   event :cluster do
     transitions :from => :submitted, :to => :clustered
@@ -47,6 +48,10 @@ class Sample < ActiveRecord::Base
 
   event :unsequence do
     transitions :from => :sequenced, :to => :clustered
+  end
+  
+  event :complete do
+    transitions :from => :sequenced, :to => :completed
   end
   
   def short_and_long_name
@@ -167,11 +172,6 @@ class Sample < ActiveRecord::Base
           :include => [:reference_genome], :order => "samples.id ASC" )
 
         for sample in samples
-#          if(sample.hybridization != nil)
-#            cel_file = sample.hybridization.raw_data_path
-#          else
-#            cel_file = ""
-#          end
           csv << [ # cel_file,
             sample.id,
             sample.submission_date.to_s,
@@ -228,13 +228,7 @@ class Sample < ActiveRecord::Base
           :include => [:reference_genome],
           :order => "samples.id ASC" )
 
-        current_row = 0
         for sample in samples
-#          if(sample.hybridization != nil)
-#            cel_file = sample.hybridization.raw_data_path
-#          else
-#            cel_file = ""
-#          end
           column_values = [ # cel_file,
             sample.id,
             sample.submission_date.to_s,

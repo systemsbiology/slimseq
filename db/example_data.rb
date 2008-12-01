@@ -27,7 +27,6 @@ module FixtureReplacement
     l.lane_number = 1
     l.starting_concentration = 2345
     l.loaded_concentration = 2
-    l.raw_data_path = "/path/to/data"
     l.status = "submitted"
     l.comment = ""
     l.samples = [default_sample]

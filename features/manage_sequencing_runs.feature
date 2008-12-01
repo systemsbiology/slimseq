@@ -7,7 +7,7 @@ Feature: Manage sequencing_runs
     Given I am logged in as a customer
     And I am on the new sequencing_run page
     When I select "Flow cell name" from "sequencing_run_flow_cell_id"
-    And I select "Super sequencer" from "sequencing_run_instrument_id"
+    And I select "Super sequencer (GAII)" from "sequencing_run_instrument_id"
     And I fill in "sequencing_run_comment" with "Some clever comment about the flow cell"
     And I press "Create"
     Then I should see "Flow cell name"
