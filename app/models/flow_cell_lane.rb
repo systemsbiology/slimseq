@@ -12,8 +12,8 @@ class FlowCellLane < ActiveRecord::Base
 
   acts_as_state_machine :initial => :clustered, :column => 'status'
   
-  state :clustered, :after => [:unsequence_samples] #, :clear_path]
-  state :sequenced, :after => [:sequence_samples, :create_charge] #, :generate_path]
+  state :clustered, :after => [:unsequence_samples]
+  state :sequenced, :after => [:sequence_samples, :create_charge]
   state :completed, :after => :complete_samples
   
   event :sequence do
@@ -84,13 +84,14 @@ class FlowCellLane < ActiveRecord::Base
   
   def raw_data_path
     if(pipeline_results.size > 0)
-      return pipeline_results[0].base_directory
+      return pipeline_results.find(:first, :order => "gerald_date DESC").base_directory
     end
   end
   
   def raw_data_path=(path)
     if(pipeline_results.size > 0)
-      return pipeline_results[0].update_attribute('base_directory', path)
+      return pipeline_results.find(:first, :order => "gerald_date DESC").
+        update_attribute('base_directory', path)
     elsif(flow_cell.sequencing_runs.size > 0)
       PipelineResult.create(
         :flow_cell_lane => self,
