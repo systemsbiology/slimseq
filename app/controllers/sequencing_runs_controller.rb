@@ -1,6 +1,7 @@
 class SequencingRunsController < ApplicationController
   before_filter :login_required
-  before_filter :load_dropdown_selections
+  before_filter :load_dropdown_selections_all, :only => [:edit, :update]
+  before_filter :load_dropdown_selections_subset, :only => [:new, :create]
 
   # GET /sequencing_runs
   # GET /sequencing_runs.xml
@@ -27,10 +28,11 @@ class SequencingRunsController < ApplicationController
   # GET /sequencing_runs/new
   # GET /sequencing_runs/new.xml
   def new
-    @sequencing_run = SequencingRun.new
+    if(params[:show_all_flow_cells] == "true")
+      load_dropdown_selections_all
+    end
     
-    # only show active instruments
-    @instruments = Instrument.active.find(:all, :order => "name ASC")
+    @sequencing_run = SequencingRun.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -94,8 +96,15 @@ class SequencingRunsController < ApplicationController
 
 private
 
-  def load_dropdown_selections
-    @flow_cells = FlowCell.find_all_by_status('clustered', :order => "name ASC")
+  def load_dropdown_selections_all
+    @flow_cells = FlowCell.find(:all, :order => "name ASC")
     @instruments = Instrument.find(:all, :order => "name ASC")
+  end
+  
+  def load_dropdown_selections_subset
+    @flow_cells = FlowCell.find_all_by_status('clustered', :order => "name ASC")
+    
+    # only show active instruments
+    @instruments = Instrument.active.find(:all, :order => "name ASC")
   end
 end
