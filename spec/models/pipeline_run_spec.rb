@@ -1,6 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe PipelineRun do
+  fixtures :site_config, :charge_templates
+  
   before(:each) do
       @instrument = create_instrument(:serial_number => "HWI-EAS427")
       @flow_cell = create_flow_cell(:name => "FC30LD7AAXX")

@@ -1,13 +1,11 @@
 --- 
-not_very_useful_template: 
-  name: Not Useful
-  description: This template exists to die
+standard_sequencing:
+  name: Sequence
+  description: Sequence a sample
   cost: 100
-labeling_and_hyb: 
-  name: Label and Hyb
-  description: Core facility labels, hybs, washes, stains, scans
-  cost: 200
+  default: true
 bioanalyzer: 
   name: Bioanalyzer
   description: Run one Bioanalyzer Nano or Pico chip
   cost: 25
+  default: false

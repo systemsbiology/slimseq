@@ -33,19 +33,23 @@ class PipelineRun < ActiveRecord::BaseWithoutTable
           date, sequencer, flow_cell])
 
       if(pipeline_run.sequencing_run != nil)
-        summaries = hash_summaries_by_date(pipeline_run.summary_files)
-        eland_outputs = hash_eland_outputs_by_date(pipeline_run.eland_output_files)
+        summaries = hash_summaries_by_gerald(pipeline_run.summary_files)
+        eland_outputs = hash_eland_outputs_by_gerald(pipeline_run.eland_output_files)
         if(summaries.keys == eland_outputs.keys)
-          summaries.keys.sort.each do |gerald_date|
-            eland_outputs[gerald_date].sort.each do |eland_output|
+          summaries.keys.sort.each do |gerald_folder|
+            eland_outputs[gerald_folder].sort.each do |eland_output|
               lane_number = /.*s_(\d)_export.txt/.match(eland_output)[1]
 
               lane = pipeline_run.sequencing_run.flow_cell.flow_cell_lanes.find(:first,
                 :conditions => {:lane_number => lane_number})
 
+              original_gerald_date = 
+                /GERALD_(\d+-\d+-\d+)_.*/.match(gerald_folder)[1]
+              gerald_date = Date.strptime(original_gerald_date,"%d-%m-%Y")
+              
               existing_result = PipelineResult.find(:first, :conditions => {
                   :base_directory => pipeline_run.base_directory,
-                  :summary_file => summaries[gerald_date],
+                  :summary_file => summaries[gerald_folder],
                   :eland_output_file => eland_output,
                   :gerald_date => gerald_date,
                   :sequencing_run_id => pipeline_run.sequencing_run_id,
@@ -57,7 +61,7 @@ class PipelineRun < ActiveRecord::BaseWithoutTable
               if(existing_result == nil)
                 pipeline_run.pipeline_results << PipelineResult.new(
                   :base_directory => pipeline_run.base_directory,
-                  :summary_file => summaries[gerald_date],
+                  :summary_file => summaries[gerald_folder],
                   :eland_output_file => eland_output,
                   :gerald_date => gerald_date,
                   :sequencing_run => pipeline_run.sequencing_run,
@@ -76,37 +80,35 @@ class PipelineRun < ActiveRecord::BaseWithoutTable
     return pipeline_run
   end
   
-  def self.hash_summaries_by_date(file_string)
+  def self.hash_summaries_by_gerald(file_string)
     by_date = Hash.new
     
     files = file_string.split(/\s*,\s*/)
     
     files.each do |file|
-      match = /.*GERALD_(\d+-\d+-\d+)_\w+\/(\w|\.)+$/.match(file)
+      match = /.*(GERALD_\d+-\d+-\d+_.*)\/(\w|\.)+$/.match(file)
       if(match != nil)
-        original_date = /.*GERALD_(\d+-\d+-\d+)_\w+\/((\w|\.)+)$/.match(file)[1]
-        reformatted_date = Date.strptime(original_date,"%d-%m-%Y")
+        gerald_folder = /.*(GERALD_\d+-\d+-\d+_.*)\/(\w|\.)+$/.match(file)[1]
         
-        by_date[reformatted_date] = file
+        by_date[gerald_folder] = file
       end
     end
     
     return by_date
   end
   
-  def self.hash_eland_outputs_by_date(file_string)
+  def self.hash_eland_outputs_by_gerald(file_string)
     by_date = Hash.new
     
     files = file_string.split(/\s*,\s*/)
     
     files.each do |file|
-      match = /.*GERALD_(\d+-\d+-\d+)_\w+\/(\w|\.)+$/.match(file)
+      match = /.*(GERALD_\d+-\d+-\d+_.*)\/(\w|\.)+$/.match(file)
       if(match != nil)
-        original_date = /.*GERALD_(\d+-\d+-\d+)_\w+\/((\w|\.)+)$/.match(file)[1]
-        reformatted_date = Date.strptime(original_date,"%d-%m-%Y")
+        gerald_folder = /.*(GERALD_\d+-\d+-\d+_.*)\/(\w|\.)+$/.match(file)[1]
         
-        by_date[reformatted_date] ||= Array.new
-        by_date[reformatted_date] << file
+        by_date[gerald_folder] ||= Array.new
+        by_date[gerald_folder] << file
       end
     end
     
