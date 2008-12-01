@@ -7,7 +7,10 @@
   <%= f.date_select 'date' %></p>
 
   <p><label>Flow Cell</label><br>
-  <%= f.collection_select 'flow_cell_id', @flow_cells, :id, :name %></p>
+  <%= f.collection_select 'flow_cell_id', @flow_cells, :id, :name %>
+  <%= link_to 'Show Flow Cells That Have Already Been Processed',
+    new_sequencing_run_path(:show_all_flow_cells => true) %>
+  </p>
 
   <p><label>Instrument</label><br>
   <%= f.collection_select 'instrument_id', @instruments, :id, :name_with_version %></p>
