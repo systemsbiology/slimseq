@@ -52,7 +52,10 @@ private
   end
   
   def mark_flow_cell_as_clustered
-    flow_cell.unsequence!
+    # only "unsequence" the flow cell if it has no other attached sequencing runs
+    if(flow_cell.sequencing_runs.size == 1)
+      flow_cell.unsequence!
+    end
   end
 
 end

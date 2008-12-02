@@ -18,6 +18,19 @@ describe SequencingRun do
     @sequencing_run.destroy
   end
   
+  it "should leave the flow cell associated with a sequencing run being destroyed as sequenced " +
+     "if there is another sequencing run associated with this flow cell" do
+    @flow_cell = mock_model(FlowCell)
+    @flow_cell.stub!(:sequence!).and_return(true)
+    @flow_cell.stub!(:sequencing_runs).and_return([
+        create_sequencing_run, create_sequencing_run
+      ])
+    @sequencing_run = create_sequencing_run(:flow_cell => @flow_cell)
+
+    @flow_cell.should_not_receive(:unsequence!)
+    @sequencing_run.destroy
+  end
+  
   it "should provide the formatted date" do
     @sequencing_run = create_sequencing_run(:date => "2008-10-10")
     @sequencing_run.date_yymmdd.should == "081010"
