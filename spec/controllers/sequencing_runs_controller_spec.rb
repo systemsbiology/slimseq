@@ -168,18 +168,43 @@ describe SequencingRunsController do
 
   describe "responding to DELETE destroy" do
 
-    it "should destroy the requested sequencing_run" do
-      SequencingRun.should_receive(:find).with("37").and_return(mock_sequencing_run)
-      mock_sequencing_run.should_receive(:destroy)
-      delete :destroy, :id => "37"
-    end
-  
-    it "should redirect to the sequencing_runs list" do
-      SequencingRun.stub!(:find).and_return(mock_sequencing_run(:destroy => true))
-      delete :destroy, :id => "1"
-      response.should redirect_to(sequencing_runs_url)
-    end
+    describe "with no pipeline results" do
+      before(:each) do
+        @sequencing_run = mock_sequencing_run
+        SequencingRun.should_receive(:find).with("37").and_return(@sequencing_run)
+        @sequencing_run.should_receive(:pipeline_results).and_return([])
+        @sequencing_run.stub!(:destroy)
+      end
+      
+      it "should destroy the requested sequencing_run" do
+        @sequencing_run.should_receive(:destroy)
+        delete :destroy, :id => "37"
+      end
 
+      it "should redirect to the sequencing_runs list" do
+        delete :destroy, :id => "37"
+        response.should redirect_to(sequencing_runs_url)
+      end
+    end
+    
+    describe "with pipeline results" do
+      before(:each) do
+        @sequencing_run = mock_sequencing_run
+        SequencingRun.should_receive(:find).with("37").and_return(@sequencing_run)
+        @sequencing_run.should_receive(:pipeline_results).and_return(["result 1", "result 2"])
+      end
+      
+      it "should destroy the requested sequencing_run" do
+        @sequencing_run.should_not_receive(:destroy)
+        delete :destroy, :id => "37"
+      end
+
+      it "should redirect to the sequencing_runs list" do
+        delete :destroy, :id => "37"
+        response.should redirect_to(sequencing_runs_url)
+      end
+    end
+    
   end
 
 end

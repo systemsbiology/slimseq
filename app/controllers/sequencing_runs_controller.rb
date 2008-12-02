@@ -86,7 +86,12 @@ class SequencingRunsController < ApplicationController
   # DELETE /sequencing_runs/1.xml
   def destroy
     @sequencing_run = SequencingRun.find(params[:id])
-    @sequencing_run.destroy
+
+    if(@sequencing_run.pipeline_results.size == 0)
+      @sequencing_run.destroy
+    else
+      flash[:warning] = "Unable to destroy sequencing runs that have gone through the pipeline."
+    end
 
     respond_to do |format|
       format.html { redirect_to(sequencing_runs_url) }
