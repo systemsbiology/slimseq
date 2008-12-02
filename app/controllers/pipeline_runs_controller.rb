@@ -7,7 +7,7 @@ class PipelineRunsController < ApplicationController
   def create
     @pipeline_run = PipelineRun.new(
       :base_directory => params[:run_folder],
-      :summary_files => params[:summary_file],
+      :summary_files => params[:summary_files],
       :eland_output_files => params[:eland_output_files]
     )
     
