@@ -143,5 +143,16 @@ module FixtureReplacement
     u.password = password
     u.password_confirmation = password
   end
+  
+  attributes_for :pipeline_result do |pr|
+    run_name = String.random
+    
+    pr.flow_cell_lane = default_flow_cell_lane
+    pr.sequencing_run = default_sequencing_run
+    pr.gerald_date = Date.today
+    pr.base_directory = "/solexa/lab/project/#{run_name}"
+    pr.summary_file = "/solexa/lab/project/#{run_name}/summary.htm"
+    pr.eland_output_file = "/solexa/lab/project/#{run_name}/s_1_eland_output.txt"
+  end
 
 end

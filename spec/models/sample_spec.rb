@@ -540,7 +540,9 @@ describe Sample do
     flow_cell = create_flow_cell
     lane_1 = create_flow_cell_lane(:samples => [sample], :flow_cell => flow_cell)
     lane_2 = create_flow_cell_lane(:samples => [sample], :flow_cell => flow_cell)
-    create_sequencing_run(:flow_cell => flow_cell)
+    sequencing_run = create_sequencing_run(:flow_cell => flow_cell)
+    create_pipeline_result(:flow_cell_lane => lane_1, :sequencing_run => sequencing_run)
+    create_pipeline_result(:flow_cell_lane => lane_2, :sequencing_run => sequencing_run)
     
     sample.raw_data_paths.should == "#{lane_1.raw_data_path}, #{lane_2.raw_data_path}"
   end

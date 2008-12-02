@@ -612,7 +612,16 @@ class Sample < ActiveRecord::Base
   end
   
   def raw_data_paths
-    flow_cell_lanes.collect{|x| x.raw_data_path}.join(", ")
+    path_string = ""
+    
+    flow_cell_lanes.each do |l|
+      if(l.raw_data_path != nil)
+        path_string += ", " if path_string.length > 0
+        path_string += l.raw_data_path
+      end
+    end
+    
+    return path_string
   end
   
   def lane_paths=(lane_paths)
