@@ -88,7 +88,12 @@ class FlowCellsController < ApplicationController
   # DELETE /flow_cells/1.xml
   def destroy
     @flow_cell = FlowCell.find(params[:id])
-    @flow_cell.destroy
+
+    if(@flow_cell.status == "clustered")
+      @flow_cell.destroy
+    else
+      flash[:warning] = "Unable to destroy flow cells that have been sequenced."
+    end
 
     respond_to do |format|
       format.html { redirect_to(flow_cells_url) }

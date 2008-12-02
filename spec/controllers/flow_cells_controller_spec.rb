@@ -205,18 +205,45 @@ describe FlowCellsController do
 
   describe "responding to DELETE destroy" do
 
-    it "should destroy the requested flow_cell" do
-      FlowCell.should_receive(:find).with("37").and_return(mock_flow_cell)
-      mock_flow_cell.should_receive(:destroy)
-      delete :destroy, :id => "37"
-    end
-  
-    it "should redirect to the flow_cells list" do
-      FlowCell.stub!(:find).and_return(mock_flow_cell(:destroy => true))
-      delete :destroy, :id => "1"
-      response.should redirect_to(flow_cells_url)
+    describe "with a clustered flow cell" do
+      before(:each) do
+        @flow_cell = mock_flow_cell
+        @flow_cell.should_receive(:status).and_return("clustered")
+        @flow_cell.stub!(:destroy)
+        FlowCell.should_receive(:find).with("37").and_return(@flow_cell)
+      end
+      
+      it "should destroy the requested flow_cell" do        
+        @flow_cell.should_receive(:destroy)
+        delete :destroy, :id => "37"
+      end
+
+      it "should redirect to the flow_cells list" do
+        delete :destroy, :id => "37"
+        response.should redirect_to(flow_cells_url)
+      end
+    
     end
 
+    describe "with a sequenced flow cell" do
+      before(:each) do
+        @flow_cell = mock_flow_cell
+        @flow_cell.should_receive(:status).and_return("sequenced")
+        FlowCell.should_receive(:find).with("37").and_return(@flow_cell)
+      end
+      
+      it "should not destroy the requested flow_cell" do        
+        @flow_cell.should_not_receive(:destroy)
+        delete :destroy, :id => "37"
+      end
+
+      it "should redirect to the flow_cells list" do
+        delete :destroy, :id => "37"
+        response.should redirect_to(flow_cells_url)
+      end
+    
+    end
+    
   end
 
 end
