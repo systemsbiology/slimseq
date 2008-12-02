@@ -17,10 +17,15 @@ class PipelineRunsController < ApplicationController
           result.save
         end
         
-        format.xml  { render :xml => "Pipeline run(s) recorded", :status => :created, :location => @pipeline_result }
+        format.xml  {
+          render :xml => "Pipeline run(s) recorded", :status => :created,
+          :location => @pipeline_result
+        }
       else
-        format.xml  { render :xml => "Parameters aren't valid or results have already been recorded",
-          :status => :unprocessable_entity }
+        format.xml  {
+          render :xml => @pipeline_run.errors.full_messages.join(", "),
+            :status => :unprocessable_entity 
+        }
       end
     end    
   end

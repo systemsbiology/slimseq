@@ -61,6 +61,9 @@ describe PipelineRunsController do
         @pipeline_run = mock_model(PipelineRun)
         PipelineRun.stub!(:new).and_return(@pipeline_run)
         @pipeline_run.stub!(:valid?).and_return(false)
+        @errors = mock("Errors")
+        @errors.stub!(:full_messages).and_return(["Error 1", "Error 2"])
+        @pipeline_run.stub!(:errors).and_return(@errors)
       end
       
       it "should instantiate a new pipeline run" do

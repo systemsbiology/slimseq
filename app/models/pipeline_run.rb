@@ -13,26 +13,31 @@ class PipelineRun < ActiveRecord::BaseWithoutTable
   validates_presence_of :summary_files
   validates_presence_of :eland_output_files
 
-  validates_presence_of :sequencing_run_id, :if => :full_validation
+  validates_presence_of :sequencing_run_id, :if => :full_validation,
+    :message => "couldn't be found based on the provided run folder"
   validates_associated :sequencing_run, :if => :full_validation
 
-  validates_size_of :pipeline_results, :minimum => 1, :if => :full_validation
+  def validate
+    if(:full_validation == true)
+      errors.add("No new results to record (may be redundant with existing results)", "")
+    end
+  end
   
   def self.new(attributes=nil)
     pipeline_run = super(attributes)
 
     if(pipeline_run.valid?)
-      original_date = /^\/.*\/.*\/(.*?)_(.*?)_(.*?)$/.match(attributes[:base_directory])[1]
+      original_date = /^\/.*\/.*\/(.*?)_(.*?)_(.*?)\/*$/.match(attributes[:base_directory])[1]
       date = Date.strptime(original_date,"%y%m%d")
-      sequencer = /^\/.*\/.*\/(.*?)_(.*?)_(.*?)$/.match(attributes[:base_directory])[2]
-      flow_cell = /^\/.*\/.*\/(.*?)_(.*?)_(.*?)$/.match(attributes[:base_directory])[3]
+      sequencer = /^\/.*\/.*\/(.*?)_(.*?)_(.*?)\/*$/.match(attributes[:base_directory])[2]
+      flow_cell = /^\/.*\/.*\/(.*?)_(.*?)_(.*?)\/*$/.match(attributes[:base_directory])[3]
 
       pipeline_run.sequencing_run = SequencingRun.find(:first, 
         :include => [:instrument, :flow_cell],
         :conditions => ["date = ? AND instruments.serial_number = ? AND flow_cells.name = ?",
           date, sequencer, flow_cell])
 
-      if(pipeline_run.sequencing_run != nil)
+      unless(pipeline_run.sequencing_run.nil?)
         summaries = hash_summaries_by_gerald(pipeline_run.summary_files)
         eland_outputs = hash_eland_outputs_by_gerald(pipeline_run.eland_output_files)
         if(summaries.keys == eland_outputs.keys)
@@ -72,11 +77,12 @@ class PipelineRun < ActiveRecord::BaseWithoutTable
           end
         end
       end
+      
+      # now allow full validation
+      pipeline_run.full_validation = true
+
     end
-    
-    # now allow full validation
-    pipeline_run.full_validation = true
-    
+        
     return pipeline_run
   end
   
