@@ -45,7 +45,7 @@ describe PipelineRunsController do
       def do_post
         post :create,
           :run_folder => "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX",
-          :summary_file => "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data/" +
+          :summary_files => "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data/" +
             "IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/Summary.htm",
           :eland_output_files => "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data" +
             "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/s_5_export.txt"
