@@ -44,6 +44,18 @@ describe PipelineRun do
         "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/s_5_export.txt"
     end
     
+    it "should have the correct eland output file for an alternate eland file name" do
+      @pipeline_run = PipelineRun.new(
+      :base_directory => "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX",
+      :summary_files => "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data/" +
+        "IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/Summary.htm",
+      :eland_output_files => "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data" +
+        "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/s_5_eland_result.txt")
+      @pipeline_run.pipeline_results[0].eland_output_file.should == 
+        "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data" +
+        "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/s_5_eland_result.txt"
+    end
+    
     def do_new
       @pipeline_run = PipelineRun.new(
       :base_directory => "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX",
