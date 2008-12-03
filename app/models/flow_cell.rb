@@ -43,7 +43,7 @@ class FlowCell < ActiveRecord::Base
   def summary_hash
     return {
       :id => id,
-      :name => name,
+      :name => prefixed_name,
       :date_generated => date_generated,
       :updated_at => updated_at,
       :uri => "#{SiteConfig.site_url}/flow_cells/#{id}"
@@ -64,7 +64,7 @@ class FlowCell < ActiveRecord::Base
     
     return {
       :id => id,
-      :name => name,
+      :name => prefixed_name,
       :date_generated => date_generated,
       :updated_at => updated_at,
       :comment => comment,
@@ -74,6 +74,10 @@ class FlowCell < ActiveRecord::Base
         |x| "#{SiteConfig.site_url}/flow_cell_lanes/#{x}"
       }
     }
+  end
+  
+  def prefixed_name
+    return "FC" + name
   end
   
 private

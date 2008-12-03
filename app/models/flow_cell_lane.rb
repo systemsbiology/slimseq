@@ -68,7 +68,7 @@ class FlowCellLane < ActiveRecord::Base
     return {
       :id => id,
       :flow_cell_uri => "#{SiteConfig.site_url}/flow_cells/#{flow_cell_id}",
-      :flow_cell_name => flow_cell.name,
+      :flow_cell_name => flow_cell.prefixed_name,
       :lane_number => lane_number,
       :updated_at => updated_at,
       :starting_concentration => starting_concentration,

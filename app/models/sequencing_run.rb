@@ -15,7 +15,7 @@ class SequencingRun < ActiveRecord::Base
   
   def run_name
     "#{date_yymmdd}_" +
-    "#{instrument.serial_number}_#{flow_cell.name}"
+    "#{instrument.serial_number}_#{flow_cell.prefixed_name}"
   end
   
   def update_attributes(attributes)  

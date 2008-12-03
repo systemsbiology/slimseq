@@ -126,7 +126,7 @@ describe FlowCellLane do
       :id => flow_cell_lane.id,
       :lane_number => 1,
       :flow_cell_uri => "http://example.com/flow_cells/#{flow_cell_lane.flow_cell_id}",
-      :flow_cell_name => flow_cell_lane.flow_cell.name,
+      :flow_cell_name => flow_cell_lane.flow_cell.prefixed_name,
       :updated_at => flow_cell_lane.updated_at,
       :comment => "failed",
       :status => "clustered",

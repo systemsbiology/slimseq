@@ -91,4 +91,10 @@ describe FlowCell do
       :sequencer => {}
     }
   end
+  
+  it "should provide the prefixed flow cell name" do
+    flow_cell = create_flow_cell(:name => "20WERT")
+    
+    flow_cell.prefixed_name.should == "FC20WERT"
+  end
 end
