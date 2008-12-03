@@ -5,7 +5,7 @@ describe PipelineRun do
   
   before(:each) do
       @instrument = create_instrument(:serial_number => "HWI-EAS427")
-      @flow_cell = create_flow_cell(:name => "FC30LD7AAXX")
+      @flow_cell = create_flow_cell(:name => "30LD7AAXX")
       create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 5)
       create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 6)
       @sequencing_run = create_sequencing_run(:date => "2008-11-14", :instrument => @instrument,
