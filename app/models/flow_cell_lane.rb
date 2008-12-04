@@ -14,7 +14,7 @@ class FlowCellLane < ActiveRecord::Base
   
   state :clustered, :after => [:unsequence_samples]
   state :sequenced, :after => [:sequence_samples, :create_charge]
-  state :completed, :after => :complete_samples
+  state :completed, :after => [:complete_samples_and_flow_cell]
   
   event :sequence do
     transitions :from => :clustered, :to => :sequenced    
@@ -130,11 +130,13 @@ private
     end
   end
 
-  def complete_samples
+  def complete_samples_and_flow_cell
     samples.each do |s|
       s = Sample.find(s.id)
       s.complete!
     end
+    
+    flow_cell.complete!
   end
 
   def create_charge

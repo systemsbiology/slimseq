@@ -9,7 +9,7 @@ class PipelineResult < ActiveRecord::Base
   ]
   
   def after_create
-    # mark the sequencing run as completed
-    sequencing_run.flow_cell.complete!
+    # mark the flow cell lane as complete
+    flow_cell_lane.complete!
   end
 end
