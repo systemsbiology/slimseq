@@ -18,7 +18,15 @@ class GeraldConfigurationsController < ApplicationController
 private
   
   def get_sequencing_run
-    @sequencing_run = SequencingRun.find(params[:sequencing_run_id])
+    # search by id if applicable
+    if(params[:sequencing_run_id] != nil)
+      @sequencing_run = SequencingRun.find(params[:sequencing_run_id])
+    # otherwise search by name if applicable
+    elsif(params[:sequencing_run_name] != nil)
+      
+    else
+      raise "No sequencing run identifier provided"
+    end    
   end
 
   def write_config_file
@@ -29,6 +37,7 @@ private
     file << "ANALYSIS eland_extended\n"
     file << "SEQUENCE_FORMAT --fasta\n"
     file << "ELAND_MULTIPLE_INSTANCES 8\n"
+    file << "QF_PARAMS '(NEIGHBOUR >=2.0) && (CHASTITY >= 0.6)'"
     @lanes.keys.sort.each do |i|
       hash = @lanes[i]
       file << "#{hash[:lane_number]}:ELAND_GENOME #{hash[:eland_genome]}\n"
