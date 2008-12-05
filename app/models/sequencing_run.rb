@@ -17,7 +17,7 @@ class SequencingRun < ActiveRecord::Base
     "#{date_yymmdd}_" +
     "#{instrument.serial_number}_#{flow_cell.prefixed_name}"
   end
-  
+
   def update_attributes(attributes)  
     # handle a change in the best sequencing run
     if(attributes[:best] == "1" || attributes[:best] == true)
@@ -33,6 +33,24 @@ class SequencingRun < ActiveRecord::Base
     
     super(attributes)
   end
+
+  def self.find_by_run_name(run_name)
+    sequencing_run = nil
+
+    name_match = run_name.match(/^(\d{6})_(.*)_FC(.*)$/)
+    if(name_match)
+      date = Date.strptime(name_match[1],"%y%m%d")
+      instrument = name_match[2]
+      flow_cell = name_match[3]
+
+      sequencing_run = SequencingRun.find(:first, :include => [:flow_cell, :instrument],
+        :conditions => ["date = ? AND flow_cells.name = ? AND instruments.serial_number = ?",
+          date, flow_cell, instrument]
+      )
+    end
+    
+    return sequencing_run
+  end  
   
 private
 
