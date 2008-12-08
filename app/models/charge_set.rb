@@ -23,6 +23,11 @@ class ChargeSet < ActiveRecord::Base
   end
 
   def self.find_or_create_for_latest_charge_period(project, budget)
+    # create a charge period if none exists
+    if(ChargePeriod.count == 0)
+      ChargePeriod.create(:name => "Default Charge Period")
+    end
+    
     set = ChargeSet.find(:first, :conditions => {
         :charge_period_id => ChargePeriod.latest.id,
         :lab_group_id => project.lab_group_id,
