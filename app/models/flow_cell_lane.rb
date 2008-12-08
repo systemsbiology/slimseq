@@ -142,7 +142,7 @@ private
   def create_charge
     # charge tracking must be turned on, there must be a default charge,
     # and the sample can't be a control
-    if( (SiteConfig.track_charges? || ChargeTemplate.default != nil) &&
+    if( SiteConfig.track_charges? && ChargeTemplate.default != nil &&
         samples[0].control == false )
       charge_set = ChargeSet.find_or_create_for_latest_charge_period(
         samples[0].project,
