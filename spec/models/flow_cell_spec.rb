@@ -62,7 +62,7 @@ describe FlowCell do
     
     flow_cell.summary_hash.should == {
       :id => flow_cell.id,
-      :name => "20WERT",
+      :name => "FC20WERT",
       :date_generated => Date.today,
       :updated_at => flow_cell.updated_at,
       :uri => "http://example.com/flow_cells/#{flow_cell.id}"
@@ -82,7 +82,7 @@ describe FlowCell do
     
     flow_cell.detail_hash.should == {
       :id => flow_cell.id,
-      :name => "20WERT",
+      :name => "FC20WERT",
       :date_generated => Date.today,
       :updated_at => flow_cell.updated_at,
       :comment => "failed",
