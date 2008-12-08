@@ -19,8 +19,19 @@
   </p>
 
   <p>
+    <b>E-mail</b><br />
+    <%= f.text_field :email %>
+  </p>
+
+  <p>
     <b>Role</b><br />
     <%= f.select :role, ["customer", "staff", "admin"] %>
+  </p>
+
+  <p>
+    <b>Notifications</b><br />
+    <%= f.check_box :new_sample_notification %> Notify when new samples are recorded<br />
+    <%= f.check_box :new_sequencing_run_notification %> Notify when a new sequencing run recorded
   </p>
 
   <p>

@@ -114,6 +114,12 @@ class FlowCellLane < ActiveRecord::Base
     end
   end
   
+  def default_result_path
+    "#{SiteConfig.raw_data_root_path}/#{samples[0].project.lab_group.file_folder}/" +
+    "#{samples[0].project.file_folder}/#{flow_cell.sequencing_runs.best[0].date_yymmdd}_" +
+    "#{flow_cell.sequencing_runs.best[0].instrument.serial_number}_#{flow_cell.name}"
+  end
+  
 private
   
   def sequence_samples

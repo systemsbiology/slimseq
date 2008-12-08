@@ -1,0 +1,14 @@
+A new sequencing run has been recorded in SLIMseq:
+
+Name: <%=h @sequencing_run.run_name %>
+
+Default pipeline result paths for lanes:
+<% @sequencing_run.flow_cell.flow_cell_lanes.each do |lane| %><%=h "#{lane.lane_number}: #{lane.default_result_path}" %>
+<% end %>
+Link to the default GERALD configuration: 
+<%= link_to 'GERALD config file', 
+  "#{SiteConfig.site_url}/gerald_configurations/#{@sequencing_run.run_name}" %>
+
+Link to create a customized GERALD configuration: 
+<%= link_to 'Customize GERALD configuration',
+  "#{SiteConfig.site_url}/sequencing_runs/#{@sequencing_run.id}/gerald_configurations/new" %>

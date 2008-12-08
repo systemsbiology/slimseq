@@ -1,18 +1,17 @@
 class Notifier < ActionMailer::Base
 
   def sample_submission_notification(samples)
-    recipients SiteConfig.administrator_email
+    recipients User.notify_of_new_samples.collect{|x| x.email}.join(",")
     from       %("SLIMseq" <slimseq@#{`hostname`.strip}>)
     subject    "[SLIMseq] Samples recorded"
     body       :samples => samples
   end
 
-  def bioanalyzer_notification(run, ran_by_email, email_recipients)
-    recipients email_recipients
-    cc         ran_by_email
+  def sequencing_run_notification(sequencing_run)
+    recipients User.notify_of_new_sequencing_runs.collect{|x| x.email}.join(",")
     from       %("SLIMseq" <slimseq@#{`hostname`.strip}>)
-    subject    "[SLIMseq] New Bioanalyzer results"
-    body       :run => run, :site_url => SiteConfig.site_url
+    subject    "[SLIMseq] New sequencing run created"
+    body       :sequencing_run => sequencing_run
   end
   
 end

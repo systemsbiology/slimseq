@@ -22,8 +22,13 @@ class User < ActiveRecord::Base
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :password, :password_confirmation,
-    :role, :firstname, :lastname
+    :role, :firstname, :lastname, :new_sample_notification, :new_sequencing_run_notification
 
+  named_scope :notify_of_new_samples,
+    :conditions => {:new_sample_notification => true}
+  named_scope :notify_of_new_sequencing_runs,
+    :conditions => {:new_sequencing_run_notification => true}
+  
   def unique_combination_of_firstname_and_lastname
     same_name_users = User.find(:all,
                       :conditions => ["firstname = ? AND lastname = ?",

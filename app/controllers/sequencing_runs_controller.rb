@@ -52,6 +52,9 @@ class SequencingRunsController < ApplicationController
     
     respond_to do |format|
       if @sequencing_run.save
+        # email notification
+        Notifier.deliver_sequencing_run_notification(@sequencing_run)
+        
         flash[:notice] = 'SequencingRun was successfully created.'
         format.html { redirect_to(sequencing_runs_url) }
         format.xml  { render :xml => @sequencing_run, :status => :created, :location => @sequencing_run }
