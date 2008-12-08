@@ -52,6 +52,26 @@ class SequencingRun < ActiveRecord::Base
     return sequencing_run
   end  
   
+  def write_config_file(params)
+    file_name = "tmp/txt/#{run_name}-config.txt"
+    
+    file = File.new(file_name, "w")
+    
+    file << "ANALYSIS eland_extended\n"
+    file << "SEQUENCE_FORMAT --fasta\n"
+    file << "ELAND_MULTIPLE_INSTANCES 8\n"
+    file << "QF_PARAMS '(NEIGHBOUR >=2.0) && (CHASTITY >= 0.6)'\n"
+    params.keys.sort.each do |i|
+      hash = params[i]
+      file << "#{hash[:lane_number]}:ELAND_GENOME #{hash[:eland_genome]}\n"
+      file << "#{hash[:lane_number]}:ELAND_SEED_LENGTH #{hash[:eland_seed_length]}\n"
+      file << "#{hash[:lane_number]}:ELAND_MAX_MATCHES #{hash[:eland_max_matches]}\n"
+      file << "#{hash[:lane_number]}:USE_BASES #{hash[:use_bases]}\n"
+    end
+    
+    file.close
+  end
+  
 private
 
   def set_best_run

@@ -85,4 +85,45 @@ describe SequencingRun do
       :flow_cell => @flow_cell)
     SequencingRun.find_by_run_name("081011_HWI-EAS124_FC456DEF").should == nil
   end
+  
+  it "should write a config file" do
+    @instrument = create_instrument(:serial_number => "HWI-EAS124")
+    @flow_cell = create_flow_cell(:name => "456DEF")
+    @flow_cell_lane = create_flow_cell_lane(:flow_cell => @flow_cell)
+    @sequencing_run = create_sequencing_run(:date => "2008-10-10", :instrument => @instrument,
+      :flow_cell => @flow_cell)
+    
+    params = {
+      "0" => {
+        :lane_number => 1,
+        :eland_genome => "/path/to/genome",
+        :eland_seed_length => 20,
+        :eland_max_matches => 1,
+        :use_bases => "all"
+      },
+      "1" => {
+        :lane_number => 2,
+        :eland_genome => "/path/to/another/genome",
+        :eland_seed_length => 25,
+        :eland_max_matches => 2,
+        :use_bases => "Y*n"
+      }
+    }
+    @sequencing_run.write_config_file(params)
+    
+    f = File.new("tmp/txt/081010_HWI-EAS124_FC456DEF-config.txt")
+    
+    f.readline.should == "ANALYSIS eland_extended\n"
+    f.readline.should == "SEQUENCE_FORMAT --fasta\n"
+    f.readline.should == "ELAND_MULTIPLE_INSTANCES 8\n"
+    f.readline.should == "QF_PARAMS '(NEIGHBOUR >=2.0) && (CHASTITY >= 0.6)'\n"
+    f.readline.should == "1:ELAND_GENOME /path/to/genome\n"
+    f.readline.should == "1:ELAND_SEED_LENGTH 20\n"
+    f.readline.should == "1:ELAND_MAX_MATCHES 1\n"
+    f.readline.should == "1:USE_BASES all\n"
+    f.readline.should == "2:ELAND_GENOME /path/to/another/genome\n"
+    f.readline.should == "2:ELAND_SEED_LENGTH 25\n"
+    f.readline.should == "2:ELAND_MAX_MATCHES 2\n"
+    f.readline.should == "2:USE_BASES Y*n\n"
+  end
 end
