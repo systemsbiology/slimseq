@@ -49,6 +49,10 @@ class SampleSetsController < ApplicationController
       @samples.each do |s|
         s.save
       end
+      
+      # send notification email
+      Notifier.deliver_sample_submission_notification(@samples)
+      
       flash[:notice] = 'Samples were successfully created.'
       redirect_to(samples_url)
     else

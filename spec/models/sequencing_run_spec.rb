@@ -126,4 +126,33 @@ describe SequencingRun do
     f.readline.should == "2:ELAND_MAX_MATCHES 2\n"
     f.readline.should == "2:USE_BASES Y*n\n"
   end
+  
+  it "should provide default gerald params file" do
+    @instrument = create_instrument(:serial_number => "HWI-EAS124")
+    @flow_cell = create_flow_cell(:name => "456DEF")
+    @flow_cell_lane = create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 1)
+    @flow_cell_lane = create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 2)
+    @flow_cell.reload
+    @sequencing_run = create_sequencing_run(:date => "2008-10-10", :instrument => @instrument,
+      :flow_cell => @flow_cell)
+    
+    expected_params = {
+      "0" => {
+        :lane_number => 1,
+        :eland_genome => "/path/to/fasta",
+        :eland_seed_length => 20,
+        :eland_max_matches => 1,
+        :use_bases => "all"
+      },
+      "1" => {
+        :lane_number => 2,
+        :eland_genome => "/path/to/fasta",
+        :eland_seed_length => 20,
+        :eland_max_matches => 1,
+        :use_bases => "all"
+      }
+    }
+    
+    @sequencing_run.default_gerald_params.should == expected_params
+  end
 end

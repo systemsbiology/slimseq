@@ -72,6 +72,24 @@ class SequencingRun < ActiveRecord::Base
     file.close
   end
   
+  def default_gerald_params
+    gerald_params = Hash.new
+
+    lane_counter = 0
+    flow_cell.flow_cell_lanes.each do |lane|
+      gerald_params[lane_counter.to_s] = {
+        :lane_number => lane.lane_number,
+        :eland_genome => lane.samples[0].reference_genome.fasta_path,
+        :eland_seed_length => 20,
+        :eland_max_matches => 1,
+        :use_bases => 'all'
+      }
+      lane_counter += 1
+    end
+    
+    return gerald_params
+  end
+  
 private
 
   def set_best_run

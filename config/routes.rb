@@ -15,6 +15,10 @@ ActionController::Routing::Routes.draw do |map|
     sequencing_runs.resources :gerald_configurations, :name_prefix => "sequencing_run_"
   end
 
+  map.connect 'gerald_configurations/:sequencing_run_name',
+    :controller => 'gerald_configurations', :action => 'default',
+    :sequencing_run_name => /.*_.*_.*/
+  
   map.resources :flow_cells
 
   map.resources :sample_prep_kits
