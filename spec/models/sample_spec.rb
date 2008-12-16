@@ -486,7 +486,10 @@ describe Sample do
       :user => create_user(:firstname => "Joe", :lastname => "User"),
       :project => create_project(:name => "Mutant Yeast"),
       :submission_date => Date.today,
-      :sample_prep_kit => create_sample_prep_kit(:name => "yeast kit"),
+      :sample_prep_kit => create_sample_prep_kit(
+        :name => "yeast kit",
+        :restriction_enzyme => "DpnII"
+      ),
       :insert_size => 250,
       :desired_read_length => 36,
       :alignment_start_position => 2,
@@ -518,6 +521,7 @@ describe Sample do
       :project => "Mutant Yeast",
       :submission_date => Date.today,
       :sample_prep_kit => "yeast kit",
+      :sample_prep_kit_enzyme => "DpnII",
       :insert_size => 250,
       :desired_number_of_cycles => 36,
       :alignment_start_position => 2,

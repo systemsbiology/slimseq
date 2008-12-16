@@ -3,6 +3,7 @@
 <table class="sortable">
   <tr>
     <th>Name</th>
+    <th>Restriction Enzyme</th>
     <td>Edit</td>
     <td>Destroy</td>
   </tr>
@@ -10,6 +11,7 @@
 <% for sample_prep_kit in @sample_prep_kits %>
   <tr>
     <td><%=h sample_prep_kit.name %></td>
+    <td><%=h sample_prep_kit.restriction_enzyme %></td>
     <td><%= link_to 'Edit', edit_sample_prep_kit_path(sample_prep_kit) %></td>
     <td><%= link_to 'Destroy', sample_prep_kit, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
