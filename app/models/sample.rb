@@ -592,7 +592,7 @@ class Sample < ActiveRecord::Base
       :submission_date => submission_date,
       :updated_at => updated_at,
       :sample_prep_kit => sample_prep_kit.name,
-      :sample_prep_kit_enzyme => sample_prep_kit.restriction_enzyme,
+      :sample_prep_kit_restriction_enzyme => sample_prep_kit.restriction_enzyme,
       :insert_size => insert_size,
       :desired_number_of_cycles => desired_read_length,
       :alignment_start_position => alignment_start_position,

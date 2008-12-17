@@ -521,7 +521,7 @@ describe Sample do
       :project => "Mutant Yeast",
       :submission_date => Date.today,
       :sample_prep_kit => "yeast kit",
-      :sample_prep_kit_enzyme => "DpnII",
+      :sample_prep_kit_restriction_enzyme => "DpnII",
       :insert_size => 250,
       :desired_number_of_cycles => 36,
       :alignment_start_position => 2,
