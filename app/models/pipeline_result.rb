@@ -10,6 +10,7 @@ class PipelineResult < ActiveRecord::Base
   
   def after_create
     # mark the flow cell lane as complete
+    flow_cell_lane = FlowCellLane.find(flow_cell_lane_id)
     flow_cell_lane.complete!
   end
 end
