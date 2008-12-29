@@ -16,4 +16,23 @@ class Project < ActiveRecord::Base
   def name_and_lab_group_id
     return "#{name} (#{lab_group_id})"
   end
+  
+  def summary_hash
+    return {
+      :id => id,
+      :name => name,
+      :updated_at => updated_at,
+      :uri => "#{SiteConfig.site_url}/projects/#{id}"
+    }
+  end
+  
+  def detail_hash
+    return {
+      :id => id,
+      :name => name,
+      :file_folder => file_folder,
+      :lab_group => lab_group.name,
+      :updated_at => updated_at,
+    }
+  end
 end

@@ -5,14 +5,26 @@ class ProjectsController < ApplicationController
                                                      :edit, :update]
   
   def index
-    list
-    render :action => 'list'
-  end
-
-  def list
     @projects = Project.find(:all, :order => "name ASC")
+    
+    respond_to do |format|
+      format.html # index.rhtml
+      format.xml  { render :xml => @projects }
+      format.json { render :json => @projects.
+        collect{|x| x.summary_hash}.to_json
+      }
+    end
   end
 
+  def show
+    @project = Project.find(params[:id])
+
+    respond_to do |format|
+      format.xml  { render :xml => @project }
+      format.json  { render :json => @project.detail_hash }
+    end
+  end
+  
   def new
     @project = Project.new
   end
