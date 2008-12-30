@@ -479,12 +479,13 @@ describe Sample do
       :term => "Young",
       :naming_element => naming_element_1
     )
+    project = create_project(:name => "Mutant Yeast")
     
     sample = create_sample(
       :name_on_tube => "mut",
       :sample_description => "mutant_yeast",
       :user => create_user(:firstname => "Joe", :lastname => "User"),
-      :project => create_project(:name => "Mutant Yeast"),
+      :project => project,
       :submission_date => Date.today,
       :sample_prep_kit => create_sample_prep_kit(
         :name => "yeast kit",
@@ -535,7 +536,8 @@ describe Sample do
       :comment => "failed",
       :sample_terms => ["Age" => "Young"],
       :sample_texts => ["Subject Number" => "345"],
-      :flow_cell_lane_uris => []
+      :flow_cell_lane_uris => [],
+      :project_uri => "http://example.com/projects/#{project.id}"
     }
   end
   

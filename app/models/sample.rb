@@ -608,7 +608,8 @@ class Sample < ActiveRecord::Base
       :sample_terms => sample_term_array,
       :sample_texts => sample_text_array,
       :flow_cell_lane_uris => flow_cell_lane_ids.
-        collect {|x| "#{SiteConfig.site_url}/flow_cell_lanes/#{x}" }
+        collect {|x| "#{SiteConfig.site_url}/flow_cell_lanes/#{x}" },
+      :project_uri => "#{SiteConfig.site_url}/projects/#{project.id}"
     }
   end
   
