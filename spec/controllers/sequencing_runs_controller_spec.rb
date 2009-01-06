@@ -85,6 +85,11 @@ describe SequencingRunsController do
   describe "responding to POST create" do
 
     describe "with valid params" do
+
+      before(:each) do
+        SequencingRun.stub!(:new).and_return(mock_sequencing_run(:save => true))
+        Notifier.stub!(:deliver_sequencing_run_notification)
+      end
       
       it "should expose a newly created sequencing_run as @sequencing_run" do
         SequencingRun.should_receive(:new).with({'these' => 'params'}).and_return(mock_sequencing_run(:save => true))
@@ -93,9 +98,13 @@ describe SequencingRunsController do
       end
 
       it "should redirect to the created sequencing_run" do
-        SequencingRun.stub!(:new).and_return(mock_sequencing_run(:save => true))
         post :create, :sequencing_run => {}
         response.should redirect_to(sequencing_runs_url)
+      end
+      
+      it "should send email notifications" do
+        Notifier.should_receive(:deliver_sequencing_run_notification)
+        post :create, :sequencing_run => {}
       end
       
     end

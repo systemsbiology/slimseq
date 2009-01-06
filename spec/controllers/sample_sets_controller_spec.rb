@@ -197,6 +197,7 @@ describe SampleSetsController do
       @sample = mock_model(Sample)
       Sample.stub!(:new).and_return(@sample)
       @sample_set.stub!(:samples=).and_return(true)
+      Notifier.stub!(:deliver_sample_submission_notification)
     end
    
     describe "with a valid sample set" do
@@ -241,6 +242,11 @@ describe SampleSetsController do
       it "should redirect to the list of samples" do
         do_post
         response.should redirect_to(samples_url)
+      end
+      
+      it "should send email notifications" do
+        Notifier.should_receive(:deliver_sample_submission_notification)
+        do_post
       end
     end
     
