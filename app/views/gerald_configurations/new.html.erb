@@ -18,8 +18,8 @@
         <td><%=h lane.samples[0].short_and_long_name %></td>
         <td><%= text_field_tag "lanes[#{n}][eland_genome]",
                                lane.samples[0].reference_genome.fasta_path, :size => 50 %></td>
-        <td><%= text_field_tag "lanes[#{n}][eland_seed_length]", 20 %></td>
-        <td><%= text_field_tag "lanes[#{n}][eland_max_matches]", 1 %></td>
+        <td><%= text_field_tag "lanes[#{n}][eland_seed_length]", 25 %></td>
+        <td><%= text_field_tag "lanes[#{n}][eland_max_matches]", 15 %></td>
         <td><%= text_field_tag "lanes[#{n}][use_bases]", lane.samples[0].use_bases_string %></td>
       </tr>
     <% end %>
