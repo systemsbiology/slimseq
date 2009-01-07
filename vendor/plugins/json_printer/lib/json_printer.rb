@@ -78,8 +78,14 @@ class JsonPrinter
       print(obj.to_s)
     
     elsif Time === obj
-      print(obj.to_s)
+      print( obj.strftime('"%Y/%m/%d %H:%M:%S %z"') )
     
+    elsif DateTime === obj
+      print( obj.strftime('"%Y/%m/%d %H:%M:%S %z"') )
+
+    elsif Date === obj
+      print( obj.strftime('"%Y/%m/%d"') )
+
     elsif obj.respond_to?(:keys)
       print("{")
       indent_out
