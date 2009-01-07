@@ -1,0 +1,93 @@
+<a href="/api">&laquo; Back to index</a>
+
+<h1>/samples</h1>
+<p class="summary">
+This resource can be used to list a summary of all samples, or show details for 
+a particular sample.
+</p>
+
+
+
+
+
+  <div style="padding:30px; padding-top:0px;border-bottom:1px solid #ddd;">
+  
+  
+  <h2><span style='color:#ff6600; width:200px;margin-right:20px;'>GET</span>/samples</h2>
+  
+  <p>
+Get a list of all samples, which doesn't have all the details that are 
+available when retrieving single samples (see GET /samples/[sample id]).
+</p>
+  
+  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+
+  <p><strong>Parameters:</strong>
+  
+    None
+  
+  </p>
+
+   
+    <strong>Return:</strong> A list of all summary information on all samples</br>
+
+    
+    <a name="json"></a>
+    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep-170971533').toggle()">(toggle code)</a><br />
+    <textarea style="width:600px;height:400px;display:none;" id="jsonrep-170971533"><%= JsonPrinter.render(Sample.find(:all, :limit => 5).collect{|x| x.summary_hash}) %></textarea></br>
+    
+
+    
+    <a name="xml"></a>
+    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep-170971533').toggle()">(toggle code)</a><br/>
+    <textarea style="width:600px;height:400px;display:none;" id="xmlrep-170971533"><%= Sample.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %></textarea>
+    
+
+  
+  
+</div>
+
+
+
+
+  <div style="padding:30px; padding-top:0px;border-bottom:1px solid #ddd;">
+  
+  
+  <h2><span style='color:#ff6600; width:200px;margin-right:20px;'>GET</span>/samples/[sample id]</h2>
+  
+  <p>
+Get detailed information about a single sample.
+</p>
+  
+  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+
+  <p><strong>Parameters:</strong>
+  
+    None
+  
+  </p>
+
+   
+    <strong>Return:</strong> Detailed attributes of a particular sample</br>
+
+    
+    <a name="json"></a>
+    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep--367659066').toggle()">(toggle code)</a><br />
+    <textarea style="width:600px;height:400px;display:none;" id="jsonrep--367659066"><%= JsonPrinter.render(Sample.find(:first).detail_hash) %></textarea></br>
+    
+
+    
+    <a name="xml"></a>
+    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep--367659066').toggle()">(toggle code)</a><br/>
+    <textarea style="width:600px;height:400px;display:none;" id="xmlrep--367659066"><%= Sample.find(:first).detail_hash.to_xml %></textarea>
+    
+
+  
+  
+</div>
+
+
+
+
+
+

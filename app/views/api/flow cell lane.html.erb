@@ -1,0 +1,93 @@
+<a href="/api">&laquo; Back to index</a>
+
+<h1>/flow_cell_lanes</h1>
+<p class="summary">
+This resource can be used to list a summary of all flow cell lanes, or show details for 
+a particular flow cell lane.
+</p>
+
+
+
+
+
+  <div style="padding:30px; padding-top:0px;border-bottom:1px solid #ddd;">
+  
+  
+  <h2><span style='color:#ff6600; width:200px;margin-right:20px;'>GET</span>/flow_cell_lanes</h2>
+  
+  <p>
+Get a list of all flow cell lanes, which doesn't have all the details that are 
+available when retrieving single flow cell lanes (see GET /flow_cell_lanes/[flow cell lane id]).
+</p>
+  
+  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+
+  <p><strong>Parameters:</strong>
+  
+    None
+  
+  </p>
+
+   
+    <strong>Return:</strong> A list of summary information on all flow cell lanes</br>
+
+    
+    <a name="json"></a>
+    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep--86599687').toggle()">(toggle code)</a><br />
+    <textarea style="width:600px;height:400px;display:none;" id="jsonrep--86599687"><%= JsonPrinter.render(FlowCellLane.find(:all, :limit => 5).collect{|x| x.summary_hash}) %></textarea></br>
+    
+
+    
+    <a name="xml"></a>
+    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep--86599687').toggle()">(toggle code)</a><br/>
+    <textarea style="width:600px;height:400px;display:none;" id="xmlrep--86599687"><%= FlowCellLane.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %></textarea>
+    
+
+  
+  
+</div>
+
+
+
+
+  <div style="padding:30px; padding-top:0px;border-bottom:1px solid #ddd;">
+  
+  
+  <h2><span style='color:#ff6600; width:200px;margin-right:20px;'>GET</span>/flow_cell_lanes/[flow cell lane id]</h2>
+  
+  <p>
+Get detailed information about a single flow cell lane.
+</p>
+  
+  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+
+  <p><strong>Parameters:</strong>
+  
+    None
+  
+  </p>
+
+   
+    <strong>Return:</strong> Detailed attributes of a particular flow cell lane</br>
+
+    
+    <a name="json"></a>
+    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep-521517884').toggle()">(toggle code)</a><br />
+    <textarea style="width:600px;height:400px;display:none;" id="jsonrep-521517884"><%= JsonPrinter.render(FlowCellLane.find(:first).detail_hash) %></textarea></br>
+    
+
+    
+    <a name="xml"></a>
+    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep-521517884').toggle()">(toggle code)</a><br/>
+    <textarea style="width:600px;height:400px;display:none;" id="xmlrep-521517884"><%= FlowCellLane.find(:first).detail_hash.to_xml %></textarea>
+    
+
+  
+  
+</div>
+
+
+
+
+
+

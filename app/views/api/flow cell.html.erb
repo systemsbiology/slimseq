@@ -1,0 +1,93 @@
+<a href="/api">&laquo; Back to index</a>
+
+<h1>/flow_cells</h1>
+<p class="summary">
+This resource can be used to list a summary of all flow cells, or show details for 
+a particular flow cell.
+</p>
+
+
+
+
+
+  <div style="padding:30px; padding-top:0px;border-bottom:1px solid #ddd;">
+  
+  
+  <h2><span style='color:#ff6600; width:200px;margin-right:20px;'>GET</span>/flow_cells</h2>
+  
+  <p>
+Get a list of all flow cells, which doesn't have all the details that are 
+available when retrieving single flow cells (see GET /flow_cells/[flow cell id]).
+</p>
+  
+  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+
+  <p><strong>Parameters:</strong>
+  
+    None
+  
+  </p>
+
+   
+    <strong>Return:</strong> A list of summary information on all flow cells</br>
+
+    
+    <a name="json"></a>
+    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep-260454736').toggle()">(toggle code)</a><br />
+    <textarea style="width:600px;height:400px;display:none;" id="jsonrep-260454736"><%= JsonPrinter.render(FlowCell.find(:all, :limit => 5).collect{|x| x.summary_hash}) %></textarea></br>
+    
+
+    
+    <a name="xml"></a>
+    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep-260454736').toggle()">(toggle code)</a><br/>
+    <textarea style="width:600px;height:400px;display:none;" id="xmlrep-260454736"><%= FlowCell.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %></textarea>
+    
+
+  
+  
+</div>
+
+
+
+
+  <div style="padding:30px; padding-top:0px;border-bottom:1px solid #ddd;">
+  
+  
+  <h2><span style='color:#ff6600; width:200px;margin-right:20px;'>GET</span>/flow_cells/[flow cell id]</h2>
+  
+  <p>
+Get detailed information about a single flow cell.
+</p>
+  
+  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+
+  <p><strong>Parameters:</strong>
+  
+    None
+  
+  </p>
+
+   
+    <strong>Return:</strong> Detailed attributes of a particular flow cell</br>
+
+    
+    <a name="json"></a>
+    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep-225432950').toggle()">(toggle code)</a><br />
+    <textarea style="width:600px;height:400px;display:none;" id="jsonrep-225432950"><%= JsonPrinter.render(FlowCell.find(:first).detail_hash) %></textarea></br>
+    
+
+    
+    <a name="xml"></a>
+    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep-225432950').toggle()">(toggle code)</a><br/>
+    <textarea style="width:600px;height:400px;display:none;" id="xmlrep-225432950"><%= FlowCell.find(:first).detail_hash.to_xml %></textarea>
+    
+
+  
+  
+</div>
+
+
+
+
+
+
