@@ -1,24 +1,56 @@
+=begin rapidoc
+name:: /naming_schemes
+
+This resource can be used to list a summary of all naming_schemes, or show details for 
+a particular naming_scheme.
+=end
+
 class NamingSchemesController < ApplicationController
   before_filter :login_required
   before_filter :staff_or_admin_required
+
+=begin rapidoc
+url:: /naming_schemes
+method:: GET
+access:: HTTP Basic authentication, Customer access or higher
+json:: <%= JsonPrinter.render(NamingScheme.find(:all, :limit => 5).collect{|x| x.summary_hash}) %>
+xml:: <%= NamingScheme.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %>
+return:: A list of all summary information on all naming_schemes
+
+Get a list of all naming_schemes, which doesn't have all the details that are 
+available when retrieving single naming_schemes (see GET /naming_schemes/[naming_scheme id]).
+=end
   
   def index
     @naming_schemes = NamingScheme.find(:all, :order => "name ASC")
 
     respond_to do |format|
       format.html # index.rhtml
-      format.xml  { render :xml => @naming_schemes }
+      format.xml  { render :xml => @naming_schemes.
+        collect{|x| x.summary_hash}.to_xml 
+      }
       format.json  { render :json => @naming_schemes.
         collect{|x| x.summary_hash}.to_json 
       }
     end
   end
 
+=begin rapidoc
+url:: /naming_schemes/[naming_scheme id]
+method:: GET
+access:: HTTP Basic authentication, Customer access or higher
+json:: <%= JsonPrinter.render(NamingScheme.find(:first).detail_hash) %>
+xml:: <%= NamingScheme.find(:first).detail_hash.to_xml %>
+return:: Detailed attributes of a particular naming_scheme
+
+Get detailed information about a single naming_scheme.
+=end
+
   def show
     @naming_scheme = NamingScheme.find(params[:id])
     
     respond_to do |format|
-      format.xml  { render :xml => @naming_scheme }
+      format.xml  { render :xml => @naming_scheme.detail_hash.to_xml }
       format.json  { render :json => @naming_scheme.detail_hash.to_json }
     end    
   end

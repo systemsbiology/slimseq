@@ -1,8 +1,27 @@
+=begin rapidoc
+name:: /projects
+
+This resource can be used to list a summary of all projects, or show details for 
+a particular project.
+=end
+
 class ProjectsController < ApplicationController
   before_filter :login_required
   before_filter :staff_or_admin_required
   before_filter :load_dropdown_selections, :only => [:new, :new_inline, :create, :create_inline,
                                                      :edit, :update]
+
+=begin rapidoc
+url:: /projects
+method:: GET
+access:: HTTP Basic authentication, Customer access or higher
+json:: <%= JsonPrinter.render(Project.find(:all, :limit => 5).collect{|x| x.summary_hash}) %>
+xml:: <%= Project.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %>
+return:: A list of all summary information on all projects
+
+Get a list of all projects, which doesn't have all the details that are 
+available when retrieving single projects (see GET /projects/[project id]).
+=end
   
   def index
     @projects = Project.find(:all, :order => "name ASC")
@@ -16,6 +35,17 @@ class ProjectsController < ApplicationController
     end
   end
 
+=begin rapidoc
+url:: /projects/[project id]
+method:: GET
+access:: HTTP Basic authentication, Customer access or higher
+json:: <%= JsonPrinter.render(Project.find(:first).detail_hash) %>
+xml:: <%= Project.find(:first).detail_hash.to_xml %>
+return:: Detailed attributes of a particular project
+
+Get detailed information about a single project.
+=end
+  
   def show
     @project = Project.find(params[:id])
 

@@ -1,8 +1,27 @@
+=begin rapidoc
+name:: /flow_cells
+
+This resource can be used to list a summary of all flow cells, or show details for 
+a particular flow cell.
+=end
+
 class FlowCellsController < ApplicationController
   before_filter :login_required
   before_filter :load_dropdown_selections_only_submitted, :only => [:new, :create]
   before_filter :load_dropdown_selections_all, :only => [:edit, :update]
-  
+
+=begin rapidoc
+url:: /flow_cells
+method:: GET
+access:: HTTP Basic authentication, Customer access or higher
+json:: <%= JsonPrinter.render(FlowCell.find(:all, :limit => 5).collect{|x| x.summary_hash}) %>
+xml:: <%= FlowCell.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %>
+return:: A list of summary information on all flow cells
+
+Get a list of all flow cells, which doesn't have all the details that are 
+available when retrieving single flow cells (see GET /flow_cells/[flow cell id]).
+=end  
+    
   # GET /flow_cells
   # GET /flow_cells.xml
   def index
@@ -10,13 +29,26 @@ class FlowCellsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @flow_cells }
+      format.xml  { render :xml => @flow_cells.
+        collect{|x| x.summary_hash}.to_xml
+      }
       format.json  { render :json => @flow_cells.
         collect{|x| x.summary_hash}.to_json
       }
     end
   end
 
+=begin rapidoc
+url:: /flow_cells/[flow cell id]
+method:: GET
+access:: HTTP Basic authentication, Customer access or higher
+json:: <%= JsonPrinter.render(FlowCell.find(:first).detail_hash) %>
+xml:: <%= FlowCell.find(:first).detail_hash.to_xml %>
+return:: Detailed attributes of a particular flow cell
+
+Get detailed information about a single flow cell.
+=end
+  
   # GET /flow_cells/1
   # GET /flow_cells/1.xml
   def show
@@ -24,7 +56,7 @@ class FlowCellsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @flow_cell }
+      format.xml  { render :xml => @flow_cell.detail_hash }
       format.json  { render :json => @flow_cell.detail_hash }
     end
   end

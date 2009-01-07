@@ -1,7 +1,26 @@
+=begin rapidoc
+name:: /samples
+
+This resource can be used to list a summary of all samples, or show details for 
+a particular sample.
+=end
+
 class SamplesController < ApplicationController
   before_filter :login_required
   before_filter :load_dropdown_selections
   before_filter :staff_or_admin_required, :only => [:bulk_destroy]
+  
+=begin rapidoc
+url:: /samples
+method:: GET
+access:: HTTP Basic authentication, Customer access or higher
+json:: <%= JsonPrinter.render(Sample.find(:all, :limit => 5).collect{|x| x.summary_hash}) %>
+xml:: <%= Sample.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %>
+return:: A list of all summary information on all samples
+
+Get a list of all samples, which doesn't have all the details that are 
+available when retrieving single samples (see GET /samples/[sample id]).
+=end
   
   def index
     if(@lab_groups != nil && @lab_groups.size > 0)
@@ -19,18 +38,31 @@ class SamplesController < ApplicationController
     
     respond_to do |format|
       format.html  #index.html
-      format.xml   { render :xml => @samples }
+      format.xml   { render :xml => @samples.
+        collect{|x| x.summary_hash}.to_xml
+      }
       format.json  { render :json => @samples.
         collect{|x| x.summary_hash}.to_json 
       }
     end
   end
+
+=begin rapidoc
+url:: /samples/[sample id]
+method:: GET
+access:: HTTP Basic authentication, Customer access or higher
+json:: <%= JsonPrinter.render(Sample.find(:first).detail_hash) %>
+xml:: <%= Sample.find(:first).detail_hash.to_xml %>
+return:: Detailed attributes of a particular sample
+
+Get detailed information about a single sample.
+=end
   
   def show
     @sample = Sample.find(params[:id])
     
     respond_to do |format|
-      format.xml   { render :xml => @sample }
+      format.xml   { render :xml => @sample.detail_hash.to_xml }
       format.json  { render :json => @sample.detail_hash.to_json }
     end    
   end
