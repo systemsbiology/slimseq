@@ -208,7 +208,7 @@ class NamingScheme < ActiveRecord::Base
         :group_element => ne.group_element,
         :optional => ne.optional,
         :free_text => ne.free_text,
-        :depends_on => ne.depends_upon_element,
+        :depends_on => ne.depends_upon_element ? ne.depends_upon_element.name : "",
         :naming_terms => naming_term_array
       }
     end
