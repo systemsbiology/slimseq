@@ -140,15 +140,15 @@ describe SequencingRun do
       "0" => {
         :lane_number => 1,
         :eland_genome => "/path/to/fasta",
-        :eland_seed_length => 20,
-        :eland_max_matches => 1,
+        :eland_seed_length => 25,
+        :eland_max_matches => 15,
         :use_bases => "all"
       },
       "1" => {
         :lane_number => 2,
         :eland_genome => "/path/to/fasta",
-        :eland_seed_length => 20,
-        :eland_max_matches => 1,
+        :eland_seed_length => 25,
+        :eland_max_matches => 15,
         :use_bases => "all"
       }
     }
