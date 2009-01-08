@@ -162,7 +162,7 @@ describe NamingScheme do
           :group_element => true,
           :optional => true,
           :free_text => false,
-          :depends_on => nil,
+          :depends_on => "",
           :naming_terms => ["Young", "Old"]
         },
         {
@@ -170,7 +170,7 @@ describe NamingScheme do
           :group_element => true,
           :optional => true,
           :free_text => true,
-          :depends_on => nil,
+          :depends_on => "",
           :naming_terms => []
         }
       ]
