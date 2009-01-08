@@ -3,7 +3,10 @@
 <h1>/projects</h1>
 <p class="summary">
 This resource can be used to list a summary of all projects, or show details for 
-a particular project.
+a particular project.<br><br>
+
+Each project belongs to a particular lab group. A project can be associated 
+with any number of samples.
 </p>
 
 
@@ -20,7 +23,9 @@ Get a list of all projects, which doesn't have all the details that are
 available when retrieving single projects (see GET /projects/[project id]).
 </p>
   
-  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/projects<p/>
+  
+  <p><strong>Access:</strong> HTTP Basic authentication, Customer access or higher<p/>
 
   <p><strong>Parameters:</strong>
   
@@ -29,17 +34,17 @@ available when retrieving single projects (see GET /projects/[project id]).
   </p>
 
    
-    <strong>Return:</strong> A list of all summary information on all projects</br>
+    <strong>Response:</strong> A list of all summary information on all projects</br>
 
     
     <a name="json"></a>
-    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep-1044892615').toggle()">(toggle code)</a><br />
+    JSON example: <br /><a href="javascript:$('jsonrep-1044892615').toggle()">(toggle code)</a><br />
     <textarea style="width:600px;height:400px;display:none;" id="jsonrep-1044892615"><%= JsonPrinter.render(Project.find(:all, :limit => 5).collect{|x| x.summary_hash}) %></textarea></br>
     
 
     
     <a name="xml"></a>
-    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep-1044892615').toggle()">(toggle code)</a><br/>
+    XML example: <br /><a href="javascript:$('xmlrep-1044892615').toggle()">(toggle code)</a><br/>
     <textarea style="width:600px;height:400px;display:none;" id="xmlrep-1044892615"><%= Project.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %></textarea>
     
 
@@ -59,7 +64,9 @@ available when retrieving single projects (see GET /projects/[project id]).
 Get detailed information about a single project.
 </p>
   
-  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/projects/5.json<p/>
+  
+  <p><strong>Access:</strong> HTTP Basic authentication, Customer access or higher<p/>
 
   <p><strong>Parameters:</strong>
   
@@ -68,17 +75,17 @@ Get detailed information about a single project.
   </p>
 
    
-    <strong>Return:</strong> Detailed attributes of a particular project</br>
+    <strong>Response:</strong> Detailed attributes of a particular project</br>
 
     
     <a name="json"></a>
-    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep--556402711').toggle()">(toggle code)</a><br />
+    JSON example: <br /><a href="javascript:$('jsonrep--556402711').toggle()">(toggle code)</a><br />
     <textarea style="width:600px;height:400px;display:none;" id="jsonrep--556402711"><%= JsonPrinter.render(Project.find(:first).detail_hash) %></textarea></br>
     
 
     
     <a name="xml"></a>
-    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep--556402711').toggle()">(toggle code)</a><br/>
+    XML example: <br /><a href="javascript:$('xmlrep--556402711').toggle()">(toggle code)</a><br/>
     <textarea style="width:600px;height:400px;display:none;" id="xmlrep--556402711"><%= Project.find(:first).detail_hash.to_xml %></textarea>
     
 

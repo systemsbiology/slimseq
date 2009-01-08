@@ -2,7 +2,11 @@
 name:: /flow_cells
 
 This resource can be used to list a summary of all flow cells, or show details for 
-a particular flow cell.
+a particular flow cell.<br><br>
+
+A flow cell has multiple (right now it is always 8) flow cell lanes, each of 
+which is associated with a sample. A flow cell is associated with a sequencer, 
+if it has been sequenced.
 =end
 
 class FlowCellsController < ApplicationController
@@ -13,6 +17,7 @@ class FlowCellsController < ApplicationController
 =begin rapidoc
 url:: /flow_cells
 method:: GET
+example:: <%= SiteConfig.site_url %>/flow_cells
 access:: HTTP Basic authentication, Customer access or higher
 json:: <%= JsonPrinter.render(FlowCell.find(:all, :limit => 5).collect{|x| x.summary_hash}) %>
 xml:: <%= FlowCell.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %>
@@ -41,6 +46,7 @@ available when retrieving single flow cells (see GET /flow_cells/[flow cell id])
 =begin rapidoc
 url:: /flow_cells/[flow cell id]
 method:: GET
+example:: <%= SiteConfig.site_url %>/flow_cells/10.json
 access:: HTTP Basic authentication, Customer access or higher
 json:: <%= JsonPrinter.render(FlowCell.find(:first).detail_hash) %>
 xml:: <%= FlowCell.find(:first).detail_hash.to_xml %>

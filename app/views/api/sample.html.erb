@@ -3,7 +3,11 @@
 <h1>/samples</h1>
 <p class="summary">
 This resource can be used to list a summary of all samples, or show details for 
-a particular sample.
+a particular sample.<br><br>
+A sample can be be run on any number of different flow cells (and therefore 
+flow cell lanes), and/or multiple lanes on a particular flow cell. It is also 
+conceivable that multiple samples could be run in one flow cell lane, however 
+SLIMseq does not yet support this ability.
 </p>
 
 
@@ -20,7 +24,9 @@ Get a list of all samples, which doesn't have all the details that are
 available when retrieving single samples (see GET /samples/[sample id]).
 </p>
   
-  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/samples<p/>
+  
+  <p><strong>Access:</strong> HTTP Basic authentication, Customer access or higher<p/>
 
   <p><strong>Parameters:</strong>
   
@@ -29,17 +35,17 @@ available when retrieving single samples (see GET /samples/[sample id]).
   </p>
 
    
-    <strong>Return:</strong> A list of all summary information on all samples</br>
+    <strong>Response:</strong> A list of all summary information on all samples</br>
 
     
     <a name="json"></a>
-    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep-170971533').toggle()">(toggle code)</a><br />
+    JSON example: <br /><a href="javascript:$('jsonrep-170971533').toggle()">(toggle code)</a><br />
     <textarea style="width:600px;height:400px;display:none;" id="jsonrep-170971533"><%= JsonPrinter.render(Sample.find(:all, :limit => 5).collect{|x| x.summary_hash}) %></textarea></br>
     
 
     
     <a name="xml"></a>
-    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep-170971533').toggle()">(toggle code)</a><br/>
+    XML example: <br /><a href="javascript:$('xmlrep-170971533').toggle()">(toggle code)</a><br/>
     <textarea style="width:600px;height:400px;display:none;" id="xmlrep-170971533"><%= Sample.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %></textarea>
     
 
@@ -59,7 +65,9 @@ available when retrieving single samples (see GET /samples/[sample id]).
 Get detailed information about a single sample.
 </p>
   
-  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/samples/100.json<p/>
+  
+  <p><strong>Access:</strong> HTTP Basic authentication, Customer access or higher<p/>
 
   <p><strong>Parameters:</strong>
   
@@ -68,17 +76,17 @@ Get detailed information about a single sample.
   </p>
 
    
-    <strong>Return:</strong> Detailed attributes of a particular sample</br>
+    <strong>Response:</strong> Detailed attributes of a particular sample</br>
 
     
     <a name="json"></a>
-    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep--367659066').toggle()">(toggle code)</a><br />
+    JSON example: <br /><a href="javascript:$('jsonrep--367659066').toggle()">(toggle code)</a><br />
     <textarea style="width:600px;height:400px;display:none;" id="jsonrep--367659066"><%= JsonPrinter.render(Sample.find(:first).detail_hash) %></textarea></br>
     
 
     
     <a name="xml"></a>
-    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep--367659066').toggle()">(toggle code)</a><br/>
+    XML example: <br /><a href="javascript:$('xmlrep--367659066').toggle()">(toggle code)</a><br/>
     <textarea style="width:600px;height:400px;display:none;" id="xmlrep--367659066"><%= Sample.find(:first).detail_hash.to_xml %></textarea>
     
 

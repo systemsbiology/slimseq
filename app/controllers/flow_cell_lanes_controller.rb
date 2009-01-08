@@ -11,6 +11,7 @@ class FlowCellLanesController < ApplicationController
 =begin rapidoc
 url:: /flow_cell_lanes
 method:: GET
+example:: <%= SiteConfig.site_url %>/flow_cell_lanes
 access:: HTTP Basic authentication, Customer access or higher
 json:: <%= JsonPrinter.render(FlowCellLane.find(:all, :limit => 5).collect{|x| x.summary_hash}) %>
 xml:: <%= FlowCellLane.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %>
@@ -38,6 +39,7 @@ available when retrieving single flow cell lanes (see GET /flow_cell_lanes/[flow
 =begin rapidoc
 url:: /flow_cell_lanes/[flow cell lane id]
 method:: GET
+example:: <%= SiteConfig.site_url %>/flow_cell_lanes/100.json
 access:: HTTP Basic authentication, Customer access or higher
 json:: <%= JsonPrinter.render(FlowCellLane.find(:first).detail_hash) %>
 xml:: <%= FlowCellLane.find(:first).detail_hash.to_xml %>

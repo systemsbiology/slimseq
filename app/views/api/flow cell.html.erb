@@ -3,7 +3,11 @@
 <h1>/flow_cells</h1>
 <p class="summary">
 This resource can be used to list a summary of all flow cells, or show details for 
-a particular flow cell.
+a particular flow cell.<br><br>
+
+A flow cell has multiple (right now it is always 8) flow cell lanes, each of 
+which is associated with a sample. A flow cell is associated with a sequencer, 
+if it has been sequenced.
 </p>
 
 
@@ -20,7 +24,9 @@ Get a list of all flow cells, which doesn't have all the details that are
 available when retrieving single flow cells (see GET /flow_cells/[flow cell id]).
 </p>
   
-  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/flow_cells<p/>
+  
+  <p><strong>Access:</strong> HTTP Basic authentication, Customer access or higher<p/>
 
   <p><strong>Parameters:</strong>
   
@@ -29,17 +35,17 @@ available when retrieving single flow cells (see GET /flow_cells/[flow cell id])
   </p>
 
    
-    <strong>Return:</strong> A list of summary information on all flow cells</br>
+    <strong>Response:</strong> test</br>
 
     
     <a name="json"></a>
-    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep-260454736').toggle()">(toggle code)</a><br />
+    JSON example: <br /><a href="javascript:$('jsonrep-260454736').toggle()">(toggle code)</a><br />
     <textarea style="width:600px;height:400px;display:none;" id="jsonrep-260454736"><%= JsonPrinter.render(FlowCell.find(:all, :limit => 5).collect{|x| x.summary_hash}) %></textarea></br>
     
 
     
     <a name="xml"></a>
-    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep-260454736').toggle()">(toggle code)</a><br/>
+    XML example: <br /><a href="javascript:$('xmlrep-260454736').toggle()">(toggle code)</a><br/>
     <textarea style="width:600px;height:400px;display:none;" id="xmlrep-260454736"><%= FlowCell.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %></textarea>
     
 
@@ -59,7 +65,9 @@ available when retrieving single flow cells (see GET /flow_cells/[flow cell id])
 Get detailed information about a single flow cell.
 </p>
   
-  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/flow_cells/10.json<p/>
+  
+  <p><strong>Access:</strong> HTTP Basic authentication, Customer access or higher<p/>
 
   <p><strong>Parameters:</strong>
   
@@ -68,17 +76,17 @@ Get detailed information about a single flow cell.
   </p>
 
    
-    <strong>Return:</strong> Detailed attributes of a particular flow cell</br>
+    <strong>Response:</strong> Detailed attributes of a particular flow cell</br>
 
     
     <a name="json"></a>
-    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep-225432950').toggle()">(toggle code)</a><br />
+    JSON example: <br /><a href="javascript:$('jsonrep-225432950').toggle()">(toggle code)</a><br />
     <textarea style="width:600px;height:400px;display:none;" id="jsonrep-225432950"><%= JsonPrinter.render(FlowCell.find(:first).detail_hash) %></textarea></br>
     
 
     
     <a name="xml"></a>
-    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep-225432950').toggle()">(toggle code)</a><br/>
+    XML example: <br /><a href="javascript:$('xmlrep-225432950').toggle()">(toggle code)</a><br/>
     <textarea style="width:600px;height:400px;display:none;" id="xmlrep-225432950"><%= FlowCell.find(:first).detail_hash.to_xml %></textarea>
     
 

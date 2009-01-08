@@ -2,7 +2,11 @@
 name:: /samples
 
 This resource can be used to list a summary of all samples, or show details for 
-a particular sample.
+a particular sample.<br><br>
+A sample can be be run on any number of different flow cells (and therefore 
+flow cell lanes), and/or multiple lanes on a particular flow cell. It is also 
+conceivable that multiple samples could be run in one flow cell lane, however 
+SLIMseq does not yet support this ability.
 =end
 
 class SamplesController < ApplicationController
@@ -13,6 +17,7 @@ class SamplesController < ApplicationController
 =begin rapidoc
 url:: /samples
 method:: GET
+example:: <%= SiteConfig.site_url %>/samples
 access:: HTTP Basic authentication, Customer access or higher
 json:: <%= JsonPrinter.render(Sample.find(:all, :limit => 5).collect{|x| x.summary_hash}) %>
 xml:: <%= Sample.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %>
@@ -50,6 +55,7 @@ available when retrieving single samples (see GET /samples/[sample id]).
 =begin rapidoc
 url:: /samples/[sample id]
 method:: GET
+example:: <%= SiteConfig.site_url %>/samples/100.json
 access:: HTTP Basic authentication, Customer access or higher
 json:: <%= JsonPrinter.render(Sample.find(:first).detail_hash) %>
 xml:: <%= Sample.find(:first).detail_hash.to_xml %>

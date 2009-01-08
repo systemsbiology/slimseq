@@ -20,7 +20,9 @@ Get a list of all flow cell lanes, which doesn't have all the details that are
 available when retrieving single flow cell lanes (see GET /flow_cell_lanes/[flow cell lane id]).
 </p>
   
-  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/flow_cell_lanes<p/>
+  
+  <p><strong>Access:</strong> HTTP Basic authentication, Customer access or higher<p/>
 
   <p><strong>Parameters:</strong>
   
@@ -29,17 +31,17 @@ available when retrieving single flow cell lanes (see GET /flow_cell_lanes/[flow
   </p>
 
    
-    <strong>Return:</strong> A list of summary information on all flow cell lanes</br>
+    <strong>Response:</strong> A list of summary information on all flow cell lanes</br>
 
     
     <a name="json"></a>
-    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep--86599687').toggle()">(toggle code)</a><br />
+    JSON example: <br /><a href="javascript:$('jsonrep--86599687').toggle()">(toggle code)</a><br />
     <textarea style="width:600px;height:400px;display:none;" id="jsonrep--86599687"><%= JsonPrinter.render(FlowCellLane.find(:all, :limit => 5).collect{|x| x.summary_hash}) %></textarea></br>
     
 
     
     <a name="xml"></a>
-    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep--86599687').toggle()">(toggle code)</a><br/>
+    XML example: <br /><a href="javascript:$('xmlrep--86599687').toggle()">(toggle code)</a><br/>
     <textarea style="width:600px;height:400px;display:none;" id="xmlrep--86599687"><%= FlowCellLane.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %></textarea>
     
 
@@ -59,7 +61,9 @@ available when retrieving single flow cell lanes (see GET /flow_cell_lanes/[flow
 Get detailed information about a single flow cell lane.
 </p>
   
-  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/flow_cell_lanes/100.json<p/>
+  
+  <p><strong>Access:</strong> HTTP Basic authentication, Customer access or higher<p/>
 
   <p><strong>Parameters:</strong>
   
@@ -68,17 +72,17 @@ Get detailed information about a single flow cell lane.
   </p>
 
    
-    <strong>Return:</strong> Detailed attributes of a particular flow cell lane</br>
+    <strong>Response:</strong> Detailed attributes of a particular flow cell lane</br>
 
     
     <a name="json"></a>
-    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep-521517884').toggle()">(toggle code)</a><br />
+    JSON example: <br /><a href="javascript:$('jsonrep-521517884').toggle()">(toggle code)</a><br />
     <textarea style="width:600px;height:400px;display:none;" id="jsonrep-521517884"><%= JsonPrinter.render(FlowCellLane.find(:first).detail_hash) %></textarea></br>
     
 
     
     <a name="xml"></a>
-    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep-521517884').toggle()">(toggle code)</a><br/>
+    XML example: <br /><a href="javascript:$('xmlrep-521517884').toggle()">(toggle code)</a><br/>
     <textarea style="width:600px;height:400px;display:none;" id="xmlrep-521517884"><%= FlowCellLane.find(:first).detail_hash.to_xml %></textarea>
     
 

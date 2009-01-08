@@ -20,7 +20,9 @@ Get a list of all naming_schemes, which doesn't have all the details that are
 available when retrieving single naming_schemes (see GET /naming_schemes/[naming_scheme id]).
 </p>
   
-  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/naming_schemes<p/>
+  
+  <p><strong>Access:</strong> HTTP Basic authentication, Customer access or higher<p/>
 
   <p><strong>Parameters:</strong>
   
@@ -29,17 +31,17 @@ available when retrieving single naming_schemes (see GET /naming_schemes/[naming
   </p>
 
    
-    <strong>Return:</strong> A list of all summary information on all naming_schemes</br>
+    <strong>Response:</strong> A list of all summary information on all naming_schemes</br>
 
     
     <a name="json"></a>
-    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep-576013531').toggle()">(toggle code)</a><br />
+    JSON example: <br /><a href="javascript:$('jsonrep-576013531').toggle()">(toggle code)</a><br />
     <textarea style="width:600px;height:400px;display:none;" id="jsonrep-576013531"><%= JsonPrinter.render(NamingScheme.find(:all, :limit => 5).collect{|x| x.summary_hash}) %></textarea></br>
     
 
     
     <a name="xml"></a>
-    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep-576013531').toggle()">(toggle code)</a><br/>
+    XML example: <br /><a href="javascript:$('xmlrep-576013531').toggle()">(toggle code)</a><br/>
     <textarea style="width:600px;height:400px;display:none;" id="xmlrep-576013531"><%= NamingScheme.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %></textarea>
     
 
@@ -59,7 +61,9 @@ available when retrieving single naming_schemes (see GET /naming_schemes/[naming
 Get detailed information about a single naming_scheme.
 </p>
   
-  <strong>Access:</strong> HTTP Basic authentication, Customer access or higher<br />
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/naming_schemes/1.json<p/>
+  
+  <p><strong>Access:</strong> HTTP Basic authentication, Customer access or higher<p/>
 
   <p><strong>Parameters:</strong>
   
@@ -68,17 +72,17 @@ Get detailed information about a single naming_scheme.
   </p>
 
    
-    <strong>Return:</strong> Detailed attributes of a particular naming_scheme</br>
+    <strong>Response:</strong> Detailed attributes of a particular naming_scheme</br>
 
     
     <a name="json"></a>
-    <strong>JSON example:</strong> <br /><a href="javascript:$('jsonrep--662540538').toggle()">(toggle code)</a><br />
+    JSON example: <br /><a href="javascript:$('jsonrep--662540538').toggle()">(toggle code)</a><br />
     <textarea style="width:600px;height:400px;display:none;" id="jsonrep--662540538"><%= JsonPrinter.render(NamingScheme.find(:first).detail_hash) %></textarea></br>
     
 
     
     <a name="xml"></a>
-    <strong>XML example:</strong> <br /><a href="javascript:$('xmlrep--662540538').toggle()">(toggle code)</a><br/>
+    XML example: <br /><a href="javascript:$('xmlrep--662540538').toggle()">(toggle code)</a><br/>
     <textarea style="width:600px;height:400px;display:none;" id="xmlrep--662540538"><%= NamingScheme.find(:first).detail_hash.to_xml %></textarea>
     
 

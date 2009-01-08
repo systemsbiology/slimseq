@@ -12,6 +12,7 @@ class NamingSchemesController < ApplicationController
 =begin rapidoc
 url:: /naming_schemes
 method:: GET
+example:: <%= SiteConfig.site_url %>/naming_schemes
 access:: HTTP Basic authentication, Customer access or higher
 json:: <%= JsonPrinter.render(NamingScheme.find(:all, :limit => 5).collect{|x| x.summary_hash}) %>
 xml:: <%= NamingScheme.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %>
@@ -38,6 +39,7 @@ available when retrieving single naming_schemes (see GET /naming_schemes/[naming
 =begin rapidoc
 url:: /naming_schemes/[naming_scheme id]
 method:: GET
+example:: <%= SiteConfig.site_url %>/naming_schemes/1.json
 access:: HTTP Basic authentication, Customer access or higher
 json:: <%= JsonPrinter.render(NamingScheme.find(:first).detail_hash) %>
 xml:: <%= NamingScheme.find(:first).detail_hash.to_xml %>

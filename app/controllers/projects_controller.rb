@@ -2,7 +2,10 @@
 name:: /projects
 
 This resource can be used to list a summary of all projects, or show details for 
-a particular project.
+a particular project.<br><br>
+
+Each project belongs to a particular lab group. A project can be associated 
+with any number of samples.
 =end
 
 class ProjectsController < ApplicationController
@@ -14,6 +17,7 @@ class ProjectsController < ApplicationController
 =begin rapidoc
 url:: /projects
 method:: GET
+example:: <%= SiteConfig.site_url %>/projects
 access:: HTTP Basic authentication, Customer access or higher
 json:: <%= JsonPrinter.render(Project.find(:all, :limit => 5).collect{|x| x.summary_hash}) %>
 xml:: <%= Project.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %>
@@ -38,6 +42,7 @@ available when retrieving single projects (see GET /projects/[project id]).
 =begin rapidoc
 url:: /projects/[project id]
 method:: GET
+example:: <%= SiteConfig.site_url %>/projects/5.json
 access:: HTTP Basic authentication, Customer access or higher
 json:: <%= JsonPrinter.render(Project.find(:first).detail_hash) %>
 xml:: <%= Project.find(:first).detail_hash.to_xml %>
