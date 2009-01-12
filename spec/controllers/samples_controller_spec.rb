@@ -33,12 +33,12 @@ describe SamplesController do
     before(:each) do      
       @accessible_samples = [mock_model(Sample), mock_model(Sample)]
       @accessible_lab_group_ids = [1,2,3]
-      @current_user.stub!(:get_lab_group_ids).and_return(@accessible_lab_group_ids)
+      @current_user.should_receive(:get_lab_group_ids).any_number_of_times.
+        and_return(@accessible_lab_group_ids)
       controller.stub!(:paginate).and_return(["Samples Pages", @accessible_samples])
     end
 
     it "should expose all samples accessible by the user as @samples" do
-      @current_user.should_receive(:get_lab_group_ids).and_return(@accessible_lab_group_ids)
       Sample.should_receive(:find).and_return(@accessible_samples)
       # TODO: test pagination
       Sample.should_receive(:paginate)
@@ -48,14 +48,21 @@ describe SamplesController do
 
     describe "with mime type of xml" do
       it "should render all accessible samples as xml" do
+        sample_1 = mock_model(Sample)
+        sample_2 = mock_model(Sample)
+        sample_1.should_receive(:summary_hash).and_return( {:n => 1} )
+        sample_2.should_receive(:summary_hash).and_return( {:n => 2} )
+        samples = [sample_1, sample_2]
+        
         request.env["HTTP_ACCEPT"] = "application/xml"
-        @current_user.should_receive(:get_lab_group_ids).and_return(@accessible_lab_group_ids)
-        @accessible_samples.should_receive(:to_xml).and_return("generated XML")
-        Sample.should_receive(:find).and_return(@accessible_samples)
-        # TODO: test pagination
-        Sample.should_receive(:paginate)
+        Sample.should_receive(:find).twice.and_return(samples)
+#        # TODO: test pagination
+#        Sample.should_receive(:paginate)
         get :index
-        response.body.should == "generated XML"
+        response.body.should ==
+          "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<records type=\"array\">\n  " +
+          "<record>\n    <n type=\"integer\">1</n>\n  </record>\n  <record>\n    " +
+          "<n type=\"integer\">2</n>\n  </record>\n</records>\n"
       end
       
     end
@@ -72,7 +79,7 @@ describe SamplesController do
         request.env["HTTP_ACCEPT"] = "application/json"
         Sample.should_receive(:find).twice.and_return(samples)
         get :index
-        response.body.should == "[{\"n\": 1}, {\"n\": 2}]"
+        response.body.should == "[{\"n\":1},{\"n\":2}]"
       end
     
     end
@@ -81,20 +88,25 @@ describe SamplesController do
 
   describe "responding to GET show" do
 
+    before(:each) do
+      @sample = mock_model(Sample)
+      @sample.should_receive(:detail_hash).and_return( {:n => "1"} )
+    end
+    
     it "should expose the requested sample as @sample" do
-      Sample.should_receive(:find).with("37").and_return(mock_sample)
+      Sample.should_receive(:find).with("37").and_return(@sample)
       get :show, :id => "37"
-      assigns[:sample].should equal(mock_sample)
+      assigns[:sample].should equal(@sample)
     end
     
     describe "with mime type of xml" do
 
       it "should render the requested sample as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        Sample.should_receive(:find).with("37").and_return(mock_sample)
-        mock_sample.should_receive(:to_xml).and_return("generated XML")
+        Sample.should_receive(:find).with("37").and_return(@sample)
         get :show, :id => "37"
-        response.body.should == "generated XML"
+        response.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+          "<hash>\n  <n>1</n>\n</hash>\n"
       end
 
     end
@@ -102,13 +114,10 @@ describe SamplesController do
     describe "with mime type of json" do
   
       it "should render the flow cell lane detail as json" do
-        sample = mock_model(Sample)
-        sample.should_receive(:detail_hash).and_return( {:n => 1} )
-        
         request.env["HTTP_ACCEPT"] = "application/json"
-        Sample.should_receive(:find).with("37").and_return(sample)
+        Sample.should_receive(:find).with("37").and_return(@sample)
         get :show, :id => 37
-        response.body.should == "{\"n\": 1}"
+        response.body.should == "{\"n\":\"1\"}"
       end
     
     end

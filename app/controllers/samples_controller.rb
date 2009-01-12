@@ -44,7 +44,7 @@ available when retrieving single samples (see GET /samples/[sample id]).
     respond_to do |format|
       format.html  #index.html
       format.xml   { render :xml => @samples.
-        collect{|x| x.summary_hash}.to_xml
+        collect{|x| x.summary_hash}
       }
       format.json  { render :json => @samples.
         collect{|x| x.summary_hash}.to_json 
@@ -68,7 +68,7 @@ Get detailed information about a single sample.
     @sample = Sample.find(params[:id])
     
     respond_to do |format|
-      format.xml   { render :xml => @sample.detail_hash.to_xml }
+      format.xml   { render :xml => @sample.detail_hash }
       format.json  { render :json => @sample.detail_hash.to_json }
     end    
   end
