@@ -21,6 +21,10 @@ config.action_controller.allow_forgery_protection    = false
 # ActionMailer::Base.deliveries array.
 config.action_mailer.delivery_method = :test
 
+# Rspec
+config.gem "rspec", :version => "1.1.12", :lib => 'spec'
+config.gem "rspec-rails", :version => "1.1.12", :lib => 'spec/rails'
+
 AUTHENTICATION_SALT = 'test-salt'
 
 require 'ruby-debug'
