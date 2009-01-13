@@ -63,6 +63,7 @@ describe SamplesController do
           "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<records type=\"array\">\n  " +
           "<record>\n    <n type=\"integer\">1</n>\n  </record>\n  <record>\n    " +
           "<n type=\"integer\">2</n>\n  </record>\n</records>\n"
+        
       end
       
     end

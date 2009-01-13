@@ -27,8 +27,8 @@ available when retrieving single flow cell lanes (see GET /flow_cell_lanes/[flow
     @flow_cell_lanes = FlowCellLane.find(:all)
 
     respond_to do |format|
-      format.xml  { render :xml => @flow_cell_lanes
-        collect{|x| x.summary_hash}.to_xml
+      format.xml  { render :xml => @flow_cell_lanes.
+        collect{|x| x.summary_hash}
       }
       format.json { render :json => @flow_cell_lanes.
         collect{|x| x.summary_hash}.to_json 
@@ -54,7 +54,7 @@ Get detailed information about a single flow cell lane.
     @flow_cell_lane = FlowCellLane.find(params[:id])
 
     respond_to do |format|
-      format.xml  { render :xml => @flow_cell_lane.detail_has.to_json }
+      format.xml  { render :xml => @flow_cell_lane.detail_hash }
       format.json  { render :json => @flow_cell_lane.detail_hash.to_json }
     end
   end

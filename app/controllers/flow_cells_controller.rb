@@ -35,7 +35,7 @@ available when retrieving single flow cells (see GET /flow_cells/[flow cell id])
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @flow_cells.
-        collect{|x| x.summary_hash}.to_xml
+        collect{|x| x.summary_hash}
       }
       format.json  { render :json => @flow_cells.
         collect{|x| x.summary_hash}.to_json

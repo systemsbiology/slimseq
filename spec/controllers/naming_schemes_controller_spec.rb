@@ -12,38 +12,44 @@ describe NamingSchemesController do
   
   describe "responding to GET index" do
 
+    before(:each) do
+      @naming_scheme_1 = mock_model(NamingScheme)
+      @naming_scheme_2 = mock_model(NamingScheme)
+      @naming_schemes = [@naming_scheme_1, @naming_scheme_2]
+      
+      NamingScheme.should_receive(:find).with(:all, {:order=>"name ASC"}).
+        and_return(@naming_schemes)
+    end
+    
     it "should expose all naming_schemes as @naming_schemes" do
-      NamingScheme.should_receive(:find).with(:all, {:order=>"name ASC"}).and_return([mock_naming_scheme])
       get :index
-      assigns[:naming_schemes].should == [mock_naming_scheme]
+      assigns[:naming_schemes].should == @naming_schemes
     end
 
     describe "with mime type of xml" do
   
       it "should render all naming_schemes as xml" do
+        @naming_scheme_1.should_receive(:summary_hash).and_return( {:n => 1} )
+        @naming_scheme_2.should_receive(:summary_hash).and_return( {:n => 2} )
+
         request.env["HTTP_ACCEPT"] = "application/xml"
-        NamingScheme.should_receive(:find).with(:all, {:order=>"name ASC"}).and_return(naming_schemes = mock("Array of NamingSchemes"))
-        naming_schemes.should_receive(:to_xml).and_return("generated XML")
         get :index
-        response.body.should == "generated XML"
+        response.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+          "<records type=\"array\">\n  <record>\n    <n type=\"integer\">1</n>\n  </record>" +
+          "\n  <record>\n    <n type=\"integer\">2</n>\n  </record>\n</records>\n"
       end
     
     end
 
     describe "with mime type of json" do
   
-      it "should render flow cell summaries as json" do
-        naming_scheme_1 = mock_model(NamingScheme)
-        naming_scheme_2 = mock_model(NamingScheme)
-        naming_scheme_1.should_receive(:summary_hash).and_return( {:n => 1} )
-        naming_scheme_2.should_receive(:summary_hash).and_return( {:n => 2} )
-        naming_schemes = [naming_scheme_1, naming_scheme_2]
-        
+      it "should render flow cell summaries as json" do       
+        @naming_scheme_1.should_receive(:summary_hash).and_return( {:n => 1} )
+        @naming_scheme_2.should_receive(:summary_hash).and_return( {:n => 2} )
+
         request.env["HTTP_ACCEPT"] = "application/json"
-        NamingScheme.should_receive(:find).with(:all, {:order=>"name ASC"}).
-          and_return(naming_schemes)
         get :index
-        response.body.should == "[{\"n\": 1}, {\"n\": 2}]"
+        response.body.should == "[{\"n\":1},{\"n\":2}]"
       end
     
     end
@@ -52,20 +58,24 @@ describe NamingSchemesController do
 
   describe "responding to GET show" do
 
+    before(:each) do
+      @naming_scheme = mock_model(NamingScheme)
+      @naming_scheme.should_receive(:detail_hash).and_return( {:n => 1} )
+      NamingScheme.should_receive(:find).with("37").and_return(@naming_scheme)
+    end
+    
     it "should expose the requested naming_scheme as @naming_scheme" do
-      NamingScheme.should_receive(:find).with("37").and_return(mock_naming_scheme)
       get :show, :id => "37"
-      assigns[:naming_scheme].should equal(mock_naming_scheme)
+      assigns[:naming_scheme].should equal(@naming_scheme)
     end
     
     describe "with mime type of xml" do
 
       it "should render the requested naming_scheme as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        NamingScheme.should_receive(:find).with("37").and_return(mock_naming_scheme)
-        mock_naming_scheme.should_receive(:to_xml).and_return("generated XML")
         get :show, :id => "37"
-        response.body.should == "generated XML"
+        response.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+          "<hash>\n  <n type=\"integer\">1</n>\n</hash>\n"
       end
 
     end
@@ -73,13 +83,9 @@ describe NamingSchemesController do
     describe "with mime type of json" do
   
       it "should render the flow cell detail as json" do
-        naming_scheme = mock_model(NamingScheme)
-        naming_scheme.should_receive(:detail_hash).and_return( {:n => 1} )
-        
         request.env["HTTP_ACCEPT"] = "application/json"
-        NamingScheme.should_receive(:find).with("37").and_return(naming_scheme)
         get :show, :id => 37
-        response.body.should == "{\"n\": 1}"
+        response.body.should == "{\"n\":1}"
       end
     
     end

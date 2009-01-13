@@ -28,7 +28,7 @@ available when retrieving single naming_schemes (see GET /naming_schemes/[naming
     respond_to do |format|
       format.html # index.rhtml
       format.xml  { render :xml => @naming_schemes.
-        collect{|x| x.summary_hash}.to_xml 
+        collect{|x| x.summary_hash} 
       }
       format.json  { render :json => @naming_schemes.
         collect{|x| x.summary_hash}.to_json 
@@ -52,7 +52,7 @@ Get detailed information about a single naming_scheme.
     @naming_scheme = NamingScheme.find(params[:id])
     
     respond_to do |format|
-      format.xml  { render :xml => @naming_scheme.detail_hash.to_xml }
+      format.xml  { render :xml => @naming_scheme.detail_hash }
       format.json  { render :json => @naming_scheme.detail_hash.to_json }
     end    
   end

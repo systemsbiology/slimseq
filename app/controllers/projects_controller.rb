@@ -32,7 +32,9 @@ available when retrieving single projects (see GET /projects/[project id]).
     
     respond_to do |format|
       format.html # index.rhtml
-      format.xml  { render :xml => @projects }
+      format.xml  { render :xml => @projects.
+        collect{|x| x.summary_hash}
+      }
       format.json { render :json => @projects.
         collect{|x| x.summary_hash}.to_json
       }
@@ -55,7 +57,7 @@ Get detailed information about a single project.
     @project = Project.find(params[:id])
 
     respond_to do |format|
-      format.xml  { render :xml => @project }
+      format.xml  { render :xml => @project.detail_hash }
       format.json  { render :json => @project.detail_hash }
     end
   end

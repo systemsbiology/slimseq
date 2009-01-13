@@ -1,4 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/controller_spec_helper.rb')
 
 describe FlowCellLanesController do
 
@@ -6,16 +7,29 @@ describe FlowCellLanesController do
     @mock_flow_cell_lane ||= mock_model(FlowCellLane, stubs)
   end
   
+  before(:each) do
+    login_as_user
+  end
+  
   describe "responding to GET index" do
 
+    before(:each) do
+      flow_cell_lane_1 = mock_model(FlowCellLane)
+      flow_cell_lane_2 = mock_model(FlowCellLane)
+      flow_cell_lane_1.should_receive(:summary_hash).and_return( {:n => 1} )
+      flow_cell_lane_2.should_receive(:summary_hash).and_return( {:n => 2} )
+      @flow_cell_lanes = [flow_cell_lane_1, flow_cell_lane_2]
+    end
+    
     describe "with mime type of xml" do
   
       it "should render all flow_cell_lanes as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        FlowCellLane.should_receive(:find).with(:all).and_return(flow_cell_lanes = mock("Array of FlowCellLanes"))
-        flow_cell_lanes.should_receive(:to_xml).and_return("generated XML")
+        FlowCellLane.should_receive(:find).with(:all).and_return(@flow_cell_lanes)
         get :index
-        response.body.should == "generated XML"
+        response.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+          "<records type=\"array\">\n  <record>\n    <n type=\"integer\">1</n>\n  " +
+          "</record>\n  <record>\n    <n type=\"integer\">2</n>\n  </record>\n</records>\n"
       end
     
     end
@@ -23,17 +37,13 @@ describe FlowCellLanesController do
     describe "with mime type of json" do
   
       it "should render flow cell lane summaries as json" do
-        flow_cell_lane_1 = mock_model(FlowCellLane)
-        flow_cell_lane_2 = mock_model(FlowCellLane)
-        flow_cell_lane_1.should_receive(:summary_hash).and_return( {:n => 1} )
-        flow_cell_lane_2.should_receive(:summary_hash).and_return( {:n => 2} )
-        flow_cell_lanes = [flow_cell_lane_1, flow_cell_lane_2]
+
         
         request.env["HTTP_ACCEPT"] = "application/json"
         FlowCellLane.should_receive(:find).with(:all).
-          and_return(flow_cell_lanes)
+          and_return(@flow_cell_lanes)
         get :index
-        response.body.should == "[{\"n\": 1}, {\"n\": 2}]"
+        response.body.should == "[{\"n\":1},{\"n\":2}]"
       end
     
     end
@@ -42,14 +52,19 @@ describe FlowCellLanesController do
 
   describe "responding to GET show" do
     
+    before(:each) do
+      @flow_cell_lane = mock_model(FlowCellLane)
+      @flow_cell_lane.should_receive(:detail_hash).and_return( {:n => 1} )      
+    end
+    
     describe "with mime type of xml" do
 
       it "should render the requested flow_cell_lane as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        FlowCellLane.should_receive(:find).with("37").and_return(mock_flow_cell_lane)
-        mock_flow_cell_lane.should_receive(:to_xml).and_return("generated XML")
+        FlowCellLane.should_receive(:find).with("37").and_return(@flow_cell_lane)
         get :show, :id => "37"
-        response.body.should == "generated XML"
+        response.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hash>\n  " +
+          "<n type=\"integer\">1</n>\n</hash>\n"
       end
 
     end
@@ -57,13 +72,10 @@ describe FlowCellLanesController do
     describe "with mime type of json" do
   
       it "should render the flow cell lane detail as json" do
-        flow_cell_lane = mock_model(FlowCellLane)
-        flow_cell_lane.should_receive(:detail_hash).and_return( {:n => 1} )
-        
         request.env["HTTP_ACCEPT"] = "application/json"
-        FlowCellLane.should_receive(:find).with("37").and_return(flow_cell_lane)
+        FlowCellLane.should_receive(:find).with("37").and_return(@flow_cell_lane)
         get :show, :id => 37
-        response.body.should == "{\"n\": 1}"
+        response.body.should == "{\"n\":1}"
       end
     
     end

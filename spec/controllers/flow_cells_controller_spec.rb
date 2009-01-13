@@ -14,20 +14,29 @@ describe FlowCellsController do
   
   describe "responding to GET index" do
 
+    before(:each) do
+      @flow_cell_1 = mock_model(FlowCell)
+      @flow_cell_2 = mock_model(FlowCell)
+      @flow_cells = [@flow_cell_1, @flow_cell_2]
+    end
+    
     it "should expose all flow_cells as @flow_cells" do
-      FlowCell.should_receive(:find).with(:all, {:order=>"date_generated DESC"}).and_return([mock_flow_cell])
+      FlowCell.should_receive(:find).with(:all, {:order=>"date_generated DESC"}).and_return(@flow_cells)
       get :index
-      assigns[:flow_cells].should == [mock_flow_cell]
+      assigns[:flow_cells].should == @flow_cells
     end
 
     describe "with mime type of xml" do
   
       it "should render all flow_cells as xml" do
+        @flow_cell_1.should_receive(:summary_hash).and_return( {:n => 1} )
+        @flow_cell_2.should_receive(:summary_hash).and_return( {:n => 2} )
         request.env["HTTP_ACCEPT"] = "application/xml"
-        FlowCell.should_receive(:find).with(:all, {:order=>"date_generated DESC"}).and_return(flow_cells = mock("Array of FlowCells"))
-        flow_cells.should_receive(:to_xml).and_return("generated XML")
+        FlowCell.should_receive(:find).with(:all, {:order=>"date_generated DESC"}).and_return(@flow_cells)
         get :index
-        response.body.should == "generated XML"
+        response.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<records type=\"array\">\n  " +
+          "<record>\n    <n type=\"integer\">1</n>\n  </record>\n  <record>\n    " +
+          "<n type=\"integer\">2</n>\n  </record>\n</records>\n"
       end
     
     end
@@ -35,17 +44,13 @@ describe FlowCellsController do
     describe "with mime type of json" do
   
       it "should render flow cell summaries as json" do
-        flow_cell_1 = mock_model(FlowCell)
-        flow_cell_2 = mock_model(FlowCell)
-        flow_cell_1.should_receive(:summary_hash).and_return( {:n => 1} )
-        flow_cell_2.should_receive(:summary_hash).and_return( {:n => 2} )
-        flow_cells = [flow_cell_1, flow_cell_2]
-        
+        @flow_cell_1.should_receive(:summary_hash).and_return( {:n => 1} )
+        @flow_cell_2.should_receive(:summary_hash).and_return( {:n => 2} )
         request.env["HTTP_ACCEPT"] = "application/json"
         FlowCell.should_receive(:find).with(:all, {:order=>"date_generated DESC"}).
-          and_return(flow_cells)
+          and_return(@flow_cells)
         get :index
-        response.body.should == "[{\"n\": 1}, {\"n\": 2}]"
+        response.body.should == "[{\"n\":1},{\"n\":2}]"
       end
     
     end
@@ -63,11 +68,14 @@ describe FlowCellsController do
     describe "with mime type of xml" do
 
       it "should render the requested flow_cell as xml" do
+        flow_cell = mock_model(FlowCell)
+        flow_cell.should_receive(:detail_hash).and_return( {:n => 1} )
+        
         request.env["HTTP_ACCEPT"] = "application/xml"
-        FlowCell.should_receive(:find).with("37").and_return(mock_flow_cell)
-        mock_flow_cell.should_receive(:to_xml).and_return("generated XML")
+        FlowCell.should_receive(:find).with("37").and_return(flow_cell)
         get :show, :id => "37"
-        response.body.should == "generated XML"
+        response.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hash>\n  "+
+          "<n type=\"integer\">1</n>\n</hash>\n"
       end
 
     end
@@ -81,7 +89,7 @@ describe FlowCellsController do
         request.env["HTTP_ACCEPT"] = "application/json"
         FlowCell.should_receive(:find).with("37").and_return(flow_cell)
         get :show, :id => 37
-        response.body.should == "{\"n\": 1}"
+        response.body.should == "{\"n\":1}"
       end
     
     end
