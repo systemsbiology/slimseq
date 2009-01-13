@@ -8,7 +8,12 @@ class SamplePrepKitsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @sample_prep_kits }
+      format.xml  { render :xml => @sample_prep_kits.
+        collect{|x| x.detail_hash}
+      }
+      format.json  { render :json => @sample_prep_kits.
+        collect{|x| x.detail_hash}
+      }
     end
   end
 
@@ -18,7 +23,8 @@ class SamplePrepKitsController < ApplicationController
     @sample_prep_kit = SamplePrepKit.find(params[:id])
 
     respond_to do |format|
-      format.xml  { render :xml => @sample_prep_kit }
+      format.xml  { render :xml => @sample_prep_kit.detail_hash }
+      format.json  { render :json => @sample_prep_kit.detail_hash }
     end
   end
 

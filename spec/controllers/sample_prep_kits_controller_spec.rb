@@ -12,36 +12,61 @@ describe SamplePrepKitsController do
   
   describe "responding to GET index" do
 
+    before(:each) do
+      @sample_prep_kit_1 = mock_model(SamplePrepKit)
+      @sample_prep_kit_2 = mock_model(SamplePrepKit)
+      @sample_prep_kits = [@sample_prep_kit_1, @sample_prep_kit_2]
+      SamplePrepKit.should_receive(:find).with(:all).and_return(@sample_prep_kits)
+    end
+    
     it "should expose all sample_prep_kits as @sample_prep_kits" do
-      SamplePrepKit.should_receive(:find).with(:all).and_return([mock_sample_prep_kit])
       get :index
-      assigns[:sample_prep_kits].should == [mock_sample_prep_kit]
+      assigns[:sample_prep_kits].should == @sample_prep_kits
     end
 
     describe "with mime type of xml" do
   
       it "should render all sample_prep_kits as xml" do
+        @sample_prep_kit_1.should_receive(:detail_hash).and_return({:n => 1})
+        @sample_prep_kit_2.should_receive(:detail_hash).and_return({:n => 2})
         request.env["HTTP_ACCEPT"] = "application/xml"
-        SamplePrepKit.should_receive(:find).with(:all).and_return(sample_prep_kits = mock("Array of SamplePrepKits"))
-        sample_prep_kits.should_receive(:to_xml).and_return("generated XML")
         get :index
-        response.body.should == "generated XML"
+        response.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<records type=" +
+          "\"array\">\n  <record>\n    <n type=\"integer\">1</n>\n  </record>\n  <record>\n" +
+          "    <n type=\"integer\">2</n>\n  </record>\n</records>\n"
       end
     
     end
+    
+    describe "with mime type of json" do
+  
+      it "should render all sample_prep_kits as json" do
+        @sample_prep_kit_1.should_receive(:detail_hash).and_return({:n => 1})
+        @sample_prep_kit_2.should_receive(:detail_hash).and_return({:n => 2})
+        request.env["HTTP_ACCEPT"] = "application/json"
+        get :index
+        response.body.should == "[{\"n\":1},{\"n\":2}]"
+      end
+    
+    end    
 
   end
 
   describe "responding to GET show" do
+    
+    before(:each) do
+      @sample_prep_kit = mock_model(SamplePrepKit)
+      @sample_prep_kit.should_receive(:detail_hash).and_return({:n => 1})
+    end
 
     describe "with mime type of xml" do
 
       it "should render the requested sample_prep_kit as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        SamplePrepKit.should_receive(:find).with("37").and_return(mock_sample_prep_kit)
-        mock_sample_prep_kit.should_receive(:to_xml).and_return("generated XML")
+        SamplePrepKit.should_receive(:find).with("37").and_return(@sample_prep_kit)
         get :show, :id => "37"
-        response.body.should == "generated XML"
+        response.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hash>\n  " +
+          "<n type=\"integer\">1</n>\n</hash>\n"
       end
 
     end
