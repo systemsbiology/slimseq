@@ -1,6 +1,31 @@
+=begin rapidoc
+name:: /instruments
+
+This resource can be used to list a summary of all instruments, or show details for 
+a particular instrument.<br><br>
+
+Each instrument belongs to a particular lab group. A instrument can be associated 
+with any number of samples.
+=end
+
 class InstrumentsController < ApplicationController
+
+=begin rapidoc
+url:: /instruments
+method:: GET
+example:: <%= SiteConfig.site_url %>/instruments
+access:: No authentication required
+json:: <%= JsonPrinter.render(Instrument.find(:all, :limit => 5).collect{|x| x.detail_hash}) %>
+xml:: <%= Instrument.find(:all, :limit => 5).collect{|x| x.detail_hash}.to_xml %>
+return:: A list of all summary information on all instruments
+
+Get a list of all instruments, which doesn't have all the details that are 
+available when retrieving single instruments (see GET /instruments/[instrument id]).
+=end
+  
   # GET /instruments
   # GET /instruments.xml
+  # GET /instruments.json
   def index
     @instruments = Instrument.find(:all)
 
@@ -15,7 +40,20 @@ class InstrumentsController < ApplicationController
     end
   end
 
+=begin rapidoc
+url:: /instruments/[instrument id]
+method:: GET
+example:: <%= SiteConfig.site_url %>/instruments/5.json
+access:: No authentication required
+json:: <%= JsonPrinter.render(Instrument.find(:first).detail_hash) %>
+xml:: <%= Instrument.find(:first).detail_hash.to_xml %>
+return:: Detailed attributes of a particular instrument
+
+Get detailed information about a single instrument.
+=end
+  
   # GET /instruments/1.xml
+  # GET /instruments/1.json
   def show
     @instrument = Instrument.find(params[:id])
 

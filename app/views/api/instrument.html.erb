@@ -1,0 +1,96 @@
+<a href="/api">&laquo; Back to index</a>
+
+<h1>/instruments</h1>
+<p class="summary">
+This resource can be used to list a summary of all instruments, or show details for 
+a particular instrument.<br><br>
+
+Each instrument belongs to a particular lab group. A instrument can be associated 
+with any number of samples.
+</p>
+
+
+
+
+
+  <div style="padding:30px; padding-top:0px;border-bottom:1px solid #ddd;">
+  
+  
+  <h2><span style='color:#ff6600; width:200px;margin-right:20px;'>GET</span>/instruments</h2>
+  
+  <p>
+Get a list of all instruments, which doesn't have all the details that are 
+available when retrieving single instruments (see GET /instruments/[instrument id]).
+</p>
+  
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/instruments<p/>
+  
+  <p><strong>Access:</strong> No authentication required<p/>
+
+  <p><strong>Parameters:</strong>
+  
+    None
+  
+  </p>
+
+   
+    <strong>Response:</strong> A list of all summary information on all instruments</br>
+
+    
+    JSON example: <br /><a href="#" onclick="javascript:$('jsonrep--968432369').toggle()">(toggle code)</a><br />
+    <textarea style="width:600px;height:400px;display:none;" id="jsonrep--968432369"><%= JsonPrinter.render(Instrument.find(:all, :limit => 5).collect{|x| x.detail_hash}) %></textarea></br>
+    
+
+    
+    XML example: <br /><a href="#" onclick="javascript:$('xmlrep--968432369').toggle()">(toggle code)</a><br/>
+    <textarea style="width:600px;height:400px;display:none;" id="xmlrep--968432369"><%= Instrument.find(:all, :limit => 5).collect{|x| x.detail_hash}.to_xml %></textarea>
+    
+
+  
+  
+</div>
+
+
+
+
+  <div style="padding:30px; padding-top:0px;border-bottom:1px solid #ddd;">
+  
+  
+  <h2><span style='color:#ff6600; width:200px;margin-right:20px;'>GET</span>/instruments/[instrument id]</h2>
+  
+  <p>
+Get detailed information about a single instrument.
+</p>
+  
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/instruments/5.json<p/>
+  
+  <p><strong>Access:</strong> No authentication required<p/>
+
+  <p><strong>Parameters:</strong>
+  
+    None
+  
+  </p>
+
+   
+    <strong>Response:</strong> Detailed attributes of a particular instrument</br>
+
+    
+    JSON example: <br /><a href="#" onclick="javascript:$('jsonrep--1098921376').toggle()">(toggle code)</a><br />
+    <textarea style="width:600px;height:400px;display:none;" id="jsonrep--1098921376"><%= JsonPrinter.render(Instrument.find(:first).detail_hash) %></textarea></br>
+    
+
+    
+    XML example: <br /><a href="#" onclick="javascript:$('xmlrep--1098921376').toggle()">(toggle code)</a><br/>
+    <textarea style="width:600px;height:400px;display:none;" id="xmlrep--1098921376"><%= Instrument.find(:first).detail_hash.to_xml %></textarea>
+    
+
+  
+  
+</div>
+
+
+
+
+
+

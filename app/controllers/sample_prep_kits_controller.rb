@@ -1,8 +1,32 @@
+=begin rapidoc
+name:: /sample_prep_kits
+
+This resource can be used to list a summary of all sample_prep_kits, or show details for 
+a particular sample_prep_kit.<br><br>
+
+Each sample_prep_kit belongs to a particular lab group. A sample_prep_kit can be associated 
+with any number of samples.
+=end
+
 class SamplePrepKitsController < ApplicationController
   before_filter :login_required
+
+=begin rapidoc
+url:: /sample_prep_kits
+method:: GET
+example:: <%= SiteConfig.site_url %>/sample_prep_kits
+access:: HTTP Basic authentication, Customer access or higher
+json:: <%= JsonPrinter.render(SamplePrepKit.find(:all, :limit => 5).collect{|x| x.detail_hash}) %>
+xml:: <%= SamplePrepKit.find(:all, :limit => 5).collect{|x| x.detail_hash}.to_xml %>
+return:: A list of all summary information on all sample_prep_kits
+
+Get a list of all sample_prep_kits, which doesn't have all the details that are 
+available when retrieving single sample_prep_kits (see GET /sample_prep_kits/[sample_prep_kit id]).
+=end
   
   # GET /sample_prep_kits
   # GET /sample_prep_kits.xml
+  # GET /sample_prep_kits.json
   def index
     @sample_prep_kits = SamplePrepKit.find(:all)
 
@@ -17,8 +41,21 @@ class SamplePrepKitsController < ApplicationController
     end
   end
 
+=begin rapidoc
+url:: /sample_prep_kits/[sample_prep_kit id]
+method:: GET
+example:: <%= SiteConfig.site_url %>/sample_prep_kits/5.json
+access:: HTTP Basic authentication, Customer access or higher
+json:: <%= JsonPrinter.render(SamplePrepKit.find(:first).detail_hash) %>
+xml:: <%= SamplePrepKit.find(:first).detail_hash.to_xml %>
+return:: Detailed attributes of a particular sample_prep_kit
+
+Get detailed information about a single sample_prep_kit.
+=end
+  
   # GET /sample_prep_kits/1
   # GET /sample_prep_kits/1.xml
+  # GET /sample_prep_kits/1.json
   def show
     @sample_prep_kit = SamplePrepKit.find(params[:id])
 
