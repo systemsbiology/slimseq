@@ -57,19 +57,29 @@ describe SamplePrepKitsController do
     before(:each) do
       @sample_prep_kit = mock_model(SamplePrepKit)
       @sample_prep_kit.should_receive(:detail_hash).and_return({:n => 1})
+      SamplePrepKit.should_receive(:find).with("37").and_return(@sample_prep_kit)
     end
 
     describe "with mime type of xml" do
 
       it "should render the requested sample_prep_kit as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        SamplePrepKit.should_receive(:find).with("37").and_return(@sample_prep_kit)
         get :show, :id => "37"
         response.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hash>\n  " +
           "<n type=\"integer\">1</n>\n</hash>\n"
       end
 
     end
+    
+    describe "with mime type of json" do
+
+      it "should render the requested sample_prep_kit as json" do
+        request.env["HTTP_ACCEPT"] = "application/json"
+        get :show, :id => "37"
+        response.body.should == "{\"n\":1}"
+      end
+
+    end    
     
   end
 
