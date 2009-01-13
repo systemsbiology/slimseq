@@ -1,0 +1,29 @@
+<h1>SLIMseq API</h1>
+
+<h2>RESTful Resources</h2>
+<p>This API attempts to conform to the design principles of 
+<a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">Representational State 
+Transfer</a> (REST), although it's a read-only interface at present, so only GET requests are 
+available.</p>
+
+<h2>Request Authentication</h2>
+<p>All SLIMseq API methods require authentication. All responses are relative to the context of 
+the authenticating user. Staff and Admin users will have access to all records, whereas Customer 
+users will only have access to records that are available to them through the web interface.</p>
+<p>For the time being, HTTP Basic Authentication is the only supported authentication scheme. 
+When authenticating via Basic Auth, use your login name and password.</p>
+
+<h2>Response Formats</h2>
+<p>Output can be either JSON or XML. The desired response format can be specified either by the 
+appropriate extension in the requset URI (e.g. GET http://slimseq-server/samples/100.json), or by 
+providing appropriate mime-type in the request.</p>
+
+<h2>The resources</h2>
+<ul>
+<% @resources.each do |r| %>
+  <li><h3>Resource:  <a href="/api/<%=r.name %>"><%=r.resource_location %></a></h3></li>
+<% end %>
+</ul>
+
+
+<%#=DocUtil.print_erb "render :partial => \"sidebar\" ", true %>

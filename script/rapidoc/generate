@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+require File.dirname(__FILE__) + '/classes/rapidoc.rb'
+
+# define your resources here
+resources = [ 
+  ResourceDoc.new("sample", "/samples", "samples_controller.rb" ),
+  ResourceDoc.new("flow cell", "/flow_cells", "flow_cells_controller.rb" ),
+  ResourceDoc.new("flow cell lane", "/flow_cell_lanes", "flow_cell_lanes_controller.rb" ),
+  ResourceDoc.new("naming schemes", "/naming_schemes", "naming_schemes_controller.rb" ),
+  ResourceDoc.new("project", "/projects", "projects_controller.rb" ),
+]
+
+# generate the apidoc
+RAPIDoc.new(resources)

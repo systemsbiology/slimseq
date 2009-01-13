@@ -1,0 +1,45 @@
+<div style="padding:30px; padding-top:0px;border-bottom:1px solid #ddd;">
+  
+  <%
+    splitted = @method
+    str = @method
+    str = "<span style='color:#ff6600; width:200px;margin-right:20px;'>#{str}</span>"
+    
+    sanitized_method = (@method + @url).hash
+  %>
+  <h2><%=str %><%=@url %></h2>
+  
+  <p><%=@content %></p>
+  
+  <p><strong>Example:</strong> <%= @method %> <%=@example %><p/>
+  
+  <p><strong>Access:</strong> <%=@access %><p/>
+
+  <p><strong>Parameters:</strong>
+  <% if @variables.size > 0 %>
+    <ul>
+    <% @variables.each do |v| %><li><%=v %></li><% end %>
+    </ul>
+  <% else %>
+    None
+  <% end  %>
+  </p>
+
+  <% if @return %> 
+    <strong>Response:</strong> <%= @return%></br>
+
+    <% if @json %>
+    JSON example: <br /><a href="#" onclick="javascript:$('jsonrep-<%= sanitized_method %>').toggle()">(toggle code)</a><br />
+    <textarea style="width:600px;height:400px;display:none;" id="jsonrep-<%= sanitized_method %>"><%=@json %></textarea></br>
+    <% end %>
+
+    <% if @xml %>
+    XML example: <br /><a href="#" onclick="javascript:$('xmlrep-<%= sanitized_method %>').toggle()">(toggle code)</a><br/>
+    <textarea style="width:600px;height:400px;display:none;" id="xmlrep-<%= sanitized_method %>"><%=@xml %></textarea>
+    <% end %>
+
+  <% end %>
+  
+</div>
+
+
