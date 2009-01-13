@@ -6,7 +6,12 @@ class InstrumentsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @instruments }
+      format.xml  { render :xml => @instruments.
+        collect{|x| x.detail_hash}
+      }
+      format.json  { render :json => @instruments.
+        collect{|x| x.detail_hash}
+      }
     end
   end
 
@@ -15,7 +20,8 @@ class InstrumentsController < ApplicationController
     @instrument = Instrument.find(params[:id])
 
     respond_to do |format|
-      format.xml  { render :xml => @instrument }
+      format.xml  { render :xml => @instrument.detail_hash }
+      format.json  { render :json => @instrument.detail_hash }
     end
   end
 

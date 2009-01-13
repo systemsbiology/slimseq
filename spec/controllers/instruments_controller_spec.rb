@@ -8,45 +8,79 @@ describe InstrumentsController do
   
   describe "responding to GET index" do
 
+    before(:each) do
+      @instrument_1 = mock_model(Instrument)
+      @instrument_2 = mock_model(Instrument)
+      @instruments = [@instrument_1, @instrument_2]
+      Instrument.should_receive(:find).with(:all).and_return(@instruments)
+    end
+    
     it "should expose all instruments as @instruments" do
-      Instrument.should_receive(:find).with(:all).and_return([mock_instrument])
       get :index
-      assigns[:instruments].should == [mock_instrument]
+      assigns[:instruments].should == @instruments
     end
 
     describe "with mime type of xml" do
   
       it "should render all instruments as xml" do
+        @instrument_1.should_receive(:detail_hash).and_return({:n => 1})
+        @instrument_2.should_receive(:detail_hash).and_return({:n => 2})
         request.env["HTTP_ACCEPT"] = "application/xml"
-        Instrument.should_receive(:find).with(:all).and_return(instruments = mock("Array of Instruments"))
-        instruments.should_receive(:to_xml).and_return("generated XML")
         get :index
-        response.body.should == "generated XML"
+        response.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<records type=" +
+          "\"array\">\n  <record>\n    <n type=\"integer\">1</n>\n  </record>\n  <record>\n" +
+          "    <n type=\"integer\">2</n>\n  </record>\n</records>\n"
       end
     
     end
-
+    
+    describe "with mime type of json" do
+  
+      it "should render all instruments as json" do
+        @instrument_1.should_receive(:detail_hash).and_return({:n => 1})
+        @instrument_2.should_receive(:detail_hash).and_return({:n => 2})
+        request.env["HTTP_ACCEPT"] = "application/json"
+        get :index
+        response.body.should == "[{\"n\":1},{\"n\":2}]"
+      end
+    
+    end  
+    
   end
 
   describe "responding to GET show" do
 
+    before(:each) do
+      @instrument = mock_model(Instrument)
+      @instrument.should_receive(:detail_hash).and_return({:n => 1})
+      Instrument.should_receive(:find).with("37").and_return(@instrument)
+    end
+    
     it "should expose the requested instrument as @instrument" do
-      Instrument.should_receive(:find).with("37").and_return(mock_instrument)
       get :show, :id => "37"
-      assigns[:instrument].should equal(mock_instrument)
+      assigns[:instrument].should equal(@instrument)
     end
     
     describe "with mime type of xml" do
 
       it "should render the requested instrument as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        Instrument.should_receive(:find).with("37").and_return(mock_instrument)
-        mock_instrument.should_receive(:to_xml).and_return("generated XML")
         get :show, :id => "37"
-        response.body.should == "generated XML"
+        response.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<hash>\n  " +
+          "<n type=\"integer\">1</n>\n</hash>\n"
       end
 
     end
+    
+    describe "with mime type of json" do
+
+      it "should render the requested instrument as json" do
+        request.env["HTTP_ACCEPT"] = "application/json"
+        get :show, :id => "37"
+        response.body.should == "{\"n\":1}"
+      end
+
+    end   
     
   end
 
