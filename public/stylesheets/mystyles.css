@@ -10,9 +10,9 @@ body { background-color: #fff; color: #111; }
     color: #fff;
 }
 #wrap {
-	float: left;
+    float: left;
     margin:0 auto;
-    width:2300px;
+    width:120em;
 }
 
 #menu {
@@ -36,7 +36,7 @@ body { background-color: #fff; color: #111; }
     /*border-left: 1px solid; */
     padding-top: 2ex;
 	padding-left: 3ex;
-	width:2000px;
+	width:100em;
 }
 
 body, p, ol, ul, td {
