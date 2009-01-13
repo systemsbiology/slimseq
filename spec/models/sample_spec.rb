@@ -480,6 +480,10 @@ describe Sample do
       :naming_element => naming_element_1
     )
     project = create_project(:name => "Mutant Yeast")
+    sample_prep_kit = create_sample_prep_kit(
+      :name => "yeast kit",
+      :restriction_enzyme => "DpnII"
+    )
     
     sample = create_sample(
       :name_on_tube => "mut",
@@ -487,10 +491,7 @@ describe Sample do
       :user => create_user(:firstname => "Joe", :lastname => "User"),
       :project => project,
       :submission_date => Date.today,
-      :sample_prep_kit => create_sample_prep_kit(
-        :name => "yeast kit",
-        :restriction_enzyme => "DpnII"
-      ),
+      :sample_prep_kit => sample_prep_kit,
       :insert_size => 250,
       :desired_read_length => 36,
       :alignment_start_position => 2,
@@ -523,6 +524,7 @@ describe Sample do
       :submission_date => Date.today,
       :sample_prep_kit => "yeast kit",
       :sample_prep_kit_restriction_enzyme => "DpnII",
+      :sample_prep_kit_uri => "http://example.com/sample_prep_kits/#{sample_prep_kit.id}",
       :insert_size => 250,
       :desired_number_of_cycles => 36,
       :alignment_start_position => 2,

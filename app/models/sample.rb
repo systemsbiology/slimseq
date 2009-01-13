@@ -593,6 +593,7 @@ class Sample < ActiveRecord::Base
       :updated_at => updated_at,
       :sample_prep_kit => sample_prep_kit.name,
       :sample_prep_kit_restriction_enzyme => sample_prep_kit.restriction_enzyme,
+      :sample_prep_kit_uri => "#{SiteConfig.site_url}/sample_prep_kits/#{sample_prep_kit.id}",
       :insert_size => insert_size,
       :desired_number_of_cycles => desired_read_length,
       :alignment_start_position => alignment_start_position,

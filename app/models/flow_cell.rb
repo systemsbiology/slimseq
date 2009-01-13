@@ -53,6 +53,7 @@ class FlowCell < ActiveRecord::Base
   def detail_hash
     if(sequencing_runs.size == 0)
       sequencer_hash = {}
+      sequencer_uri = ""
     else
       sequencing_run = sequencing_runs[0]
       sequencer_hash = {
@@ -60,6 +61,7 @@ class FlowCell < ActiveRecord::Base
         :serial_number => sequencing_run.instrument.serial_number,
         :instrument_version => sequencing_run.instrument.instrument_version
       }
+      sequencer_uri = "#{SiteConfig.site_url}/instruments/#{sequencing_run.instrument.id}"
     end
     
     return {
@@ -70,6 +72,7 @@ class FlowCell < ActiveRecord::Base
       :comment => comment,
       :status => status,
       :sequencer => sequencer_hash,
+      :sequencer_uri => sequencer_uri,
       :flow_cell_lane_uris => flow_cell_lane_ids.collect {
         |x| "#{SiteConfig.site_url}/flow_cell_lanes/#{x}"
       }
