@@ -31,7 +31,9 @@ class LabGroup < ActiveRecord::Base
       :file_folder => file_folder,
       :updated_at => updated_at,
       :user_uris => user_ids.sort.
-        collect {|x| "#{SiteConfig.site_url}/users/#{x}" }
+        collect {|x| "#{SiteConfig.site_url}/users/#{x}" },
+      :project_uris => project_ids.sort.
+        collect {|x| "#{SiteConfig.site_url}/projects/#{x}" }
     }
   end
 end

@@ -31,14 +31,18 @@ describe "LabGroup" do
     )
     user_1 = create_user(:lab_groups => [lab_group])
     user_2 = create_user(:lab_groups => [lab_group])
-    
+    project_1 = create_project(:lab_group => lab_group)
+    project_2 = create_project(:lab_group => lab_group)
+
     lab_group.detail_hash.should == {
       :id => lab_group.id,
       :name => "Fungus Group",
       :file_folder => "fungus",
       :updated_at => lab_group.updated_at,
       :user_uris => ["http://example.com/users/#{user_1.id}",
-                     "http://example.com/users/#{user_2.id}"]
+                     "http://example.com/users/#{user_2.id}"],
+      :project_uris => ["http://example.com/projects/#{project_1.id}",
+                        "http://example.com/projects/#{project_2.id}"]
     }
   end
 end
