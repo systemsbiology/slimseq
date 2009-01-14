@@ -1,0 +1,96 @@
+<a href="/api">&laquo; Back to index</a>
+
+<h1>/lab_groups</h1>
+<p class="summary">
+This resource can be used to list a summary of all lab_groups, or show details for
+a particular lab_group.<br><br>
+
+A user can have and belong to many lab groups. A lab_group may be associated with any number of
+projects.
+</p>
+
+
+
+
+
+  <div style="padding:30px; padding-top:0px;border-bottom:1px solid #ddd;">
+  
+  
+  <h2><span style='color:#ff6600; width:200px;margin-right:20px;'>GET</span>/lab_groups</h2>
+  
+  <p>
+Get a list of all lab_groups, which doesn't have all the details that are
+available when retrieving single lab_groups (see GET /lab_groups/[lab_group id]).
+</p>
+  
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/lab_groups<p/>
+  
+  <p><strong>Access:</strong> HTTP Basic authentication, Customer access or higher<p/>
+
+  <p><strong>Parameters:</strong>
+  
+    None
+  
+  </p>
+
+   
+    <strong>Response:</strong> A list of all summary information on all lab_groups</br>
+
+    
+    JSON example: <br /><a href="#" onclick="javascript:$('jsonrep-1297754995').toggle()">(toggle code)</a><br />
+    <textarea style="width:600px;height:400px;display:none;" id="jsonrep-1297754995"><%= JsonPrinter.render(LabGroup.find(:all, :limit => 5).collect{|x| x.summary_hash}) %></textarea></br>
+    
+
+    
+    XML example: <br /><a href="#" onclick="javascript:$('xmlrep-1297754995').toggle()">(toggle code)</a><br/>
+    <textarea style="width:600px;height:400px;display:none;" id="xmlrep-1297754995"><%= LabGroup.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %></textarea>
+    
+
+  
+  
+</div>
+
+
+
+
+  <div style="padding:30px; padding-top:0px;border-bottom:1px solid #ddd;">
+  
+  
+  <h2><span style='color:#ff6600; width:200px;margin-right:20px;'>GET</span>/lab_groups/[lab_group id]</h2>
+  
+  <p>
+Get detailed information about a single lab_group.
+</p>
+  
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/lab_groups/5.json<p/>
+  
+  <p><strong>Access:</strong> HTTP Basic authentication, Customer access or higher<p/>
+
+  <p><strong>Parameters:</strong>
+  
+    None
+  
+  </p>
+
+   
+    <strong>Response:</strong> Detailed attributes of a particular lab_group</br>
+
+    
+    JSON example: <br /><a href="#" onclick="javascript:$('jsonrep--1372857383').toggle()">(toggle code)</a><br />
+    <textarea style="width:600px;height:400px;display:none;" id="jsonrep--1372857383"><%= JsonPrinter.render(LabGroup.find(:first).detail_hash) %></textarea></br>
+    
+
+    
+    XML example: <br /><a href="#" onclick="javascript:$('xmlrep--1372857383').toggle()">(toggle code)</a><br/>
+    <textarea style="width:600px;height:400px;display:none;" id="xmlrep--1372857383"><%= LabGroup.find(:first).detail_hash.to_xml %></textarea>
+    
+
+  
+  
+</div>
+
+
+
+
+
+

@@ -1,0 +1,95 @@
+<a href="/api">&laquo; Back to index</a>
+
+<h1>/users</h1>
+<p class="summary">
+This resource can be used to list a summary of all users, or show details for
+a particular user.<br><br>
+
+A user can have and belong to many lab groups.
+</p>
+
+
+
+
+
+  <div style="padding:30px; padding-top:0px;border-bottom:1px solid #ddd;">
+  
+  
+  <h2><span style='color:#ff6600; width:200px;margin-right:20px;'>GET</span>/users</h2>
+  
+  <p>
+Get a list of all users, which doesn't have all the details that are
+available when retrieving single users (see GET /users/[user id]).
+</p>
+  
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/users<p/>
+  
+  <p><strong>Access:</strong> HTTP Basic authentication, Customer access or higher<p/>
+
+  <p><strong>Parameters:</strong>
+  
+    None
+  
+  </p>
+
+   
+    <strong>Response:</strong> A list of all summary information on all users</br>
+
+    
+    JSON example: <br /><a href="#" onclick="javascript:$('jsonrep--70683543').toggle()">(toggle code)</a><br />
+    <textarea style="width:600px;height:400px;display:none;" id="jsonrep--70683543"><%= JsonPrinter.render(User.find(:all, :limit => 5).collect{|x| x.summary_hash}) %></textarea></br>
+    
+
+    
+    XML example: <br /><a href="#" onclick="javascript:$('xmlrep--70683543').toggle()">(toggle code)</a><br/>
+    <textarea style="width:600px;height:400px;display:none;" id="xmlrep--70683543"><%= User.find(:all, :limit => 5).collect{|x| x.summary_hash}.to_xml %></textarea>
+    
+
+  
+  
+</div>
+
+
+
+
+  <div style="padding:30px; padding-top:0px;border-bottom:1px solid #ddd;">
+  
+  
+  <h2><span style='color:#ff6600; width:200px;margin-right:20px;'>GET</span>/users/[user id]</h2>
+  
+  <p>
+Get detailed information about a single user.
+</p>
+  
+  <p><strong>Example:</strong> GET <%= SiteConfig.site_url %>/users/5.json<p/>
+  
+  <p><strong>Access:</strong> HTTP Basic authentication, Customer access or higher<p/>
+
+  <p><strong>Parameters:</strong>
+  
+    None
+  
+  </p>
+
+   
+    <strong>Response:</strong> Detailed attributes of a particular user</br>
+
+    
+    JSON example: <br /><a href="#" onclick="javascript:$('jsonrep-991920608').toggle()">(toggle code)</a><br />
+    <textarea style="width:600px;height:400px;display:none;" id="jsonrep-991920608"><%= JsonPrinter.render(User.find(:first).detail_hash) %></textarea></br>
+    
+
+    
+    XML example: <br /><a href="#" onclick="javascript:$('xmlrep-991920608').toggle()">(toggle code)</a><br/>
+    <textarea style="width:600px;height:400px;display:none;" id="xmlrep-991920608"><%= User.find(:first).detail_hash.to_xml %></textarea>
+    
+
+  
+  
+</div>
+
+
+
+
+
+

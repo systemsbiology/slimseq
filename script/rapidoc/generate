@@ -9,7 +9,9 @@ resources = [
   ResourceDoc.new("naming schemes", "/naming_schemes", "naming_schemes_controller.rb" ),
   ResourceDoc.new("project", "/projects", "projects_controller.rb" ),
   ResourceDoc.new("sample_prep_kit", "/sample_prep_kits", "sample_prep_kits_controller.rb" ),
-  ResourceDoc.new("instrument", "/instruments", "instruments_controller.rb" )
+  ResourceDoc.new("instrument", "/instruments", "instruments_controller.rb" ),
+  ResourceDoc.new("lab_group", "/lab_groups", "lab_groups_controller.rb" ),
+  ResourceDoc.new("user", "/users", "users_controller.rb" )
 ]
 
 # generate the apidoc

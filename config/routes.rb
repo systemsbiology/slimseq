@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :lab_groups
+
   map.resources :projects
 
   map.resources :pipeline_runs

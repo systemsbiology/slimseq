@@ -4,8 +4,7 @@ name:: /instruments
 This resource can be used to list a summary of all instruments, or show details for 
 a particular instrument.<br><br>
 
-Each instrument belongs to a particular lab group. A instrument can be associated 
-with any number of samples.
+An instrument can be associated with any number of flow cells, once they have been sequenced.
 =end
 
 class InstrumentsController < ApplicationController

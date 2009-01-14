@@ -208,4 +208,26 @@ public
       :order => "name ASC"
     )
   end
+
+  def summary_hash
+    return {
+      :id => id,
+      :login => login,
+      :updated_at => updated_at,
+      :uri => "#{SiteConfig.site_url}/users/#{id}"
+    }
+  end
+
+  def detail_hash
+    return {
+      :id => id,
+      :login => login,
+      :email => email,
+      :firstname => firstname,
+      :lastname => lastname,
+      :updated_at => updated_at,
+      :lab_group_uris => lab_group_ids.sort.
+        collect {|x| "#{SiteConfig.site_url}/lab_groups/#{x}" }
+    }
+  end
 end

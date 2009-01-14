@@ -75,7 +75,7 @@ Get detailed information about a single project.
     @project = Project.new(params[:project])
     if @project.save
       flash[:notice] = 'Project was successfully created.'
-      redirect_to :action => 'list'
+      redirect_to projects_url
     else
       render :action => 'new'
     end
@@ -102,7 +102,7 @@ Get detailed information about a single project.
     begin
       if @project.update_attributes(params[:project])
         flash[:notice] = 'Project was successfully updated.'
-        redirect_to :action => 'list', :id => @project
+        redirect_to projects_url
       else
         render :action => 'edit'
       end
@@ -115,7 +115,7 @@ Get detailed information about a single project.
 
   def destroy    
     Project.find(params[:id]).destroy
-    redirect_to :action => 'list'
+    redirect_to projects_url
   end
 
   private

@@ -14,4 +14,24 @@ class LabGroup < ActiveRecord::Base
            projects.size.to_s + " project(s)\n" +
            "Are you sure you want to destroy it?"
   end
+
+  def summary_hash
+    return {
+      :id => id,
+      :name => name,
+      :updated_at => updated_at,
+      :uri => "#{SiteConfig.site_url}/lab_groups/#{id}"
+    }
+  end
+
+  def detail_hash
+    return {
+      :id => id,
+      :name => name,
+      :file_folder => file_folder,
+      :updated_at => updated_at,
+      :user_uris => user_ids.sort.
+        collect {|x| "#{SiteConfig.site_url}/users/#{x}" }
+    }
+  end
 end
