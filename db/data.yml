@@ -1,0 +1,161 @@
+site_config:
+  columns:
+  - id
+  - site_name
+  - organization_name
+  - facility_name
+  - track_charges
+  - use_LDAP
+  - LDAP_server
+  - LDAP_DN
+  - administrator_email
+  - raw_data_root_path
+  - site_url
+  - lock_version
+  - created_at
+  - updated_at
+  records:
+  - - "1"
+    - SLIMseq
+    - Institute for Systems Biology
+    - Sequencing Facility
+    - false
+    - true
+    - ldap.systemsbiology.net
+    - cn=users,dc=systemsbiology,dc=net
+    - bmarzolf@systemsbiology.org
+    - /solexa
+    - http://osiris:3000
+    - "7"
+    -
+    - 2008-12-02 08:57:09
+
+organisms:
+  columns:
+  - id
+  - name
+  - lock_version
+  - created_at
+  - updated_at
+  records:
+  - - "1"
+    - PhiX
+    - "0"
+    -
+    -
+
+reference_genomes:
+  columns:
+  - id
+  - name
+  - organism_id
+  - lock_version
+  - fasta_path
+  - description
+  - created_at
+  - updated_at
+  records:
+  - - "1"
+    - PhiX
+    - "1"
+    - "0"
+    - /data/Genomes/ELAND/PhiX/PhiX
+    - PhiX
+    -
+    -
+
+sample_prep_kits:
+  columns:
+  - id
+  - name
+  - lock_version
+  - created_at
+  - updated_at
+  - restriction_enzyme
+  records:
+  - - "1"
+    - PhiX Control
+    - "0"
+    -
+    -
+    - 
+
+lab_groups:
+  columns:
+  - id
+  - name
+  - file_folder
+  - lock_version
+  - created_at
+  - updated_at
+  records:
+  - - "1"
+    - Sequencing Facility
+    - facility
+    - "0"
+    -
+    -
+
+projects:
+  columns:
+  - id
+  - name
+  - file_folder
+  - lab_group_id
+  - lock_version
+  - created_at
+  - updated_at
+  records:
+  - - "1"
+    - Sequencing Facility
+    - PhiX
+    - "1"
+    - "0"
+    -
+    - 2008-11-21 10:41:54
+
+samples:
+  columns:
+  - id
+  - sample_set_id
+  - submitted_by_id
+  - project_id
+  - submission_date
+  - name_on_tube
+  - sample_description
+  - sample_prep_kit_id
+  - insert_size
+  - desired_read_length
+  - alignment_start_position
+  - alignment_end_position
+  - reference_genome_id
+  - status
+  - naming_scheme_id
+  - budget_number
+  - control
+  - lock_version
+  - comment
+  - created_at
+  - updated_at
+  records:
+  - - "1"
+    -
+    -
+    - "1"
+    - "2008-08-21"
+    - PhiX
+    - PhiX_Control
+    - "1"
+    - "100"
+    - "18"
+    - "1"
+    - "18"
+    - "1"
+    - completed
+    - ""
+    - "00000000"
+    - true
+    - "60"
+    - ""
+    -
+    - 2008-12-02 08:58:15

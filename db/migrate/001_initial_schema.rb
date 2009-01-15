@@ -200,38 +200,6 @@ class InitialSchema < ActiveRecord::Migration
       end
     end
     
-    # Initial site configuration
-    SiteConfig.create :site_name => "SLIMseq",
-                      :organization_name => "Name of Your Organization Here",
-                      :facility_name => "Your Facility Name Here",
-                      :track_charges => true,
-                      :use_LDAP => false,
-                      :LDAP_server => "",
-                      :LDAP_DN => "",
-                      :administrator_email => "admin@example.com",
-                      :raw_data_root_path => "/tmp/",
-                      :site_url => "http://slim"
-    # For PhiX control
-    organism = Organism.create(:name => "PhiX")
-    reference_genome = ReferenceGenome.create(:name => "PhiX", :organism => organism)
-    sample_prep_kit = SamplePrepKit.create(:name => "PhiX Control")
-    lab_group = LabGroup.create(:name => "Sequencing Facility", :file_folder => "facility")
-    project = Project.create(:name => "Facility Controls", :file_folder => "",
-                             :lab_group => lab_group)
-
-    Sample.create(:submission_date => "2008-10-10",
-                  :project => project,
-                  :short_sample_name => "PhiX",
-                  :sample_name => "PhiX_Control",
-                  :sample_prep_kit => sample_prep_kit,
-                  :insert_size => 100,
-                  :desired_read_length => 18,
-                  :alignment_start_position => 1,
-                  :alignment_end_position => 18,
-                  :reference_genome => reference_genome,
-                  :budget_number => '00000000',
-                  :control => true
-                 )
   end
 
   def self.down
