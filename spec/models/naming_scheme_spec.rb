@@ -251,7 +251,7 @@ describe NamingScheme do
   end
 
   it "should create a new naming scheme based on a CSV of the format created by to_csv" do
-    csv_file_name = "#{RAILS_ROOT}/spec/fixtures/toad_naming_scheme.csv"
+    csv_file_name = "#{RAILS_ROOT}/spec/fixtures/csv/toad_naming_scheme.csv"
 
     scheme = NamingScheme.from_csv("Toad Scheme", csv_file_name)
 
