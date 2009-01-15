@@ -60,8 +60,12 @@ Rails::Initializer.run do |config|
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc
   
-  # Require the latest version of the JSON gem
+  # Required gems
   config.gem "json"
+  config.gem "parseexcel"
+  config.gem "rest-client", :lib => "rest_client"
+  config.gem "rspec", :lib => 'spec'
+  config.gem "rspec-rails", :lib => 'spec/rails'
 end
 
 AUTHENTICATION_SALT = 'mmm_kosher_rocks' unless defined? AUTHENTICATION_SALT
@@ -69,8 +73,10 @@ AUTHENTICATION_SALT = 'mmm_kosher_rocks' unless defined? AUTHENTICATION_SALT
 # Exception Notifier plugin configuration
 if( ENV["RAILS_ENV"] == "test" )
   ExceptionNotifier.exception_recipients = "admin@example.com"
-else
+elsif SiteConfig.count == 1
   ExceptionNotifier.exception_recipients = SiteConfig.administrator_email
+else
+  ExceptionNotifier.exception_recipients = "admin@example.com"
 end  
 ExceptionNotifier.sender_address =
     %("Application Error" <slimseq@#{`hostname`.strip}>)
