@@ -3,22 +3,21 @@ production:
   database: slimseq_production
   username: mysql_user_name
   password: mysql_user_password
-  socket: /var/lib/mysql/mysql.sock
   host: localhost
+  encoding: utf8
 
 development:
   adapter: mysql
   database: slimseq_development
   username: mysql_user_name
   password: mysql_user_password
-  socket: /var/lib/mysql/mysql.sock
   host: localhost
+  encoding: utf8
   
 test:
   adapter: mysql
   database: slimseq_test
   username: mysql_user_name
   password: mysql_user_password
-  socket: /var/lib/mysql/mysql.sock
   host: localhost
-
+  encoding: utf8
