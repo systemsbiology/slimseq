@@ -1,0 +1,32 @@
+Naming Element,Food,
+Order,1,
+Group Element,Yes,
+Optional,No,
+Free Text,No,
+Depends On,,
+Include in Sample Description,Yes,
+Naming Terms,,
+Term,Abbreviated Term,Order
+None,None,1
+Fruit Flies,FF,2
+Horse Flies,HF,3
+
+Naming Element,Food Amount,
+Order,2,
+Group Element,Yes,
+Optional,No,
+Free Text,No,
+Depends On,Food,
+Include in Sample Description,Yes,
+Naming Terms,,
+Term,Abbreviated Term,Order
+Small,S,1
+Large,L,2
+
+Naming Element,Name,
+Order,3,
+Group Element,No,
+Optional,No,
+Free Text,Yes,
+Depends On,Perturbation,
+Include in Sample Description,Yes,
