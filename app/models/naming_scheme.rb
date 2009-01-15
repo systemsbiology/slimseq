@@ -253,7 +253,7 @@ class NamingScheme < ActiveRecord::Base
     csv_file.close
   end
 
-  def self.from_csv(scheme_name, csv_file)
+  def self.from_csv(scheme_name, csv_file_name)
     # complain if there's already a naming scheme by this name
     existing_scheme = NamingScheme.find(:first, :conditions => {:name => scheme_name})
     if existing_scheme != nil
@@ -264,7 +264,6 @@ class NamingScheme < ActiveRecord::Base
 
     naming_scheme = NamingScheme.create(:name => scheme_name)
 
-    csv_file_name = "#{RAILS_ROOT}/spec/fixtures/csv/toad_naming_scheme.csv"
     csv = CSV.open(csv_file_name, 'r')
 
     naming_element = NamingElement.new
