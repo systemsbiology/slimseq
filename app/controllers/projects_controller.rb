@@ -10,7 +10,7 @@ with any number of samples.
 
 class ProjectsController < ApplicationController
   before_filter :login_required
-  before_filter :staff_or_admin_required
+  before_filter :staff_or_admin_required, :except => [:new_inline, :create_inline]
   before_filter :load_dropdown_selections, :only => [:new, :new_inline, :create, :create_inline,
                                                      :edit, :update]
 
