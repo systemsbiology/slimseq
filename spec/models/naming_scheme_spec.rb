@@ -178,4 +178,126 @@ describe NamingScheme do
     
     naming_scheme.detail_hash.should == expected_hash
   end
+
+  it "should create a CSV file describing a naming scheme" do
+    naming_schemes(:yeast_scheme).to_csv
+
+    csv_file_name = "#{RAILS_ROOT}/tmp/csv/#{SiteConfig.site_name}_naming_scheme_" +
+      "Yeast Scheme-#{Date.today.to_s}.csv"
+    csv = CSV.open(csv_file_name, 'r')
+
+    expected_contents = [
+      ["Naming Element","Strain"],
+      ["Order","1"],
+      ["Group Element","Yes"],
+      ["Optional","No"],
+      ["Free Text","No"],
+      ["Depends On",""],
+      ["Include in Sample Description","Yes"],
+      ["Naming Terms"],
+      ["Term","Abbreviated Term","Order"],
+      ["wild-type","wt","0"],
+      ["mutant","mut","1"],
+      [""],
+      ["Naming Element","Perturbation"],
+      ["Order","2"],
+      ["Group Element","Yes"],
+      ["Optional","No"],
+      ["Free Text","No"],
+      ["Depends On",""],
+      ["Include in Sample Description","Yes"],
+      ["Naming Terms"],
+      ["Term","Abbreviated Term","Order"],
+      ["heat","HT","0"],
+      ["heavy metals","HM","1"],
+      [""],
+      ["Naming Element","Perturbation Time"],
+      ["Order","3"],
+      ["Group Element","Yes"],
+      ["Optional","Yes"],
+      ["Free Text","No"],
+      ["Depends On","Perturbation"],
+      ["Include in Sample Description","Yes"],
+      ["Naming Terms"],
+      ["Term","Abbreviated Term","Order"],
+      ["000","000","0"],
+      ["024","024","1"],
+      [""],
+      ["Naming Element","Replicate"],
+      ["Order","4"],
+      ["Group Element","No"],
+      ["Optional","No"],
+      ["Free Text","No"],
+      ["Depends On",""],
+      ["Include in Sample Description","No"],
+      ["Naming Terms"],
+      ["Term","Abbreviated Term","Order"],
+      ["A","A","0"],
+      ["B","B","1"],
+      [""],
+      ["Naming Element","Subject Number"],
+      ["Order","5"],
+      ["Group Element","No"],
+      ["Optional","No"],
+      ["Free Text","Yes"],
+      ["Depends On",""],
+      ["Include in Sample Description","Yes"],
+      [""],
+    ]
+
+    expected_contents.each do |row|
+      csv.shift.should eql(row)
+    end
+  end
+
+  it "should create a new naming scheme based on a CSV of the format created by to_csv" do
+    csv_file_name = "#{RAILS_ROOT}/spec/fixtures/toad_naming_scheme.csv"
+
+    scheme = NamingScheme.from_csv("Toad Scheme", csv_file_name)
+
+    elements = scheme.naming_elements.find(:all, :order => "element_order ASC")
+
+    elements[0].name.should == "Food"
+    elements[0].element_order.should == 1
+    elements[0].group_element.should == true
+    elements[0].optional.should == false
+    elements[0].free_text.should == false
+    elements[0].dependent_element_id.should == nil
+    elements[0].include_in_sample_description.should == true
+    terms = elements[0].naming_terms.find(:all, :order => "term_order ASC")
+    terms[0].term.should == "None"
+    terms[0].abbreviated_term.should == "None"
+    terms[0].term_order.should == 1
+    terms[1].term.should == "Fruit Flies"
+    terms[1].abbreviated_term.should == "FF"
+    terms[1].term_order.should == 2
+    terms[2].term.should == "Horse Flies"
+    terms[2].abbreviated_term.should == "HF"
+    terms[2].term_order.should == 3
+
+    elements[1].name.should == "Food Amount"
+    elements[1].element_order.should == 2
+    elements[1].group_element.should == true
+    elements[1].optional.should == false
+    elements[1].free_text.should == false
+    elements[1].dependent_element_id.should == elements[0].id
+    elements[1].include_in_sample_description.should == true
+    terms = elements[1].naming_terms.find(:all, :order => "term_order ASC")
+    terms[0].term.should == "Small"
+    terms[0].abbreviated_term.should == "S"
+    terms[0].term_order.should == 1
+    terms[1].term.should == "Large"
+    terms[1].abbreviated_term.should == "L"
+    terms[1].term_order.should == 2
+
+    elements[2].name.should == "Name"
+    elements[2].element_order.should == 3
+    elements[2].group_element.should == false
+    elements[2].optional.should == false
+    elements[2].free_text.should == true
+    elements[2].dependent_element_id.should == nil
+    elements[2].include_in_sample_description.should == true
+  end
+  
+
 end

@@ -28,6 +28,14 @@ class NamingElement < ActiveRecord::Base
            "Are you sure you want to destroy it?"
   end
 
+  def depends_upon_name
+    if(depends_upon_element.nil?)
+      return ""
+    else
+      return depends_upon_element.name
+    end
+  end
+
   def ordered_naming_terms
     return NamingTerm.find(:all, :conditions => ["naming_element_id = ?", self.id], :order => "term_order ASC")
   end

@@ -227,15 +227,110 @@ class NamingScheme < ActiveRecord::Base
     
     csv_file = File.open(csv_file_name, 'wb')
     CSV::Writer.generate(csv_file) do |csv|
-      naming_elements.each do |ne|
-        if(ne.free_text == true)
-          csv << [ne.name, "FREE TEXT"]
-        else
-          csv << [ne.name] + ne.naming_terms.collect {|nt| nt.term}
+      naming_elements.sort{|x,y| x.element_order <=> y.element_order }.each do |element|
+        csv << ["Naming Element", element.name]
+        csv << ["Order", element.element_order]
+        csv << ["Group Element", to_yes_or_no(element.group_element)]
+        csv << ["Optional", to_yes_or_no(element.optional)]
+        csv << ["Free Text", to_yes_or_no(element.free_text)]
+        csv << ["Depends On", element.depends_upon_name]
+        csv << ["Include in Sample Description",
+          to_yes_or_no(element.include_in_sample_description)]
+        
+        if(element.free_text == false)
+          csv << ["Naming Terms"]
+          csv << ["Term","Abbreviated Term","Order"]
+
+          element.naming_terms.sort{|x,y| x.term_order <=> y.term_order }.each do |term|
+            csv << [term.term, term.abbreviated_term, term.term_order]
+          end
         end
+
+        csv << [""]
       end
     end
     
     csv_file.close
+  end
+
+  def self.from_csv(scheme_name, csv_file)
+    # complain if there's already a naming scheme by this name
+    existing_scheme = NamingScheme.find(:first, :conditions => {:name => scheme_name})
+    if existing_scheme != nil
+      puts "There's already a naming scheme named #{existing_scheme}"
+      return nil
+    end
+
+
+    naming_scheme = NamingScheme.create(:name => scheme_name)
+
+    csv_file_name = "#{RAILS_ROOT}/spec/fixtures/csv/toad_naming_scheme.csv"
+    csv = CSV.open(csv_file_name, 'r')
+
+    naming_element = NamingElement.new
+    in_naming_terms = false
+    csv.each do |row|
+      if(in_naming_terms)
+        if(row.size == 3)
+          NamingTerm.create!(
+            :naming_element => naming_element,
+            :term => row[0],
+            :abbreviated_term => row[1],
+            :term_order => row[2]
+          )
+        else
+          in_naming_terms = false
+        end
+      else
+        case row[0]
+        when "Naming Element"
+          naming_element = NamingElement.new(
+            :naming_scheme => naming_scheme,
+            :name => row[1]
+          )
+        when "Order"
+          naming_element.element_order = row[1].to_i
+        when "Group Element"
+          naming_element.group_element = from_yes_or_no(row[1])
+        when "Optional"
+          naming_element.optional = from_yes_or_no(row[1])
+        when "Free Text"
+          naming_element.free_text = from_yes_or_no(row[1])
+        when "Depends On"
+          depends_upon_element = NamingElement.find(:first,
+            :conditions => {:naming_scheme_id => naming_scheme.id, :name => row[1]})
+          if(depends_upon_element.nil?)
+            naming_element.dependent_element_id = nil
+          else
+            naming_element.dependent_element_id = depends_upon_element.id
+          end
+        when "Include in Sample Description"
+          naming_element.include_in_sample_description = from_yes_or_no(row[1])
+        when "Term"
+          in_naming_terms = true
+          naming_element.save!
+        when nil
+          naming_element.save!
+        end
+      end
+    end
+    naming_element.save!
+
+    return naming_scheme
+  end
+
+  private
+
+  def to_yes_or_no(bool)
+    bool ? "Yes" : "No"
+  end
+
+  # If it's not yes, then it's no
+  def self.from_yes_or_no(text)
+    if(text =~ /yes/i)
+      return true
+    else
+      return false
+    end
   end
 end
