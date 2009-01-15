@@ -159,3 +159,30 @@ samples:
     - ""
     -
     - 2008-12-02 08:58:15
+
+users:
+  columns:
+  - id
+  - login
+  - crypted_password
+  - email
+  - firstname
+  - lastname
+  - salt
+  - role
+  - remember_token
+  - remember_token_expires_at
+  - created_at
+  - updated_at
+  - lock_version
+  records:
+  - - "1"
+    - admin
+    - af59d49bd90be7a7acf0ef0ec6f380294d420a3d
+    - admin@example.com
+    - Administrator
+    - User
+    - e6f7f6195d2097c5a059b98f942fc4be1c54fcf5
+    - admin
+    -
+    -
