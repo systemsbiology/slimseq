@@ -257,7 +257,7 @@ class NamingScheme < ActiveRecord::Base
     # complain if there's already a naming scheme by this name
     existing_scheme = NamingScheme.find(:first, :conditions => {:name => scheme_name})
     if existing_scheme != nil
-      puts "There's already a naming scheme named #{existing_scheme}"
+      puts "There's already a naming scheme named #{existing_scheme.name}"
       return nil
     end
 
