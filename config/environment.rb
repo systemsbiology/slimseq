@@ -65,7 +65,7 @@ Rails::Initializer.run do |config|
   config.gem "parseexcel"
   config.gem "rest-client", :lib => "rest_client"
   config.gem "rspec", :lib => 'spec'
-  config.gem "rspec-rails", :lib => 'spec/rails'
+  #config.gem "rspec-rails", :lib => 'spec/rails'
   config.gem "hpricot"
 end
 
