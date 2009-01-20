@@ -66,17 +66,21 @@ Rails::Initializer.run do |config|
   config.gem "rest-client", :lib => "rest_client"
   config.gem "rspec", :lib => 'spec'
   config.gem "rspec-rails", :lib => 'spec/rails'
+  config.gem "hpricot"
 end
 
 AUTHENTICATION_SALT = 'mmm_kosher_rocks' unless defined? AUTHENTICATION_SALT
 
 # Exception Notifier plugin configuration
-if( ENV["RAILS_ENV"] == "test" )
+# Hackish way of handling the case where the database is empty
+begin
+  if( ENV["RAILS_ENV"] == "test" )
+    ExceptionNotifier.exception_recipients = "admin@example.com"
+  else
+    ExceptionNotifier.exception_recipients = SiteConfig.administrator_email
+  end
+rescue
   ExceptionNotifier.exception_recipients = "admin@example.com"
-elsif SiteConfig.count == 1
-  ExceptionNotifier.exception_recipients = SiteConfig.administrator_email
-else
-  ExceptionNotifier.exception_recipients = "admin@example.com"
-end  
+end
 ExceptionNotifier.sender_address =
     %("Application Error" <slimseq@#{`hostname`.strip}>)
