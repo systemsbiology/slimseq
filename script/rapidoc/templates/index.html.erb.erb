@@ -21,9 +21,6 @@ providing appropriate mime-type in the request.</p>
 <h2>The resources</h2>
 <ul>
 <% @resources.each do |r| %>
-  <li><h3>Resource:  <a href="/api/<%=r.name %>"><%=r.resource_location %></a></h3></li>
+  <li><h3>Resource:  <a href="api/<%=r.name %>"><%=r.resource_location %></a></h3></li>
 <% end %>
 </ul>
-
-
-<%#=DocUtil.print_erb "render :partial => \"sidebar\" ", true %>
