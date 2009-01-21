@@ -112,12 +112,13 @@ class NamingScheme < ActiveRecord::Base
       if(name.length > 0)
         name += "_"
       end
-      
+
       if( schemed_params[element.name] != nil && !depends_upon_element_with_no_selection )
         # free text
         if( element.free_text )
           name += schemed_params[element.name]
-        elsif( schemed_params[element.name].to_i > 0 )
+        elsif( schemed_params[element.name].to_i > 0 &&
+               NamingTerm.find(schemed_params[element.name]).abbreviated_term != nil )
           name += NamingTerm.find(schemed_params[element.name]).abbreviated_term
         end
       end

@@ -29,6 +29,18 @@ describe NamingScheme do
     end
   end
 
+  describe "generating a sample name from schemed parameters, where one term has no abbreviated form" do
+    it "should provide a string of the abbreviated terms and free text values" do
+      schemed_params = {
+        "Strain" => naming_terms(:wild_type).id, "Perturbation" => naming_terms(:none).id,
+        "Replicate" => naming_terms(:replicateA).id, "Perturbation Time" => naming_terms(:time024).id,
+        "Subject Number" => "3283"
+      }
+
+      @naming_scheme.generate_sample_description(schemed_params).should == "wt__024_A_3283"
+    end
+  end
+
   describe "generating a sample name from schemed parameters, with a hidden element" do
     it "should provide a string of the abbreviated terms and free text values" do
       schemed_params = {
@@ -210,6 +222,7 @@ describe NamingScheme do
       ["Term","Abbreviated Term","Order"],
       ["heat","HT","0"],
       ["heavy metals","HM","1"],
+      ["none",nil,"2"],
       [""],
       ["Naming Element","Perturbation Time"],
       ["Order","3"],
