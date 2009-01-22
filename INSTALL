@@ -47,6 +47,10 @@ At the mysql prompt:
 
     sudo aptitude -y install subversion
 
+== Install Prerequisite Gems
+sudo aptitude -y install build-essential
+sudo gem install ruby-debug json parseexcel rest-client rspec-rails hpricot
+
 == Install SLIMseq itself
 
     sudo mkdir /apps
