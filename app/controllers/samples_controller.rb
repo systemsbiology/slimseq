@@ -65,8 +65,15 @@ Get detailed information about a single sample.
 =end
   
   def show
-    @sample = Sample.find(params[:id])
-    
+    @sample = Sample.find(
+      params[:id],
+      :include => {
+        :sample_terms => {
+          :naming_term => :naming_element
+        }
+      }
+    )
+
     respond_to do |format|
       format.xml   { render :xml => @sample.detail_hash }
       format.json  { render :json => @sample.detail_hash.to_json }

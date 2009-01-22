@@ -95,7 +95,9 @@ describe SamplesController do
     end
     
     it "should expose the requested sample as @sample" do
-      Sample.should_receive(:find).with("37").and_return(@sample)
+      Sample.should_receive(:find).
+        with("37", :include => { :sample_terms => { :naming_term => :naming_element} }).
+        and_return(@sample)
       get :show, :id => "37"
       assigns[:sample].should equal(@sample)
     end
@@ -104,7 +106,9 @@ describe SamplesController do
 
       it "should render the requested sample as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
-        Sample.should_receive(:find).with("37").and_return(@sample)
+        Sample.should_receive(:find).
+          with("37", :include => { :sample_terms => { :naming_term => :naming_element} }).
+          and_return(@sample)
         get :show, :id => "37"
         response.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
           "<hash>\n  <n>1</n>\n</hash>\n"
@@ -116,7 +120,9 @@ describe SamplesController do
   
       it "should render the flow cell lane detail as json" do
         request.env["HTTP_ACCEPT"] = "application/json"
-        Sample.should_receive(:find).with("37").and_return(@sample)
+        Sample.should_receive(:find).
+          with("37", :include => { :sample_terms => { :naming_term => :naming_element} }).
+          and_return(@sample)
         get :show, :id => 37
         response.body.should == "{\"n\":\"1\"}"
       end
