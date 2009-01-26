@@ -1,6 +1,6 @@
 <h1>Editing project</h1>
 
-<% form_tag :action => 'update', :id => @project do -%>
+<% form_tag project_path(@project), :method => :put do -%>
   <%= render :partial => 'form' %>
   <%= submit_tag 'Edit' %>
 <% end -%>
