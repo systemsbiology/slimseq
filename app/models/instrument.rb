@@ -1,4 +1,6 @@
 class Instrument < ActiveRecord::Base
+  has_many :sequencing_runs
+
   named_scope :active, :conditions => {:active => true}
 
   def name_with_version
