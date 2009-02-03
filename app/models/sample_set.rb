@@ -24,7 +24,11 @@ class SampleSet < ActiveRecord::BaseWithoutTable
   
   def self.new(attributes=nil)
     sample_set = super(attributes)
-    sample_set.alignment_end_position = 36
+
+    # this should set the initial end position
+    if(sample_set.alignment_end_position.nil?)
+      sample_set.alignment_end_position = 36
+    end
     
     return sample_set
   end
