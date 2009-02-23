@@ -35,7 +35,7 @@ available when retrieving single samples (see GET /samples/[sample id]).
           current_user.get_lab_group_ids, false ],
          :order => "submission_date DESC, samples.id ASC")
       @paged_samples = Sample.paginate :page => params[:page],
-        :include => 'project',
+        :include => [:project,:user,{:flow_cell_lanes => :pipeline_results}],
         :order => 'submission_date DESC, samples.id ASC',
         :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
           current_user.get_lab_group_ids, false ]

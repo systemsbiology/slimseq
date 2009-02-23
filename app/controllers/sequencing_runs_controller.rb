@@ -6,7 +6,11 @@ class SequencingRunsController < ApplicationController
   # GET /sequencing_runs
   # GET /sequencing_runs.xml
   def index
-    @sequencing_runs = SequencingRun.find(:all, :order => "date DESC")
+    @sequencing_runs = SequencingRun.find(
+      :all,
+      :order => "date DESC",
+      :include => ['flow_cell','instrument']
+    )
 
     respond_to do |format|
       format.html # index.html.erb
