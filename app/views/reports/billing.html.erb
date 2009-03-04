@@ -1,0 +1,30 @@
+<h2>Billing Report</h2>
+
+<% if(@paged_lanes != nil && @paged_lanes.size > 0) %>
+  <table class="sortable" id="samples">
+    <tr>
+      <th>Date</th>
+      <th>Sample</th>
+      <th>Submitted By</th>
+      <th>Budget</th>
+      <th>Kit</th>
+      <th>Requested Cycles</th>
+    </tr>
+
+    <% for lane in @paged_lanes %>
+      <tr>
+        <td><%=h lane.flow_cell.sequencing_runs.best[0].date %></td>
+        <td><%=h lane.samples[0].short_and_long_name %></td>
+        <td>
+          <%=h lane.samples[0].user ? lane.samples[0].user.full_name : "" %>
+        </td>
+        <td><%=h lane.samples[0].budget_number %></td>
+        <td><%=h lane.samples[0].sample_prep_kit.name %></td>
+        <td><%=h lane.samples[0].desired_read_length %></td>
+      </tr>
+    <% end %>
+  </table>
+  <%= will_paginate @paged_lanes %>
+<% else %>
+  <p>There are currently no flow cell lanes.</p>
+<% end %>
