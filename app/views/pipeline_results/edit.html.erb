@@ -1,0 +1,32 @@
+<h1>Editing Pipeline Result</h1>
+
+<%= error_messages_for :pipeline_result %>
+
+<% form_for(@pipeline_result) do |f| %>
+  <p>
+    <p><label>Sequencing Date</label>:
+    <%=h @pipeline_result.sequencing_run.date %></p>
+
+    <p><label>Instrument</label>:
+    <%=h @pipeline_result.sequencing_run.instrument.name_with_version %></p>
+
+    <p><label>Flow Cell</label>:
+    <%=h @pipeline_result.flow_cell_lane.flow_cell.name %></p>
+
+    <p><label>Lane Number</label>:
+    <%=h @pipeline_result.flow_cell_lane.lane_number %></p>
+
+    <p><label>Base Directory</label><br>
+    <%= f.text_field 'base_directory', :size => 80 %></p>
+
+    <p><label>Eland Output File</label><br>
+    <%= f.text_field 'eland_output_file', :size => 120 %></p>
+    
+    <p><label>Summary File</label><br>
+    <%= f.text_field 'summary_file', :size => 120 %></p>
+    
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', pipeline_results_path %>

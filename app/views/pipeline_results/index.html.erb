@@ -1,0 +1,31 @@
+<h1>Listing Pipeline Results</h1>
+
+<table class="sortable">
+  <tr>
+    <th>GERALD Date</th>
+    <th>Sequencing Date</th>
+    <th>Instrument</th>
+    <th>Flow Cell</th>
+    <th>Flow Cell Lane</th>
+    <th>Base Directory</th>
+    <th>Eland Output File</th>
+    <th>Summary File</th>
+    <th>Edit</th>
+    <th>Destroy</th>
+  </tr>
+
+<% for pipeline_result in @pipeline_results %>
+  <tr>
+    <td><%=h pipeline_result.gerald_date %></td>
+    <td><%=h pipeline_result.sequencing_run.date %></td>
+    <td><%=h pipeline_result.sequencing_run.instrument.name_with_version %></td>
+    <td><%=h pipeline_result.flow_cell_lane.flow_cell.name %></td>
+    <td><%=h pipeline_result.flow_cell_lane.lane_number %></td>
+    <td><%=h pipeline_result.base_directory %></td>
+    <td><%=h pipeline_result.eland_output_file %></td>
+    <td><%=h pipeline_result.summary_file %></td>
+    <td><%= link_to 'Edit', edit_pipeline_result_path(pipeline_result) %></td>
+    <td><%= link_to 'Destroy', pipeline_result, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
