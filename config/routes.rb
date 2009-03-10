@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :pipeline_results
+
   map.resources :lab_groups
 
   map.resources :projects
@@ -12,7 +14,10 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :samples
   
   map.resources :instruments
-  
+
+  # Use with Rails 2.3
+  # load routes from naming schemer plugin
+  #map.from_plugin :naming_schemer
   map.resources :naming_schemes
 
   map.resources :sequencing_runs do |sequencing_runs|
