@@ -25,6 +25,10 @@ describe SequencingRunsController do
     it "should map #destroy" do
       route_for(:controller => "sequencing_runs", :action => "destroy", :id => 1).should == "/sequencing_runs/1"
     end
+
+    it "should map #default_output_paths" do
+      route_for(:controller => "sequencing_runs", :action => "default_output_paths", :id => 1).should == "/sequencing_runs/default_output_paths/1"
+    end
   end
 
   describe "route recognition" do
@@ -54,6 +58,10 @@ describe SequencingRunsController do
   
     it "should generate params for #destroy" do
       params_from(:delete, "/sequencing_runs/1").should == {:controller => "sequencing_runs", :action => "destroy", :id => "1"}
+    end
+
+    it "should generate params for #default_output_paths" do
+      params_from(:get, "/sequencing_runs/default_output_path1").should == {:controller => "sequencing_runs", :action => "default_output_paths", :id => "1"}
     end
   end
 end

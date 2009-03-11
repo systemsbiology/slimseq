@@ -1,0 +1,6 @@
+<h2>Sequencing Run: <%=h @sequencing_run.run_name %></h2>
+
+<h3>Default pipeline result paths for lanes:</h3>
+<% @sequencing_run.flow_cell.flow_cell_lanes.each do |lane| %>
+  <%=h "#{lane.lane_number}: #{lane.default_result_path}" %><br/>
+<% end %>

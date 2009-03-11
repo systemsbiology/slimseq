@@ -106,6 +106,10 @@ class SequencingRunsController < ApplicationController
     end
   end
 
+  def default_output_paths
+    @sequencing_run = SequencingRun.find(params[:id])
+  end
+
 private
 
   def load_dropdown_selections_all

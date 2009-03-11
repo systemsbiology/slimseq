@@ -218,4 +218,20 @@ describe SequencingRunsController do
     
   end
 
+  describe "responding to GET default_output_paths" do
+    before(:each) do
+      @sequencing_run = mock_sequencing_run
+      SequencingRun.stub!(:find).and_return(@sequencing_run)
+    end
+
+    it "should find the requested sequencing run" do
+      SequencingRun.should_receive(:find).with("37").and_return(@sequencing_run)
+      get :default_output_paths, :id => 37
+    end
+
+    it "should render the default_output_paths template" do
+      get :default_output_paths, :id => 37
+      response.should render_template('default_output_paths')
+    end
+  end
 end
