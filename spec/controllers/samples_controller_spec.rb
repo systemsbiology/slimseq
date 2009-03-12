@@ -1,7 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
-require File.expand_path(File.dirname(__FILE__) + '/controller_spec_helper.rb')
 
 describe SamplesController do
+  include CASAuthenticatedSpecHelper
+
   fixtures :all
 
   def mock_sample(stubs={})

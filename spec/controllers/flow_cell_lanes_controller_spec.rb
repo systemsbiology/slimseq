@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
-require File.expand_path(File.dirname(__FILE__) + '/controller_spec_helper.rb')
 
 describe FlowCellLanesController do
+  include CASAuthenticatedSpecHelper
 
   def mock_flow_cell_lane(stubs={})
     @mock_flow_cell_lane ||= mock_model(FlowCellLane, stubs)
