@@ -1,8 +1,9 @@
 # Filters added to this controller will be run for all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
 class ApplicationController < ActionController::Base
-  # RESTful authentication
-  include AuthenticatedSystem
+  # RubyCAS-server authentication with HTTP basic authentication for web services 
+  # and some authentication_plugin helpers
+  include CASAuthenticatedSystem
   
   # Homebrew, very simple authorization
   include Authorization

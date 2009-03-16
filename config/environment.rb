@@ -85,3 +85,11 @@ rescue
 end
 ExceptionNotifier.sender_address =
     %("Application Error" <slimseq@#{`hostname`.strip}>)
+
+# rubycas-client gem
+require 'casclient'
+require 'casclient/frameworks/rails/filter'
+
+CASClient::Frameworks::Rails::Filter.configure(
+  :cas_base_url => "https://osiris:3040/"
+)
