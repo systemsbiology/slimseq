@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe PipelineRunsController do
-  include CASAuthenticatedSpecHelper
+  include AuthenticatedSpecHelper
 
   describe "POST 'create'" do
     describe "with valid parameters" do

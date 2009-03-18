@@ -1,6 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe SequencingRun do
+  fixtures :site_config
+
   it "should mark the flow cell associated with a sequencing run being created as sequenced" do
     @flow_cell = mock_model(FlowCell)
     @flow_cell.should_receive(:sequence!).and_return(true)

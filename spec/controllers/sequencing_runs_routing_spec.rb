@@ -61,7 +61,7 @@ describe SequencingRunsController do
     end
 
     it "should generate params for #default_output_paths" do
-      params_from(:get, "/sequencing_runs/default_output_path").should == {:controller => "sequencing_runs", :action => "default_output_paths", :id => "1"}
+      params_from(:get, "/sequencing_runs/default_output_paths/1").should == {:controller => "sequencing_runs", :action => "default_output_paths", :id => "1"}
     end
   end
 end

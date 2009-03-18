@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe FlowCellsController do
-  include CASAuthenticatedSpecHelper
+  include AuthenticatedSpecHelper
 
   before(:each) do
     login_as_user
