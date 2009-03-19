@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.connect 'sessions/new', :controller => "welcome", :action => "home"
+
   map.resources :pipeline_results
 
   map.resources :lab_groups
@@ -71,6 +73,4 @@ ActionController::Routing::Routes.draw do |map|
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
-
-  map.resource :session
 end

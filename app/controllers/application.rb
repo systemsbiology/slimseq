@@ -3,8 +3,11 @@
 class ApplicationController < ActionController::Base
   # RubyCAS-server authentication with HTTP basic authentication for web services 
   # and some authentication_plugin helpers
-  include CASAuthenticatedSystem
-  
+  #include CASAuthenticatedSystem
+
+  # Non-SLIMcore authentication and authorization
+  include AuthenticatedSystem 
+ 
   # Homebrew, very simple authorization
   include Authorization
 

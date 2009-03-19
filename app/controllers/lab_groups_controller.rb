@@ -30,9 +30,7 @@ available when retrieving single lab_groups (see GET /lab_groups/[lab_group id])
 
     respond_to do |format|
       format.html # index.rhtml
-      format.xml  { render :xml => @lab_groups.
-        collect{|x| x.summary_hash}
-      }
+      format.xml
       format.json { render :json => @lab_groups.
         collect{|x| x.summary_hash}.to_json
       }

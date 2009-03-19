@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081216222448) do
+ActiveRecord::Schema.define(:version => 20090318223738) do
 
   create_table "charge_periods", :force => true do |t|
     t.string   "name"
@@ -91,6 +91,13 @@ ActiveRecord::Schema.define(:version => 20081216222448) do
     t.datetime "updated_at"
     t.string   "instrument_version"
     t.boolean  "active",             :default => true
+  end
+
+  create_table "lab_group_profiles", :force => true do |t|
+    t.integer  "lab_group_id"
+    t.string   "file_folder"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "lab_groups", :force => true do |t|
@@ -227,10 +234,6 @@ ActiveRecord::Schema.define(:version => 20081216222448) do
     t.datetime "updated_at"
   end
 
-  create_table "schema_info", :id => false, :force => true do |t|
-    t.integer "version"
-  end
-
   create_table "sequencing_runs", :force => true do |t|
     t.integer  "flow_cell_id"
     t.integer  "instrument_id"
@@ -254,6 +257,15 @@ ActiveRecord::Schema.define(:version => 20081216222448) do
     t.string   "raw_data_root_path"
     t.string   "site_url"
     t.integer  "lock_version",        :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_profiles", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "role",                            :default => "customer"
+    t.boolean  "new_sample_notification",         :default => false
+    t.boolean  "new_sequencing_run_notification", :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
