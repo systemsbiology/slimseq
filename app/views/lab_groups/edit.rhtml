@@ -1,6 +1,6 @@
 <h2>Editing Lab Group</h2>
 
-<% form_tag :action => 'update', :id => @lab_group do -%>
+<% form_tag lab_group_path(@lab_group), :method => :put do -%>
   <%= render :partial => 'form' %>
   <%= submit_tag 'Edit' %>
 <% end -%>
