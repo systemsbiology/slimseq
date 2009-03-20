@@ -1,0 +1,17 @@
+development:
+  rubycas_server: http://localhost:3020
+  slimcore_site: http://localhost:3030
+  slimcore_user: slimbot
+  slimcore_password: test
+
+test:
+  rubycas_server: http://localhost:3020
+  slimcore_site: http://localhost:3030
+  slimcore_user: slimbot
+  slimcore_password: test
+
+production:
+  rubycas_server: http://localhost:3020
+  slimcore_site: http://localhost:3030
+  slimcore_user: slimbot
+  slimcore_password: test
