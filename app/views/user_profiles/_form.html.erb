@@ -1,0 +1,10 @@
+  <p>
+    <b>Role</b><br />
+    <%= select :user_profile, :role, ["customer", "staff", "admin"] %>
+  </p>
+
+  <p>
+    <b>Notifications</b><br />
+    <%= check_box :user_profile, :new_sample_notification %> Notify when new samples are recorded<br />
+    <%= check_box :user_profile, :new_sequencing_run_notification %> Notify when a new sequencing run recorded
+  </p>
