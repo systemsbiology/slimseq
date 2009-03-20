@@ -86,10 +86,3 @@ end
 ExceptionNotifier.sender_address =
     %("Application Error" <slimseq@#{`hostname`.strip}>)
 
-# rubycas-client gem
-require 'casclient'
-require 'casclient/frameworks/rails/filter'
-
-CASClient::Frameworks::Rails::Filter.configure(
-  :cas_base_url => APP_CONFIG['rubycas_server']
-)
