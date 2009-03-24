@@ -1,10 +1,11 @@
 module FixtureReplacement
+
   attributes_for :charge_period do |cp|
     cp.name = String.random
   end
 
   attributes_for :charge_set do |cs|
-    cs.lab_group = default_lab_group
+    cs.lab_group_id = 1
     cs.charge_period = default_charge_period
     cs.name = String.random
     cs.budget_manager = String.random
@@ -44,15 +45,6 @@ module FixtureReplacement
     i.serial_number = String.random    
   end
 
-  attributes_for :lab_group do |lg|
-    lg.name = String.random
-    lg.file_folder = String.random
-  end
-
-#  attributes_for :lab_membership do |a|
-#    
-#  end
-
   attributes_for :naming_element do |ne|
     ne.naming_scheme = default_naming_scheme
     ne.name = String.random
@@ -78,7 +70,6 @@ module FixtureReplacement
 
   attributes_for :project do |p|
     p.name = String.random
-    p.lab_group = default_lab_group
     p.file_folder = String.random
   end
 
@@ -104,7 +95,6 @@ module FixtureReplacement
   end
 
   attributes_for :sample do |s|
-    s.user = default_user
     s.project = default_project
     s.submission_date = Date.today
     s.name_on_tube = String.random(5)
@@ -132,18 +122,6 @@ module FixtureReplacement
 #    
 #  end
 
-  attributes_for :user do |u|
-    password = String.random
-    
-    u.login = String.random
-    u.email = String.random + "@example.com"
-    u.firstname = String.random
-    u.lastname = String.random
-    u.role = "customer"
-    u.password = password
-    u.password_confirmation = password
-  end
-  
   attributes_for :pipeline_result do |pr|
     run_name = String.random
     
@@ -153,6 +131,11 @@ module FixtureReplacement
     pr.base_directory = "/solexa/lab/project/#{run_name}"
     pr.summary_file = "/solexa/lab/project/#{run_name}/summary.htm"
     pr.eland_output_file = "/solexa/lab/project/#{run_name}/s_1_eland_output.txt"
+  end
+
+  attributes_for :user_profile do |up|
+    up.role = "customer"
+    up.user_id = 1
   end
 
 end
