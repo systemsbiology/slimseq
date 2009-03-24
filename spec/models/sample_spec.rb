@@ -488,7 +488,6 @@ describe Sample do
     sample = create_sample(
       :name_on_tube => "mut",
       :sample_description => "mutant_yeast",
-      :user => create_user(:firstname => "Joe", :lastname => "User"),
       :project => project,
       :submission_date => Date.today,
       :sample_prep_kit => sample_prep_kit,
@@ -510,6 +509,7 @@ describe Sample do
       ],
       :comment => "failed"
     )   
+    sample.stub!(:user).and_return( mock("User", :firstname => "Joe", :lastname => "User", :full_name => "Joe User") )
 
     sample.detail_hash.should == {
       :id => sample.id,

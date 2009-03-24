@@ -15,12 +15,15 @@ describe "Project" do
   end
 
   it "should provide a hash of detailed attributes" do
-    lab_group = create_lab_group(:name => "Fungus Group")
+    lab_group = mock("LabGroup", :id => 3, :name => "Fungus Group")
+
     project = create_project(
       :name => "Fungus Project",
-      :file_folder => "fungus",
-      :lab_group => lab_group
+      :file_folder => "fungus"
     )
+    project.stub!(:lab_group_id).and_return(3)
+    project.stub!(:lab_group).and_return(lab_group)
+
     sample_1 = create_sample(:project => project)
     sample_2 = create_sample(:project => project)
 

@@ -26,8 +26,11 @@ describe FlowCellLane do
   # lots of mocks here due to interconnectedness of these models
   describe "being sequenced" do
     before(:each) do
-      @lab_group = create_lab_group(:file_folder => "Yeast")
-      @project = create_project(:lab_group => @lab_group, :file_folder => "Genetics")
+      @lab_group = mock("LabGroup", :id => 3, :name => "Fungus Group", :file_folder => "Yeast")
+#      @lab_group = create_lab_group(:file_folder => "Yeast")
+      @project = create_project(:file_folder => "Genetics")
+      @project.stub!(:lab_group_id).and_return(3)
+      @project.stub!(:lab_group).and_return(@lab_group)
       @sample_1 = create_sample(:project => @project)
       @sample_2 = create_sample(:project => @project)
 
@@ -45,7 +48,7 @@ describe FlowCellLane do
 
       # if charge tracking is turned on, sequencing should result in a new charge
       @charge_set = create_charge_set(:name => @sample_1.project.name,
-                                     :lab_group => @lab_group,
+                                     :lab_group_id => @lab_group.id,
                                      :budget => @sample_1.budget_number,
                                      :charge_period => create_charge_period)
       @charge_template = create_charge_template(:default => true)
