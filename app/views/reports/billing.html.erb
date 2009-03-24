@@ -16,7 +16,8 @@
         <td><%=h lane.flow_cell.sequencing_runs.best[0].date %></td>
         <td><%=h lane.samples[0].short_and_long_name %></td>
         <td>
-          <%=h lane.samples[0].user ? lane.samples[0].user.full_name : "" %>
+          <%=h lane.samples[0].submitted_by_id && @users_by_id[lane.samples[0].submitted_by_id] ?
+            @users_by_id[lane.samples[0].submitted_by_id].full_name : "" %>
         </td>
         <td><%=h lane.samples[0].budget_number %></td>
         <td><%=h lane.samples[0].sample_prep_kit.name %></td>

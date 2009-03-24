@@ -39,6 +39,7 @@ available when retrieving single samples (see GET /samples/[sample id]).
         :order => 'submission_date DESC, samples.id ASC',
         :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
           current_user.get_lab_group_ids, false ]
+      @users_by_id = User.all_by_id
     end
     
     respond_to do |format|

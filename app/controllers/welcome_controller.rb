@@ -33,6 +33,7 @@ class WelcomeController < ApplicationController
          :conditions => [ "status = ? AND projects.lab_group_id IN (?) AND control = ?",
           'submitted', current_user.get_lab_group_ids, false ],
          :order => "samples.id ASC")
+      @users_by_id = User.all_by_id
     end
   end
 
@@ -45,6 +46,7 @@ class WelcomeController < ApplicationController
     @lab_groups = LabGroup.find(:all, :order => "name ASC")
     @samples = Sample.find(:all, :conditions => [ "status = ? AND control = ?", 'submitted', false],
                               :order => "samples.id ASC")
+    @users_by_id = User.all_by_id
     @flow_cells = FlowCell.find(:all, :conditions => "status = 'clustered'")
   end
 

@@ -22,7 +22,7 @@
       <td><%=h sample.submission_date %></td>
       <td><%=h sample.short_and_long_name %></td>
       <td>
-        <%=h sample.submitted_by_id ? sample.user.full_name : "" %>
+        <%=h sample.submitted_by_id && @users_by_id[sample.submitted_by_id] ? @users_by_id[sample.submitted_by_id].full_name : "" %>
       </td>
       <td><%=h sample.status %></td>
       <td><%=h sample.raw_data_paths %></td>
