@@ -1,13 +1,16 @@
 <h1>Listing Sample Prep Kits</h1>
 
-<table class="sortable">
-  <tr>
-    <th>Name</th>
-    <th>Restriction Enzyme</th>
-    <td>Edit</td>
-    <td>Destroy</td>
-  </tr>
+<%= link_to 'New sample prep kit', new_sample_prep_kit_path %>
 
+<table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
+  <thead>
+    <tr>
+      <th><h3>Name</h3></th>
+      <th><h3>Restriction Enzyme</h3></th>
+      <th class="nosort"><h3>Edit</h3></td>
+      <th class="nosort"><h3>Destroy</h3></td>
+    </tr>
+  </thead>
 <% for sample_prep_kit in @sample_prep_kits %>
   <tr>
     <td><%=h sample_prep_kit.name %></td>
@@ -18,6 +21,4 @@
 <% end %>
 </table>
 
-<br />
-
-<%= link_to 'New sample prep kit', new_sample_prep_kit_path %>
+<%= render :partial => 'shared/tinytable', :locals => {:sort_column => 0} %>

@@ -1,20 +1,25 @@
-<h1>Listing Sequencing Runs</h1>
+<h2>Listing Sequencing Runs</h2>
 
-<table class="sortable">
+<p><%= link_to 'New Sequencing Run', new_sequencing_run_path %></p>
+
+<table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
+  <thead>
   <tr>
-    <th>Date</th>
-    <th>Flow Cell</th>
-    <th>Instrument</th>
-    <th>Comment</th>
-    <th>Edit</th>
-    <th>Destroy</th>
-    <th>Create Config File</th>
-    <th>Default Output Paths</th>
+    <th><h3>Date</h3></th>
+    <th><h3>Flow Cell</h3></th>
+    <th><h3>Instrument</h3></th>
+    <th><h3>Comment</h3></th>
+    <th class="nosort"><h3>Edit</h3></th>
+    <th class="nosort"><h3>Destroy</h3></th>
+    <th class="nosort"><h3>Create Config File</h3></th>
+    <th class="nosort"><h3>Default Output Paths</h3></th>
   </tr>
+  </thead>
 
+  <tbody>
 <% for sequencing_run in @sequencing_runs %>
   <tr>
-    <td><%=h sequencing_run.date %></td>
+    <td><%=h sequencing_run.date.strftime("%Y/%m/%d") %></td>
     <td><%=h sequencing_run.flow_cell.name %></td>
     <td><%=h sequencing_run.instrument.name_with_version %></td>
     <td><%=h sequencing_run.comment %></td>
@@ -23,9 +28,10 @@
     <td><%= link_to 'Create Config File',
       new_sequencing_run_gerald_configuration_path(sequencing_run) %></td>
     <td><%= link_to 'Default Output Paths',
-      :action => 'default_output_paths', :id => sequencing_run.id %>
+      :action => 'default_output_paths', :id => sequencing_run.id %></td>
   </tr>
 <% end %>
+  </tbody>
 </table>
 
-<%= link_to 'New Sequencing Run', new_sequencing_run_path %>
+<%= render :partial => 'shared/tinytable', :locals => {:sort_column => 0} %>

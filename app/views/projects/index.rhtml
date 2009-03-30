@@ -1,12 +1,18 @@
 <h1>Listing projects</h1>
 
-<table class="sortable" id="samples">
-  <tr>
-  <% for column in ["Name", "File Folder", "Lab Group", "Edit", "Destroy"] %>
-    <th><%= column %></th>
-  <% end %>
-  </tr>
-  
+<%= link_to 'New project', :action => 'new' %>
+
+<table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
+  <thead>
+    <tr>
+    <% for column in ["Name", "File Folder", "Lab Group"] %>
+      <th><h3><%= column %></h3></th>
+    <% end %>
+    <% for column in ["Edit", "Destroy"] %>
+      <th class="nosort"><h3><%= column %></h3></th>
+    <% end %>
+    </tr>
+  </thead>  
 <% for project in @projects %>
   <tr>
     <td><%=h project.name %></td>
@@ -18,4 +24,4 @@
 <% end %>
 </table>
 
-<%= link_to 'New project', :action => 'new' %>
+<%= render :partial => 'shared/tinytable', :locals => {:sort_column => 0} %>

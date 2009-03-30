@@ -1,15 +1,18 @@
 <h1>Listing instruments</h1>
 
-<table class="sortable">
-  <tr>
-    <td>Name</td>
-    <td>Serial Number</td>
-    <td>Instrument Version</td>
-    <td>Active Instrument</td>
-    <td>Edit</td>
-    <td>Destroy</td>
-  </tr>
+<%= link_to 'New instrument', new_instrument_path %>
 
+<table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
+  <thead>
+    <tr>
+      <th><h3>Name</h3></th>
+      <th><h3>Serial Number</h3></th>
+      <th><h3>Instrument Version</h3></th>
+      <th><h3>Active Instrument</h3></th>
+      <th><h3 class="nosort">Edit</h3></th>
+        <th><h3 class="nosort">Destroy</h3></th>
+    </tr>
+  </thead>
 <% for instrument in @instruments %>
   <tr>
     <td><%=h instrument.name %></td>
@@ -22,6 +25,4 @@
 <% end %>
 </table>
 
-<br />
-
-<%= link_to 'New instrument', new_instrument_path %>
+<%= render :partial => 'shared/tinytable', :locals => {:sort_column => 0} %>

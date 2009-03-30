@@ -1,15 +1,18 @@
 <h1>Listing Reference Genomes</h1>
 
-<table class="sortable">
-  <tr>
-    <td>Description</td>
-    <td>Shorthand Name</td>
-    <td>Organism</td>
-    <td>FASTA File</td>
-    <td>Edit</td>
-    <td>Destroy</td>
-  </tr>
+<%= link_to 'New Reference Genome', new_reference_genome_path %>
 
+<table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
+  <thead>
+    <tr>
+      <th><h3>Description</h3></th>
+      <th><h3>Shorthand Name</h3></th>
+      <th><h3>Organism</h3></th>
+      <th><h3>FASTA File</h3></th>
+      <th><h3 class="nosort">Edit</h3></th>
+      <th><h3 class="nosort">Destroy</h3></th>
+    </tr>
+  </thead>
 <% for reference_genome in @reference_genomes %>
   <tr>
     <td><%=h reference_genome.description %></td>
@@ -22,4 +25,4 @@
 <% end %>
 </table>
 
-<%= link_to 'New Reference Genome', new_reference_genome_path %>
+<%= render :partial => 'shared/tinytable', :locals => {:sort_column => 0} %>

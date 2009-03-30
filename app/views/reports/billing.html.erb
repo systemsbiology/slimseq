@@ -1,16 +1,17 @@
 <h2>Billing Report</h2>
 
 <% if(@paged_lanes != nil && @paged_lanes.size > 0) %>
-  <table class="sortable" id="samples">
+<table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
+  <thead>
     <tr>
-      <th>Date</th>
-      <th>Sample</th>
-      <th>Submitted By</th>
-      <th>Budget</th>
-      <th>Kit</th>
-      <th>Requested Cycles</th>
+      <th><h3>Date</h3></th>
+      <th><h3>Sample</h3></th>
+      <th><h3>Submitted By</h3></th>
+      <th><h3>Budget</h3></th>
+      <th><h3>Kit</h3></th>
+      <th><h3>Requested Cycles</h3></th>
     </tr>
-
+  </thead>
     <% for lane in @paged_lanes %>
       <tr>
         <td><%=h lane.flow_cell.sequencing_runs.best[0].date %></td>
@@ -25,7 +26,9 @@
       </tr>
     <% end %>
   </table>
-  <%= will_paginate @paged_lanes %>
+
+  <%= render :partial => 'shared/tinytable', :locals => {:sort_column => 0} %>
 <% else %>
   <p>There are currently no flow cell lanes.</p>
 <% end %>
+
