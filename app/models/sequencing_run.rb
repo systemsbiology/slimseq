@@ -53,14 +53,17 @@ class SequencingRun < ActiveRecord::Base
   end  
   
   def write_config_file(params)
+    gerald_defaults = GeraldDefaults.find(:first)
+    
     file_name = "tmp/txt/#{run_name}-config.txt"
     
     file = File.new(file_name, "w")
     
-    file << "ANALYSIS eland_extended\n"
-    file << "SEQUENCE_FORMAT --fasta\n"
-    file << "ELAND_MULTIPLE_INSTANCES 8\n"
-    file << "QF_PARAMS '(NEIGHBOUR >=2.0) && (CHASTITY >= 0.6)'\n"
+    file << "#{gerald_defaults.header}\n"
+    file << "EMAIL_LIST #{gerald_defaults.email_list}\n"
+    file << "EMAIL_SERVER #{gerald_defaults.email_server}\n"
+    file << "EMAIL_DOMAIN #{gerald_defaults.email_domain}\n"
+    file << "WEB_DIR_ROOT #{instrument.web_root}\n"
     params.keys.sort.each do |i|
       hash = params[i]
       file << "#{hash[:lane_number]}:ELAND_GENOME #{hash[:eland_genome]}\n"
@@ -73,6 +76,8 @@ class SequencingRun < ActiveRecord::Base
   end
   
   def default_gerald_params
+    gerald_defaults = GeraldDefaults.find(:first)
+
     gerald_params = Hash.new
 
     lane_counter = 0
@@ -80,8 +85,8 @@ class SequencingRun < ActiveRecord::Base
       gerald_params[lane_counter.to_s] = {
         :lane_number => lane.lane_number,
         :eland_genome => lane.samples[0].reference_genome.fasta_path,
-        :eland_seed_length => 25,
-        :eland_max_matches => 15,
+        :eland_seed_length => gerald_defaults.eland_seed_length,
+        :eland_max_matches => gerald_defaults.eland_max_matches,
         :use_bases => 'all'
       }
       lane_counter += 1
