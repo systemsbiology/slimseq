@@ -39,7 +39,8 @@ available when retrieving single samples (see GET /samples/[sample id]).
         :include => [:project,{:flow_cell_lanes => :pipeline_results}],
         :order => 'submission_date DESC, samples.id ASC',
         :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
-          current_user.get_lab_group_ids, false ] )
+          current_user.get_lab_group_ids, false ],
+        :limit => 20 )
       @users_by_id = User.all_by_id
     end
     
