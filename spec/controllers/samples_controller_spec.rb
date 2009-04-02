@@ -41,9 +41,7 @@ describe SamplesController do
     end
 
     it "should expose all samples accessible by the user as @samples" do
-      Sample.should_receive(:find).and_return(@accessible_samples)
-      # TODO: test pagination
-      Sample.should_receive(:paginate)
+      Sample.should_receive(:find).twice.and_return(@accessible_samples)
       get :index
       assigns[:samples].should == @accessible_samples
     end
@@ -58,8 +56,6 @@ describe SamplesController do
         
         request.env["HTTP_ACCEPT"] = "application/xml"
         Sample.should_receive(:find).twice.and_return(samples)
-#        # TODO: test pagination
-#        Sample.should_receive(:paginate)
         get :index
         response.body.should ==
           "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<records type=\"array\">\n  " +
