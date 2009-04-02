@@ -57,6 +57,7 @@ describe GeraldConfigurationsController do
     before(:each) do
       @sequencing_run = mock_model(SequencingRun)
       SequencingRun.stub!(:find).and_return(@sequencing_run)
+      GeraldDefaults.should_receive(:find).and_return( mock_model(GeraldDefaults) )
       @sequencing_run.stub!(:run_name).and_return("ASDF_WERT_RTYU")
       @sequencing_run.stub!(:write_config_file)
       @lanes_hash = {
