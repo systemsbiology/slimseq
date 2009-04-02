@@ -1,48 +1,11 @@
-body { background-color: #fff; color: #111; }
-
-#title_bar {
-    padding: 3ex 10ex 1ex 4ex;
-    background-color: #006;
-/*margin-bottom: 10px;*/
-}
-
-#title_bar h1{
-    color: #fff;
-}
-#wrap {
-    float: left;
-    margin:0 auto;
-    width:120em;
-}
-
-#menu {
-	font-size: 12px;
-	line-height: 20px;
-	color: #333333;
-	background: #E3E8F7;
-	/*border-right: 1px solid;*/
-	float: left;
-	padding: 1ex 0 4ex 1ex;
-	width:15em;
-	margin:2px;
-}
-
-#main {
-	color: #333333;
-	background: #FFFFFF;
-	line-height: 20px;
-    float:left;
-    margin-left: -3px;
-    /*border-left: 1px solid; */
-    padding-top: 2ex;
-	padding-left: 3ex;
-	width:100em;
+body {
+  background-color: #fff;
+  color: #111;
 }
 
 body, p, ol, ul, td {
   font-family: verdana, arial, helvetica, sans-serif;
   font-size:   11px;
-  line-height: 16px;
 }
 
 pre {
@@ -51,8 +14,8 @@ pre {
   font-size: 11px;
 }
 
-a { color: #2b4475; text-decoration: none;}
-a:visited { color: #2b4475; text-decoration: none;}
+a { color: #2b4475; }
+a:visited { color: #2b4475; }
 a:hover { color: #2b4475;  text-decoration: underline;}
 
 p.flash{
@@ -60,9 +23,45 @@ p.flash{
 	margin: 5px auto;
 }
 
+#title_bar {
+  padding: 2ex 10ex 2ex 3ex;
+  background-color: #006;
+  color: #fff;
+}
+
+#wrap {
+  float: left;
+  margin: 0;
+  width:1000px;
+}
+
+#menu {
+  font-size: 12px;
+  line-height: 20px;
+  color: #333333;
+  background: #E3E8F7;
+  float: left;
+  padding: 1ex 0 4ex 1ex;
+  width:160px;
+  margin:2px;
+}
+
+#main {
+	color: #333333;
+	background: #FFFFFF;
+	/*line-height: 20px;*/
+    float:left;
+    margin-left: -3px;
+    /*border-left: 1px solid; */
+    padding-top: 2ex;
+	padding-left: 3ex;
+	width:800px;
+}
+
 #menu a{
     padding-left: 1ex;
     padding-right: 1ex;
+    text-decoration: none;
     /*color: #004;   */
 }
 
@@ -95,7 +94,7 @@ p.flash{
 	margin:3px;
 	height:165px;
 	width:200px; }
-.table{
+./*table{
     padding: 2;
 	background-color: #ffffff;
 	border-color: #5d74a5;
@@ -104,27 +103,6 @@ p.flash{
 	border-collapse: collapse;
 	margin-bottom: 8px
 }
-.sortable{
-    padding: 2;
-	background-color: #ffffff;
-	border-color: #5d74a5;
-	border-width: 1px 1px 1px 1px;
-	border-style: solid;
-	border-collapse: collapse;
-	margin-bottom: 8px
-}
-/* Sortable tables */
-table.sortable a.sortheader {
-    color:#000;
-    font-weight: bold;
-    text-decoration: none;
-    display: block;
-}
-table.sortable span.sortarrow {
-    color: black;
-    text-decoration: none;
-}
-
 td { 
     border: inset 1pt;
     padding: 2px 2px 2px 2px;
@@ -141,7 +119,7 @@ th {
     border: inset 1pt;
     padding: 2px 2px 2px 2px;
 }
-
+*/
 .notice {
 	color: red;
 	background-color: white;
@@ -222,24 +200,42 @@ div.progressBar div.background {
 	border:1px solid #888;
 	cursor:move;
 }
-/* Bioanalyzer Trace table */
-table#quality_traces {
-    text-align: center;
-    padding: 2;
-	background-color: #ffffff;
-	border-color: #5d74a5;
-	border-width: 1px;
-	border-style: solid;
-	border-collapse: collapse;
-	margin-bottom: 8px
-}
-
-table#quality_traces td {
-    padding: 15px;
-}
-
 #new_project_box {
     border: 1px solid;
     padding: 5px;
     width: 30em;
 }
+
+/* TinyTable table sorter/paginator */
+.sortable {width:800px; border-left:1px solid #c6d5e1; border-top:1px solid #c6d5e1; border-bottom:none; margin:0 auto 15px}
+.sortable th {background:url(/images/header-bg.gif); text-align:left; color:#cfdce7; border:1px solid #fff; border-right:none}
+.sortable th h3 {font-size:10px; padding:6px 8px 8px}
+.sortable td {padding:4px 6px 6px; border-bottom:1px solid #c6d5e1; border-right:1px solid #c6d5e1}
+.sortable .head h3 {background:url(/images/sort.gif) 7px center no-repeat; cursor:pointer; padding-left:18px}
+.sortable .desc, .sortable .asc {background:url(/images/header-selected-bg.gif)}
+.sortable .desc h3 {background:url(/images/desc.gif) 7px center no-repeat; cursor:pointer; padding-left:18px}
+.sortable .asc h3 {background:url(/images/asc.gif) 7px  center no-repeat; cursor:pointer; padding-left:18px}
+.sortable .head:hover, .sortable .desc:hover, .sortable .asc:hover {color:#fff}
+.sortable .evenrow td {background:#fff}
+.sortable .oddrow td {background:#ecf2f6}
+.sortable td.evenselected {background:#ecf2f6}
+.sortable td.oddselected {background:#dce6ee}
+
+#controls {width:800px; margin:0 auto; height:20px}
+#perpage {float:left; width:200px}
+#perpage select {float:left; font-size:11px}
+#perpage span {float:left; margin:2px 0 0 5px}
+#navigation {float:left; width:400px; text-align:center}
+#navigation img {cursor:pointer}
+#text {float:left; width:200px; text-align:right; margin-top:2px}
+
+/* Tables that shouldn't be sorted */
+.nonsortable {border-collapse: collapse; width:800px; border-left:1px solid #bbb; border-top:1px solid #c6d5e1; border-bottom:none; margin:0 auto 15px}
+.nonsortable th {font-size: 12px; text-align:left; color:#000; border:1px solid #bbb; border-right:none}
+.nonsortable td {padding:4px 6px 6px; border-bottom:1px solid #bbb; border-right:1px solid #bbb}
+.nonsortable .head h3 {background:url(/images/sort.gif) 7px center no-repeat; cursor:pointer; padding-left:18px}
+.nonsortable .head:hover, .sortable .desc:hover, .sortable .asc:hover {color:#fff}
+.nonsortable .evenrow td {background:#fff}
+.nonsortable .oddrow td {background:#ecf2f6}
+.nonsortable td.evenselected {background:#ecf2f6}
+.nonsortable td.oddselected {background:#dce6ee}

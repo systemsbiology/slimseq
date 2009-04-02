@@ -1,12 +1,12 @@
-<h1>Listing organisms</h1>
+<h2>Listing organisms</h2>
 
-<%= link_to 'New organism', :action => 'new' %>
+<p><%= link_to 'New organism', :action => 'new' %></p>
 
 <table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
   <thead>
     <tr>
     <% for column in ["Name", "Edit", "Destroy"] %>
-      <th><%= column %></th>
+      <th><h3><%= column %></h3></th>
     <% end %>
     </tr>
   </thead> 

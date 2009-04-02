@@ -12,7 +12,7 @@
   </thead>
 <% for sample in @samples %>
   <tr>
-    <td><%=h sample.submission_date %></td>
+    <td><%=h sample.submission_date.strftime("%Y/%m/%d") %></td>
     <td><%=h sample.short_and_long_name %></td>
     <td>
       <%=h sample.submitted_by_id && @users_by_id[sample.submitted_by_id] ? @users_by_id[sample.submitted_by_id].full_name : "" %>
