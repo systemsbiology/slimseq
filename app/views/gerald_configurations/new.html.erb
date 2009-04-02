@@ -1,7 +1,37 @@
-<h1>Gerald Configuration Generator: <%=h @sequencing_run.run_name %></h1>
+<h2>Default Gerald Parameters</h2>
+
+<% form_for(
+  @gerald_defaults,
+  :url => { :controller => 'gerald_defaults', :id => 1, :action => 'update'}) do |g| %>
+  <p>
+    <p><label>ELAND Seed Length</label><br>
+    <%= g.text_field 'eland_seed_length' %></p>
+
+    <p><label>ELAND Max Matches</label><br>
+    <%= g.text_field 'eland_max_matches' %></p>
+    
+    <p><label>Email List</label><br>
+    <%= g.text_field 'email_list' %></p>
+    
+    <p><label>Email Server</label><br>
+    <%= g.text_field 'email_server' %></p>
+    
+    <p><label>Email Domain</label><br>
+    <%= g.text_field 'email_domain' %></p>
+    
+    <p><label>Header (before lane-specific configurations)</label><br>
+    <%= g.text_area 'header', :rows => 4 %></p>
+
+    <%= hidden_field_tag 'sequencing_run_id', @sequencing_run.id %>
+
+    <%= g.submit "Update" %>
+  </p> 
+<% end %>
+
+<h2>Gerald Configuration Generator: <%=h @sequencing_run.run_name %></h2>
 
 <% form_tag :action => 'create' do -%>
-  <table class="sortable">
+  <table class="nonsortable">
     <tr>
       <th>Lane</th>
       <th>Sample</th>
@@ -17,9 +47,11 @@
             <%= hidden_field_tag "lanes[#{n}][lane_number]", lane.lane_number %></td>
         <td><%=h lane.samples[0].short_and_long_name %></td>
         <td><%= text_field_tag "lanes[#{n}][eland_genome]",
-                               lane.samples[0].reference_genome.fasta_path, :size => 50 %></td>
-        <td><%= text_field_tag "lanes[#{n}][eland_seed_length]", 25 %></td>
-        <td><%= text_field_tag "lanes[#{n}][eland_max_matches]", 15 %></td>
+          lane.samples[0].reference_genome.fasta_path, :size => 50 %></td>
+        <td><%= text_field_tag "lanes[#{n}][eland_seed_length]", 
+          @gerald_defaults.eland_seed_length %></td>
+        <td><%= text_field_tag "lanes[#{n}][eland_max_matches]",
+          @gerald_defaults.eland_max_matches %></td>
         <td><%= text_field_tag "lanes[#{n}][use_bases]", lane.samples[0].use_bases_string %></td>
       </tr>
     <% end %>

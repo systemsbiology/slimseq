@@ -4,10 +4,14 @@
                :sequencing_run_id => @sequencing_run.id %></p>
 
 <code>
-ANALYSIS eland_extended<br>
-SEQUENCE_FORMAT --fasta<br>
-ELAND_MULTIPLE_INSTANCES 8<br>
-QF_PARAMS '(NEIGHBOUR >=2.0) && (CHASTITY >= 0.6)'<br>
+<%= @gerald_defaults.header.gsub(/\n/,'<br>') %><br>
+
+EMAIL_LIST <%=h @gerald_defaults.email_list %><br>
+EMAIL_SERVER <%=h @gerald_defaults.email_server %><br>
+EMAIL_DOMAIN <%=h @gerald_defaults.email_domain %><br>
+
+WEB_DIR_ROOT <%=h @sequencing_run.instrument.web_root %><br>
+
 <% @lanes.keys.sort.each do |i| %>
 <% hash = @lanes[i]  %>
   <%=h "#{hash[:lane_number]}:ELAND_GENOME #{hash[:eland_genome]}" %><br>

@@ -3,12 +3,14 @@ class GeraldConfigurationsController < ApplicationController
   
   def new
     @flow_cell_lanes = @sequencing_run.flow_cell.flow_cell_lanes
+    @gerald_defaults = GeraldDefaults.find(:first)
   end
 
   def create
     @lanes = params[:lanes]
     
     @sequencing_run.write_config_file(@lanes)
+    @gerald_defaults = GeraldDefaults.find(:first)
   end
   
   def download

@@ -138,4 +138,12 @@ module FixtureReplacement
     up.user_id = 1
   end
 
+  attributes_for :gerald_defaults do |gd|
+    gd.eland_seed_length = 25
+    gd.eland_max_matches = 5
+    gd.email_list = "me@localhost"
+    gd.email_server = "localhost"
+    gd.email_domain = "localhost"
+    gd.header = "ANALYSIS eland_extended\nSEQUENCE_FORMAT --fasta\nELAND_MULTIPLE_INSTANCES 8"
+  end
 end
