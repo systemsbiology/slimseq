@@ -18,7 +18,7 @@
 
 <% for pipeline_result in @pipeline_results %>
   <tr>
-    <td><%=h pipeline_result.gerald_date.strftime("%Y/%m/%d") %></td>
+    <td><%=h pipeline_result.gerald_date.strftime("%Y/%m/%d") if pipeline_result.gerald_date %></td>
     <td><%=h pipeline_result.sequencing_run.date.strftime("%Y/%m/%d") %></td>
     <td><%=h pipeline_result.sequencing_run.instrument.name_with_version %></td>
     <td><%=h pipeline_result.flow_cell_lane.flow_cell.name %></td>
