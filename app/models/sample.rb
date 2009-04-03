@@ -633,4 +633,41 @@ class Sample < ActiveRecord::Base
       lane.update_attributes(path_hash)
     end
   end
+
+  def associated_comments
+    result = ""
+
+    result = add_comment(result, comment, "sample")
+
+    flow_cells = Array.new
+    sequencing_runs = Array.new
+    flow_cell_lanes.each do |l|
+      result = add_comment(result, l.comment, "lane")
+      flow_cells << l.flow_cell
+      l.flow_cell.sequencing_runs.each do |s|
+        sequencing_runs << s
+      end
+    end
+
+    flow_cells.uniq.each do |f|
+      result = add_comment(result, f.comment, "flow cell")
+    end
+
+    sequencing_runs.uniq.each do |s|
+      result = add_comment(result, s.comment, "sequencing")
+    end
+
+    return result
+  end
+
+private
+
+  def add_comment(base, comment, type)
+    if(comment && comment.length > 0)
+      base += ", " if base.length > 0
+      base += "#{type}: #{comment}" 
+    end
+
+    return base
+  end
 end
