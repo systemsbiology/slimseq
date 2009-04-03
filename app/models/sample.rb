@@ -657,7 +657,11 @@ class Sample < ActiveRecord::Base
       result = add_comment(result, s.comment, "sequencing")
     end
 
-    return result
+    if(result.length > 0)
+      return result
+    else
+      return "No comments"
+    end
   end
 
 private

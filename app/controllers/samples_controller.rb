@@ -11,8 +11,7 @@ SLIMseq does not yet support this ability.
 
 class SamplesController < ApplicationController
   before_filter :login_required
-  before_filter :load_dropdown_selections
-  before_filter :staff_or_admin_required, :only => [:bulk_destroy]
+  before_filter :load_dropdown_selections, :only => [:edit, :update]
   
 =begin rapidoc
 url:: /samples
@@ -28,6 +27,8 @@ available when retrieving single samples (see GET /samples/[sample id]).
 =end
   
   def index
+    @lab_groups = current_user.accessible_lab_groups
+
     if(@lab_groups != nil && @lab_groups.size > 0)
       @samples = Sample.find(:all, 
          :include => 'project',
@@ -39,9 +40,9 @@ available when retrieving single samples (see GET /samples/[sample id]).
         :include => [:project,{:flow_cell_lanes => :pipeline_results}],
         :order => 'submission_date DESC, samples.id ASC',
         :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
-          current_user.get_lab_group_ids, false ],
-        :limit => 20 )
-      @users_by_id = User.all_by_id
+          current_user.get_lab_group_ids, false ] ) #,
+        #:limit => 20 )
+      #@users_by_id = User.all_by_id
     end
     
     respond_to do |format|
@@ -124,17 +125,29 @@ Get detailed information about a single sample.
     redirect_to :back
   end
   
-  def bulk_destroy
+  def bulk_handler
     selected_samples = params[:selected_samples]
     
+    @samples = Array.new
     for sample_id in selected_samples.keys
       if selected_samples[sample_id] == '1'
-        sample = Sample.find(sample_id)
-        sample.destroy
+        @samples << Sample.find(sample_id)
       end
     end
-    
-    redirect_to(samples_url)
+
+    if(params[:commit] == "Delete Selected Samples")
+      if(current_user.staff_or_admin?)
+        @samples.each do |s|
+          s.destroy
+        end
+      else
+        flash[:warning] = "Only facility staff can delete multiple samples at a time"
+      end
+
+      redirect_to(samples_url)
+    elsif(params[:commit] == "Show Details")
+      render :action => "details"
+    end
   end
   
 private

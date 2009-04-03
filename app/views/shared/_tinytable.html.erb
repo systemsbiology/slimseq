@@ -22,6 +22,12 @@
 <br>
 
 <script type="text/javascript">
+  <% if(sort_column)
+       sort_param = ", #{sort_column}"
+     else
+       sort_param = ""
+     end %>
+
   var sorter = new TINY.table.sorter("sorter");
 	sorter.head = "head";
 	sorter.asc = "asc";
@@ -33,5 +39,5 @@
 	sorter.paginate = true;
 	sorter.currentid = "currentpage";
 	sorter.limitid = "pagelimit";
-        sorter.init("table", <%= sort_column || 0 %>);
+        sorter.init("table" <%= sort_param %>);
 </script>

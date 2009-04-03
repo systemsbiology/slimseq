@@ -36,7 +36,7 @@ describe SamplesController do
       @accessible_lab_group_ids = [1,2,3]
       @current_user.should_receive(:get_lab_group_ids).any_number_of_times.
         and_return(@accessible_lab_group_ids)
-      User.should_receive(:all_by_id).and_return( mock("User hash") )
+      #User.should_receive(:all_by_id).and_return( mock("User hash") )
       controller.stub!(:paginate).and_return(["Samples Pages", @accessible_samples])
     end
 
@@ -268,9 +268,9 @@ describe SamplesController do
     
   end
 
-  describe "responding to bulk destroy" do
+  describe "responding to bulk handler" do
     
-    it "should allow bulk destroy when logged in as admin" do
+    it "should allow bulk destroy with staff or admin privileges" do
       # turn the current user into an admin
       @current_user.should_receive(:staff_or_admin?).any_number_of_times.and_return(true)
       
@@ -281,13 +281,29 @@ describe SamplesController do
       @sample1.should_receive(:destroy).and_return(true)
       @sample2.should_receive(:destroy).and_return(true)
       
-      post :bulk_destroy, :selected_samples => {'1' => '1',
+      post :bulk_handler, :selected_samples => {'1' => '1',
                                                 '2' => '1'},
-           :commit => "Delete Samples"
+           :commit => "Delete Selected Samples"
 
       response.should redirect_to(samples_url)
     end
     
+    it "should show details for selected samples" do
+      # turn the current user into an admin
+      @current_user.should_receive(:staff_or_admin?).any_number_of_times.and_return(true)
+      
+      @sample1 = mock_model(Sample)
+      @sample2 = mock_model(Sample)
+      
+      Sample.should_receive(:find).once.and_return(@sample1, @sample2)
+      
+      post :bulk_handler, :selected_samples => {'1' => '1',
+                                                '2' => '1'},
+           :commit => "Show Details"
+
+      response.should render_template('details')
+    end
+
   end
   
 end

@@ -1,0 +1,20 @@
+<script type="text/javascript">
+  <% if(sort_column)
+       sort_param = ", #{sort_column}"
+     else
+       sort_param = ""
+     end %>
+
+  var sorter = new TINY.table.sorter("sorter");
+	sorter.head = "head";
+	sorter.asc = "asc";
+	sorter.desc = "desc";
+	sorter.even = "evenrow";
+	sorter.odd = "oddrow";
+	sorter.evensel = "evenselected";
+	sorter.oddsel = "oddselected";
+	sorter.paginate = false;
+	sorter.currentid = "currentpage";
+	sorter.limitid = "pagelimit";
+        sorter.init("table" <%= sort_param %>);
+</script>
