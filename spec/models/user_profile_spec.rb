@@ -35,4 +35,10 @@ describe UserProfile do
       user_profile.admin?.should be_false
     end
   end
+
+  it "should provide a detail hash of attributes" do
+    user_profile = UserProfile.create
+
+    user_profile.detail_hash.should == {}
+  end
 end

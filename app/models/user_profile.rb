@@ -11,6 +11,10 @@ class UserProfile < ActiveRecord::Base
   named_scope :notify_of_new_sequencing_runs,
     :conditions => {:new_sequencing_run_notification => true}
 
+  def detail_hash
+    return {}
+  end
+
   ####################################################
   # Authorization
   ####################################################
