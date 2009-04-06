@@ -595,4 +595,10 @@ describe Sample do
     end
 
   end
+
+  it "should provide the associated user" do
+    sample = create_sample(:submitted_by_id => 1)
+    User.should_receive(:find).with(1).and_return( mock_user = mock_model(User) )
+    sample.user.should == mock_user
+  end
 end

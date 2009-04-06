@@ -664,6 +664,14 @@ class Sample < ActiveRecord::Base
     end
   end
 
+  def user
+    if(submitted_by_id != nil)
+      return User.find(submitted_by_id)
+    else
+      return nil
+    end
+  end
+
 private
 
   def add_comment(base, comment, type)
