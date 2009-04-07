@@ -11,7 +11,4 @@ class ReportsController < ApplicationController
     @users_by_id = User.all_by_id
   end
 
-  def run_summary
-  end
-
 end
