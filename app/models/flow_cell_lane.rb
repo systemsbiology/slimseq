@@ -93,12 +93,6 @@ class FlowCellLane < ActiveRecord::Base
     if(pipeline_results.size > 0)
       pipeline_results.find(:first, :order => "gerald_date DESC").
         update_attribute('base_directory', path)
-    elsif(flow_cell.sequencing_runs.size > 0)
-      PipelineResult.create(
-        :flow_cell_lane => self,
-        :sequencing_run => flow_cell.sequencing_runs[0],
-        :base_directory => path
-      )
     end
   end
   

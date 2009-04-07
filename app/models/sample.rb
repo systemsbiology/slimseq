@@ -630,7 +630,7 @@ class Sample < ActiveRecord::Base
   def lane_paths=(lane_paths)
     lane_paths.each do |lane_id, path_hash|
       lane = FlowCellLane.find(lane_id)
-      lane.update_attributes(path_hash)
+      lane.raw_data_path = path_hash['raw_data_path']
     end
   end
 

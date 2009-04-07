@@ -143,4 +143,48 @@ describe FlowCellLane do
                        "http://example.com/samples/#{sample_2.id}"]
     }
   end
+
+  describe "providing the raw data path" do
+    
+    it "should provide a path if an associated pipeline result exists" do
+      lane = create_flow_cell_lane
+      result = create_pipeline_result(:flow_cell_lane => lane)
+      lane.should_receive(:pipeline_results).twice.
+        and_return( pipeline_results = mock("Pipeline Results") )
+      pipeline_results.should_receive(:size).and_return(1)
+      pipeline_results.should_receive(:find).with(:first, :order => "gerald_date DESC").
+        and_return(result)
+      lane.raw_data_path.should == result.base_directory
+    end
+
+    it "should return nil if there are no associated results" do
+      lane = create_flow_cell_lane
+      result = create_pipeline_result(:flow_cell_lane => lane)
+      lane.should_receive(:pipeline_results).
+        and_return( pipeline_results = mock("Pipeline Results") )
+      pipeline_results.should_receive(:size).and_return(0)
+      lane.raw_data_path.should be_nil
+    end
+
+  end
+
+  describe "setting the raw data path" do
+
+    it "should update an existing pipeline result if there is one" do
+      lane = create_flow_cell_lane
+      result = create_pipeline_result(:flow_cell_lane => lane)
+      lane.should_receive(:pipeline_results).twice.
+        and_return( pipeline_results = mock("Pipeline Results") )
+      pipeline_results.should_receive(:size).and_return(1)
+      pipeline_results.should_receive(:find).with(:first, :order => "gerald_date DESC").
+        and_return(result)
+      result.should_receive(:update_attribute).with('base_directory', '/path/to/data')
+      lane.raw_data_path = "/path/to/data"
+    end
+
+    it "should do nothing if no pipeline result exists" do
+      lane = create_flow_cell_lane
+      lane.raw_data_path = "/path/to/data"
+    end
+  end
 end

@@ -1,6 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Sample do
+
   describe "getting naming element visibility" do
     fixtures :samples, :naming_schemes, :naming_elements, :naming_terms, :sample_terms,
              :sample_texts
@@ -561,12 +562,14 @@ describe Sample do
     lane_1 = create_flow_cell_lane(:samples => [sample], :flow_cell => flow_cell)
     lane_2 = create_flow_cell_lane(:samples => [sample], :flow_cell => flow_cell)
     create_sequencing_run(:flow_cell => flow_cell)
+    create_pipeline_result(:flow_cell_lane => lane_1)
+    create_pipeline_result(:flow_cell_lane => lane_2)
     
     sample.lane_paths = {
       lane_1.id.to_s => {'raw_data_path' => '/new/lane_1/path'},
       lane_2.id.to_s => {'raw_data_path' => '/new/lane_2/path'}
     }
-    
+   
     sample.raw_data_paths.should == "/new/lane_1/path, /new/lane_2/path"
   end
 
