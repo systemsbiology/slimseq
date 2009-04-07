@@ -4,8 +4,7 @@ Feature: Generate Gerald config files
   Should be able to create a Gerald config file
   
   Scenario: Make a Gerald config file using the default settings
-    Given I am logged in as a staff member
-    And I am on the new gerald_configurations page
+    Given I am on the new gerald_configurations page
     And I press "Create"
     Then I should see "ANALYSIS eland_extended"
     And I should see "SEQUENCE_FORMAT --fasta"

@@ -4,7 +4,6 @@ Feature: Manage sequencing_runs
   Should be able to manage several sequencing_runs
   
   Scenario: Register new sequencing_run
-    Given I am logged in as a customer
     And I am on the new sequencing_run page
     When I select "Flow cell name" from "sequencing_run_flow_cell_id"
     And I select "Super sequencer (GAII)" from "sequencing_run_instrument_id"
@@ -15,7 +14,6 @@ Feature: Manage sequencing_runs
     And I should see "Some clever comment about the flow cell"
 
   Scenario: Delete sequencing_run
-    Given I am logged in as a customer
     And there are 4 sequencing_runs
     When I delete the first sequencing_run
     Then there should be 3 sequencing_runs left

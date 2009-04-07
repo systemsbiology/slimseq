@@ -16,7 +16,7 @@ Given /there are (\d+) sequencing_runs/i do |n|
       SequencingRun.create!(
         :flow_cell => FlowCell.create!(:name => "Flow cell #{n}",
           :date_generated => "2008-11-04", :status => "clustered"),
-        :instrument => instrument
+        :instrument => instrument, :date => Date.today
       )
     end
   end

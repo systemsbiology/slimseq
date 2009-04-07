@@ -1,4 +1,5 @@
 Given /I am on the new gerald_configurations page/i do
+  create_gerald_defaults
   sample_1 = create_sample
   sample_2 = create_sample
   flow_cell = create_flow_cell
