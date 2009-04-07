@@ -14,7 +14,7 @@
   </thead>
     <% for lane in @paged_lanes %>
       <tr>
-        <td><%=h lane.flow_cell.sequencing_runs.best[0].date %></td>
+        <td><%=h lane.flow_cell.sequencing_runs.best[0].date.strftime("%Y/%m/%d") %></td>
         <td><%=h lane.samples[0].short_and_long_name %></td>
         <td>
           <%=h lane.samples[0].submitted_by_id && @users_by_id[lane.samples[0].submitted_by_id] ?
