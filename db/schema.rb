@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090318223738) do
+ActiveRecord::Schema.define(:version => 20090402200022) do
 
   create_table "charge_periods", :force => true do |t|
     t.string   "name"
@@ -60,11 +60,16 @@ ActiveRecord::Schema.define(:version => 20090318223738) do
     t.integer  "lane_number"
     t.string   "starting_concentration"
     t.string   "loaded_concentration"
-    t.integer  "lock_version",           :default => 0
-    t.string   "status",                 :default => "clustered"
+    t.integer  "lock_version",                 :default => 0
+    t.string   "status",                       :default => "clustered"
     t.string   "comment"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "lane_yield_kb"
+    t.integer  "average_clusters"
+    t.float    "percent_pass_filter_clusters"
+    t.float    "percent_align"
+    t.float    "percent_error"
   end
 
   create_table "flow_cell_lanes_samples", :id => false, :force => true do |t|
@@ -83,6 +88,15 @@ ActiveRecord::Schema.define(:version => 20090318223738) do
     t.datetime "updated_at"
   end
 
+  create_table "gerald_defaults", :force => true do |t|
+    t.string  "email_list",        :default => "admin@example.com"
+    t.string  "email_server",      :default => "mail.example.com:25"
+    t.string  "email_domain",      :default => "example.com"
+    t.integer "eland_seed_length", :default => 25
+    t.integer "eland_max_matches", :default => 15
+    t.string  "header",            :default => "ANALYSIS eland_extended"
+  end
+
   create_table "instruments", :force => true do |t|
     t.string   "name"
     t.integer  "lock_version",       :default => 0
@@ -91,11 +105,12 @@ ActiveRecord::Schema.define(:version => 20090318223738) do
     t.datetime "updated_at"
     t.string   "instrument_version"
     t.boolean  "active",             :default => true
+    t.string   "web_root"
   end
 
   create_table "lab_group_profiles", :force => true do |t|
     t.integer  "lab_group_id"
-    t.string   "file_folder"
+    t.string   "file_folder",  :default => ""
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -234,6 +249,10 @@ ActiveRecord::Schema.define(:version => 20090318223738) do
     t.datetime "updated_at"
   end
 
+  create_table "schema_info", :id => false, :force => true do |t|
+    t.integer "version"
+  end
+
   create_table "sequencing_runs", :force => true do |t|
     t.integer  "flow_cell_id"
     t.integer  "instrument_id"
@@ -243,6 +262,7 @@ ActiveRecord::Schema.define(:version => 20090318223738) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "best",          :default => true
+    t.integer  "yield_kb"
   end
 
   create_table "site_config", :force => true do |t|
