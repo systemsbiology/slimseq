@@ -1,0 +1,12 @@
+nbproject
+log/*
+config/database.yml
+config/application.yml
+tmp/cache/*
+tmp/csv/*
+tmp/excel/*
+tmp/pids/*
+tmp/sessions/*
+tmp/sockets/*
+tmp/txt/*
+doc/app
