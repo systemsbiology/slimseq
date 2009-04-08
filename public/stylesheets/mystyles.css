@@ -32,7 +32,7 @@ p.flash{
 #wrap {
   float: left;
   margin: 0;
-  width:1000px;
+  width:3000px;
 }
 
 #menu {
@@ -42,20 +42,16 @@ p.flash{
   background: #E3E8F7;
   float: left;
   padding: 1ex 0 4ex 1ex;
-  width:160px;
   margin:2px;
 }
 
 #main {
 	color: #333333;
 	background: #FFFFFF;
-	/*line-height: 20px;*/
     float:left;
     margin-left: -3px;
-    /*border-left: 1px solid; */
     padding-top: 2ex;
 	padding-left: 3ex;
-	width:800px;
 }
 
 #menu a{
@@ -186,20 +182,6 @@ div.progressBar div.background {
     margin-left: 5ex;
 }
 
-#hybridization_list {
-      margin:0;
-      margin-top:10px;
-      padding:0;
-      list-style-type: none;
-      width:250px;
-}
-#hybridization_list li {
-	margin:0;
-	margin-bottom:4px;
-	padding:3px;
-	border:1px solid #888;
-	cursor:move;
-}
 #new_project_box {
     border: 1px solid;
     padding: 5px;
