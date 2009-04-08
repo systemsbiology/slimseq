@@ -18,7 +18,10 @@ describe PipelineResultsController do
       PipelineResult.should_receive(:find).with(
         :all,
         :order => "gerald_date DESC, flow_cell_lanes.lane_number ASC",
-        :include => :flow_cell_lane
+        :include => {
+          :flow_cell_lane => :flow_cell,
+          :sequencing_run => :instrument
+        }
       ).and_return(@pipeline_results)
       get 'index'
     end
