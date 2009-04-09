@@ -33,3 +33,5 @@
 </table>
 
 <%= render :partial => 'shared/tinytable', :locals => {:sort_column => 0} %>
+
+<%= button_to "Load All Summaries", :action => "load_summaries", :method => :get %>

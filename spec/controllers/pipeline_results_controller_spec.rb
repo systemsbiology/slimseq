@@ -123,4 +123,22 @@ describe PipelineResultsController do
     end
   end
 
+  describe "responding to GET load_summaries" do
+
+    before(:each) do
+      @result_1 = mock_model(PipelineResult)
+      @result_2 = mock_model(PipelineResult)
+      @results = [ @result_1, @result_2 ]
+      PipelineResult.stub!(:find).and_return(@results)
+      @result_1.stub!(:import_run_summary)
+      @result_2.stub!(:import_run_summary)
+    end
+
+    it "should run import_run_summary on all pipeline results" do
+      PipelineResult.should_receive(:find).with(:all).and_return(@results)
+      @result_1.should_receive(:import_run_summary)
+      @result_2.should_receive(:import_run_summary)
+      get :load_summaries
+    end 
+  end
 end

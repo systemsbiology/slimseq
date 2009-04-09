@@ -49,4 +49,16 @@ class PipelineResultsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+  # GET /pipeline_results/load_summaries
+  def load_summaries
+    PipelineResult.find(:all).each do |result|
+      result.import_run_summary
+    end
+
+    respond_to do |format|
+      format.html { redirect_to(pipeline_results_url) }
+      format.xml  { head :ok }
+    end
+  end
 end
