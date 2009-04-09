@@ -188,6 +188,8 @@ div.progressBar div.background {
     width: 30em;
 }
 
+table { empty-cells: show; }
+
 /* TinyTable table sorter/paginator */
 .sortable {width:800px; border-left:1px solid #c6d5e1; border-top:1px solid #c6d5e1; border-bottom:none; margin:0 auto 15px}
 .sortable th {background:url(../images/header-bg.gif); text-align:left; color:#cfdce7; border:1px solid #fff; border-right:none}
