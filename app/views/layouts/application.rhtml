@@ -14,7 +14,7 @@
     <div id="wrap">
       <div id="menu">
         <% if logged_in? %>
-          <%= link_to 'Home', {:controller => 'welcome', :action => 'home'} %>
+            <li><%= link_to 'Home', {:controller => 'welcome', :action => 'home'} %></li>
             <li class="category">Samples</li>
             <li><%= link_to 'Samples', samples_path %></li>
             <% if current_user.staff_or_admin? %>
