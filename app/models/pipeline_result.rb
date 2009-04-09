@@ -55,8 +55,8 @@ class PipelineResult < ActiveRecord::Base
           end
         end
       end
-    rescue Exception => e
-      puts "Run summary import error: #{e.to_s}\n"
+    rescue StandardError => e
+      logger.error "Run summary import error: #{e.to_s}\n"
     end
   end
 end
