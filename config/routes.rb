@@ -1,5 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   map.connect 'sessions/new', :controller => "welcome", :action => "home"
+  map.connect 'session/new', :controller => "welcome", :action => "home"
 
   map.resources :pipeline_results
 
