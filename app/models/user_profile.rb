@@ -11,6 +11,13 @@ class UserProfile < ActiveRecord::Base
   named_scope :notify_of_new_sequencing_runs,
     :conditions => {:new_sequencing_run_notification => true}
 
+  def before_save
+    # make the first user to log in the admin
+    if(UserProfile.count == 0)
+      self.role = "admin"
+    end
+  end
+
   def detail_hash
     return {}
   end
