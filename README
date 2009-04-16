@@ -12,11 +12,19 @@ REST-like API.
 
 == How do I install it?
 
+Currently SLIMseq is dependent upon SLIMcore (http://github.com/bmarzolf/slimcore/tree/master) 
+and RubyCAS-server (http://github.com/gunark/rubycas-server/tree/master) being installed, however 
+a plugin that will allow SLIMseq to run without this is being developed.
+
 SLIMseq is a Ruby on Rails application. Those familiar with setting up Ruby on Rails applications
 may find the following sufficient to get it up and running (with Rails itself already installed):
 
-    gem install ruby-debug json parseexcel rest-client rspec-rails hpricot
-    svn co http://slimarray.systemsbiology.net/svn/branches/slimseq
+    gem install ruby-debug json parseexcel rest-client rspec-rails hpricot rubycas-client nokogiri
+    git clone git://github.com/bmarzolf/slimseq.git
+    cd slimseq
+    git submodule update --init
+    # set up database.yml and application.yml
+    script/plugin install git://github.com/bmarzolf/slimcore_authorizer.git
     rake db:load
     script/server
 
@@ -25,10 +33,8 @@ named INSTALL. Installation on other operating systems should be similar.
 
 == I've installed it, now how do I log in?
 
-Log in as the initial administrator user using:
-
-Login: admin
-Password: test
+Log in in as a user that will authenticate with your RubyCAS-server install. The first user to 
+log in will automatically be made an administrator.
 
 == How do I use the API?
 
