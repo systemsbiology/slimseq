@@ -16,6 +16,30 @@ class Project < ActiveRecord::Base
     return "#{name} (#{lab_group_id})"
   end
   
+  def self.accessible_to_user(user, active_only = false)
+    # Administrators and staff can see all projects, otherwise users
+    # are restricted to seeing only projects for lab groups they belong to
+    if(user.staff_or_admin?)
+      return Project.find(:all, :order => "name ASC")
+    else
+      projects = Array.new
+      
+      lab_groups = user.lab_groups
+      lab_groups.each do |g|
+        if(active_only)
+          projects << g.projects.find(:all, :conditions => {:active => true})
+        else
+          projects << g.projects
+        end
+      end
+      
+      # put it all down to a 1D Array
+      projects.flatten!
+      
+      return projects.sort {|x,y| x.name <=> y.name }
+    end  
+  end
+
   def summary_hash
     return {
       :id => id,

@@ -155,7 +155,7 @@ private
   def load_dropdown_selections
     @lab_groups = current_user.accessible_lab_groups
     @users = current_user.accessible_users
-    @projects = current_user.accessible_projects
+    @projects = Project.accessible_to_user(current_user)
     @naming_schemes = NamingScheme.find(:all, :order => "name ASC")
     @sample_prep_kits = SamplePrepKit.find(:all, :order => "name ASC")
     @reference_genomes = ReferenceGenome.find(:all, :order => "name ASC")
