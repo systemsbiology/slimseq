@@ -80,7 +80,7 @@ namespace :db do
                            :new_sequencing_run_notification => u.new_sequencing_run_notification)
       end
 
-      puts "Migrating lab groupse"
+      puts "Migrating lab groups"
       SoloLabGroup.find(:all).each do |lg|
         lab_group = CoreLabGroup.find_by_name(lg.name)
         lab_group = CoreLabGroup.create(:name => lg.name) if lab_group.nil?
@@ -119,5 +119,26 @@ namespace :db do
       puts "== Finished migrating to SLIMcore"
     end
 
+
+    desc "Create user profiles and lab group profiles"
+    task :slimsolo => :environment do
+      puts "== Migrating to SLIMsolo =="
+
+      class UserProfile < ActiveRecord::Base; end
+
+      class LabGroupProfile < ActiveRecord::Base; end
+
+      puts "Migrating users"
+      User.find(:all).each do |u|
+        UserProfile.create(:user_id => u.id, :role => u.role,
+                           :new_sample_notification => u.new_sample_notification,
+                           :new_sequencing_run_notification => u.new_sequencing_run_notification)
+      end
+
+      puts "Migrating lab groups"
+      LabGroup.find(:all).each do |lg|
+        LabGroupProfile.create(:lab_group_id => lg.id, :file_folder => lg.file_folder)
+      end
+    end
   end
 end
