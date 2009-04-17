@@ -10,12 +10,13 @@ describe SamplesController do
   end
   
   before(:each) do
-    login_as_user
+    login_as_staff
 
     lab_groups = [mock_model(LabGroup), mock_model(LabGroup)]
     @current_user.stub!(:accessible_lab_groups).and_return(lab_groups)
+    @current_user.stub!(:lab_groups).and_return(lab_groups)
     projects = [mock_model(Project), mock_model(Project)]
-    @current_user.stub!(:accessible_projects).and_return(projects)
+    Project.stub!(:accessible_to_user).and_return(projects)
     users = [mock_model(User), mock_model(User)]
     @current_user.stub!(:accessible_users).and_return(users)
     NamingScheme.stub!(:find).and_return(

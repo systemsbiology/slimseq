@@ -2,6 +2,11 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe UserProfile do
 
+  # fix for the first user who logs in automatically being an admin
+  before(:all) do
+    create_user_profile
+  end
+
   describe "determining if user has staff or admin privileges" do
     it "should be true when the user's role is 'staff'" do
       user_profile = create_user_profile(:role => "staff")

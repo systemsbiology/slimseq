@@ -7,7 +7,7 @@ describe SampleSetsController do
     login_as_user
     
     projects = [mock_model(Project), mock_model(Project)]
-    @current_user.stub!(:accessible_projects).and_return(projects)
+    Project.stub!(:accessible_to_user).and_return(projects)
     NamingScheme.stub!(:find).and_return(
       [mock_model(NamingScheme), mock_model(NamingScheme)]
     )
