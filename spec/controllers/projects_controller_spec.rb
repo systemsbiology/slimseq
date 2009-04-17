@@ -262,7 +262,7 @@ describe ProjectsController do
     describe "with successful save" do
 
       before(:each) do
-        @current_user.should_receive(:accessible_projects)
+        Project.should_receive(:accessible_to_user)
       end
 
       def do_post
