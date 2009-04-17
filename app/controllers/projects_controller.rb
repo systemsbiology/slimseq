@@ -84,7 +84,7 @@ Get detailed information about a single project.
   def create_inline
     @project = Project.new(params[:project])
     if @project.save
-      @projects = current_user.accessible_projects
+      @projects = Project.accessible_to_user(current_user)
       @sample_set = SampleSet.new(:project_id => @project.id)
       render :partial => 'sample_sets/projects'
     else
