@@ -1,27 +1,33 @@
 ActionController::Routing::Routes.draw do |map|
-  map.connect 'sessions/new', :controller => "welcome", :action => "home"
+  # backward compatibility with bookmarked login page
   map.connect 'session/new', :controller => "welcome", :action => "home"
 
-  map.resources :pipeline_results
-
+  # SLIM* Authorization routes
+  map.resources :sessions
   map.resources :lab_groups
+  map.resources :registrations
+  map.resources :users do |users|
+    users.resources :lab_memberships, :name_prefix => "user_"
+  end
+  map.resources :lab_memberships
+
+  # load routes from naming schemer plugin
+  # Use with Rails 2.3
+  #map.from_plugin :naming_schemer
+  map.resources :naming_schemes
+
+  # SLIMseq routes
+  map.resources :pipeline_results
 
   map.resources :projects
 
   map.resources :pipeline_runs
-
-  map.resources :registrations
   
   map.resources :flow_cell_lanes
 
   map.resources :samples
   
   map.resources :instruments
-
-  # Use with Rails 2.3
-  # load routes from naming schemer plugin
-  #map.from_plugin :naming_schemer
-  map.resources :naming_schemes
 
   map.resources :sequencing_runs do |sequencing_runs|
     sequencing_runs.resources :gerald_configurations, :name_prefix => "sequencing_run_"
@@ -36,12 +42,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :sample_prep_kits
 
   map.resources :reference_genomes
-
-  map.resources :users do |users|
-    users.resources :lab_memberships, :name_prefix => "user_"
-  end
-
-  map.resources :lab_memberships
 
   # The priority is based upon order of creation: first created -> highest priority.
 
