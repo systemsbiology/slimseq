@@ -79,6 +79,11 @@ class FlowCellLane < ActiveRecord::Base
       :status => status,
       :comment => comment,
       :sequencer => sequencer_hash,
+      :lane_yield_kb => lane_yield_kb,
+      :average_clusters => average_clusters,
+      :percent_pass_filter_clusters => percent_pass_filter_clusters,
+      :percent_align => percent_align,
+      :percent_error => 20,
       :sample_uris => sample_ids.collect {|x| "#{SiteConfig.site_url}/samples/#{x}" }
     }
   end

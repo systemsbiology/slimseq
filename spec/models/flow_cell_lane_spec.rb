@@ -122,7 +122,12 @@ describe FlowCellLane do
       :comment => "failed",
       :starting_concentration => 1000,
       :loaded_concentration => 2,
-      :samples => [sample_1, sample_2]
+      :samples => [sample_1, sample_2],
+      :lane_yield_kb => 4200,
+      :average_clusters => 20000,
+      :percent_pass_filter_clusters => 60,
+      :percent_align => 50,
+      :percent_error => 20
     )   
 
     flow_cell_lane.detail_hash.should == {
@@ -139,6 +144,11 @@ describe FlowCellLane do
       :eland_output_file => nil,
       :summary_file => nil,
       :sequencer => {},
+      :lane_yield_kb => 4200,
+      :average_clusters => 20000,
+      :percent_pass_filter_clusters => 60,
+      :percent_align => 50,
+      :percent_error => 20,
       :sample_uris => ["http://example.com/samples/#{sample_1.id}",
                        "http://example.com/samples/#{sample_2.id}"]
     }
