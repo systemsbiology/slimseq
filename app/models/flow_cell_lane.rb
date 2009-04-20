@@ -83,7 +83,7 @@ class FlowCellLane < ActiveRecord::Base
       :average_clusters => average_clusters,
       :percent_pass_filter_clusters => percent_pass_filter_clusters,
       :percent_align => percent_align,
-      :percent_error => 20,
+      :percent_error => percent_error,
       :sample_uris => sample_ids.collect {|x| "#{SiteConfig.site_url}/samples/#{x}" }
     }
   end
