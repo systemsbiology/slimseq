@@ -2,6 +2,9 @@ ActionController::Routing::Routes.draw do |map|
   # backward compatibility with bookmarked login page
   map.connect 'session/new', :controller => "welcome", :action => "home"
 
+  # logout
+  map.connect 'logout', :controller => "sessions", :action => "destroy"
+
   # SLIM* Authorization routes
   map.resources :sessions
   map.resources :lab_groups
