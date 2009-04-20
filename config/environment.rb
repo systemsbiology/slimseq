@@ -65,9 +65,8 @@ Rails::Initializer.run do |config|
   config.gem "json"
   config.gem "parseexcel"
   config.gem "rest-client", :lib => "rest_client"
-  config.gem "rspec", :lib => 'spec'
-  #config.gem "rspec-rails", :lib => 'spec/rails'
   config.gem "hpricot"
+  config.gem "nokogiri"
 end
 
 AUTHENTICATION_SALT = 'mmm_kosher_rocks' unless defined? AUTHENTICATION_SALT

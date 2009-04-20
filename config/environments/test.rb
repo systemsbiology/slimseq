@@ -22,8 +22,8 @@ config.action_controller.allow_forgery_protection    = false
 config.action_mailer.delivery_method = :test
 
 # Rspec
-config.gem "rspec", :version => "1.1.12", :lib => 'spec'
-config.gem "rspec-rails", :version => "1.1.12", :lib => 'spec/rails'
+config.gem "rspec", :version => "1.1.12", :lib => false
+config.gem "rspec-rails", :version => "1.1.12", :lib => false
 
 AUTHENTICATION_SALT = 'test-salt'
 
