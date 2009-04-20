@@ -1,51 +1,75 @@
-site_config:
-  columns:
+
+--- 
+lab_groups: 
+  columns: 
   - id
-  - site_name
-  - organization_name
-  - facility_name
-  - track_charges
-  - use_LDAP
-  - LDAP_server
-  - LDAP_DN
-  - administrator_email
-  - raw_data_root_path
-  - site_url
+  - name
+  - file_folder
   - lock_version
   - created_at
   - updated_at
-  records:
+  records: 
   - - "1"
-    - SLIMseq
-    - Institute for Systems Biology
     - Sequencing Facility
-    - false
-    - true
-    - ldap.systemsbiology.net
-    - cn=users,dc=systemsbiology,dc=net
-    - bmarzolf@systemsbiology.org
-    - /solexa
-    - http://osiris:3000
-    - "7"
-    -
-    - 2008-12-02 08:57:09
+    - facility
+    - "0"
+    - 
+    - 
 
-organisms:
-  columns:
+--- 
+lab_memberships: 
+  columns: 
+  - id
+  - lab_group_id
+  - user_id
+  - lock_version
+  - created_at
+  - updated_at
+  records: 
+  - - "1"
+    - "1"
+    - "1"
+    - "0"
+    - 2009-04-20 16:10:27
+    - 2009-04-20 16:10:27
+
+--- 
+organisms: 
+  columns: 
   - id
   - name
   - lock_version
   - created_at
   - updated_at
-  records:
+  records: 
   - - "1"
     - PhiX
     - "0"
-    -
-    -
+    - 
+    - 
 
-reference_genomes:
-  columns:
+--- 
+projects: 
+  columns: 
+  - id
+  - name
+  - file_folder
+  - lab_group_id
+  - lock_version
+  - created_at
+  - updated_at
+  records: 
+  - - "1"
+    - Sequencing Facility
+    - PhiX
+    - "1"
+    - "0"
+    - 
+    - 2008-11-21 10:41:54
+
+--- 
+reference_genomes: 
+  columns: 
   - id
   - name
   - organism_id
@@ -54,68 +78,36 @@ reference_genomes:
   - description
   - created_at
   - updated_at
-  records:
+  records: 
   - - "1"
     - PhiX
     - "1"
     - "0"
     - /data/Genomes/ELAND/PhiX/PhiX
     - PhiX
-    -
-    -
+    - 
+    - 
 
-sample_prep_kits:
-  columns:
+--- 
+sample_prep_kits: 
+  columns: 
   - id
   - name
   - lock_version
   - created_at
   - updated_at
   - restriction_enzyme
-  records:
+  records: 
   - - "1"
     - PhiX Control
     - "0"
-    -
-    -
+    - 
+    - 
     - 
 
-lab_groups:
-  columns:
-  - id
-  - name
-  - file_folder
-  - lock_version
-  - created_at
-  - updated_at
-  records:
-  - - "1"
-    - Sequencing Facility
-    - facility
-    - "0"
-    -
-    -
-
-projects:
-  columns:
-  - id
-  - name
-  - file_folder
-  - lab_group_id
-  - lock_version
-  - created_at
-  - updated_at
-  records:
-  - - "1"
-    - Sequencing Facility
-    - PhiX
-    - "1"
-    - "0"
-    -
-    - 2008-11-21 10:41:54
-
-samples:
-  columns:
+--- 
+samples: 
+  columns: 
   - id
   - sample_set_id
   - submitted_by_id
@@ -137,10 +129,10 @@ samples:
   - comment
   - created_at
   - updated_at
-  records:
+  records: 
   - - "1"
-    -
-    -
+    - 
+    - 
     - "1"
     - "2008-08-21"
     - PhiX
@@ -157,11 +149,64 @@ samples:
     - true
     - "60"
     - ""
-    -
+    - 
     - 2008-12-02 08:58:15
 
-users:
-  columns:
+--- 
+site_config: 
+  columns: 
+  - id
+  - site_name
+  - organization_name
+  - facility_name
+  - track_charges
+  - use_LDAP
+  - LDAP_server
+  - LDAP_DN
+  - administrator_email
+  - raw_data_root_path
+  - site_url
+  - lock_version
+  - created_at
+  - updated_at
+  records: 
+  - - "1"
+    - SLIMseq
+    - Institute for Systems Biology
+    - Sequencing Facility
+    - false
+    - true
+    - ldap.systemsbiology.net
+    - cn=users,dc=systemsbiology,dc=net
+    - bmarzolf@systemsbiology.org
+    - /solexa
+    - http://osiris:3000
+    - "7"
+    - 
+    - 2008-12-02 08:57:09
+
+--- 
+user_profiles: 
+  columns: 
+  - id
+  - user_id
+  - role
+  - new_sample_notification
+  - new_sequencing_run_notification
+  - created_at
+  - updated_at
+  records: 
+  - - "1"
+    - "1"
+    - admin
+    - false
+    - false
+    - 2009-04-20 16:10:18
+    - 2009-04-20 16:10:18
+
+--- 
+users: 
+  columns: 
   - id
   - login
   - crypted_password
@@ -175,7 +220,9 @@ users:
   - created_at
   - updated_at
   - lock_version
-  records:
+  - new_sample_notification
+  - new_sequencing_run_notification
+  records: 
   - - "1"
     - admin
     - af59d49bd90be7a7acf0ef0ec6f380294d420a3d
@@ -184,8 +231,10 @@ users:
     - User
     - e6f7f6195d2097c5a059b98f942fc4be1c54fcf5
     - admin
-    -
-    -
-    -
-    -
+    - 
+    - 
+    - 
+    - 
     - "0"
+    - false
+    - false
