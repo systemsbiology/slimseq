@@ -1,0 +1,54 @@
+= SLIMseq
+
+== What is it?
+
+SLIMseq is a sample tracking system for ultra-high-throughput sequencing, specifically the
+Illumina/Solexa platform. It is geared primarily towards a "Core Facility" model, where end users
+submit samples to a core facility and then the core takes care of actually running the samples on
+the sequencing instruments. SLIMseq captures meta data about samples as they are submitted, and
+then lets the core facility track the samples through being run on a flow cell, sequenced and
+having the Solexa pipeline run on them. Much of the sample information is available through a
+REST-like API.
+
+== How do I install it?
+
+SLIMseq can be installed either as a standalone application, or using shared infrastructure that 
+allows single sign-on and shared users and lab groups with other applications such as SLIMarray. 
+The shared infrastructure install requires that you separately install SLIMcore 
+(http://github.com/bmarzolf/slimcore/tree/master) and RubyCAS-server 
+(http://github.com/gunark/rubycas-server/tree/master). See INSTALL.rdoc for details on 
+installing these.
+
+SLIMseq is a Ruby on Rails application. Those familiar with setting up Ruby on Rails applications
+may find the following sufficient to get it up and running (with Rails itself already installed):
+
+    gem install ruby-debug json parseexcel rest-client rspec-rails hpricot rubycas-client nokogiri
+    git clone git://github.com/bmarzolf/slimseq.git
+    cd slimseq
+    git submodule init
+    git submodule update
+    # set up database.yml and application.yml
+
+Only do one of the following:
+
+    # standalone install: script/plugin install git://github.com/bmarzolf/slimsolo_authorizer.git
+    # shared infrastrucure: script/plugin install git://github.com/bmarzolf/slimcore_authorizer.git
+
+    rake db:load
+    script/server
+
+For a detailed example of how to install SLIMseq on a fresh Ubuntu 8.04 machine, see the file
+named INSTALL.rdoc. Installation on other operating systems should be similar.
+
+== I've installed it, now how do I log in?
+
+With the slimsolo_authorizer, you should be able to log in as user 'admin' with the password 'test'.
+
+With the slimcore_authorizer plugin and RubyCAS-server, log in in as a user that will authenticate 
+with your RubyCAS-server install. The first user to log in will automatically be made an administrator.
+
+== How do I use the API?
+
+The API documentation can be reached by adding /api to the base path to your app. So if you're
+hosting SLIMseq at http://my-server, go to http://my-server/api. This describes how to use the API
+in general as well as documenting what calls are available and what example outputs look like.
