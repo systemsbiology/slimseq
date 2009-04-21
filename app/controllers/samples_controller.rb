@@ -137,8 +137,16 @@ Get detailed information about a single sample.
 
     if(params[:commit] == "Delete Selected Samples")
       if(current_user.staff_or_admin?)
+        flash[:notice] = ""
+        flash[:warning] = ""
         @samples.each do |s|
-          s.destroy
+          if(s.submitted?)
+            s.destroy
+            flash[:notice] += "Sample #{s.name_on_tube} was destroyed<br>"
+          else
+            flash[:warning] += 
+              "Sample #{s.name_on_tube} has already been clustered, and can't be destroyed<br>"
+          end
         end
       else
         flash[:warning] = "Only facility staff can delete multiple samples at a time"

@@ -9,16 +9,19 @@ describe SamplesController do
     @mock_sample ||= mock_model(Sample, stubs)
   end
   
-  before(:each) do
-    login_as_staff
-
+  def mock_user_methods
     lab_groups = [mock_model(LabGroup), mock_model(LabGroup)]
     @current_user.stub!(:accessible_lab_groups).and_return(lab_groups)
     @current_user.stub!(:lab_groups).and_return(lab_groups)
-    projects = [mock_model(Project), mock_model(Project)]
-    Project.stub!(:accessible_to_user).and_return(projects)
+
     users = [mock_model(User), mock_model(User)]
     @current_user.stub!(:accessible_users).and_return(users)
+  end
+
+  before(:each) do
+    projects = [mock_model(Project), mock_model(Project)]
+    Project.stub!(:accessible_to_user).and_return(projects)
+
     NamingScheme.stub!(:find).and_return(
       [mock_model(NamingScheme), mock_model(NamingScheme)]
     )
@@ -33,6 +36,9 @@ describe SamplesController do
   describe "responding to GET index" do
     
     before(:each) do      
+      login_as_user
+      mock_user_methods
+
       @accessible_samples = [mock_model(Sample), mock_model(Sample)]
       @accessible_lab_group_ids = [1,2,3]
       @current_user.should_receive(:get_lab_group_ids).any_number_of_times.
@@ -89,6 +95,9 @@ describe SamplesController do
   describe "responding to GET show" do
 
     before(:each) do
+      login_as_user
+      mock_user_methods
+
       @sample = mock_model(Sample)
       @sample.should_receive(:detail_hash).and_return( {:n => "1"} )
     end
@@ -133,6 +142,9 @@ describe SamplesController do
   describe "responding to GET edit" do
 
     before(:each) do
+      login_as_user
+      mock_user_methods
+
       @sample = mock_sample
       @sample.stub!(:naming_scheme).and_return(nil)     
     end
@@ -174,6 +186,11 @@ describe SamplesController do
 
   describe "responding to PUT udpate" do
 
+    before(:each) do
+      login_as_user
+      mock_user_methods
+    end
+    
     describe "with valid params" do
 
       it "should update the requested sample" do
@@ -223,6 +240,9 @@ describe SamplesController do
   describe "responding to DELETE destroy" do
 
     before(:each) do
+      login_as_user
+      mock_user_methods
+
       request.env["HTTP_REFERER"] = "/refering_url"
       @current_user.stub!(:staff_or_admin?).and_return(false)
     end
@@ -271,32 +291,83 @@ describe SamplesController do
 
   describe "responding to bulk handler" do
     
-    it "should allow bulk destroy with staff or admin privileges" do
-      # turn the current user into an admin
-      @current_user.should_receive(:staff_or_admin?).any_number_of_times.and_return(true)
-      
+    before(:each) do
       @sample1 = mock_model(Sample)
       @sample2 = mock_model(Sample)
-      
-      Sample.should_receive(:find).once.and_return(@sample1, @sample2)
-      @sample1.should_receive(:destroy).and_return(true)
-      @sample2.should_receive(:destroy).and_return(true)
-      
-      post :bulk_handler, :selected_samples => {'1' => '1',
-                                                '2' => '1'},
-           :commit => "Delete Selected Samples"
 
-      response.should redirect_to(samples_url)
+      Sample.should_receive(:find).once.and_return(@sample1, @sample2)
     end
+
+    describe "deleting selected samples" do
+        
+      describe "with staff or admin privileges" do
+
+        before(:each) do
+          login_as_staff
+          mock_user_methods
+          
+          # turn the current user into an admin
+          @current_user.should_receive(:staff_or_admin?).any_number_of_times.and_return(true)
+      
+          @sample1.should_receive(:name_on_tube).and_return("s1")
+          @sample2.should_receive(:name_on_tube).and_return("s2")
+        end
+
+        it "should allow bulk destroy of submitted samples" do
+          @sample1.should_receive(:submitted?).and_return(true)
+          @sample2.should_receive(:submitted?).and_return(true)
+          
+          @sample1.should_receive(:destroy).and_return(true)
+          @sample2.should_receive(:destroy).and_return(true)
+          
+          post :bulk_handler, :selected_samples => {'1' => '1',
+                                                    '2' => '1'},
+               :commit => "Delete Selected Samples"
+
+          response.should redirect_to(samples_url)
+        end
+
+        it "should not allow bulk destroy of clustered, sequenced or completed samples" do
+          @sample1.should_receive(:submitted?).and_return(false)
+          @sample2.should_receive(:submitted?).and_return(false)
+          
+          @sample1.should_not_receive(:destroy)
+          @sample1.should_not_receive(:destroy)
+          
+          post :bulk_handler, :selected_samples => {'1' => '1',
+                                                    '2' => '1'},
+               :commit => "Delete Selected Samples"
+
+          response.should redirect_to(samples_url)
+        end
+
+      end
+
+      it "should not allow bulk destroy for non staff or admin users" do
+        login_as_user
+        mock_user_methods
+
+        # turn the current user into an admin
+        @current_user.should_receive(:staff_or_admin?).any_number_of_times.and_return(false)
+
+        @sample1.should_not_receive(:destroy)
+        @sample1.should_not_receive(:destroy)
+
+        post :bulk_handler, :selected_samples => {'1' => '1',
+                                                  '2' => '1'},
+             :commit => "Delete Selected Samples"
+
+        response.should redirect_to(samples_url)
+      end
     
+    end
+
     it "should show details for selected samples" do
+      login_as_user
+      mock_user_methods
+
       # turn the current user into an admin
       @current_user.should_receive(:staff_or_admin?).any_number_of_times.and_return(true)
-      
-      @sample1 = mock_model(Sample)
-      @sample2 = mock_model(Sample)
-      
-      Sample.should_receive(:find).once.and_return(@sample1, @sample2)
       
       post :bulk_handler, :selected_samples => {'1' => '1',
                                                 '2' => '1'},
