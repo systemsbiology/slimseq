@@ -18,6 +18,10 @@ class PipelineResult < ActiveRecord::Base
     import_run_summary
   end
 
+  def after_save
+    flow_cell_lane.update_attributes(:updated_at => Time.now)
+  end
+
   def import_run_summary
     # isolate exceptions since we don't want to crash the pipeline results
     # import process
