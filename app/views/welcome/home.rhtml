@@ -3,7 +3,9 @@
 <p>This is <b><%= SiteConfig.site_name %></b>, an installation of the SLIMseq 
 software for <%= SiteConfig.organization_name %>.</p>
 
-<h3>Samples Submitted</h3>
+<%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %>
+
+<h3>Samples Not Yet Competed</h3>
 
 <% if @samples != nil && @samples.size > 0 %>
   <%= render :partial => 'sample_table' %>
@@ -11,4 +13,10 @@ software for <%= SiteConfig.organization_name %>.</p>
     <p>Your lab groups have no submitted samples that have not been sequenced.</p>
 <% end %>
 
-<%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %>
+<h3>Last 10 Completed Samples (<%= link_to 'See Older Samples', samples_path %>)</h3>
+
+<% if @completed_samples != nil && @completed_samples.size > 0 %>
+  <%= render :partial => 'completed_sample_table' %>
+<% else %>
+    <p>Your lab groups have no samples that have been completed in the past month.</p>
+<% end %>
