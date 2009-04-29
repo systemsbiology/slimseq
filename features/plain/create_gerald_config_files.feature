@@ -11,4 +11,4 @@ Feature: Generate Gerald config files
     And I should see "ELAND_MULTIPLE_INSTANCES 8"
     And I should see the following parameters:
       | lane  | genome | seed_length | max_matches | use_bases |
-      | 1     | mm9    | 20          | 1           | all       |
+      | 1     | mm9.fa | 25          | 5           | all       |

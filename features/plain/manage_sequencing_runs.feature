@@ -13,12 +13,13 @@ Feature: Manage sequencing_runs
     And I should see "Super sequencer"
     And I should see "Some clever comment about the flow cell"
 
-  Scenario: Delete sequencing_run
-    And there are 4 sequencing_runs
+  Scenario Outline: Delete sequencing_run
+    And there are <initial> sequencing_runs
     When I delete the first sequencing_run
-    Then there should be 3 sequencing_runs left
+    Then there should be <after> sequencing_runs left
     
-  More Examples:
+  Examples:
     | initial | after |
+    | 4       | 3     |
     | 100     | 99    |
     | 1       | 0     |

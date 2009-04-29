@@ -1,7 +1,8 @@
 Given /I am on the new gerald_configurations page/i do
   create_gerald_defaults
-  sample_1 = create_sample
-  sample_2 = create_sample
+  mm9 = create_reference_genome(:fasta_path => "mm9.fa")
+  sample_1 = create_sample(:reference_genome => mm9)
+  sample_2 = create_sample(:reference_genome => mm9)
   flow_cell = create_flow_cell
   flow_cell_lane_1 = create_flow_cell_lane(:samples => [sample_1], :flow_cell => flow_cell)
   flow_cell_lane_2 = create_flow_cell_lane(:samples => [sample_2], :flow_cell => flow_cell)
