@@ -28,7 +28,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :flow_cell_lanes
 
-  map.resources :samples
+  map.resources :samples, :collection => {:browse => :get, :search => :get}
   
   map.resources :instruments
 

@@ -1,60 +1,18 @@
-<script src="/javascripts/checkall.js" type="text/javascript"></script>
 <h2>Samples</h2>
 
-<% if(@paged_samples != nil && @samples.size > 0) %>
-  <% form_tag( {:action => 'bulk_handler'}, {:name => 'bulk_handler'} ) do -%>
-    <p><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></p>
+<% if(@lab_groups != nil && @lab_groups.size > 0) %>
+  <p><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></p>
 
-    <div id="search_criteria_hidden" style="display:none">
-      <p><%= image_tag('plus.gif')%> <%= link_to_function 'Search for samples', "toggle_search_criteria()" %></p>
-    </div>
-    <div id="search_criteria_shown" style="display:none">
-      <p><%= image_tag('minus.gif')%> <%= link_to_function 'Search for samples', "toggle_search_criteria()" %></p>
-    </div>
-
-    <h3>Recent samples</h3>
-    <table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
-      <thead>
-        <tr>
-          <th class="nosort"><h3><input id="master_checker" type="checkbox" onClick="toggleChecks(document.bulk_handler)"></h3></th>
-          <th><h3>Date</h3></th>
-          <th><h3>Sample</h3></th>
-          <th><h3>Status</h3></th>
-          <th class="nosort"><h3>Edit</h3></th>
-          <th class="nosort"><h3>Destroy</h3></th>
-        </tr>
-      </thead>
-
-    <% for sample in @paged_samples %>
-      <tr>
-        <td><%= check_box 'selected_samples', sample.id %></td>
-        <td><%=h sample.submission_date.strftime("%Y/%m/%d") %></td>
-        <td><%=h sample.short_and_long_name %></td>
-        <td><%=h sample.status %></td>
-        <td><%= link_to 'Edit', edit_sample_path(sample) %></td>
-        <td><%= link_to 'Destroy', sample, :confirm => 'Are you sure?', :method => :delete %></td>
-      </tr>
-    <% end %>
-    </table>
-
-    <%= render :partial => 'shared/tinytable', :locals => {:sort_column => 0} %>
-
-    <p>
-      <%= submit_tag 'Show Details' %>
-      <% if current_user.staff_or_admin? %>
-        <%= submit_tag 'Delete Selected Samples',
-          :confirm => "Are you sure you want to delete all the selected samples?" %>
-      <% end %>
-    </p>
-  <% end -%>	
+  <% form_tag( {:action => 'browse'}, {:name => "browse"} ) do -%>
+    Browse by <select name="category_1"><option value="none">Please Select</option><%= options_for_select @browse_categories %></select>
+    , <select name="category_2"><option value="none">Please Select</option><%= options_for_select @browse_categories %></select>
+    <%= link_to 'Add Category', "#" %> OR 
+    <%= submit_tag 'Done' %>
+  <% end -%>
+    
 <% else %>
-  <% if current_user.staff_or_admin? ||( @lab_groups != nil && @lab_groups.size > 0) %>
-    <p>There are currently no samples.</p>
-    <p><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></p>
-  <% else %>
-    <p>You need to belong to one or more lab groups before you can see or submit any samples.<br>
-    Please contact your administrator at <a href="mailto:<%=h SiteConfig.administrator_email %>">
-    <%=h SiteConfig.administrator_email %></a>
-    if you need<br>to be added to any lab groups.</p>
-  <% end %>
+  <p>You need to belong to one or more lab groups before you can see or submit any samples.<br>
+  Please contact your administrator at <a href="mailto:<%=h SiteConfig.administrator_email %>">
+  <%=h SiteConfig.administrator_email %></a>
+  if you need<br>to be added to any lab groups.</p>
 <% end %>

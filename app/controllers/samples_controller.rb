@@ -45,6 +45,11 @@ available when retrieving single samples (see GET /samples/[sample id]).
       #@users_by_id = User.all_by_id
     end
     
+    @browse_categories = [
+      ['Project', 'project'],
+      ['Submitter', 'submitter']
+    ]
+
     respond_to do |format|
       format.html  #index.html
       format.xml   { render :xml => @samples.
@@ -158,6 +163,28 @@ Get detailed information about a single sample.
     end
   end
   
+  def browse
+    @samples = Sample.accessible_to_user(current_user)
+    categories = sorted_categories(params)
+
+    @tree = Sample.browse_by(@samples, categories)
+
+    respond_to do |format|
+      format.html  #browse.html
+    end
+  end
+
+  def search
+    accessible_samples = Sample.accessible_to_user(current_user)
+    search_samples = Sample.find_by_sanitized_conditions(params)
+
+    @samples = accessible_samples & search_samples
+
+    respond_to do |format|
+      format.html { render :action => "list" }
+    end
+  end
+
 private
 
   def load_dropdown_selections
@@ -167,5 +194,15 @@ private
     @naming_schemes = NamingScheme.find(:all, :order => "name ASC")
     @sample_prep_kits = SamplePrepKit.find(:all, :order => "name ASC")
     @reference_genomes = ReferenceGenome.find(:all, :order => "name ASC")
+  end
+
+  def sorted_categories(params)
+    categories = Array.new
+
+    params.keys.sort.each do |key|
+      categories << params[key] if key.match(/category_\d+/)
+    end
+
+    return categories
   end
 end

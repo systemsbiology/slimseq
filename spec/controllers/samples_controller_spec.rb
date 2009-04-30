@@ -378,4 +378,63 @@ describe SamplesController do
 
   end
   
+  describe "responding to GET browse" do
+    
+    before(:each) do
+      login_as_user
+
+      mock_samples = mock("Array of samples")
+      Sample.should_receive(:accessible_to_user).and_return(mock_samples)
+
+      @mock_tree = mock("Sample tree")
+      Sample.should_receive(:browse_by).and_return(@mock_tree)
+    end
+
+    it "should expose a sample tree as @tree" do
+      get :browse, :category1 => 'project', :category2 => 'submitter'
+      assigns(:tree).should == @mock_tree
+    end 
+
+    it "should render the 'browse' view" do
+      get :browse, :category1 => 'project', :category2 => 'submitter'
+      response.should render_template('browse')
+    end
+  end
+
+  describe "responding to GET search" do
+  
+    before(:each) do
+      login_as_user
+
+      @sample_1 = mock_model(Sample)
+      @sample_2 = mock_model(Sample)
+      @sample_3 = mock_model(Sample)
+      @accessible_samples = [@sample_1, @sample_3]
+      @search_samples = [@sample_1, @sample_2]
+      Sample.stub!(:accessible_to_user).and_return(@accessible_samples)
+      Sample.stub!(:find_by_sanitized_conditions).and_return(@search_samples)
+    end
+
+    it "should get the samples accessible to the user" do
+      Sample.should_receive(:accessible_to_user).with(@current_user).
+        and_return(@accessible_samples)
+      get :search, :project_id => 5
+    end
+
+    it "should find samples with the given parameters" do
+      Sample.should_receive(:find_by_sanitized_conditions).with(
+        "controller" => "samples",
+        "action" => "search",
+        "project_id" => "5"
+      ).and_return(@search_samples)
+      get :search, :project_id => 5
+    end
+
+    it "should expose the searched samples that are accessible to the user" do
+      get :search, :project_id => 5
+      assigns(:samples).should == [@sample_1]
+    end
+
+  end
+
 end
