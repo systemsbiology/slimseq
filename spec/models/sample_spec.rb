@@ -604,4 +604,90 @@ describe Sample do
     User.should_receive(:find).with(1).and_return( mock_user = mock_model(User) )
     sample.user.should == mock_user
   end
+
+  it "should provide the samples accessible to a user" do
+    lab_group_1 = mock_model(LabGroup)
+    lab_group_2 = mock_model(LabGroup)
+    user = mock_model(User, :get_lab_group_ids => [lab_group_1.id])
+    sample_1 = create_sample( :project => create_project(:lab_group => lab_group_1) )
+    sample_2 = create_sample( :project => create_project(:lab_group => lab_group_2) )
+    
+    Sample.accessible_to_user(user).should == [sample_1]
+  end
+
+  it "should generate a browsing tree Hash" do
+    scheme = create_naming_scheme(:name => "Mouse")
+    strain = create_naming_element(:naming_scheme => scheme, :name => "Strain")
+    bl6 = create_naming_term(:naming_element => strain, :term => "Bl6")
+    mutant = create_naming_term(:naming_element => strain, :term => "Mutant")
+    project_1 = create_project(:name => "ChIP-Seq")
+    project_2 = create_project(:name => "RNA-Seq")
+    sample_1 = create_sample(:project => project_1)
+    sample_2 = create_sample(:project => project_1)
+    sample_3 = create_sample(:project => project_1)
+    sample_4 = create_sample(:project => project_2)
+    create_sample_term(:sample => sample_1, :naming_term => bl6)
+    create_sample_term(:sample => sample_2, :naming_term => bl6)
+    create_sample_term(:sample => sample_3, :naming_term => mutant)
+    create_sample_term(:sample => sample_4, :naming_term => bl6)
+
+    Sample.browse_by(
+      [sample_1, sample_2, sample_3, sample_4],
+      ["project", "naming_element-#{strain.id}"]
+    ).should == [
+      {
+        :name => "ChIP-Seq",
+        :number => 3,
+        :search_string => "project_id=#{project_1.id}",
+        :children => [
+          {
+            :name => "Bl6",
+            :number => 2,
+            :search_string => "project_id=#{project_1.id}&naming_term_id=#{bl6.id}",
+            :children => nil
+          },
+          {
+            :name => "Mutant",
+            :number => 1,
+            :search_string => "project_id=#{project_1.id}&naming_term_id=#{mutant.id}",
+            :children => nil
+          }
+        ]
+      },
+      {
+        :name => "RNA-Seq",
+        :number => 1,
+        :search_string => "project_id=#{project_2.id}",
+        :children => [
+          {
+            :name => "Bl6",
+            :number => 1,
+            :search_string => "project_id=#{project_2.id}&naming_term_id=#{bl6.id}",
+            :children => nil
+          }
+        ]
+      }
+    ]
+  end
+
+  it "should find by a set of conditions after sanitizing them" do
+    scheme = create_naming_scheme(:name => "Mouse")
+    strain = create_naming_element(:naming_scheme => scheme, :name => "Strain")
+    bl6 = create_naming_term(:naming_element => strain, :term => "Bl6")
+    mutant = create_naming_term(:naming_element => strain, :term => "Mutant")
+    project_1 = create_project(:name => "ChIP-Seq")
+    project_2 = create_project(:name => "RNA-Seq")
+    sample_1 = create_sample(:project => project_1)
+    sample_2 = create_sample(:project => project_1)
+    create_sample_term(:sample => sample_1, :naming_term => bl6)
+    create_sample_term(:sample => sample_2, :naming_term => mutant)
+
+    Sample.find_by_sanitized_conditions(
+      "controller" => "this",
+      "action" => "that",
+      "project_id" => project_1.id,
+      "naming_term_id" => bl6.id,
+      "bob_id" => 123
+    ).should == [sample_1]
+  end
 end

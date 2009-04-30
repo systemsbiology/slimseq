@@ -672,6 +672,90 @@ class Sample < ActiveRecord::Base
     end
   end
 
+  def self.accessible_to_user(user)
+    samples = Sample.find(:all, 
+      :include => 'project',
+      :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
+        user.get_lab_group_ids, false ],
+      :order => "submission_date DESC, samples.id ASC")
+  end
+
+  def self.browse_by(samples, categories, search_prefix = "")
+    return nil if categories.nil?
+
+    category = categories.shift
+
+    value = Array.new
+    case category
+    when "project"
+      samples.group_by(&:project).each do |project, sub_samples|
+        next if sub_samples.size == 0
+
+        sub_prefix = combine_search(search_prefix, "project_id=#{project.id}")
+        value << {
+          :name => project.name,
+          :number => sub_samples.size,
+          :search_string => sub_prefix,
+          :children => Sample.browse_by(sub_samples, categories.dup, sub_prefix)
+        }
+      end
+    when "submitter"
+      samples.group_by(&:submitted_by_id).each do |user_id, sub_samples|
+        next if sub_samples.size == 0
+
+        sub_prefix = combine_search(search_prefix, "submitted_by_id=#{user_id}")
+
+        users_by_id = User.all_by_id
+        value << {
+          :name => users_by_id[user_id].full_name,
+          :number => sub_samples.size,
+          :search_string => sub_prefix,
+          :children => Sample.browse_by(sub_samples, categories.dup, sub_prefix)
+        }
+      end
+    when /naming_element-(\d+)/
+      element = NamingElement.find($1)
+      
+      element.naming_terms.each do |term|
+        samples_for_term = Sample.find(:all, :include => :sample_terms,
+                                       :conditions => ["sample_terms.naming_term_id = ?", term.id])
+        sub_samples = samples & samples_for_term
+        sub_prefix = combine_search(search_prefix, "naming_term_id=#{term.id}")
+        
+        next if sub_samples.size == 0
+
+        value << {
+          :name => term.term,
+          :number => sub_samples.size,
+          :search_string => sub_prefix,
+          :children => Sample.browse_by(sub_samples, categories, sub_prefix)
+        }
+      end
+    else
+      value = nil
+    end
+
+    return value
+  end
+
+  def self.find_by_sanitized_conditions(conditions)
+    accepted_keys = {
+      'project_id' => 'project_id',
+      'submitted_by_id' => 'submitted_by_id',
+      'naming_term_id' => 'sample_terms.naming_term_id'
+    }
+
+    sanitized_conditions = Hash.new
+
+    conditions.each do |key, value|
+      if accepted_keys.include?(key)
+        sanitized_conditions[ accepted_keys[key] ] = value
+      end
+    end
+
+    return Sample.find(:all, :include => :sample_terms, :conditions => sanitized_conditions)
+  end
+
 private
 
   def add_comment(base, comment, type)
@@ -682,4 +766,13 @@ private
 
     return base
   end
+
+  def self.combine_search(base_string, added_string)
+    if(base_string.length == 0)
+      return added_string
+    else
+      return "#{base_string}&#{added_string}"
+    end
+  end
+
 end
