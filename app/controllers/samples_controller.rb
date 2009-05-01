@@ -45,10 +45,7 @@ available when retrieving single samples (see GET /samples/[sample id]).
       #@users_by_id = User.all_by_id
     end
     
-    @browse_categories = [
-      ['Project', 'project'],
-      ['Submitter', 'submitter']
-    ]
+    @browse_categories = Sample.browsing_categories
 
     respond_to do |format|
       format.html  #index.html

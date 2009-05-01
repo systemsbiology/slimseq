@@ -4,9 +4,13 @@
   <p><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></p>
 
   <% form_tag( {:action => 'browse'}, {:name => "browse"} ) do -%>
-    Browse by <select name="category_1"><option value="none">Please Select</option><%= options_for_select @browse_categories %></select>
-    , <select name="category_2"><option value="none">Please Select</option><%= options_for_select @browse_categories %></select>
-    <%= link_to 'Add Category', "#" %> OR 
+    Browse by<br>
+    <ol>
+      <li><select name="category_1"><option value="none">Please Select</option><%= options_for_select @browse_categories %></select></li>
+      <li><select name="category_2"><option value="none">- None -</option><%= options_for_select @browse_categories %></select></li>
+      <li><select name="category_3"><option value="none">- None -</option><%= options_for_select @browse_categories %></select></li>
+    </ol>
+    <div style="display:none"><%= link_to 'Add Category', "#" %> OR </div><br/>
     <%= submit_tag 'Done' %>
   <% end -%>
     

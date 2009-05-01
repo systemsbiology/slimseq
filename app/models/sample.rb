@@ -728,7 +728,7 @@ class Sample < ActiveRecord::Base
           :name => term.term,
           :number => sub_samples.size,
           :search_string => sub_prefix,
-          :children => Sample.browse_by(sub_samples, categories, sub_prefix)
+          :children => Sample.browse_by(sub_samples, categories.dup, sub_prefix)
         }
       end
     else
@@ -754,6 +754,21 @@ class Sample < ActiveRecord::Base
     end
 
     return Sample.find(:all, :include => :sample_terms, :conditions => sanitized_conditions)
+  end
+
+  def self.browsing_categories
+    categories = [
+      ['Project', 'project'],
+      ['Submitter', 'submitter'],
+    ]
+
+    NamingScheme.find(:all, :order => "name ASC").each do |scheme|
+      scheme.naming_elements.find(:all, :order => "name ASC").each do |element|
+        categories << ["#{scheme.name}: #{element.name}", "naming_element-#{element.id}"]
+      end
+    end
+
+    return categories
   end
 
 private

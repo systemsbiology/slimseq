@@ -690,4 +690,18 @@ describe Sample do
       "bob_id" => 123
     ).should == [sample_1]
   end
+
+  it "should provide sample browsing categories" do
+    # make sure there are no other schemes to get in the way
+    NamingScheme.destroy_all
+
+    scheme = create_naming_scheme(:name => "Mouse")
+    strain = create_naming_element(:naming_scheme => scheme, :name => "Strain")
+
+    Sample.browsing_categories.should == [
+       ['Project', 'project'],
+       ['Submitter', 'submitter'],
+       ['Mouse: Strain', "naming_element-#{strain.id}"]
+    ]
+  end
 end
