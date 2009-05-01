@@ -677,8 +677,12 @@ describe Sample do
     mutant = create_naming_term(:naming_element => strain, :term => "Mutant")
     project_1 = create_project(:name => "ChIP-Seq")
     project_2 = create_project(:name => "RNA-Seq")
-    sample_1 = create_sample(:project => project_1)
-    sample_2 = create_sample(:project => project_1)
+    flow_cell = create_flow_cell
+    sample_1 = create_sample(:project => project_1, :submission_date => '2009-05-01',
+                             :insert_size => 100, :naming_scheme_id => scheme.id)
+    sample_2 = create_sample(:project => project_1, :submission_date => '2009-05-02',
+                             :insert_size => 150)
+    flow_cell_lane = create_flow_cell_lane(:samples => [sample_1], :flow_cell => flow_cell)
     create_sample_term(:sample => sample_1, :naming_term => bl6)
     create_sample_term(:sample => sample_2, :naming_term => mutant)
 
@@ -686,7 +690,14 @@ describe Sample do
       "controller" => "this",
       "action" => "that",
       "project_id" => project_1.id,
+      "submission_date" => '2009-05-01',
+      "insert_size" => 100,
+      "reference_genome_id" => sample_1.reference_genome.id,
+      "organism_id" => sample_1.reference_genome.organism_id,
+      "status" => "clustered",
+      "naming_scheme_id" => scheme.id,
       "naming_term_id" => bl6.id,
+      "flow_cell_id" => flow_cell.id,
       "bob_id" => 123
     ).should == [sample_1]
   end
@@ -699,9 +710,17 @@ describe Sample do
     strain = create_naming_element(:naming_scheme => scheme, :name => "Strain")
 
     Sample.browsing_categories.should == [
-       ['Project', 'project'],
-       ['Submitter', 'submitter'],
-       ['Mouse: Strain', "naming_element-#{strain.id}"]
+      ['Project', 'project'],
+      ['Submitter', 'submitter'],
+      ['Submission Date', 'submission_date'],
+      ['Sample Prep Kit', 'sample_prep_kit'],
+      ['Insert Size', 'insert_size'],
+      ['Reference Genome', 'reference_genome'],
+      ['Organism', 'organism'],
+      ['Status', 'status'],
+      ['Naming Scheme', 'naming_scheme'],
+      ['Flow Cell', 'flow_cell'],
+      ['Mouse: Strain', "naming_element-#{strain.id}"]
     ]
   end
 end

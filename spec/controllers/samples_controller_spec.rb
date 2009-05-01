@@ -49,7 +49,7 @@ describe SamplesController do
     end
 
     it "should expose all samples accessible by the user as @samples" do
-      Sample.should_receive(:find).twice.and_return(@accessible_samples)
+      Sample.should_receive(:accessible_to_user).and_return(@accessible_samples)
       get :index
       assigns[:samples].should == @accessible_samples
     end
@@ -63,7 +63,7 @@ describe SamplesController do
         samples = [sample_1, sample_2]
         
         request.env["HTTP_ACCEPT"] = "application/xml"
-        Sample.should_receive(:find).twice.and_return(samples)
+        Sample.should_receive(:accessible_to_user).and_return(samples)
         get :index
         response.body.should ==
           "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<records type=\"array\">\n  " +
@@ -84,7 +84,7 @@ describe SamplesController do
         samples = [sample_1, sample_2]
         
         request.env["HTTP_ACCEPT"] = "application/json"
-        Sample.should_receive(:find).twice.and_return(samples)
+        Sample.should_receive(:accessible_to_user).and_return(samples)
         get :index
         response.body.should == "[{\"n\":1},{\"n\":2}]"
       end
@@ -434,6 +434,27 @@ describe SamplesController do
     it "should expose the searched samples that are accessible to the user" do
       get :search, :project_id => 5
       assigns(:samples).should == [@sample_1]
+    end
+
+  end
+
+  describe "responding to GET all" do
+    
+    before(:each) do
+      login_as_user
+
+      @mock_samples = mock("Array of samples")
+      Sample.should_receive(:accessible_to_user).and_return(@mock_samples)
+    end
+
+    it "should expose all accessible samples as @samples" do
+      get :all
+      assigns(:samples).should == @mock_samples
+    end 
+
+    it "should render the 'list' view" do
+      get :all
+      response.should render_template('list')
     end
 
   end

@@ -1,19 +1,25 @@
 <h2>Samples</h2>
 
 <% if(@lab_groups != nil && @lab_groups.size > 0) %>
-  <p><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></p>
+  <div id="samples-index">
+    <ul>
+      <li><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></li>
 
-  <% form_tag( {:action => 'browse'}, {:name => "browse"} ) do -%>
-    Browse by<br>
-    <ol>
-      <li><select name="category_1"><option value="none">Please Select</option><%= options_for_select @browse_categories %></select></li>
-      <li><select name="category_2"><option value="none">- None -</option><%= options_for_select @browse_categories %></select></li>
-      <li><select name="category_3"><option value="none">- None -</option><%= options_for_select @browse_categories %></select></li>
-    </ol>
-    <div style="display:none"><%= link_to 'Add Category', "#" %> OR </div><br/>
-    <%= submit_tag 'Done' %>
-  <% end -%>
-    
+      <li><%= link_to "Show All #{@samples.size} Samples", :controller => 'samples', :action => 'all' %></li>
+
+      <li><% form_tag( {:action => 'browse'}, {:name => "browse"} ) do -%>
+        Browse by<br>
+        <ol>
+          <li><select name="category_1"><option value="none">Please Select</option><%= options_for_select @browse_categories %></select></li>
+          <li><select name="category_2"><option value="none">- None -</option><%= options_for_select @browse_categories %></select></li>
+          <li><select name="category_3"><option value="none">- None -</option><%= options_for_select @browse_categories %></select></li>
+          <li><select name="category_4"><option value="none">- None -</option><%= options_for_select @browse_categories %></select></li>
+        </ol>
+        <div style="display:none"><%= link_to 'Add Category', "#" %> OR </div><br/>
+        <%= submit_tag 'Done' %>
+      <% end -%></li>
+    </ul>
+  </div>    
 <% else %>
   <p>You need to belong to one or more lab groups before you can see or submit any samples.<br>
   Please contact your administrator at <a href="mailto:<%=h SiteConfig.administrator_email %>">

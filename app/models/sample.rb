@@ -692,12 +692,7 @@ class Sample < ActiveRecord::Base
         next if sub_samples.size == 0
 
         sub_prefix = combine_search(search_prefix, "project_id=#{project.id}")
-        value << {
-          :name => project.name,
-          :number => sub_samples.size,
-          :search_string => sub_prefix,
-          :children => Sample.browse_by(sub_samples, categories.dup, sub_prefix)
-        }
+        value << branch_hash(project.name, sub_samples, sub_prefix, categories)
       end
     when "submitter"
       samples.group_by(&:submitted_by_id).each do |user_id, sub_samples|
@@ -706,12 +701,87 @@ class Sample < ActiveRecord::Base
         sub_prefix = combine_search(search_prefix, "submitted_by_id=#{user_id}")
 
         users_by_id = User.all_by_id
-        value << {
-          :name => users_by_id[user_id].full_name,
-          :number => sub_samples.size,
-          :search_string => sub_prefix,
-          :children => Sample.browse_by(sub_samples, categories.dup, sub_prefix)
-        }
+        value << branch_hash(users_by_id[user_id].full_name, sub_samples, sub_prefix, categories)
+      end
+    when "submission_date"
+      samples.group_by(&:submission_date).each do |submission_date, sub_samples|
+        next if sub_samples.size == 0
+
+        sub_prefix = combine_search(search_prefix, "submission_date=#{submission_date}")
+
+        value << branch_hash(submission_date, sub_samples, sub_prefix, categories)
+      end
+    when "sample_prep_kit"
+      samples.group_by(&:sample_prep_kit).each do |sample_prep_kit, sub_samples|
+        next if sub_samples.size == 0
+
+        sub_prefix = combine_search(search_prefix, "sample_prep_kit_id=#{sample_prep_kit.id}")
+
+        value << branch_hash(sample_prep_kit.name, sub_samples, sub_prefix, categories)
+      end
+    when "insert_size"
+      samples.group_by(&:insert_size).each do |insert_size, sub_samples|
+        next if sub_samples.size == 0
+
+        sub_prefix = combine_search(search_prefix, "insert_size=#{insert_size}")
+
+        value << branch_hash(insert_size, sub_samples, sub_prefix, categories)
+      end
+    when "reference_genome"
+      samples.group_by(&:reference_genome).each do |reference_genome, sub_samples|
+        next if sub_samples.size == 0
+
+        sub_prefix = combine_search(search_prefix, "reference_genome_id=#{reference_genome.id}")
+
+        value << branch_hash(reference_genome.name, sub_samples, sub_prefix, categories)
+      end
+    when "organism"
+      Organism.find(:all).each do |organism|
+        organism_samples = Array.new
+        organism.reference_genomes.each do |genome|
+          organism_samples.concat(genome.samples)
+        end
+        sub_samples = samples & organism_samples
+
+        next if sub_samples.size == 0
+
+        sub_prefix = combine_search(search_prefix, "organism_id=#{organism.id}")
+
+        value << branch_hash(organism.name, sub_samples, sub_prefix, categories)
+      end
+    when "status"
+      samples.group_by(&:status).each do |status, sub_samples|
+        next if sub_samples.size == 0
+
+        sub_prefix = combine_search(search_prefix, "status=#{status}")
+
+        value << branch_hash(status, sub_samples, sub_prefix, categories)
+      end
+    when "naming_scheme"
+      samples.group_by(&:naming_scheme).each do |naming_scheme, sub_samples|
+        next if sub_samples.size == 0
+
+        if(naming_scheme.nil?)
+          sub_prefix = combine_search(search_prefix, 'naming_scheme_id=')
+          value << branch_hash("None", sub_samples, sub_prefix, categories)
+        else
+          sub_prefix = combine_search(search_prefix, "naming_scheme_id=#{naming_scheme.id}")
+          value << branch_hash(naming_scheme.name, sub_samples, sub_prefix, categories)
+        end
+      end
+    when "flow_cell"
+      FlowCell.find(:all).each do |flow_cell|
+        flow_cell_samples = Array.new
+        flow_cell.flow_cell_lanes.each do |lane|
+          flow_cell_samples.concat(lane.samples)
+        end
+        sub_samples = samples & flow_cell_samples
+
+        next if sub_samples.size == 0
+
+        sub_prefix = combine_search(search_prefix, "flow_cell_id=#{flow_cell.id}")
+
+        value << branch_hash(flow_cell.name, sub_samples, sub_prefix, categories)
       end
     when /naming_element-(\d+)/
       element = NamingElement.find($1)
@@ -724,12 +794,7 @@ class Sample < ActiveRecord::Base
         
         next if sub_samples.size == 0
 
-        value << {
-          :name => term.term,
-          :number => sub_samples.size,
-          :search_string => sub_prefix,
-          :children => Sample.browse_by(sub_samples, categories.dup, sub_prefix)
-        }
+        value << branch_hash(term.term, sub_samples, sub_prefix, categories)
       end
     else
       value = nil
@@ -740,8 +805,15 @@ class Sample < ActiveRecord::Base
 
   def self.find_by_sanitized_conditions(conditions)
     accepted_keys = {
-      'project_id' => 'project_id',
-      'submitted_by_id' => 'submitted_by_id',
+      'project_id' => 'samples.project_id',
+      'submitted_by_id' => 'samples.submitted_by_id',
+      'submission_date' => 'samples.submission_date',
+      'insert_size' => 'samples.insert_size',
+      'reference_genome_id' => 'samples.reference_genome_id',
+      'organism_id' => 'reference_genomes.organism_id',
+      'status' => 'status',
+      'naming_scheme_id' => 'naming_scheme_id',
+      'flow_cell_id' => 'flow_cell_lanes.flow_cell_id',
       'naming_term_id' => 'sample_terms.naming_term_id'
     }
 
@@ -753,13 +825,25 @@ class Sample < ActiveRecord::Base
       end
     end
 
-    return Sample.find(:all, :include => :sample_terms, :conditions => sanitized_conditions)
+    return Sample.find(
+      :all,
+      :include => [:sample_terms, :reference_genome, :flow_cell_lanes],
+      :conditions => sanitized_conditions
+    )
   end
 
   def self.browsing_categories
     categories = [
       ['Project', 'project'],
       ['Submitter', 'submitter'],
+      ['Submission Date', 'submission_date'],
+      ['Sample Prep Kit', 'sample_prep_kit'],
+      ['Insert Size', 'insert_size'],
+      ['Reference Genome', 'reference_genome'],
+      ['Organism', 'organism'],
+      ['Status', 'status'],
+      ['Naming Scheme', 'naming_scheme'],
+      ['Flow Cell', 'flow_cell']
     ]
 
     NamingScheme.find(:all, :order => "name ASC").each do |scheme|
@@ -788,6 +872,15 @@ private
     else
       return "#{base_string}&#{added_string}"
     end
+  end
+
+  def self.branch_hash(name, samples, prefix, categories)
+    return {
+      :name => name,
+      :number => samples.size,
+      :search_string => prefix,
+      :children => Sample.browse_by(samples, categories.dup, prefix)
+    }
   end
 
 end

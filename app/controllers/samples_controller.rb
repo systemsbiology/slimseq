@@ -29,22 +29,8 @@ available when retrieving single samples (see GET /samples/[sample id]).
   def index
     @lab_groups = current_user.accessible_lab_groups
 
-    if(@lab_groups != nil && @lab_groups.size > 0)
-      @samples = Sample.find(:all, 
-         :include => 'project',
-         :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
-          current_user.get_lab_group_ids, false ],
-         :order => "submission_date DESC, samples.id ASC")
-      @paged_samples = #Sample.paginate :page => params[:page],
-        Sample.find(:all,
-        :include => [:project,{:flow_cell_lanes => :pipeline_results}],
-        :order => 'submission_date DESC, samples.id ASC',
-        :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
-          current_user.get_lab_group_ids, false ] ) #,
-        #:limit => 20 )
-      #@users_by_id = User.all_by_id
-    end
-    
+    @samples = Sample.accessible_to_user(current_user)
+
     @browse_categories = Sample.browsing_categories
 
     respond_to do |format|
@@ -176,6 +162,14 @@ Get detailed information about a single sample.
     search_samples = Sample.find_by_sanitized_conditions(params)
 
     @samples = accessible_samples & search_samples
+
+    respond_to do |format|
+      format.html { render :action => "list" }
+    end
+  end
+
+  def all
+    @samples = Sample.accessible_to_user(current_user)
 
     respond_to do |format|
       format.html { render :action => "list" }

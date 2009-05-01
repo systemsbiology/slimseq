@@ -1,5 +1,9 @@
 <h2>Browse Samples</h2>
 
-<%= link_to "<< Back", samples_path %>
+<% if @tree.nil? %>
+  Nothing selected to browse by. <%= link_to 'Go Back', samples_url %>
+<% else %>
+  <%= link_to "&laquo; Back", samples_path %>
 
-<%= render :partial => 'branch', :locals => {:branches => @tree} %>
+  <%= render :partial => 'branch', :locals => {:branches => @tree} %>
+<% end %>
