@@ -817,19 +817,33 @@ class Sample < ActiveRecord::Base
       'naming_term_id' => 'sample_terms.naming_term_id'
     }
 
-    sanitized_conditions = Hash.new
+    sanitized_conditions = Array.new
 
     conditions.each do |key, value|
       if accepted_keys.include?(key)
-        sanitized_conditions[ accepted_keys[key] ] = value
+        value.to_s.split(/,/).each do |subvalue|
+          sanitized_conditions << {accepted_keys[key] => subvalue}
+        end
       end
     end
 
-    return Sample.find(
-      :all,
-      :include => [:sample_terms, :reference_genome, :flow_cell_lanes],
-      :conditions => sanitized_conditions
-    )
+    samples = Array.new
+
+    sanitized_conditions.each do |condition|
+      search_samples = Sample.find(
+        :all,
+        :include => [:sample_terms, :reference_genome, :flow_cell_lanes],
+        :conditions => condition
+      )
+
+      if(samples.size > 0)
+        samples = samples & search_samples
+      else
+        samples = search_samples
+      end
+    end
+
+    return samples
   end
 
   def self.browsing_categories
@@ -867,8 +881,14 @@ private
   end
 
   def self.combine_search(base_string, added_string)
+    added_string.match(/\A(.*?)=(.*?)\Z/)
+    key = $1
+    value = $2
+
     if(base_string.length == 0)
       return added_string
+    elsif( base_string.match(/#{key}=(\d+)/) )
+      return base_string.gsub(/#{key}=(\d+)/, "#{key}=#{$1},#{value}")
     else
       return "#{base_string}&#{added_string}"
     end

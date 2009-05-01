@@ -620,6 +620,9 @@ describe Sample do
     strain = create_naming_element(:naming_scheme => scheme, :name => "Strain")
     bl6 = create_naming_term(:naming_element => strain, :term => "Bl6")
     mutant = create_naming_term(:naming_element => strain, :term => "Mutant")
+    age = create_naming_element(:naming_scheme => scheme, :name => "Age")
+    one_week = create_naming_term(:naming_element => age, :term => "One Week")
+    two_weeks = create_naming_term(:naming_element => age, :term => "Two Weeks")
     project_1 = create_project(:name => "ChIP-Seq")
     project_2 = create_project(:name => "RNA-Seq")
     sample_1 = create_sample(:project => project_1)
@@ -630,10 +633,14 @@ describe Sample do
     create_sample_term(:sample => sample_2, :naming_term => bl6)
     create_sample_term(:sample => sample_3, :naming_term => mutant)
     create_sample_term(:sample => sample_4, :naming_term => bl6)
+    create_sample_term(:sample => sample_1, :naming_term => one_week)
+    create_sample_term(:sample => sample_2, :naming_term => one_week)
+    create_sample_term(:sample => sample_3, :naming_term => two_weeks)
+    create_sample_term(:sample => sample_4, :naming_term => two_weeks)
 
     Sample.browse_by(
       [sample_1, sample_2, sample_3, sample_4],
-      ["project", "naming_element-#{strain.id}"]
+      ["project", "naming_element-#{strain.id}", "naming_element-#{age.id}"]
     ).should == [
       {
         :name => "ChIP-Seq",
@@ -644,13 +651,27 @@ describe Sample do
             :name => "Bl6",
             :number => 2,
             :search_string => "project_id=#{project_1.id}&naming_term_id=#{bl6.id}",
-            :children => nil
+            :children => [
+              {
+                :name => "One Week",
+                :number => 2,
+                :search_string => "project_id=#{project_1.id}&naming_term_id=#{bl6.id},#{one_week.id}",
+                :children => nil
+              }
+            ]
           },
           {
             :name => "Mutant",
             :number => 1,
             :search_string => "project_id=#{project_1.id}&naming_term_id=#{mutant.id}",
-            :children => nil
+            :children => [
+              {
+                :name => "Two Weeks",
+                :number => 1,
+                :search_string => "project_id=#{project_1.id}&naming_term_id=#{mutant.id},#{two_weeks.id}",
+                :children => nil
+              }
+            ]
           }
         ]
       },
@@ -663,7 +684,14 @@ describe Sample do
             :name => "Bl6",
             :number => 1,
             :search_string => "project_id=#{project_2.id}&naming_term_id=#{bl6.id}",
-            :children => nil
+            :children => [
+              {
+                :name => "Two Weeks",
+                :number => 1,
+                :search_string => "project_id=#{project_2.id}&naming_term_id=#{bl6.id},#{two_weeks.id}",
+                :children => nil
+              }
+            ]
           }
         ]
       }
@@ -675,16 +703,31 @@ describe Sample do
     strain = create_naming_element(:naming_scheme => scheme, :name => "Strain")
     bl6 = create_naming_term(:naming_element => strain, :term => "Bl6")
     mutant = create_naming_term(:naming_element => strain, :term => "Mutant")
+    age = create_naming_element(:naming_scheme => scheme, :name => "Age")
+    one_week = create_naming_term(:naming_element => age, :term => "One Week")
+    two_weeks = create_naming_term(:naming_element => age, :term => "Two Weeks")
     project_1 = create_project(:name => "ChIP-Seq")
     project_2 = create_project(:name => "RNA-Seq")
     flow_cell = create_flow_cell
+    genome = create_reference_genome
     sample_1 = create_sample(:project => project_1, :submission_date => '2009-05-01',
-                             :insert_size => 100, :naming_scheme_id => scheme.id)
+                             :insert_size => 100, :naming_scheme_id => scheme.id,
+                             :reference_genome => genome)
     sample_2 = create_sample(:project => project_1, :submission_date => '2009-05-02',
                              :insert_size => 150)
-    flow_cell_lane = create_flow_cell_lane(:samples => [sample_1], :flow_cell => flow_cell)
+    sample_3 = create_sample(:project => project_1, :submission_date => '2009-05-01',
+                             :insert_size => 100, :naming_scheme_id => scheme.id,
+                             :reference_genome => genome)
+    sample_4 = create_sample(:project => project_2)
+    flow_cell_lane = create_flow_cell_lane(:samples => [sample_1, sample_3], :flow_cell => flow_cell)
     create_sample_term(:sample => sample_1, :naming_term => bl6)
     create_sample_term(:sample => sample_2, :naming_term => mutant)
+    create_sample_term(:sample => sample_3, :naming_term => bl6)
+    create_sample_term(:sample => sample_4, :naming_term => bl6)
+    create_sample_term(:sample => sample_1, :naming_term => one_week)
+    create_sample_term(:sample => sample_2, :naming_term => one_week)
+    create_sample_term(:sample => sample_3, :naming_term => two_weeks)
+    create_sample_term(:sample => sample_4, :naming_term => two_weeks)
 
     Sample.find_by_sanitized_conditions(
       "controller" => "this",
@@ -692,11 +735,11 @@ describe Sample do
       "project_id" => project_1.id,
       "submission_date" => '2009-05-01',
       "insert_size" => 100,
-      "reference_genome_id" => sample_1.reference_genome.id,
-      "organism_id" => sample_1.reference_genome.organism_id,
+      "reference_genome_id" => genome.id,
+      "organism_id" => genome.organism_id,
       "status" => "clustered",
       "naming_scheme_id" => scheme.id,
-      "naming_term_id" => bl6.id,
+      "naming_term_id" => "#{one_week.id},#{bl6.id}",
       "flow_cell_id" => flow_cell.id,
       "bob_id" => 123
     ).should == [sample_1]
