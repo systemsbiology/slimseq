@@ -861,7 +861,7 @@ class Sample < ActiveRecord::Base
     ]
 
     NamingScheme.find(:all, :order => "name ASC").each do |scheme|
-      scheme.naming_elements.find(:all, :order => "name ASC").each do |element|
+      scheme.naming_elements.find(:all, :order => "element_order ASC").each do |element|
         categories << ["#{scheme.name}: #{element.name}", "naming_element-#{element.id}"]
       end
     end

@@ -192,6 +192,11 @@ div.progressBar div.background {
   margin-top: 5px;
 }
 
+.tree ul {
+  padding-left: 2em;
+  padding-bottom: 5px;
+}
+
 table { empty-cells: show; }
 
 /* TinyTable table sorter/paginator */

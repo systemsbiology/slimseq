@@ -5,5 +5,7 @@
 <% else %>
   <%= link_to "&laquo; Back", samples_path %>
 
-  <%= render :partial => 'branch', :locals => {:branches => @tree} %>
+  <div class="tree">
+    <%= render :partial => 'branch', :locals => {:branches => @tree} %>
+  </div>
 <% end %>
