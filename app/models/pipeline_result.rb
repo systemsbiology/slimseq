@@ -19,7 +19,7 @@ class PipelineResult < ActiveRecord::Base
   end
 
   def after_save
-    flow_cell_lane.update_attributes(:updated_at => Time.now)
+    flow_cell_lane.reload.update_attributes(:updated_at => Time.now)
   end
 
   def import_run_summary
