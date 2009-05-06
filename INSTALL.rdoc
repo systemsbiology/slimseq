@@ -142,8 +142,12 @@ versions of Passenger. This is problematic since SLIMcore uses Rails 2.3.2, whic
 Passenger 2.1+. When installing RubyCAS-server, be sure to install the following forks
 of Picnic and RubyCAS-server:
 
-    gem sources -a http://gems.github.com
-    gem install bmarzolf-picnic -v=0.8.0.20090421
+    sudo gem sources -a http://gems.github.com
+    sudo gem install bmarzolf-picnic -v=0.8.0.20090421
+
+Also install the gettext gem:
+
+    sudo gem install gettext
 
 Then, install RubyCAS-server from this source:
 
@@ -171,4 +175,4 @@ Enable the new site you've created and reload the apache configs:
 
 Finally, install the RubyCAS-client gem:
 
-    gem install gunark-rubycas-client
+    sudo gem install gunark-rubycas-client
