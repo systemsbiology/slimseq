@@ -38,4 +38,14 @@ describe "Project" do
                         "http://example.com/samples/#{sample_2.id}"]
     }
   end
+
+  it "should provide projects associated with a lab group" do
+    lab_group_1 = mock_model(LabGroup)
+    lab_group_2 = mock_model(LabGroup)
+    project_1 = create_project(:lab_group => lab_group_1)
+    project_2 = create_project(:lab_group => lab_group_1)
+    project_3 = create_project(:lab_group => lab_group_2)
+
+    Project.for_lab_group(lab_group_1).should == [project_1, project_2]
+  end
 end

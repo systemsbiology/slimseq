@@ -783,6 +783,20 @@ class Sample < ActiveRecord::Base
 
         value << branch_hash(flow_cell.name, sub_samples, sub_prefix, categories)
       end
+    when "lab_group"
+      LabGroup.find(:all).each do |lab_group|
+        lab_group_samples = Array.new
+        Project.for_lab_group(lab_group).each do |project|
+          lab_group_samples.concat(project.samples)
+        end
+        sub_samples = samples & lab_group_samples
+
+        next if sub_samples.size == 0
+
+        sub_prefix = combine_search(search_prefix, "lab_group_id=#{lab_group.id}")
+
+        value << branch_hash(lab_group.name, sub_samples, sub_prefix, categories)
+      end
     when /naming_element-(\d+)/
       element = NamingElement.find($1)
       
@@ -814,7 +828,8 @@ class Sample < ActiveRecord::Base
       'status' => 'status',
       'naming_scheme_id' => 'naming_scheme_id',
       'flow_cell_id' => 'flow_cell_lanes.flow_cell_id',
-      'naming_term_id' => 'sample_terms.naming_term_id'
+      'naming_term_id' => 'sample_terms.naming_term_id',
+      'lab_group_id' => 'projects.lab_group_id'
     }
 
     sanitized_conditions = Array.new
@@ -832,7 +847,7 @@ class Sample < ActiveRecord::Base
     sanitized_conditions.each do |condition|
       search_samples = Sample.find(
         :all,
-        :include => [:sample_terms, :reference_genome, :flow_cell_lanes],
+        :include => [:sample_terms, :reference_genome, :flow_cell_lanes, :project],
         :conditions => condition
       )
 
@@ -848,16 +863,17 @@ class Sample < ActiveRecord::Base
 
   def self.browsing_categories
     categories = [
-      ['Project', 'project'],
-      ['Submitter', 'submitter'],
-      ['Submission Date', 'submission_date'],
-      ['Sample Prep Kit', 'sample_prep_kit'],
+      ['Flow Cell', 'flow_cell'],
       ['Insert Size', 'insert_size'],
-      ['Reference Genome', 'reference_genome'],
-      ['Organism', 'organism'],
-      ['Status', 'status'],
+      ['Lab Group', 'lab_group'],
       ['Naming Scheme', 'naming_scheme'],
-      ['Flow Cell', 'flow_cell']
+      ['Organism', 'organism'],
+      ['Project', 'project'],
+      ['Reference Genome', 'reference_genome'],
+      ['Sample Prep Kit', 'sample_prep_kit'],
+      ['Status', 'status'],
+      ['Submission Date', 'submission_date'],
+      ['Submitter', 'submitter'],
     ]
 
     NamingScheme.find(:all, :order => "name ASC").each do |scheme|

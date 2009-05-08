@@ -48,6 +48,10 @@ class Project < ActiveRecord::Base
     end  
   end
 
+  def self.for_lab_group(lab_group)
+    return Project.find(:all, :conditions => {:lab_group_id => lab_group.id})    
+  end
+
   def summary_hash
     return {
       :id => id,

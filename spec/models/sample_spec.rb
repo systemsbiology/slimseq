@@ -706,7 +706,8 @@ describe Sample do
     age = create_naming_element(:naming_scheme => scheme, :name => "Age")
     one_week = create_naming_term(:naming_element => age, :term => "One Week")
     two_weeks = create_naming_term(:naming_element => age, :term => "Two Weeks")
-    project_1 = create_project(:name => "ChIP-Seq")
+    lab_group_1 = mock_model(LabGroup, :name => "Smith Lab")
+    project_1 = create_project(:name => "ChIP-Seq", :lab_group => lab_group_1)
     project_2 = create_project(:name => "RNA-Seq")
     flow_cell = create_flow_cell
     genome = create_reference_genome
@@ -741,6 +742,7 @@ describe Sample do
       "naming_scheme_id" => scheme.id,
       "naming_term_id" => "#{one_week.id},#{bl6.id}",
       "flow_cell_id" => flow_cell.id,
+      "lab_group_id" => lab_group_1.id,
       "bob_id" => 123
     ).should == [sample_1]
   end
@@ -753,16 +755,17 @@ describe Sample do
     strain = create_naming_element(:naming_scheme => scheme, :name => "Strain")
 
     Sample.browsing_categories.should == [
-      ['Project', 'project'],
-      ['Submitter', 'submitter'],
-      ['Submission Date', 'submission_date'],
-      ['Sample Prep Kit', 'sample_prep_kit'],
-      ['Insert Size', 'insert_size'],
-      ['Reference Genome', 'reference_genome'],
-      ['Organism', 'organism'],
-      ['Status', 'status'],
-      ['Naming Scheme', 'naming_scheme'],
       ['Flow Cell', 'flow_cell'],
+      ['Insert Size', 'insert_size'],
+      ['Lab Group', 'lab_group'],
+      ['Naming Scheme', 'naming_scheme'],
+      ['Organism', 'organism'],
+      ['Project', 'project'],
+      ['Reference Genome', 'reference_genome'],
+      ['Sample Prep Kit', 'sample_prep_kit'],
+      ['Status', 'status'],
+      ['Submission Date', 'submission_date'],
+      ['Submitter', 'submitter'],
       ['Mouse: Strain', "naming_element-#{strain.id}"]
     ]
   end
