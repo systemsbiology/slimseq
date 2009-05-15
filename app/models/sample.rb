@@ -168,7 +168,7 @@ class Sample < ActiveRecord::Base
           "Naming Scheme"
         ]
 
-        samples = Sample.find( :all, :conditions => {:naming_scheme_id => nil},
+        samples = Sample.find( :all, :conditions => {:naming_scheme_id => 0},
           :include => [:reference_genome], :order => "samples.id ASC" )
 
         for sample in samples
