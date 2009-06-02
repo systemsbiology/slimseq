@@ -829,7 +829,8 @@ class Sample < ActiveRecord::Base
       'naming_scheme_id' => 'naming_scheme_id',
       'flow_cell_id' => 'flow_cell_lanes.flow_cell_id',
       'naming_term_id' => 'sample_terms.naming_term_id',
-      'lab_group_id' => 'projects.lab_group_id'
+      'lab_group_id' => 'projects.lab_group_id',
+      'sample_prep_kit_id' => 'samples.sample_prep_kit_id'
     }
 
     sanitized_conditions = Array.new

@@ -711,9 +711,10 @@ describe Sample do
     project_2 = create_project(:name => "RNA-Seq")
     flow_cell = create_flow_cell
     genome = create_reference_genome
+    prep_kit = create_sample_prep_kit
     sample_1 = create_sample(:project => project_1, :submission_date => '2009-05-01',
                              :insert_size => 100, :naming_scheme_id => scheme.id,
-                             :reference_genome => genome)
+                             :reference_genome => genome, :sample_prep_kit => prep_kit)
     sample_2 = create_sample(:project => project_1, :submission_date => '2009-05-02',
                              :insert_size => 150)
     sample_3 = create_sample(:project => project_1, :submission_date => '2009-05-01',
