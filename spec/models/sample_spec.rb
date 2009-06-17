@@ -430,23 +430,63 @@ describe Sample do
   end
   
   describe "turning the alignment start and stop into a USE_BASES string for Gerald" do
-    it "should return 'all' if the alignment start and stop span the full desired read" do
-      @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 1,
-                  :alignment_end_position => 36)
-      @sample.use_bases_string.should == "all"
+
+    describe "with last base skipping turned off" do
+
+      it "should return 'all' if the alignment start and stop span the full desired read" do
+        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 1,
+                    :alignment_end_position => 36)
+        @sample.use_bases_string(false).should == "Y36"
+      end
+      
+      it "should return 'Y25n11' for the first 25 of 36 bases of the desired read length" do
+        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 1,
+                    :alignment_end_position => 25)
+        @sample.use_bases_string(false).should == "Y25n11"
+      end
+      
+      it "should return 'n2Y34' for the last 34 of 36 bases of the desired read length" do
+        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 3,
+                    :alignment_end_position => 36)
+        @sample.use_bases_string(false).should == "n2Y34"
+      end
+
+      it "should return 'n4Y15n17' for the 5th through 19th bases of a 36 base read" do
+        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 5,
+                    :alignment_end_position => 19)
+        @sample.use_bases_string(false).should == "n4Y15n17"
+      end
+
     end
-    
-    it "should return 'Y25n11' for the first 25 of 36 bases of the desired read length" do
-      @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 1,
-                  :alignment_end_position => 25)
-      @sample.use_bases_string.should == "Y25n11"
+
+    describe "with last base skipping turned on" do
+
+      it "should return 'all' if the alignment start and stop span the full desired read" do
+        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 1,
+                    :alignment_end_position => 36)
+        @sample.use_bases_string(true).should == "Y35n1"
+      end
+      
+      it "should return 'Y25n11' for the first 25 of 36 bases of the desired read length" do
+        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 1,
+                    :alignment_end_position => 25)
+        @sample.use_bases_string(true).should == "Y25n11"
+      end
+      
+      it "should return 'n2Y34' for the last 34 of 36 bases of the desired read length" do
+        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 3,
+                    :alignment_end_position => 36)
+        @sample.use_bases_string(true).should == "n2Y33n1"
+      end
+
+      it "should return 'n4Y15n17' for the 5th through 19th bases of a 36 base read" do
+        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 5,
+                    :alignment_end_position => 19)
+        @sample.use_bases_string(true).should == "n4Y15n17"
+      end
+
     end
-    
-    it "should return 'n2Y34' for the last 34 of 36 bases of the desired read length" do
-      @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 3,
-                  :alignment_end_position => 36)
-      @sample.use_bases_string.should == "n2Y34"
-    end
+
   end
 
   it "should provide a hash of summary attributes" do

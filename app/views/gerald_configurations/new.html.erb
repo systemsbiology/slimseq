@@ -10,6 +10,9 @@
     <p><label>ELAND Max Matches</label><br>
     <%= g.text_field 'eland_max_matches' %></p>
     
+    <p><%= g.check_box 'skip_last_base' %>
+    Always Skip Last Base in USE_BASES?</p>
+
     <p><label>Email List</label><br>
     <%= g.text_field 'email_list' %></p>
     
@@ -52,7 +55,7 @@
           @gerald_defaults.eland_seed_length %></td>
         <td><%= text_field_tag "lanes[#{n}][eland_max_matches]",
           @gerald_defaults.eland_max_matches %></td>
-        <td><%= text_field_tag "lanes[#{n}][use_bases]", lane.samples[0].use_bases_string %></td>
+        <td><%= text_field_tag "lanes[#{n}][use_bases]", lane.samples[0].use_bases_string(@gerald_defaults.skip_last_base) %></td>
       </tr>
     <% end %>
   </table>

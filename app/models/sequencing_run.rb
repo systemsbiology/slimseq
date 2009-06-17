@@ -89,7 +89,7 @@ class SequencingRun < ActiveRecord::Base
         :eland_genome => lane.samples[0].reference_genome.fasta_path,
         :eland_seed_length => gerald_defaults.eland_seed_length,
         :eland_max_matches => gerald_defaults.eland_max_matches,
-        :use_bases => 'all'
+        :use_bases => gerald_defaults.skip_last_base ? "Y#{lane.samples[0].desired_read_length - 1}n" : 'all'
       }
       lane_counter += 1
     end

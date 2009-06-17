@@ -145,5 +145,6 @@ module FixtureReplacement
     gd.email_server = "localhost"
     gd.email_domain = "localhost"
     gd.header = "ANALYSIS eland_extended\nSEQUENCE_FORMAT --fasta\nELAND_MULTIPLE_INSTANCES 8"
+    gd.skip_last_base = false
   end
 end

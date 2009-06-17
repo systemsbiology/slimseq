@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090402200022) do
+ActiveRecord::Schema.define(:version => 20090612204501) do
 
   create_table "charge_periods", :force => true do |t|
     t.string   "name"
@@ -95,6 +95,7 @@ ActiveRecord::Schema.define(:version => 20090402200022) do
     t.integer "eland_seed_length", :default => 25
     t.integer "eland_max_matches", :default => 15
     t.string  "header",            :default => "ANALYSIS eland_extended"
+    t.boolean "skip_last_base",    :default => false
   end
 
   create_table "instruments", :force => true do |t|
@@ -247,10 +248,6 @@ ActiveRecord::Schema.define(:version => 20090402200022) do
     t.string   "comment"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "schema_info", :id => false, :force => true do |t|
-    t.integer "version"
   end
 
   create_table "sequencing_runs", :force => true do |t|

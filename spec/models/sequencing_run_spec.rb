@@ -133,7 +133,7 @@ describe SequencingRun do
     f.readline.should == "2:USE_BASES Y*n\n"
   end
   
-  it "should provide default gerald params" do
+  it "should provide default gerald params with last base skipping turned off" do
     @gerald_defaults = create_gerald_defaults
     @instrument = create_instrument(:serial_number => "HWI-EAS124")
     @flow_cell = create_flow_cell(:name => "456DEF")
@@ -162,4 +162,35 @@ describe SequencingRun do
     
     @sequencing_run.default_gerald_params.should == expected_params
   end
+
+  it "should provide default gerald params with last base skipping turned on" do
+    @gerald_defaults = create_gerald_defaults(:skip_last_base => true)
+    @instrument = create_instrument(:serial_number => "HWI-EAS124")
+    @flow_cell = create_flow_cell(:name => "456DEF")
+    @flow_cell_lane = create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 1)
+    @flow_cell_lane = create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 2)
+    @flow_cell.reload
+    @sequencing_run = create_sequencing_run(:date => "2008-10-10", :instrument => @instrument,
+      :flow_cell => @flow_cell)
+    
+    expected_params = {
+      "0" => {
+        :lane_number => 1,
+        :eland_genome => "/path/to/fasta",
+        :eland_seed_length => @gerald_defaults.eland_seed_length,
+        :eland_max_matches => @gerald_defaults.eland_max_matches,
+        :use_bases => "Y35n"
+      },
+      "1" => {
+        :lane_number => 2,
+        :eland_genome => "/path/to/fasta",
+        :eland_seed_length => @gerald_defaults.eland_seed_length,
+        :eland_max_matches => @gerald_defaults.eland_max_matches,
+        :use_bases => "Y35n"
+      }
+    }
+    
+    @sequencing_run.default_gerald_params.should == expected_params
+  end
+
 end
