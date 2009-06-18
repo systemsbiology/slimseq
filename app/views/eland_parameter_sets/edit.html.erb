@@ -1,0 +1,20 @@
+<h1>Editing ELAND Parameter Set</h1>
+
+<% form_for(@eland_parameter_set) do |f| %>
+  <%= f.error_messages %>
+
+  <p><label>Name</label><br>
+  <%= f.text_field 'name' %></p>
+
+  <p><label>ELAND Seed Length</label><br>
+  <%= f.text_field 'eland_seed_length' %></p>
+
+  <p><label>ELAND Max Matches</label><br>
+  <%= f.text_field 'eland_max_matches' %></p>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', eland_parameter_sets_path %>

@@ -89,6 +89,7 @@ describe SequencingRun do
   end
   
   it "should write a config file" do
+    GeraldDefaults.destroy_all
     @gerald_defaults = create_gerald_defaults
     @instrument = create_instrument(:serial_number => "HWI-EAS124", :web_root => "http://pipeline1/")
     @flow_cell = create_flow_cell(:name => "456DEF")
@@ -134,6 +135,7 @@ describe SequencingRun do
   end
   
   it "should provide default gerald params with last base skipping turned off" do
+    GeraldDefaults.destroy_all
     @gerald_defaults = create_gerald_defaults
     @instrument = create_instrument(:serial_number => "HWI-EAS124")
     @flow_cell = create_flow_cell(:name => "456DEF")
@@ -164,6 +166,7 @@ describe SequencingRun do
   end
 
   it "should provide default gerald params with last base skipping turned on" do
+    GeraldDefaults.destroy_all
     @gerald_defaults = create_gerald_defaults(:skip_last_base => true)
     @instrument = create_instrument(:serial_number => "HWI-EAS124")
     @flow_cell = create_flow_cell(:name => "456DEF")

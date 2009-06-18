@@ -147,4 +147,10 @@ module FixtureReplacement
     gd.header = "ANALYSIS eland_extended\nSEQUENCE_FORMAT --fasta\nELAND_MULTIPLE_INSTANCES 8"
     gd.skip_last_base = false
   end
+
+  attributes_for :eland_parameter_set do |s|
+    s.name = String.random
+    s.eland_seed_length = 25
+    s.eland_max_matches = 5
+  end
 end

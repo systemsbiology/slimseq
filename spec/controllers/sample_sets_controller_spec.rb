@@ -103,6 +103,7 @@ describe SampleSetsController do
           @sample_set.stub!(:desired_read_length).and_return(18)
           @sample_set.stub!(:alignment_start_position).and_return(1)
           @sample_set.stub!(:alignment_end_position).and_return(17)
+          @sample_set.stub!(:eland_parameter_set_id).and_return(12)
           @sample_set.stub!(:insert_size).and_return(150)
           @sample = mock_model(Sample)
           @sample.stub!(:populate_default_visibilities_and_texts)

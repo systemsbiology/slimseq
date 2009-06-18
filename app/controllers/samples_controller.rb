@@ -185,6 +185,7 @@ private
     @naming_schemes = NamingScheme.find(:all, :order => "name ASC")
     @sample_prep_kits = SamplePrepKit.find(:all, :order => "name ASC")
     @reference_genomes = ReferenceGenome.find(:all, :order => "name ASC")
+    @eland_parameter_sets = ElandParameterSet.find(:all, :order => "name ASC")
   end
 
   def sorted_categories(params)

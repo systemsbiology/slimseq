@@ -810,4 +810,45 @@ describe Sample do
       ['Mouse: Strain', "naming_element-#{strain.id}"]
     ]
   end
+
+  describe "providing eland seed length" do
+    
+    before(:each) do
+      GeraldDefaults.destroy_all
+      create_gerald_defaults(:eland_seed_length => 25, :eland_max_matches => 5)
+      @eland_parameter_set = create_eland_parameter_set(:name => "mouse", :eland_seed_length => 20, :eland_max_matches => 10)
+    end
+    
+    it "should provide the seed length from the sample's eland parameter set if one is specified" do
+      sample = create_sample(:eland_parameter_set_id => @eland_parameter_set.id)
+      sample.eland_seed_length.should == 20
+    end
+
+    it "should provide the application-wide gerald default seed length if no sample eland parameter set exists" do
+      sample = create_sample
+      sample.eland_seed_length.should == 25
+    end
+
+  end
+
+  describe "providing eland max matches" do
+    
+    before(:each) do
+      GeraldDefaults.destroy_all
+      create_gerald_defaults(:eland_seed_length => 25, :eland_max_matches => 5)
+      @eland_parameter_set = create_eland_parameter_set(:name => "mouse", :eland_seed_length => 20, :eland_max_matches => 10)
+    end
+    
+    it "should provide the max matches from the sample's eland parameter set if one is specified" do
+      sample = create_sample(:eland_parameter_set_id => @eland_parameter_set.id)
+      sample.eland_max_matches.should == 10
+    end
+
+    it "should provide the application-wide gerald default max matches if no sample eland parameter set exists" do
+      sample = create_sample
+      sample.eland_max_matches.should == 5
+    end
+
+  end
+
 end

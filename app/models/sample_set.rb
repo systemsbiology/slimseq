@@ -10,6 +10,7 @@ class SampleSet < ActiveRecord::BaseWithoutTable
   column :insert_size, :integer
   column :alignment_start_position, :integer, :default => 1
   column :alignment_end_position, :integer
+  column :eland_parameter_set_id, :integer
 
   validates_numericality_of :number_of_samples, :greater_than_or_equal_to => 1
   validates_numericality_of :insert_size

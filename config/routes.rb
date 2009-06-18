@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :eland_parameter_sets
+
   # backward compatibility with bookmarked login page
   map.connect 'session/new', :controller => "welcome", :action => "home"
 

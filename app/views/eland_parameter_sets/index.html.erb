@@ -1,0 +1,27 @@
+<h1>Listing ELAND Parameter Sets</h1>
+
+<p><%= link_to 'New ELAND Parameter Set', new_eland_parameter_set_path %></p>
+
+<table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
+  <thead>
+    <tr>
+      <th><h3>Name</h3></th>
+      <th><h3>ELAND Seed Length</h3></th>
+      <th><h3>ELAND Max Matches</h3></th>
+      <th><h3 class="nosort">Edit</h3></th>
+      <th><h3 class="nosort">Destroy</h3></th>
+    </tr>
+  </thead>
+
+<% for eland_parameter_set in @eland_parameter_sets %>
+  <tr>
+    <td><%=h eland_parameter_set.name %></td>
+    <td><%=h eland_parameter_set.eland_seed_length %></td>
+    <td><%=h eland_parameter_set.eland_max_matches %></td>
+    <td><%= link_to 'Edit', edit_eland_parameter_set_path(eland_parameter_set) %></td>
+    <td><%= link_to 'Destroy', eland_parameter_set, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= render :partial => 'shared/tinytable', :locals => {:sort_column => 0} %>

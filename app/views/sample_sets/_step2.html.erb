@@ -7,6 +7,7 @@
   <%= hidden_field 'sample_set', 'desired_read_length' %>
   <%= hidden_field 'sample_set', 'alignment_start_position' %> 
   <%= hidden_field 'sample_set', 'alignment_end_position' %>
+  <%= hidden_field 'sample_set', 'eland_parameter_set_id' %>
   <%= hidden_field 'sample_set', 'insert_size' %>
   <%= hidden_field 'sample_set', 'naming_scheme_id' %>
   <%= hidden_field 'sample_set', 'budget_number' %>
@@ -67,6 +68,7 @@
           <%= hidden_field :sample, :project_id, :index =>@n %>
           <%= hidden_field :sample, :naming_scheme_id, :index =>@n %>
           <%= hidden_field :sample, :submitted_by_id, :index =>@n %>
+          <%= hidden_field :sample, :eland_parameter_set_id, :index =>@n %></td>
       </tr>
     <% end %>
   </table>

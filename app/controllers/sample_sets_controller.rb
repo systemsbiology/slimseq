@@ -22,6 +22,7 @@ class SampleSetsController < ApplicationController
             :desired_read_length => @sample_set.desired_read_length,
             :alignment_start_position => @sample_set.alignment_start_position,
             :alignment_end_position => @sample_set.alignment_end_position,
+            :eland_parameter_set_id => @sample_set.eland_parameter_set_id,
             :insert_size => @sample_set.insert_size,
             :budget_number => @sample_set.budget_number,
             :submitted_by_id => current_user.id,
@@ -76,5 +77,6 @@ private
     @naming_schemes = NamingScheme.find(:all, :order => "name ASC")
     @sample_prep_kits = SamplePrepKit.find(:all, :order => "name ASC")
     @reference_genomes = ReferenceGenome.find(:all, :order => "name ASC")
+    @eland_parameter_sets = ElandParameterSet.find(:all, :order => "name ASC")
   end
 end

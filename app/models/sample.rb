@@ -10,6 +10,7 @@ class Sample < ActiveRecord::Base
   belongs_to :sample_prep_kit
   belongs_to :reference_genome
   belongs_to :project
+  belongs_to :eland_parameter_set
   has_and_belongs_to_many :flow_cell_lanes
   
   has_many :sample_terms, :dependent => :destroy
@@ -892,6 +893,24 @@ class Sample < ActiveRecord::Base
     return categories
   end
 
+  def eland_seed_length
+    if(eland_parameter_set)
+      return eland_parameter_set.eland_seed_length
+    else
+      gerald_defaults = GeraldDefaults.find(:first)
+      return gerald_defaults.eland_seed_length
+    end
+  end
+
+  def eland_max_matches
+    if(eland_parameter_set)
+      return eland_parameter_set.eland_max_matches
+    else
+      gerald_defaults = GeraldDefaults.find(:first)
+      return gerald_defaults.eland_max_matches
+    end
+  end
+
 private
 
   def add_comment(base, comment, type)
@@ -940,4 +959,5 @@ private
 
     return compressed
   end
+
 end

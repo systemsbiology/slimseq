@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090612204501) do
+ActiveRecord::Schema.define(:version => 20090617205418) do
 
   create_table "charge_periods", :force => true do |t|
     t.string   "name"
@@ -54,6 +54,12 @@ ActiveRecord::Schema.define(:version => 20090612204501) do
   end
 
   add_index "charges", ["charge_set_id"], :name => "charge_set_id"
+
+  create_table "eland_parameter_sets", :force => true do |t|
+    t.string  "name"
+    t.integer "eland_seed_length"
+    t.integer "eland_max_matches"
+  end
 
   create_table "flow_cell_lanes", :force => true do |t|
     t.integer  "flow_cell_id"
@@ -248,6 +254,7 @@ ActiveRecord::Schema.define(:version => 20090612204501) do
     t.string   "comment"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "eland_parameter_set_id"
   end
 
   create_table "sequencing_runs", :force => true do |t|

@@ -44,17 +44,18 @@
       <th>Use Bases</th>
     </tr>
     <% for n in 0..@flow_cell_lanes.size-1 %>
-      <% lane = @flow_cell_lanes[n] %>
+      <% lane = @flow_cell_lanes[n] 
+         first_sample = lane.samples[0] %>
       <tr>
         <td><%=h lane.lane_number %>
             <%= hidden_field_tag "lanes[#{n}][lane_number]", lane.lane_number %></td>
-        <td><%=h lane.samples[0].short_and_long_name %></td>
+        <td><%=h first_sample.short_and_long_name %></td>
         <td><%= text_field_tag "lanes[#{n}][eland_genome]",
-          lane.samples[0].reference_genome.fasta_path, :size => 50 %></td>
+          first_sample.reference_genome.fasta_path, :size => 50 %></td>
         <td><%= text_field_tag "lanes[#{n}][eland_seed_length]", 
-          @gerald_defaults.eland_seed_length %></td>
+          first_sample.eland_seed_length %></td>
         <td><%= text_field_tag "lanes[#{n}][eland_max_matches]",
-          @gerald_defaults.eland_max_matches %></td>
+          first_sample.eland_max_matches %></td>
         <td><%= text_field_tag "lanes[#{n}][use_bases]", lane.samples[0].use_bases_string(@gerald_defaults.skip_last_base) %></td>
       </tr>
     <% end %>
