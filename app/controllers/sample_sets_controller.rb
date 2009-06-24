@@ -1,5 +1,6 @@
 class SampleSetsController < ApplicationController
-  before_filter :load_dropdown_selections, :login_required
+  before_filter :login_required
+  before_filter :load_dropdown_selections
   
   def new
     if(params[:step] == "2")
