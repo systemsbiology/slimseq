@@ -1,4 +1,5 @@
 class ChargesController < ApplicationController
+  before_filter :login_required
 
   def list_within_charge_set
     # if a charge set id was passed in, use it.

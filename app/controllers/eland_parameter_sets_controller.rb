@@ -1,4 +1,7 @@
 class ElandParameterSetsController < ApplicationController
+  before_filter :login_required
+  before_filter :staff_or_admin_required
+
   # GET /eland_parameter_sets
   # GET /eland_parameter_sets.xml
   def index

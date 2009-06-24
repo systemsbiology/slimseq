@@ -1,11 +1,16 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe ElandParameterSetsController do
+  include AuthenticatedSpecHelper
 
   def mock_eland_parameter_set(stubs={})
     @mock_eland_parameter_set ||= mock_model(ElandParameterSet, stubs)
   end
   
+  before(:each) do
+    login_as_staff
+  end
+
   describe "responding to GET index" do
 
     it "should expose all eland_parameter_sets as @eland_parameter_sets" do

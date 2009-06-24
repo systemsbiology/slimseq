@@ -8,6 +8,8 @@ An instrument can be associated with any number of flow cells, once they have be
 =end
 
 class InstrumentsController < ApplicationController
+  before_filter :login_required
+  before_filter :staff_or_admin_required
 
 =begin rapidoc
 url:: /instruments

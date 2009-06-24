@@ -1,11 +1,16 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe InstrumentsController do
+  include AuthenticatedSpecHelper
 
   def mock_instrument(stubs={})
     @mock_instrument ||= mock_model(Instrument, stubs)
   end
   
+  before(:each) do
+    login_as_staff
+  end
+
   describe "responding to GET index" do
 
     before(:each) do
