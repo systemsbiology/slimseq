@@ -12,19 +12,21 @@ describe ReferenceGenomesController do
     end
   
     it "should map { :controller => 'reference_genomes', :action => 'show', :id => 1 } to /reference_genomes/1" do
-      route_for(:controller => "reference_genomes", :action => "show", :id => 1).should == "/reference_genomes/1"
+      route_for(:controller => "reference_genomes", :action => "show", :id => "1").should == "/reference_genomes/1"
     end
   
     it "should map { :controller => 'reference_genomes', :action => 'edit', :id => 1 } to /reference_genomes/1/edit" do
-      route_for(:controller => "reference_genomes", :action => "edit", :id => 1).should == "/reference_genomes/1/edit"
+      route_for(:controller => "reference_genomes", :action => "edit", :id => "1").should == "/reference_genomes/1/edit"
     end
   
     it "should map { :controller => 'reference_genomes', :action => 'update', :id => 1} to /reference_genomes/1" do
-      route_for(:controller => "reference_genomes", :action => "update", :id => 1).should == "/reference_genomes/1"
+      route_for(:controller => "reference_genomes", :action => "update", :id => "1").
+        should == {:path => "/reference_genomes/1", :method => :put}
     end
   
     it "should map { :controller => 'reference_genomes', :action => 'destroy', :id => 1} to /reference_genomes/1" do
-      route_for(:controller => "reference_genomes", :action => "destroy", :id => 1).should == "/reference_genomes/1"
+      route_for(:controller => "reference_genomes", :action => "destroy", :id => "1").
+        should == {:path => "/reference_genomes/1", :method => :delete}
     end
   end
 

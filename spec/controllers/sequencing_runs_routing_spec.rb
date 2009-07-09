@@ -11,23 +11,25 @@ describe SequencingRunsController do
     end
   
     it "should map #show" do
-      route_for(:controller => "sequencing_runs", :action => "show", :id => 1).should == "/sequencing_runs/1"
+      route_for(:controller => "sequencing_runs", :action => "show", :id => "1").should == "/sequencing_runs/1"
     end
   
     it "should map #edit" do
-      route_for(:controller => "sequencing_runs", :action => "edit", :id => 1).should == "/sequencing_runs/1/edit"
+      route_for(:controller => "sequencing_runs", :action => "edit", :id => "1").should == "/sequencing_runs/1/edit"
     end
   
     it "should map #update" do
-      route_for(:controller => "sequencing_runs", :action => "update", :id => 1).should == "/sequencing_runs/1"
+      route_for(:controller => "sequencing_runs", :action => "update", :id => "1").
+        should == {:path => "/sequencing_runs/1", :method => :put}
     end
   
     it "should map #destroy" do
-      route_for(:controller => "sequencing_runs", :action => "destroy", :id => 1).should == "/sequencing_runs/1"
+      route_for(:controller => "sequencing_runs", :action => "destroy", :id => "1").
+        should == {:path => "/sequencing_runs/1", :method => :delete}
     end
 
     it "should map #default_output_paths" do
-      route_for(:controller => "sequencing_runs", :action => "default_output_paths", :id => 1).should == "/sequencing_runs/default_output_paths/1"
+      route_for(:controller => "sequencing_runs", :action => "default_output_paths", :id => "1").should == "/sequencing_runs/default_output_paths/1"
     end
   end
 

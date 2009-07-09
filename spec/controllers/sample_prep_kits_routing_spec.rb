@@ -11,19 +11,21 @@ describe SamplePrepKitsController do
     end
   
     it "should map #show" do
-      route_for(:controller => "sample_prep_kits", :action => "show", :id => 1).should == "/sample_prep_kits/1"
+      route_for(:controller => "sample_prep_kits", :action => "show", :id => "1").should == "/sample_prep_kits/1"
     end
   
     it "should map #edit" do
-      route_for(:controller => "sample_prep_kits", :action => "edit", :id => 1).should == "/sample_prep_kits/1/edit"
+      route_for(:controller => "sample_prep_kits", :action => "edit", :id => "1").should == "/sample_prep_kits/1/edit"
     end
   
     it "should map #update" do
-      route_for(:controller => "sample_prep_kits", :action => "update", :id => 1).should == "/sample_prep_kits/1"
+      route_for(:controller => "sample_prep_kits", :action => "update", :id => "1").
+        should == {:path => "/sample_prep_kits/1", :method => :put}
     end
   
     it "should map #destroy" do
-      route_for(:controller => "sample_prep_kits", :action => "destroy", :id => 1).should == "/sample_prep_kits/1"
+      route_for(:controller => "sample_prep_kits", :action => "destroy", :id => "1").
+        should == {:path => "/sample_prep_kits/1", :method => :delete}
     end
   end
 

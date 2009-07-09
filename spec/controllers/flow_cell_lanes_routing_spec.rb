@@ -11,19 +11,21 @@ describe FlowCellLanesController do
     end
   
     it "should map #show" do
-      route_for(:controller => "flow_cell_lanes", :action => "show", :id => 1).should == "/flow_cell_lanes/1"
+      route_for(:controller => "flow_cell_lanes", :action => "show", :id => "1").should == "/flow_cell_lanes/1"
     end
   
     it "should map #edit" do
-      route_for(:controller => "flow_cell_lanes", :action => "edit", :id => 1).should == "/flow_cell_lanes/1/edit"
+      route_for(:controller => "flow_cell_lanes", :action => "edit", :id => "1").should == "/flow_cell_lanes/1/edit"
     end
   
     it "should map #update" do
-      route_for(:controller => "flow_cell_lanes", :action => "update", :id => 1).should == "/flow_cell_lanes/1"
+      route_for(:controller => "flow_cell_lanes", :action => "update", :id => "1").
+        should == {:path => "/flow_cell_lanes/1", :method => :put}
     end
   
     it "should map #destroy" do
-      route_for(:controller => "flow_cell_lanes", :action => "destroy", :id => 1).should == "/flow_cell_lanes/1"
+      route_for(:controller => "flow_cell_lanes", :action => "destroy", :id => "1").
+        should == {:path => "/flow_cell_lanes/1", :method => :delete}
     end
   end
 

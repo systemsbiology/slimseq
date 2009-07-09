@@ -11,19 +11,21 @@ describe ElandParameterSetsController do
     end
   
     it "should map #show" do
-      route_for(:controller => "eland_parameter_sets", :action => "show", :id => 1).should == "/eland_parameter_sets/1"
+      route_for(:controller => "eland_parameter_sets", :action => "show", :id => "1").should == "/eland_parameter_sets/1"
     end
   
     it "should map #edit" do
-      route_for(:controller => "eland_parameter_sets", :action => "edit", :id => 1).should == "/eland_parameter_sets/1/edit"
+      route_for(:controller => "eland_parameter_sets", :action => "edit", :id => "1").should == "/eland_parameter_sets/1/edit"
     end
   
     it "should map #update" do
-      route_for(:controller => "eland_parameter_sets", :action => "update", :id => 1).should == "/eland_parameter_sets/1"
+      route_for(:controller => "eland_parameter_sets", :action => "update", :id => "1").
+        should == {:path => "/eland_parameter_sets/1", :method => :put}
     end
   
     it "should map #destroy" do
-      route_for(:controller => "eland_parameter_sets", :action => "destroy", :id => 1).should == "/eland_parameter_sets/1"
+      route_for(:controller => "eland_parameter_sets", :action => "destroy", :id => "1").
+        should == {:path => "/eland_parameter_sets/1", :method => :delete}
     end
   end
 
