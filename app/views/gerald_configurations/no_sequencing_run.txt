@@ -1,0 +1,4 @@
+The specified sequencing run couldn't be found. This can happen for a couple of reasons:
+
+* The date, instrument or flow cell name doesn't match what's been entered in SLIMseq
+* The sequencing run hasn't been entered in SLIMseq yet

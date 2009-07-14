@@ -18,10 +18,14 @@ class GeraldConfigurationsController < ApplicationController
   end
 
   def default
-    lane_params = @sequencing_run.default_gerald_params
-    @sequencing_run.write_config_file(lane_params)
-    
-    render :file => "tmp/txt/#{@sequencing_run.run_name}-config.txt"
+    if(@sequencing_run)
+      lane_params = @sequencing_run.default_gerald_params
+      @sequencing_run.write_config_file(lane_params)
+      
+      render :file => "tmp/txt/#{@sequencing_run.run_name}-config.txt"
+    else
+      render :file => "app/views/gerald_configurations/no_sequencing_run.txt"
+    end
   end
   
 private
@@ -33,9 +37,6 @@ private
     # otherwise search by name if available
     elsif(params[:sequencing_run_name] != nil)
       @sequencing_run = SequencingRun.find_by_run_name(params[:sequencing_run_name])
-    # otherwise, complain
-    else
-      raise "No sequencing run identifier provided"
     end    
   end
 end

@@ -110,42 +110,64 @@ describe GeraldConfigurationsController do
   end    
   
   describe "GET 'default'" do
-    before(:each) do
-      @sequencing_run = mock_model(SequencingRun)
-      SequencingRun.stub!(:find).and_return(@sequencing_run)
-      @sequencing_run.stub!(:run_name).and_return("ASDF_WERT_RTYU")
-      @sequencing_run.stub!(:default_gerald_params).and_return(@lanes_hash)
-      @sequencing_run.stub!(:write_config_file)
+
+    describe "with a valid sequencing run identifier" do
+
+      before(:each) do
+        @sequencing_run = mock_model(SequencingRun)
+        SequencingRun.stub!(:find).and_return(@sequencing_run)
+        @sequencing_run.stub!(:run_name).and_return("ASDF_WERT_RTYU")
+        @sequencing_run.stub!(:default_gerald_params).and_return(@lanes_hash)
+        @sequencing_run.stub!(:write_config_file)
+      end
+
+      def do_get
+        get :default, :sequencing_run_id => 42
+      end
+
+      it "should find the sequencing run" do
+        SequencingRun.should_receive(:find).and_return(@sequencing_run)
+        do_get
+      end
+
+      it "should get the default gerald params" do
+        @sequencing_run.should_receive(:default_gerald_params).and_return(@lanes_hash)
+        do_get
+      end
+
+      it "should write the config file" do
+        @sequencing_run.should_receive(:write_config_file)
+        do_get
+      end
+
+      it "should be successful" do
+        do_get
+        response.should be_success
+      end
+
+      it "should render the file" do
+        do_get
+        response.should render_template("tmp/txt/ASDF_WERT_RTYU-config.txt")
+      end
+      
     end
 
-    def do_get
-      get :default, :sequencing_run_id => 42
+    describe "without a valid sequencing run identifier" do
+
+      before(:each) do
+        SequencingRun.should_receive(:find).and_return(nil)
+      end
+
+      def do_get
+        get :default, :sequencing_run_id => 42
+      end
+
+      it "should render an error text file" do
+        do_get
+        response.should render_template("app/views/gerald_configurations/no_sequencing_run.txt")
+      end
+
     end
 
-    it "should find the sequencing run" do
-      SequencingRun.should_receive(:find).and_return(@sequencing_run)
-      do_get
-    end
-
-    it "should get the default gerald params" do
-      @sequencing_run.should_receive(:default_gerald_params).and_return(@lanes_hash)
-      do_get
-    end
-
-    it "should write the config file" do
-      @sequencing_run.should_receive(:write_config_file)
-      do_get
-    end
-
-    it "should be successful" do
-      do_get
-      response.should be_success
-    end
-
-#    it "should render the file" do
-#      do_get
-#      response.should_receive(:render).
-#        with(:file => "tmp/txt/081010_HWI-EAS124_FC456DEF-config.txt")
-#    end
   end
 end
