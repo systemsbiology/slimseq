@@ -94,6 +94,9 @@ describe SampleSetsController do
       
       describe "with valid sample set data" do
         before(:each) do
+          @lab_group_profile = mock_model(LabGroupProfile, :samples_need_approval => true)
+          @lab_group = mock_model(LabGroup, :lab_group_profile => @lab_group_profile) 
+          @project = mock_model(Project, :lab_group => @lab_group)
           @sample_set.stub!(:valid?).and_return(true)
           @sample_set.stub!(:submission_date).and_return('2008-02-01')
           @sample_set.stub!(:project_id).and_return(1)
@@ -105,6 +108,7 @@ describe SampleSetsController do
           @sample_set.stub!(:alignment_end_position).and_return(17)
           @sample_set.stub!(:eland_parameter_set_id).and_return(12)
           @sample_set.stub!(:insert_size).and_return(150)
+          @sample_set.stub!(:project).and_return(@project)
           @sample = mock_model(Sample)
           @sample.stub!(:populate_default_visibilities_and_texts)
           Sample.stub!(:new).and_return( @sample )
@@ -124,6 +128,11 @@ describe SampleSetsController do
           it "should check the validity of the sample set" do
             @sample_set.should_receive(:valid?).and_return(true)
             do_get
+          end
+
+          it "should assign whether samples need approval to the view" do
+            do_get
+            assigns[:samples_need_approval].should == true
           end
 
           it "should be successful" do
@@ -194,7 +203,9 @@ describe SampleSetsController do
   
   describe "handling POST /sample_sets" do
     before(:each) do
-      @sample_set = mock_model(SampleSet, :to_param => "1")
+      @lab_group = mock_model(LabGroup)
+      @project = mock_model(Project, :lab_group => @lab_group)
+      @sample_set = mock_model(SampleSet, :to_param => "1", :project => @project)
       SampleSet.stub!(:new).and_return(@sample_set)
       @sample = mock_model(Sample)
       Sample.stub!(:new).and_return(@sample)
@@ -247,7 +258,8 @@ describe SampleSetsController do
       end
       
       it "should send email notifications" do
-        Notifier.should_receive(:deliver_sample_submission_notification)
+        Notifier.should_receive(:deliver_sample_submission_notification).
+          with([@sample], @lab_group)
         do_post
       end
     end

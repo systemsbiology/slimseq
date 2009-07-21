@@ -6,8 +6,6 @@ class UserProfile < ActiveRecord::Base
   class << self; attr_accessor :index_columns end
   @index_columns = ['role']
 
-  named_scope :notify_of_new_samples,
-    :conditions => {:new_sample_notification => true}
   named_scope :notify_of_new_sequencing_runs,
     :conditions => {:new_sequencing_run_notification => true}
 
@@ -21,6 +19,15 @@ class UserProfile < ActiveRecord::Base
   def detail_hash
     return {}
   end
+  
+  def self.notify_of_new_samples(lab_group)
+    new_sample_profiles = UserProfile.find(:all, :conditions => {:new_sample_notification => true})
+    lab_group_user_profiles = lab_group.users.collect{|x| x.user_profile}
+    lab_group_user_profiles += UserProfile.find(:all, :conditions => "role = 'staff' OR role = 'admin'")
+
+    
+    return new_sample_profiles & lab_group_user_profiles
+  end
 
   ####################################################
   # Authorization
@@ -32,5 +39,9 @@ class UserProfile < ActiveRecord::Base
  
   def admin?
     role == "admin"
+  end
+
+  def manager?
+    role == "manager"
   end
 end

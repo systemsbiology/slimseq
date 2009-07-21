@@ -11,7 +11,7 @@ SLIMseq does not yet support this ability.
 
 class SamplesController < ApplicationController
   before_filter :login_required
-  before_filter :load_dropdown_selections, :only => [:edit, :update]
+  before_filter :load_dropdown_selections, :only => :edit
   
 =begin rapidoc
 url:: /samples
@@ -94,7 +94,10 @@ Get detailed information about a single sample.
         format.xml  { head :ok }
         format.json  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html {
+          load_dropdown_selections
+          render :action => "edit"
+        }
         format.xml  { render :xml => @sample.errors, :status => :unprocessable_entity }
         format.json  { render :json => @sample.errors, :status => :unprocessable_entity }
       end

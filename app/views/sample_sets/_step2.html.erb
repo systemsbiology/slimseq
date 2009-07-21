@@ -18,12 +18,15 @@
       <th>Date</th>
       <th>Name on the sample tube</th>
       <% if @sample_set.naming_scheme_id == nil %>
-          <th>Sample Description</th>
-        <% else %>
-          <% for element in @naming_elements %>
-            <th><%=h element.name %></th>
-          <% end %>
+        <th>Sample Description</th>
+      <% else %>
+        <% for element in @naming_elements %>
+          <th><%=h element.name %></th>
         <% end %>
+      <% end %>
+      <% unless @samples_need_approval %>
+        <th>Ready For Sequencing</th>
+      <% end %>
       <th>Sample Comment</th>
       <th>Sample Prep Kit</th>
       <th>Reference Genome</th>
@@ -49,6 +52,12 @@
             <%= render :partial => 'samples/schemed_sample_description' %>
           <% end %>
           
+          <% if @samples_need_approval %>
+            <%= hidden_field :sample, :ready_for_sequencing, :index => @n, :value => 0 %>
+          <% else %>
+            <td><%= check_box :sample, :ready_for_sequencing, :index => @n %></td>
+          <% end %>
+
           <td><%= text_field :sample, :comment, :index =>@n %></td>
           
           <td><%=h @sample.sample_prep_kit.name %>

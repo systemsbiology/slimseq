@@ -143,8 +143,8 @@ private
 
   def load_dropdown_selections_only_submitted
     @samples = Sample.find_all_by_control(true, :order => "name_on_tube ASC")
-    @samples += Sample.find_all_by_control_and_status(false, 'submitted',
-      :order => "name_on_tube ASC")
+    @samples += Sample.find_all_by_control_and_status_and_ready_for_sequencing(false, 'submitted',
+      true, :order => "name_on_tube ASC")
   end
   
   def load_dropdown_selections_all

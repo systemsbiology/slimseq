@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090617205418) do
+ActiveRecord::Schema.define(:version => 20090709221527) do
 
   create_table "charge_periods", :force => true do |t|
     t.string   "name"
@@ -117,9 +117,10 @@ ActiveRecord::Schema.define(:version => 20090617205418) do
 
   create_table "lab_group_profiles", :force => true do |t|
     t.integer  "lab_group_id"
-    t.string   "file_folder",  :default => ""
+    t.string   "file_folder",           :default => ""
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "samples_need_approval", :default => false, :null => false
   end
 
   create_table "lab_groups", :force => true do |t|
@@ -255,6 +256,11 @@ ActiveRecord::Schema.define(:version => 20090617205418) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "eland_parameter_set_id"
+    t.boolean  "ready_for_sequencing",     :default => true,        :null => false
+  end
+
+  create_table "schema_info", :id => false, :force => true do |t|
+    t.integer "version"
   end
 
   create_table "sequencing_runs", :force => true do |t|

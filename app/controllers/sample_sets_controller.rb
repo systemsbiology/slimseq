@@ -7,6 +7,8 @@ class SampleSetsController < ApplicationController
       @sample_set = SampleSet.new(params[:sample_set])
 
       if(@sample_set.valid?)
+        @samples_need_approval = @sample_set.project.lab_group.lab_group_profile.samples_need_approval
+
         @naming_scheme = @sample_set.naming_scheme
         if(@naming_scheme != nil)
           @naming_elements = @naming_scheme.ordered_naming_elements
@@ -53,7 +55,7 @@ class SampleSetsController < ApplicationController
       end
       
       # send notification email
-      Notifier.deliver_sample_submission_notification(@samples)
+      Notifier.deliver_sample_submission_notification(@samples, @sample_set.project.lab_group)
       
       flash[:notice] = 'Samples were successfully created.'
       redirect_to(samples_url)

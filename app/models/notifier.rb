@@ -1,7 +1,7 @@
 class Notifier < ActionMailer::Base
 
-  def sample_submission_notification(samples)
-    recipients UserProfile.notify_of_new_samples.collect{|x| x.user.email}.join(",")
+  def sample_submission_notification(samples, lab_group)
+    recipients UserProfile.notify_of_new_samples(lab_group).collect{|x| x.user.email}.join(",")
     from       %("SLIMseq" <slimseq@#{`hostname`.strip}>)
     subject    "[SLIMseq] Samples recorded"
     body       :samples => samples

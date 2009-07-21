@@ -33,4 +33,8 @@ class SampleSet < ActiveRecord::BaseWithoutTable
     
     return sample_set
   end
+
+  def project
+    return Project.find(project_id)
+  end
 end

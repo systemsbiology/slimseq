@@ -46,4 +46,21 @@ describe UserProfile do
 
     user_profile.detail_hash.should == {}
   end
+
+  it "should provide a list of user profiles that have new sample notification turned on" do
+    user_profile_1 = create_user_profile(:new_sample_notification => true)
+    user_profile_2 = create_user_profile(:new_sample_notification => true)
+    user_profile_3 = create_user_profile(:new_sample_notification => false)
+    user_profile_4 = create_user_profile(:new_sample_notification => true, :role => "staff")
+        
+    user_1 = mock_model(User, :user_profile => user_profile_1)
+    user_2 = mock_model(User, :user_profile => user_profile_2)
+    user_3 = mock_model(User, :user_profile => user_profile_3)
+    user_4 = mock_model(User, :user_profile => user_profile_4)
+
+
+    lab_group = mock_model(LabGroup, :users => [user_2,user_3])
+
+    UserProfile.notify_of_new_samples(lab_group).should == [user_profile_2, user_profile_4]
+  end
 end
