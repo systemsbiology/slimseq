@@ -24,6 +24,7 @@ class UserProfile < ActiveRecord::Base
     new_sample_profiles = UserProfile.find(:all, :conditions => {:new_sample_notification => true})
     lab_group_user_profiles = lab_group.users.collect{|x| x.user_profile}
     lab_group_user_profiles += UserProfile.find(:all, :conditions => "role = 'staff' OR role = 'admin'")
+    lab_group_user_profiles.uniq!
 
     
     return new_sample_profiles & lab_group_user_profiles
