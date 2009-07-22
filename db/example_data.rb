@@ -153,4 +153,9 @@ module FixtureReplacement
     s.eland_seed_length = 25
     s.eland_max_matches = 5
   end
+
+  attributes_for :lab_group_profile do |p|
+    p.file_folder = String.random
+    p.lab_group_id = 1
+  end
 end

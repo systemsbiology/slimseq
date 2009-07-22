@@ -7,3 +7,4 @@ first:
   site_name: Test Site
   administrator_email: admin@example.com
   site_url: http://example.com
+  raw_data_root_path: /solexa

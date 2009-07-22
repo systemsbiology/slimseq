@@ -116,8 +116,7 @@ class FlowCellLane < ActiveRecord::Base
   def default_result_path
     lab_group_profile = LabGroupProfile.find_by_lab_group_id(samples[0].project.lab_group_id)
     "#{SiteConfig.raw_data_root_path}/#{lab_group_profile.file_folder}/" +
-    "#{samples[0].project.file_folder}/#{flow_cell.sequencing_runs.best[0].date_yymmdd}_" +
-    "#{flow_cell.sequencing_runs.best[0].instrument.serial_number}_#{flow_cell.name}"
+    "#{samples[0].project.file_folder}/#{flow_cell.sequencing_runs.best[0].run_name}"
   end
   
 private

@@ -197,4 +197,18 @@ describe FlowCellLane do
       lane.raw_data_path = "/path/to/data"
     end
   end
+
+  it "should provide the default result path" do
+    lab_group = mock_model(LabGroup)
+    lab_group_profile = create_lab_group_profile(:file_folder => "genetics", :lab_group_id => lab_group.id)
+    project = create_project(:lab_group_id => lab_group.id, :file_folder => "mouse")
+    sample = create_sample(:project => project)
+    flow_cell = create_flow_cell(:name => "2233AAXX")
+    lane = create_flow_cell_lane(:flow_cell => flow_cell, :samples => [sample])
+    instrument = create_instrument(:serial_number => "HWI-EAS123")
+    sequencing_run = create_sequencing_run(:flow_cell => flow_cell, :instrument => instrument)
+
+    lane.default_result_path.should == "/solexa/genetics/mouse/090722_HWI-EAS123_FC2233AAXX"
+  end
+
 end
