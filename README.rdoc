@@ -34,6 +34,8 @@ Only do one of the following:
     # standalone install: script/plugin install git://github.com/bmarzolf/slimsolo_authorizer.git
     # shared infrastrucure: script/plugin install git://github.com/bmarzolf/slimcore_authorizer.git
 
+Then load the seed data and start the server:
+
     rake db:load
     script/server
 
