@@ -67,6 +67,7 @@ Rails::Initializer.run do |config|
   config.gem "rest-client", :lib => "rest_client"
   config.gem "hpricot"
   config.gem "nokogiri"
+  config.gem "cucumber"
 end
 
 AUTHENTICATION_SALT = 'mmm_kosher_rocks' unless defined? AUTHENTICATION_SALT
