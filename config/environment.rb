@@ -62,12 +62,12 @@ Rails::Initializer.run do |config|
   # config.active_record.default_timezone = :utc
   
   # Required gems
-  config.gem "json"
-  config.gem "parseexcel"
-  config.gem "rest-client", :lib => "rest_client"
-  config.gem "hpricot"
-  config.gem "nokogiri"
-  config.gem "cucumber"
+  config.gem "json", :version => '1.1.3'
+  config.gem "parseexcel", :version => '0.5.2'
+  config.gem "rest-client", :lib => "rest_client", :version => '0.8.2'
+  config.gem "hpricot", :version => '0.6.161'
+  config.gem "nokogiri", :version => '1.2.3'
+  config.gem "rubycas-client", :version => '2.1.0'
 end
 
 AUTHENTICATION_SALT = 'mmm_kosher_rocks' unless defined? AUTHENTICATION_SALT

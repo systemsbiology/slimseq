@@ -24,7 +24,7 @@ config.action_mailer.delivery_method = :test
 # Rspec
 config.gem "rspec", :version => "~> 1.2.7", :lib => false
 config.gem "rspec-rails", :version => "~> 1.2.7", :lib => false
+config.gem "cucumber", :version => '0.3.1'
+config.gem "ruby-debug", :version => "0.10.3"
 
 AUTHENTICATION_SALT = 'test-salt'
-
-require 'ruby-debug'
