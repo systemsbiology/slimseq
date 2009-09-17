@@ -1,8 +1,11 @@
-= Installation example with a fresh Ubuntu 8.04 machine and Apache + Passenger
+= Installation example with a fresh Ubuntu 8.04 machine and SQLite3 + Apache + Passenger
 
 Although this guide is specific for Ubuntu 8.04, it can also serve as a rough guide for the steps
 necessary using any operating system. There are also many other deployment choices, but Apache with
-Phusion Passenger (mod_rails) is a popular one.
+Phusion Passenger (mod_rails) is a popular one. SQLite3 is used here for the sake of simplicity, 
+but MySQL will probably be a better choice for a production environment, and can easily be used 
+by configuring it in the config/database.yml. SLIMcore Authorizer is the default since this is what's 
+being used at Institute for Systems Biology where SLIMseq was developed.
 
 == Prerequisites
 
@@ -29,40 +32,14 @@ installing SLIMcore and RubyCAS-server/RubyCAS-client.
     sudo ln -s /usr/bin/gem1.8 /usr/bin/gem
     sudo gem install rails -v=2.2.2
 
-== Install MySQL and bindings for Ruby
-
-Install MySQL server, client and client libraries:
-
-    sudo aptitude -y install mysql-server mysql-client libmysqlclient15-dev
-
-Choose the root password at this point. Then, install the MySQL-Ruby bindings:
-
-    sudo aptitude -y install libmysql-ruby1.8
-
-== Create the necessary databases
-
-Note that I'm doing this the quick and dirty way by using the MySQL admin user, whereas if I were
-going to deploy this in a production environment I would probably want to have a specific MySQL
-user for SLIMseq with limited access rights.
-
-    mysql -u root -p
-
-At the mysql prompt:
-
-    CREATE DATABASE slimseq_production;
-    CREATE DATABASE slimseq_development;
-    CREATE DATABASE slimseq_test;
-    \q
-
 == Install Git
 
     sudo aptitude -y install git-core
 
-== Install Prerequisite Gems
+== Install Prerequisites For Gems
 
     sudo aptitude -y install build-essential
     sudo aptitude -y install libxml2-dev libxslt1-dev
-    sudo gem install ruby-debug json parseexcel rest-client rspec-rails hpricot rubycas-client nokogiri
 
 == Install SLIMseq itself
 
@@ -71,36 +48,22 @@ At the mysql prompt:
     cd /apps/
     git clone git://github.com/bmarzolf/slimseq.git
     cd slimseq
-    git submodule init
-    git submodule update
 
-Edit the configuration files to reflect your installation-specific information:
+== Edit your application configuration
 
-    cp config/database.example config/database.yml
-    vim config/database.yml
-    cp config/application.yml.example config/application.yml
-    vim config/application.yml
+Edit the file in /apps/slimseq/config/application.yml to specify 
 
-SLIMseq can be installed either as a standalone application, or using shared infrastructure that 
-allows single sign-on and shared users and lab groups with other applications such as SLIMarray. 
-The shared infrastructure install requires that you separately install SLIMcore 
-(http://github.com/bmarzolf/slimcore/tree/master) and RubyCAS-server 
-(http://github.com/gunark/rubycas-server/tree/master).
+== Run the setup task
 
-Install either the SLIMsolo Authorizer or SLIMcore Authorizer engine, but not both:
+    # using authorizer=slimsolo here will cause the setup task to instead us slimsolo_authorizer
+    rake setup authorizer=slimcore
 
-    script/plugin install git://github.com/bmarzolf/slimsolo_authorizer.git
+== Run the server
 
-    -- OR --
-    
-    script/plugin install git://github.com/bmarzolf/slimcore_authorizer.git
-
-Load the database and start the server:
-
-    rake db:load
     script/server
 
-If all is well, you should be able to browse to <Server IP>:3000 and log in as admin:test
+If all is well, you should be able to browse to <Server IP>:3000 and log in as a user that will 
+authenticate on your RubyCAS-server. The first user to log in will automatically become an admin.
 
 == Install Apache2 and Passenger
 
