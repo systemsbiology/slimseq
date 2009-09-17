@@ -1,6 +1,6 @@
 nbproject
 log/*
-config/database.yml
-config/application.yml
 doc/app
 script/rapidoc/structure
+vendor/plugins/slim*_authorizer
+db/*sqlite3

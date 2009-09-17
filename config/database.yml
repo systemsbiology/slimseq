@@ -1,0 +1,11 @@
+production:
+  adapter: sqlite3
+  database: db/slimseq_production.sqlite3
+
+development:
+  adapter: sqlite3
+  database: db/slimseq_development.sqlite3
+  
+test:
+  adapter: sqlite3
+  database: db/slimseq_test.sqlite3
