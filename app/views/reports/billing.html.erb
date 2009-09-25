@@ -13,6 +13,7 @@
     </tr>
   </thead>
     <% for lane in @paged_lanes %>
+      <% next if lane.flow_cell.sequencing_runs.size == 0 %>
       <tr>
         <td><%=h lane.flow_cell.sequencing_runs.best[0].date.strftime("%Y/%m/%d") %></td>
         <td><%=h lane.samples[0].short_and_long_name %></td>
