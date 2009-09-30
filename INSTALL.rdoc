@@ -51,7 +51,9 @@ installing SLIMcore and RubyCAS-server/RubyCAS-client.
 
 == Edit your application configuration
 
-Edit the file in /apps/slimseq/config/application.yml to specify 
+Edit /apps/slimseq/config/application.yml to specify the location of your RubyCAS 
+server and SLIMcore (only necessary if you're using SLIMcore Authorizer), and your API username 
+and password.
 
 == Run the setup task
 
