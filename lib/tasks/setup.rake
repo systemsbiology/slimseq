@@ -1,6 +1,6 @@
 desc "Initial set up of SLIMseq"
-task :setup => ["setup:naming_schemer", "setup:authorizer", "gems:install", "db:load",
-                "setup:admin_user"]
+task :setup => ["setup:naming_schemer", "setup:authorizer", "gems:install",
+                "db:load", "setup:external_data", "setup:admin_user"]
 
 namespace :setup do
   task :naming_schemer do
@@ -23,12 +23,22 @@ namespace :setup do
     end
   end
 
+  task :external_data => :environment do
+    puts "== Setting up external data =="
+
+    facility_group = LabGroup.create(:name => "Sequencing Facility")
+    LabGroupProfile.create(:lab_group_id => facility_group.id, :file_folder => "facility")
+    facility_project = Project.find_by_name("Sequencing Facility")
+    facility_project.update_attributes(:lab_group_id => facility_group.id)
+  end
+
   task :admin_user => :environment do
     puts "== Setting up an admin user =="
 
     # Reload gems in case highline was installed after the task was started
     Gem.clear_paths
     require 'highline/import'
+    HighLine.track_eof = false
 
     return unless agree("Would you like to create an initial admin user? ")
 
