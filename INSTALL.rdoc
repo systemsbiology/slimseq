@@ -57,6 +57,9 @@ and password.
 
 == Run the setup task
 
+Running the setup task will install the necessary plugins and gems, initialize the database and 
+create and administrator user.
+
     # using authorizer=slimsolo here will cause the setup task to instead us slimsolo_authorizer
     rake setup authorizer=slimcore
 
@@ -64,8 +67,7 @@ and password.
 
     script/server
 
-If all is well, you should be able to browse to <Server IP>:3000 and log in as a user that will 
-authenticate on your RubyCAS-server. The first user to log in will automatically become an admin.
+If all is well, you should be able to browse to <Server IP>:3000 and log in as .
 
 == Install Apache2 and Passenger
 
