@@ -26,6 +26,8 @@ namespace :setup do
   task :admin_user => :environment do
     puts "== Setting up an admin user =="
 
+    # Reload gems in case highline was installed after the task was started
+    Gem.clear_paths
     require 'highline/import'
 
     return unless agree("Would you like to create an initial admin user? ")
