@@ -89,7 +89,7 @@
 
   <% if current_user.manager? || current_user.staff_or_admin? %>
     <p><label for="sample_0_ready_for_sequencing">Ready For Sequencing?</label><br/>
-    <%= check_box :sample, :ready_for_sequencing, :index => @n %></p>
+    <%= check_box :sample, :ready_for_sequencing, :index => 0 %></p>
   <% end %>
 
   <p>
