@@ -18,8 +18,9 @@ The shared infrastructure install requires that you separately install SLIMcore
 See the "Install Extras for SLIMcore Authorizer" at the end of this document for details on 
 installing SLIMcore and RubyCAS-server/RubyCAS-client.
 
-== Install Ruby, RubyGems, Rails
+== Install Ruby, RubyGems, Rails and Rake
 
+    sudo aptitude update && sudo aptitude upgrade
     sudo aptitude -y install ruby1.8-dev ruby1.8 ri1.8 rdoc1.8 irb1.8 libreadline-ruby1.8 libruby1.8 libopenssl-ruby sqlite3 libsqlite3-ruby1.8
     sudo ln -s /usr/bin/ruby1.8 /usr/bin/ruby
     sudo ln -s /usr/bin/ri1.8 /usr/bin/ri
@@ -31,6 +32,7 @@ installing SLIMcore and RubyCAS-server/RubyCAS-client.
     sudo ruby setup.rb
     sudo ln -s /usr/bin/gem1.8 /usr/bin/gem
     sudo gem install rails -v=2.2.2
+    sudo gem install rake
 
 == Install Git
 
@@ -58,10 +60,10 @@ and password.
 == Run the setup task
 
 Running the setup task will install the necessary plugins and gems, initialize the database and 
-create and administrator user.
+create and administrator user. This needs to be run using sudo since it will be installing some gems.
 
     # using authorizer=slimsolo here will cause the setup task to instead us slimsolo_authorizer
-    rake setup authorizer=slimcore
+    sudo rake setup authorizer=slimcore
 
 == Run the server
 
