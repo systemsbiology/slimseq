@@ -158,7 +158,7 @@ site_config:
     - Institute for Systems Biology
     - Sequencing Facility
     - false
-    - true
+    - false
     - ldap.systemsbiology.net
     - cn=users,dc=systemsbiology,dc=net
     - bmarzolf@systemsbiology.org
