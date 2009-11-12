@@ -1,22 +1,5 @@
 
 --- 
-lab_groups: 
-  columns: 
-  - id
-  - name
-  - file_folder
-  - lock_version
-  - created_at
-  - updated_at
-  records: 
-  - - "1"
-    - Sequencing Facility
-    - facility
-    - "0"
-    - 
-    - 
-
---- 
 lab_memberships: 
   columns: 
   - id
