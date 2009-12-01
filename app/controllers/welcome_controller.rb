@@ -1,3 +1,4 @@
+#class WelcomeController < ApplicationController::Base
 class WelcomeController < ApplicationController
   before_filter :login_required
   before_filter :staff_or_admin_required, :only => [ :staff ]
@@ -12,7 +13,7 @@ class WelcomeController < ApplicationController
 
   def home
     # Admins get their own home page
-    if(current_user.staff_or_admin?)
+    if(current_user != :false && current_user.staff_or_admin?)
       redirect_to :action => 'staff'
     else 
       # Make an array of the accessible lab group ids, and use this

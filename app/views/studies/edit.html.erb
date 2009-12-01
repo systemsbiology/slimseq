@@ -1,0 +1,31 @@
+<h2>Editing study <i><%= @study.name %></i></h2>
+
+<% form_for(@study) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :description %><br />
+    <%= f.text_field :description %>
+  </p>
+  <p>
+    <%= f.label :project %>
+    <%= f.select :project_id, @projects.map {|p| [p.name, p.id]}, :selected=>@study.project.id %>
+  </p>
+  <p>
+    <%= f.label :Experiments %>
+    <% @experiments.each do |e| %><ul>
+    <li><%= link_to e.name, edit_experiment_path(e) %>
+    </ul><% end %>
+    <%= link_to "Add a new experiment", new_experiment_path() %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @study %> |
+<%= link_to 'Back', studies_path %>

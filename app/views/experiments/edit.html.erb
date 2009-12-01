@@ -1,0 +1,36 @@
+<h2>Editing experiment <i><%= @experiment.name %></i></h2>
+
+<% form_for(@experiment) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :description %><br />
+    <%= f.text_field :description %>
+  </p>
+
+  <p>
+    <%= f.label :study %>
+    <%= f.select :study_id, @studies.map {|s| [s.name, s.id]}, :selected=>@experiment.study.id %>
+  </p>
+
+  <p>
+    <%= f.label :Samples %>
+    <% @samples.each do |s| %><ul>
+    <li><%= link_to s.name_on_tube, edit_sample_path(s) %>
+    </ul><% end %>
+    <%= link_to "Manage samples", :controller=>:experiments, :action=>:add_samples, :id=>@experiment.id %>
+    <%= link_to "Post Processing Pipeline", :controller=>:experiments, :action=>:pipeline,
+      :id=>@experiment.id if APP_CONFIG['post_pipelines_enabled'] %>
+  </p>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @experiment %> |
+<%= link_to 'Back', experiments_path %>

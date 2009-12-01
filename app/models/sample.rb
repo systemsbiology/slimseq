@@ -11,11 +11,15 @@ class Sample < ActiveRecord::Base
   belongs_to :reference_genome
   belongs_to :project
   belongs_to :eland_parameter_set
+  belongs_to :experiment
+
   has_and_belongs_to_many :flow_cell_lanes
   
   has_many :sample_terms, :dependent => :destroy
   has_many :sample_texts, :dependent => :destroy
-  
+
+  has_many :post_pipelines
+
   validates_presence_of :sample_description, :name_on_tube, :submission_date, :budget_number,
     :reference_genome_id, :sample_prep_kit_id, :desired_read_length, :project_id
   validates_numericality_of :alignment_start_position, :greater_than_or_equal_to => 1
@@ -169,7 +173,8 @@ class Sample < ActiveRecord::Base
           "Naming Scheme"
         ]
 
-        samples = Sample.find( :all, :conditions => {:naming_scheme_id => 0},
+        samples = Sample.find( :all,
+          :conditions => "naming_scheme_id = 0 OR naming_scheme_id IS NULL",
           :include => [:reference_genome], :order => "samples.id ASC" )
 
         for sample in samples
@@ -605,6 +610,7 @@ class Sample < ActiveRecord::Base
       :desired_number_of_cycles => desired_read_length,
       :alignment_start_position => alignment_start_position,
       :alignment_end_position => alignment_end_position,
+      :reference_genome_id => reference_genome_id,
       :reference_genome => {
         :name => reference_genome.name,
         :organism => reference_genome.organism.name
@@ -620,6 +626,15 @@ class Sample < ActiveRecord::Base
       :project_uri => "#{SiteConfig.site_url}/projects/#{project.id}"
     }
   end
+
+  def tree_hash
+    require 'application_helper'
+    { :id=> "s_#{id}",
+      :text => name_on_tube,
+      :href => "#{SiteConfig.site_url}/samples/edit/#{id}",
+      :leaf => true
+    }
+  end   
   
   def raw_data_paths
     path_string = ""

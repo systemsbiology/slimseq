@@ -18,6 +18,8 @@ describe "ChargeSet" do
   end
 
   it "should find or create a charge set that doesn't exist" do
+    ChargePeriod.destroy_all
+    ChargeSet.destroy_all
     charge_period = create_charge_period
     project = create_project
     project.stub!(:lab_group_id).and_return(1)
@@ -29,11 +31,13 @@ describe "ChargeSet" do
   end
 
   it "should find or create a charge set that does exist" do
-    charge_period = create_charge_period
+    ChargePeriod.destroy_all
+    ChargeSet.destroy_all
     project = create_project
     project.stub!(:lab_group_id).and_return(1)
     charge_set = create_charge_set(:budget => "1234", :lab_group_id => project.lab_group_id,
-                                   :name => project.name, :charge_period => charge_period)
+                                   :name => project.name)
+    charge_period = charge_set.charge_period
     found_set = ChargeSet.find_or_create_for_latest_charge_period(project, "1234")
     found_set.should == charge_set
   end

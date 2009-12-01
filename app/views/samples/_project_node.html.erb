@@ -1,0 +1,9 @@
+<% p.name %>
+<%= link_to p.name, edit_project_path(p) %>
+<% if p.studies.length > 0 %>
+<h4>Studies:</h4>
+<ul><% p.studies.each do |s| %>
+  <%= render :partial=>'study_node', :locals=>{:s=>s} %>
+    <% end %>
+</ul>
+<% end %>

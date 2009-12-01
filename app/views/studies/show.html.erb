@@ -1,0 +1,20 @@
+<h2>Study <%= @study.name %></h2>
+<p>
+  <b>Name:</b>
+  <%=h @study.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @study.description %>
+</p>
+
+<p>
+  <b>Project:</b>
+  <%= link_to @project.name, project_path(@project) %>
+</p>
+
+
+
+<%= link_to 'Edit', edit_study_path(@study) %> |
+<%= link_to 'Back to studies', studies_path %>

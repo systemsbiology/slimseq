@@ -1,0 +1,17 @@
+<h1>New study for project '<%= @project.name %>'</h1>
+
+<% form_for(:study, :url=>{:action=>:add_study}) do |f| %>
+<input type='hidden' name='project_id' value='<%= @project.id %>' />
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :description %><br />
+    <%= f.text_field :description %>
+  </p>
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+

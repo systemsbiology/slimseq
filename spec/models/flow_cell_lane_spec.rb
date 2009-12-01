@@ -39,7 +39,7 @@ describe FlowCellLane do
       @sequencing_run.stub!(:date_yymmdd).and_return("081010")
       @sequencing_run.stub!(:instrument).and_return(@instrument)
 
-      @flow_cell = mock_model(FlowCell)
+      @flow_cell = mock_model(FlowCell, :destroyed? => false)
       @flow_cell.stub!(:name).and_return("123ABC")
       @flow_cell.stub!(:sequencing_run).twice.and_return(@sequencing_run)
 
@@ -206,7 +206,8 @@ describe FlowCellLane do
     flow_cell = create_flow_cell(:name => "2233AAXX")
     lane = create_flow_cell_lane(:flow_cell => flow_cell, :samples => [sample])
     instrument = create_instrument(:serial_number => "HWI-EAS123")
-    sequencing_run = create_sequencing_run(:flow_cell => flow_cell, :instrument => instrument)
+    sequencing_run = create_sequencing_run(:flow_cell => flow_cell, :instrument => instrument,
+                                           :date => "2009-07-22")
 
     lane.default_result_path.should == "/solexa/genetics/mouse/090722_HWI-EAS123_FC2233AAXX"
   end

@@ -1,0 +1,50 @@
+<html>
+<head>
+  <title id="page-title">Tree Test</title>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="stylesheet" type="text/css" href="ext/resources/css/ext-all.css">
+
+
+  <script type="text/javascript" src="ext/adapter/ext/ext-base.js"></script>
+  <script type="text/javascript" src="ext/ext-all-debug.js"></script>
+
+<script type='text/javascript' language='javascript'>
+  // Path to the blank image must point to a valid location on your server
+  Ext.BLANK_IMAGE_URL = '/ext/resources/images/default/s.gif';
+ 
+  // Main application entry point
+  Ext.onReady(function() {
+      var Tree = Ext.tree;
+ 
+      tree = new Tree.TreePanel({
+        el:'tree_div',
+	    useArrows:true,
+	    autoScroll:true,
+	    animate:true,
+	    enableDD:false,
+	    containerScroll: true,
+ 
+	    dataUrl: '/projects/explore_data',
+ 
+	    root: {
+              nodeType  : 'async',
+	      text      : 'Projects',
+	      visible   : true,
+	      id        : 'source'
+	      }
+	});
+ 
+      // render the tree and expand the parent node
+      tree.render();
+      tree.getRootNode().expand();
+ 
+});
+  </script>
+ 
+</head>
+<body>
+
+<div id='tree_div'></div>
+</body>
+</html>

@@ -78,7 +78,7 @@ describe PipelineRunsController do
       
       it "should be unprocessable" do
         do_post
-        response.headers["Status"].should == "422 Unprocessable Entity"
+        response.status.should == "422 Unprocessable Entity"
       end
       
       def do_post

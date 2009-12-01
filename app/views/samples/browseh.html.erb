@@ -1,0 +1,6 @@
+<h3>Projects:</h3>
+<ul>
+<% @projects.each do |p| %>
+<li><%= render :partial => 'project_node', :locals => { :p => p } %></li>
+<% end %>
+</ul>

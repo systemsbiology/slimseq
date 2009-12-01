@@ -1,0 +1,7 @@
+<li><%= link_to s.name, edit_study_path(s) %></li>
+<% if s.experiments.length > 0 %>
+<h5>Experiments:</h5>
+<ul><% s.experiments.each do |e| %>
+<%= render :partial => 'experiment_node', :locals => { :exp=>e } %>
+<% end %></ul>
+<% end %>
