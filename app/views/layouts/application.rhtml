@@ -3,6 +3,9 @@
       <title><%= SiteConfig.site_name %> | <%= controller.controller_name %> | <%= controller.action_name %></title>
       <%= stylesheet_link_tag 'mystyles' %>
       <%= stylesheet_link_tag 'print', :media => 'print' %>
+
+      <%= javascript_tag "var site_url = '#{SiteConfig.site_url}'" %>
+
       <%= javascript_include_tag 'tinytable-packed' %>
       <%= javascript_include_tag 'checkall' %>
       <%= javascript_include_tag :defaults %>
@@ -24,8 +27,6 @@
       <% if !@page_specific_css.nil? then @page_specific_css.each do |css| %>
          <%= stylesheet_link_tag css %>
       <% end %><% end %>
-
-
   </head>
   <body <% if @onload %><%= "onload='#{@onload}'" %><% end %>
     <div id="title_bar">

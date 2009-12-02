@@ -1,6 +1,6 @@
 
   // Path to the blank image must point to a valid location on your server
-  Ext.BLANK_IMAGE_URL = '../../ext/resources/images/default/s.gif';
+  Ext.BLANK_IMAGE_URL = site_url + '/ext/resources/images/default/s.gif';
  
   // Main application entry point
   Ext.onReady(function() {
@@ -14,7 +14,7 @@
 	    enableDD:false,
 	    containerScroll: true,
  
-	    dataUrl: '/projects/explore_data',
+	    dataUrl: '../projects/explore_data',
  
 	    root: {
               nodeType  : 'async',
