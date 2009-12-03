@@ -1,8 +1,15 @@
 desc "Initial set up of SLIMseq"
-task :setup => ["setup:naming_schemer", "setup:authorizer", "gems:install",
-                "db:load", "setup:external_data", "setup:admin_user"]
+task :setup => ["setup:configuration", "setup:naming_schemer", "setup:authorizer",
+                "gems:install", "db:load", "setup:external_data", "setup:admin_user"]
 
 namespace :setup do
+  desc "Use the example database and application YAML configuration files"
+  task :configuration do
+    puts "== Using the default application and database configuration files"
+    FileUtils.cp "config/database.yml.example", "config/database.yml" unless File.exists? "config/database.yml"
+    FileUtils.cp "config/application.yml.example", "config/application.yml" unless File.exists? "config/application.yml"
+  end
+
   desc "Install the naming schemer plugin"
   task :naming_schemer do
     puts "== Downloading naming_schemer submodule =="
