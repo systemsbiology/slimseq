@@ -5,7 +5,7 @@ software for <%= SiteConfig.organization_name %>.</p>
 
 <%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %>
 
-<h3>Samples Not Yet Competed</h3>
+<h3>Samples Not Yet Completed</h3>
 
 <% if @samples != nil && @samples.size > 0 %>
   <%= render :partial => 'sample_table' %>
