@@ -44,28 +44,41 @@ class SampleSetsController < ApplicationController
   end
 
   def create
-    @sample_set = SampleSet.new(params[:sample_set])
+    respond_to do |format|
+      format.html do
+        @sample_set = SampleSet.new(params[:sample_set])
 
-    @samples = Array.new
-    params[:sample].each_value { |sample| @samples << Sample.new(sample) }
-    @sample_set.samples = @samples
-    if @sample_set.valid?
-      @samples.each do |s|
-        s.save
+        @samples = Array.new
+        params[:sample].each_value { |sample| @samples << Sample.new(sample) }
+        @sample_set.samples = @samples
+        if @sample_set.valid?
+          @samples.each do |s|
+            s.save
+          end
+          
+          # send notification email
+          Notifier.deliver_sample_submission_notification(@samples, @sample_set.project.lab_group)
+          
+          flash[:notice] = 'Samples were successfully created.'
+          redirect_to(samples_url)
+        else
+          @naming_scheme = @sample_set.naming_scheme
+          if(@naming_scheme != nil)
+            @naming_elements = @naming_scheme.ordered_naming_elements
+          end
+          params[:step] = '2'
+          render :action => 'new'
+        end
       end
-      
-      # send notification email
-      Notifier.deliver_sample_submission_notification(@samples, @sample_set.project.lab_group)
-      
-      flash[:notice] = 'Samples were successfully created.'
-      redirect_to(samples_url)
-    else
-      @naming_scheme = @sample_set.naming_scheme
-      if(@naming_scheme != nil)
-        @naming_elements = @naming_scheme.ordered_naming_elements
+      format.json do
+        @sample_set = SampleSet.new(params[:sample_set])
+        
+        if @sample_set.save
+          render :json => @sample_set
+        else
+          render :json => {:message => "Sample set parameters are invalid: #{@sample_set.errors}"}
+        end
       end
-      params[:step] = '2'
-      render :action => 'new'
     end
   end
 

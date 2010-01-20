@@ -316,4 +316,46 @@ describe SampleSetsController do
       end
     end
   end
+
+  describe "handling POST /sample_sets with a JSON mime type" do
+    it "should create the samples when valid parameters are given" do
+      sample_set = mock_model(SampleSet)
+      SampleSet.should_receive(:new).with(
+        "naming_scheme_id" => "12",
+        "sample_prep_kit_id" => "4",
+        "reference_genome_id" => "7",
+        "project_id" => "43",
+        "alignment_start_position" => "1",
+        "alignment_end_position" => "36",
+        "desired_read_length" => "36",
+        "eland_parameter_set_id" => "3",
+        "budget_number" => "12345678",
+        "submitted_by" => "bmarzolf",
+        "samples" => [
+          { "name_on_tube" => "RM11-1a pbp1::URA3", "Sample Key" => "YO 1" },
+          { "name_on_tube" => "DBVPG 1373", "Sample Key" => "YO 2" },
+        ]
+      ).and_return(sample_set)
+      sample_set.should_receive(:save).and_return(true)
+
+      request.env["HTTP_ACCEPT"] = "application/json"
+
+      post :create, :sample_set => {
+        "naming_scheme_id" => "12",
+        "sample_prep_kit_id" => "4",
+        "reference_genome_id" => "7",
+        "project_id" => "43",
+        "alignment_start_position" => "1",
+        "alignment_end_position" => "36",
+        "desired_read_length" => "36",
+        "eland_parameter_set_id" => "3",
+        "budget_number" => "12345678",
+        "submitted_by" => "bmarzolf",
+        "samples" => [
+          { "name_on_tube" => "RM11-1a pbp1::URA3", "Sample Key" => "YO 1" },
+          { "name_on_tube" => "DBVPG 1373", "Sample Key" => "YO 2" }
+        ] }
+    end
+
+  end
 end
