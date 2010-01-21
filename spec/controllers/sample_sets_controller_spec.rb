@@ -97,19 +97,14 @@ describe SampleSetsController do
           @lab_group_profile = mock_model(LabGroupProfile, :samples_need_approval => true)
           @lab_group = mock_model(LabGroup, :lab_group_profile => @lab_group_profile) 
           @project = mock_model(Project, :lab_group => @lab_group)
+
+          @sample_1 = mock_model(Sample)
+          @sample_2 = mock_model(Sample)
+          @samples = [@sample_1, @sample_2]
+
           @sample_set.stub!(:valid?).and_return(true)
-          @sample_set.stub!(:submission_date).and_return('2008-02-01')
-          @sample_set.stub!(:project_id).and_return(1)
-          @sample_set.stub!(:sample_prep_kit_id).and_return(1)
-          @sample_set.stub!(:budget_number).and_return("1234")
-          @sample_set.stub!(:reference_genome_id).and_return(1)
-          @sample_set.stub!(:desired_read_length).and_return(18)
-          @sample_set.stub!(:alignment_start_position).and_return(1)
-          @sample_set.stub!(:alignment_end_position).and_return(17)
-          @sample_set.stub!(:eland_parameter_set_id).and_return(12)
-          @sample_set.stub!(:insert_size).and_return(150)
+          @sample_set.stub!(:samples).and_return(@samples)
           @sample_set.stub!(:project).and_return(@project)
-          @sample = mock_model(Sample)
           @sample.stub!(:populate_default_visibilities_and_texts)
           Sample.stub!(:new).and_return( @sample )
         end
@@ -201,7 +196,7 @@ describe SampleSetsController do
     end
   end
   
-  describe "handling POST /sample_sets" do
+  describe "handling POST /sample_sets with HTML mime type" do
     before(:each) do
       @lab_group = mock_model(LabGroup)
       @project = mock_model(Project, :lab_group => @lab_group)
@@ -215,8 +210,7 @@ describe SampleSetsController do
    
     describe "with a valid sample set" do
       before(:each) do
-        @sample_set.stub!(:valid?).and_return(true)
-        @sample.stub!(:save).and_return(true)
+        @sample_set.stub!(:save).and_return(true)
       end
   
       def do_post
@@ -242,13 +236,8 @@ describe SampleSetsController do
         do_post
       end
       
-      it "should find the new sample set valid" do
-        @sample_set.should_receive(:valid?).and_return(true)
-        do_post
-      end
-      
-      it "should save the sample" do
-        @sample.should_receive(:save).and_return(true)
+      it "should save the sample set" do
+        @sample_set.should_receive(:save).and_return(true)
         do_post
       end      
 
@@ -257,16 +246,11 @@ describe SampleSetsController do
         response.should redirect_to(samples_url)
       end
       
-      it "should send email notifications" do
-        Notifier.should_receive(:deliver_sample_submission_notification).
-          with([@sample], @lab_group)
-        do_post
-      end
     end
     
     describe "with an invalid sample set" do
       before(:each) do
-        @sample_set.stub!(:valid?).and_return(false)
+        @sample_set.stub!(:save).and_return(false)
         @naming_scheme = mock_model(NamingScheme)
         @sample_set.stub!(:naming_scheme).and_return(@naming_scheme)
         @naming_scheme.stub!(:ordered_naming_elements).and_return( [mock_model(NamingElement)] )
@@ -290,8 +274,8 @@ describe SampleSetsController do
              "sample_prep_kit_id"=>"1"} }
       end
 
-      it "should find the new sample set invalid" do
-        @sample_set.should_receive(:valid?).and_return(false)
+      it "should not save the new sample set" do
+        @sample_set.should_receive(:save).and_return(false)
         do_post
       end
 
@@ -321,7 +305,7 @@ describe SampleSetsController do
     it "should create the samples when valid parameters are given" do
       sample_set = mock_model(SampleSet)
       SampleSet.should_receive(:new).with(
-        "naming_scheme_id" => "12",
+        {"naming_scheme_id" => "12",
         "sample_prep_kit_id" => "4",
         "reference_genome_id" => "7",
         "project_id" => "43",
@@ -334,7 +318,8 @@ describe SampleSetsController do
         "samples" => [
           { "name_on_tube" => "RM11-1a pbp1::URA3", "Sample Key" => "YO 1" },
           { "name_on_tube" => "DBVPG 1373", "Sample Key" => "YO 2" },
-        ]
+        ]},
+        nil
       ).and_return(sample_set)
       sample_set.should_receive(:save).and_return(true)
 
@@ -356,6 +341,6 @@ describe SampleSetsController do
           { "name_on_tube" => "DBVPG 1373", "Sample Key" => "YO 2" }
         ] }
     end
-
   end
+
 end

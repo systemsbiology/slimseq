@@ -32,6 +32,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :samples, :collection => {:browse => :get, :search => :get, :all => :get}
   
+  map.resources :sample_sets, :only => [:new, :create]
+  
   map.resources :instruments
 
   map.resources :sequencing_runs do |sequencing_runs|
