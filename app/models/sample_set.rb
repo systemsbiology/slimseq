@@ -37,7 +37,7 @@ class SampleSet < ActiveRecord::BaseWithoutTable
       sample_set.load_sample_api_hash(sample_api_hash, attributes)
     elsif sample_form_hash
       sample_set.load_sample_form_hash(sample_form_hash)
-    else
+    elsif number_of_samples
       sample_set.initialize_samples(number_of_samples, attributes)
     end
 
