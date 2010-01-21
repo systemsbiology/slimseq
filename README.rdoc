@@ -30,7 +30,7 @@ The prerequisites for SLIMseq are:
 SLIMseq is a Ruby on Rails application. Those familiar with setting up Ruby on Rails applications
 may find the following sufficient to get it up and running (with sqlite3 and slimcore):
 
-    gem install rails -v=2.2.2
+    gem install rails -v=2.3.5
     git clone git://github.com/bmarzolf/slimseq.git
     cd slimseq
     rake setup authorizer=slimcore
