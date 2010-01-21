@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090709221527) do
+ActiveRecord::Schema.define(:version => 20091008221500) do
 
   create_table "charge_periods", :force => true do |t|
     t.string   "name"
@@ -59,6 +59,14 @@ ActiveRecord::Schema.define(:version => 20090709221527) do
     t.string  "name"
     t.integer "eland_seed_length"
     t.integer "eland_max_matches"
+  end
+
+  create_table "experiments", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "study_id"
   end
 
   create_table "flow_cell_lanes", :force => true do |t|
@@ -257,6 +265,7 @@ ActiveRecord::Schema.define(:version => 20090709221527) do
     t.datetime "updated_at"
     t.integer  "eland_parameter_set_id"
     t.boolean  "ready_for_sequencing",     :default => true,        :null => false
+    t.integer  "experiment_id"
   end
 
   create_table "schema_info", :id => false, :force => true do |t|
@@ -289,6 +298,14 @@ ActiveRecord::Schema.define(:version => 20090709221527) do
     t.integer  "lock_version",        :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "studies", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "project_id"
   end
 
   create_table "user_profiles", :force => true do |t|

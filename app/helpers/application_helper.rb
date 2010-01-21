@@ -35,4 +35,8 @@ module ApplicationHelper
   def staff_or_admin?
     current_user.staff_or_admin?
   end
+
+  def link_to_obj(obj)
+    link_to (obj.name || "some #{obj.class}"),obj
+  end
 end

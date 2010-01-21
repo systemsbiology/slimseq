@@ -1,0 +1,41 @@
+<h2>Add/Remove samples to experiment <i><%=h @experiment.name %></i></h2>
+
+<div style='width: 600px'>
+<p>To add samples to this experiment, click the radio button in the column 'Owned
+by Current Experiment'.  To make the sample unassigned, click the radio button
+in the 'Unassigned' column.  When you are finished, make sure to click on either
+'Update' button found at the top and bottom of the list.</p>
+
+
+<p>Samples that you have access to, but are already owned by other experiments,
+appear with the radio button in that column checked.  To move a sample from
+another expeiment to this one, navigate to the 'add_samples' page for that
+experiment, move the sample to the 'unassigned' column, and then return to this
+page and click the 'Owned by Current sample' button.</p>
+</div>
+
+<% form_for(@experiment, :url=> { :action => :update_samples, :id=>@experiment.id } ) do |f| %>
+<%= submit_tag 'Update' %>
+<table>
+<tr>
+  <th>Sample name</th>
+  <th>Owned by <br />Current Experiment</th>
+  <th>Unassigned</th>
+  <th>Owned by <br />Other Experiment</th>
+</tr>
+
+<% @all_samples.each do |sample| %>
+<% owned_other = !sample.experiment_id.nil? && sample.experiment_id != @experiment.id %>
+<tr>
+  <td style='text-align: center'><%=h sample.name_on_tube %></td>
+  <td style='text-align: center'><input type='radio' name='sample_<%= sample.id %>' value='current' <%= sample.experiment_id == @experiment.id ? "checked='1'" : ''%> 
+	     <%= owned_other ? "disabled='1'" : '' %> /></td>
+  <td style='text-align: center'><input type='radio' name='sample_<%= sample.id %>' value='unassigned' <%= sample.experiment_id.nil? ? "checked='1'" : ''%> <%= owned_other ? "disabled='1'" : '' %> /></td>
+  <td style='text-align: center'><input type='radio' name='sample_<%= sample.id %>' disabled='1' value='other' <%= owned_other ? "checked='1'" : '' %> />
+    <% if !sample.experiment_id.nil? %><%= e=Experiment.find(sample.experiment_id); link_to e.name, :action=>:add_samples, :id=>e.id %><% end %>
+</td>
+</tr>
+<% end %><!-- @all_samples.each -->
+</table>
+<%= submit_tag 'Update' %>
+<% end %><!-- form_for block -->

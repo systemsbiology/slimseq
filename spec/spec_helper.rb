@@ -55,6 +55,8 @@ Spork.prefork do
     # For more information take a look at Spec::Example::Configuration and Spec::Runner
   end
 
+  FixtureReplacement.validate!
+
   # Can't seem to get first spec to run passing without having this here.
   APP_CONFIG = {
     'slimcore_site' => "http://localhost:3030",

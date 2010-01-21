@@ -298,7 +298,7 @@ describe ProjectsController do
 
       it "should re-render 'new_inline'" do
         do_post
-        response.should render_template('new_inline')
+        response.should render_template('_new_inline')
       end
 
     end

@@ -1,2 +1,2 @@
 "Sample ID","Submission Date","Name On Tube","Sample Description","Project","Sample Prep Kit","Reference Genome","Desired Read Length","Alignment Start Position","Alignment End Position","Insert Size","Budget Number","Comment","Naming Scheme","Strain","Perturbation","Perturbation Time","Replicate","Subject Number"
-420467331,02/10/2006,"vold","Very_Old","MouseGroup","ChIP-Seq","weevil v1",36,1,22,150,1234,,"Yeast Scheme","wild-type","heat",,"B",234
+793646824,02/10/2006,"vold","Very_Old","MouseGroup","ChIP-Seq","weevil v1",36,1,22,150,1234,,"Yeast Scheme","wild-type","heat",,"B",234

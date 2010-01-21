@@ -1,0 +1,6 @@
+<li><%= link_to exp.name, edit_experiment_path(exp) %></li>
+<% if exp.samples.length > 0 %>
+<% exp.samples.each do |s| %>
+<%= link_to s.name_on_tube, edit_sample_path(s) %> &nbsp;&nbsp;
+<% end %>
+<% end %>

@@ -118,9 +118,45 @@ Get detailed information about a single project.
     redirect_to projects_url
   end
 
+########################################################################
+  def new_study
+    @project=Project.find(params[:id])
+  end
+
+  def add_study
+    @project=Project.find(params[:project_id])
+    @study=Study.new(params[:study])
+    @study.project_id=@project.id
+    @study.save
+    
+    redirect_to :controller=>:projects, :id=>@project.id, :action=>:edit
+  end
+
+  def explore
+    @page_specific_javascripts=%w(../ext/adapter/ext/ext-base ../ext/ext-all-debug ext/explore_project_tree.js)
+    @page_specific_css=%(../ext/resources/css/ext-all.css)
+  end
+
+  def explore_data
+    @projects = Project.accessible_to_user(current_user)
+    tree_hash=@projects.map {|p| p.tree_hash }
+
+    respond_to do |format|
+#      format.xml  { render :xml => tree_hash }
+      format.json  { render :json => tree_hash }
+    end
+  end
+
+########################################################################
+#### Private Methods ###################################################
+########################################################################
+
   private
   
   def load_dropdown_selections
     @lab_groups = current_user.accessible_lab_groups
   end
 end
+
+
+

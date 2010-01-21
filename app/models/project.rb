@@ -1,5 +1,7 @@
 class Project < ActiveRecord::Base
   has_many :samples
+  has_many :studies
+
   belongs_to :lab_group
   
   validates_presence_of :name
@@ -73,4 +75,13 @@ class Project < ActiveRecord::Base
         collect {|x| "#{SiteConfig.site_url}/samples/#{x}" }
     }
   end
+
+  def tree_hash 
+    children=studies.map {|st| st.tree_hash}
+    { :id => "p_#{id}",
+      :text=>name,
+      :href => "#{SiteConfig.site_url}/projects/edit/#{id}",
+      :children=>children }
+  end
+
 end

@@ -24,12 +24,23 @@ ActionController::Routing::Routes.draw do |map|
   # SLIMseq routes
   map.resources :pipeline_results
 
+  # samples hiearchy 
+  map.connect 'projects/:id/new_sample', :controller=>'projects', :action=>'new_study'
+  map.connect 'projects/explore', :controller=>'projects', :action=>'explore'
+  map.connect 'projects/explore_data', :controller=>'projects', :action=>'explore_data'
   map.resources :projects
+  map.resources :studies
+  map.resources :experiments
 
   map.resources :pipeline_runs
   
   map.resources :flow_cell_lanes
 
+  # add in some other urls to samples/
+  map.connect 'samples/browseh/:project/:study/:experiment', :controller=>'samples', :action=>'browseh'
+  map.connect 'samples/browseh/:project/:study', :controller=>'samples', :action=>'browseh'
+  map.connect 'samples/browseh/:project', :controller=>'samples', :action=>'browseh'
+  map.connect 'samples/browseh', :controller=>'samples', :action=>'browseh'
   map.resources :samples, :collection => {:browse => :get, :search => :get, :all => :get}
   
   map.resources :sample_sets, :only => [:new, :create]

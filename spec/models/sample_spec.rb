@@ -208,6 +208,23 @@ describe Sample do
       ])
 
       csv.shift.should eql([
+        samples(:sample5).id.to_s,
+        "2006-09-10",
+        "bb",
+        "BobB",
+        "Bob's Stuff",
+        "ChIP-Seq",
+        "weevil v1",
+        "36",
+        "1",
+        "22",
+        "150",
+        "1234",
+        "",
+        "None"
+      ])      
+
+      csv.shift.should eql([
         samples(:sample2).id.to_s,
         "2006-02-10",
         "old",
@@ -257,23 +274,6 @@ describe Sample do
         "",
         "None"
       ])
-
-      csv.shift.should eql([
-        samples(:sample5).id.to_s,
-        "2006-09-10",
-        "bb",
-        "BobB",
-        "Bob's Stuff",
-        "ChIP-Seq",
-        "weevil v1",
-        "36",
-        "1",
-        "22",
-        "150",
-        "1234",
-        "",
-        "None"
-      ])      
     end
     
     it "should export all non-naming scheme samples when given no naming scheme" do
@@ -525,6 +525,10 @@ describe Sample do
       :name => "yeast kit",
       :restriction_enzyme => "DpnII"
     )
+    reference_genome = create_reference_genome(
+      :name => "Yeast 5.0",
+      :organism => create_organism(:name => "Yeast")
+    )
     
     sample = create_sample(
       :name_on_tube => "mut",
@@ -536,10 +540,7 @@ describe Sample do
       :desired_read_length => 36,
       :alignment_start_position => 2,
       :alignment_end_position => 30,
-      :reference_genome => create_reference_genome(
-        :name => "Yeast 5.0",
-        :organism => create_organism(:name => "Yeast")
-      ),
+      :reference_genome => reference_genome,
       :naming_scheme => naming_scheme,
       :budget_number => "1234",
       :sample_terms => [
@@ -554,15 +555,12 @@ describe Sample do
 
     sample.detail_hash.should == {
       :id => sample.id,
-      :submission_date => Date.today,
-      :updated_at => sample.updated_at,
-      :comment => "failed",
-      :status => "submitted",
       :submitted_by => "Joe User",
       :name_on_tube => "mut",
       :sample_description => "mutant_yeast",
       :project => "Mutant Yeast",
       :submission_date => Date.today,
+      :updated_at => sample.updated_at,
       :sample_prep_kit => "yeast kit",
       :sample_prep_kit_restriction_enzyme => "DpnII",
       :sample_prep_kit_uri => "http://example.com/sample_prep_kits/#{sample_prep_kit.id}",
@@ -570,10 +568,12 @@ describe Sample do
       :desired_number_of_cycles => 36,
       :alignment_start_position => 2,
       :alignment_end_position => 30,
+      :reference_genome_id => reference_genome.id,
       :reference_genome => {
         :name => "Yeast 5.0",
         :organism => "Yeast"
       },
+      :status => "submitted",
       :naming_scheme => "Beast Scheme",
       :budget_number => "1234",
       :comment => "failed",
@@ -646,8 +646,8 @@ describe Sample do
   end
 
   it "should provide the samples accessible to a user" do
-    lab_group_1 = mock_model(LabGroup)
-    lab_group_2 = mock_model(LabGroup)
+    lab_group_1 = mock_model(LabGroup, :destroyed? => false)
+    lab_group_2 = mock_model(LabGroup, :destroyed? => false)
     user = mock_model(User, :get_lab_group_ids => [lab_group_1.id])
     sample_1 = create_sample( :project => create_project(:lab_group => lab_group_1) )
     sample_2 = create_sample( :project => create_project(:lab_group => lab_group_2) )
@@ -746,7 +746,7 @@ describe Sample do
     age = create_naming_element(:naming_scheme => scheme, :name => "Age")
     one_week = create_naming_term(:naming_element => age, :term => "One Week")
     two_weeks = create_naming_term(:naming_element => age, :term => "Two Weeks")
-    lab_group_1 = mock_model(LabGroup, :name => "Smith Lab")
+    lab_group_1 = mock_model(LabGroup, :name => "Smith Lab", :destroyed? => false)
     project_1 = create_project(:name => "ChIP-Seq", :lab_group => lab_group_1)
     project_2 = create_project(:name => "RNA-Seq")
     flow_cell = create_flow_cell

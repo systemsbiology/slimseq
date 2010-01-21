@@ -1,8 +1,18 @@
-<h1>Editing project</h1>
+<h1>Editing project <i><%= @project.name %></i></h1>
 
 <% form_tag project_path(@project), :method => :put do -%>
   <%= render :partial => 'form' %>
   <%= submit_tag 'Edit' %>
 <% end -%>
 
-<%= link_to 'Back', projects_path %>
+<!-- display the studies in the project -->
+<div>
+<h2>Studies for this project:</h2>
+<table>
+<% @project.studies.each do |s| %>
+<tr><td><%= link_to s.name, edit_study_path(s) %></td></tr>
+<% end %>
+</table>
+</div>
+<%= link_to 'Add a new study', { :controller=>:projects, :action=>:new_study, :id=>@project.id} %>
+<%= link_to 'Back to Projects', projects_path %>

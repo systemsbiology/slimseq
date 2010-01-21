@@ -33,7 +33,7 @@ class SampleSetsController < ApplicationController
           flash[:notice] = 'Samples were successfully created.'
           redirect_to(samples_url)
         end
-        format.json { render :json => @sample_set, :include => :samples }
+        format.json { render :json => {:message => "Samples recorded"} }
       else
         format.html do
           @naming_scheme = @sample_set.naming_scheme
@@ -45,8 +45,7 @@ class SampleSetsController < ApplicationController
         end
         format.json do
           error_text = (@sample_set.errors.collect {|e| e[1].to_s}).join(", ")
-          render :json => {
-          :message => error_text}
+          render :json => {:message => error_text}
         end
       end
     end

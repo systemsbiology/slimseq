@@ -160,6 +160,26 @@ Get detailed information about a single sample.
     end
   end
 
+########################################################################
+  
+  def browseh
+#    (project_id,study_id,experiment_id)=params.values_at(:project_id,:study_id,:experiment_id)
+
+    # ok, what do we actually want to do here?
+    # If only :project_id given, list all projects with chosen project
+    # expanded to show studies.  If :project_id and :study_id given,
+    # show same but with chosen study expanded (to show samples).
+    # If all three given, show the sample as if /samples/display/id
+    # had been called
+
+    # HA! Turned out to be way simpler.
+
+    @projects=Project.accessible_to_user(current_user)
+
+  end
+
+########################################################################
+
   def search
     accessible_samples = Sample.accessible_to_user(current_user)
     search_samples = Sample.find_by_sanitized_conditions(params)

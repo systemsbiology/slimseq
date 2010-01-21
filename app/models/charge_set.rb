@@ -31,7 +31,8 @@ class ChargeSet < ActiveRecord::Base
     set = ChargeSet.find(:first, :conditions => {
         :charge_period_id => ChargePeriod.latest.id,
         :lab_group_id => project.lab_group_id,
-        :budget => budget
+        :budget => budget,
+        :name => project.name
       })
 
     # create a new set only if an existing one isn't found
