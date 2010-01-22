@@ -1,0 +1,56 @@
+<a href="../api">&laquo; Back to index</a>
+
+<h1>/sample_sets</h1>
+<p class="summary">
+  This resource can be used to submit sets of samples.
+</p>
+
+<div style="padding:30px; padding-top:0px;border-bottom:1px solid #ddd;">
+  <h2><span style='color:#ff6600; width:200px;margin-right:20px;'>POST</span>/sample_sets</h2>
+  <p>
+    Submit a set of samples.
+  </p>
+  <p><strong>Example:</strong> POST <%= SiteConfig.site_url %>/sample_sets<p/>
+  <p><strong>Access:</strong> HTTP Basic authentication, Customer access or higher<p/>
+  <p><strong>Parameters:</strong></br>
+    sample_prep_kit_id - ID for the sample preparation kit in SLIMseq</br>
+    reference_genome_id - ID for the reference genome in SLIMseq</br>
+    project_id - ID for the project in SLIMseq</br>
+    desired_read_length - read length on the sequencing instrument (e.g. 18, 36)</br>
+    alignment_start_position - position in the read sequences to start alignment</br>
+    alignment_end_position - position in the read sequences to end alignment</br>
+    eland_parameter_set_id - ID for the set of ELAND parameters in SLIMseq</br>
+    budget_number - the budget number to which the samples should be charges</br>
+    submitted_by - username/login of the person the samples should be owned by in SLIMseq</br>
+    insert_size - length of insert being sequenced</br>
+    naming_scheme_id - ID of the naming scheme used for the samples, skip if none is being used</br>
+    samples - an array of hashes with sample meta data; must include 'name_on_tube', as well as </br>
+    either a 'sample_description' when no naming scheme is used or the naming terms being used </br>
+    for a naming scheme (See example)
+  </p>
+
+  <strong>Response:</strong> HTTP status 200 and a success message if it works, a HTTP status 422 and error
+message if it doesn't.</br>
+  JSON example: <br /><a href="#" onclick="javascript:$('jsonrep-1044892615').toggle()">(toggle code)</a><br />
+  <textarea style="width:600px;height:400px;display:none;" id="jsonrep-1044892615">
+    <%= JsonPrinter.render(
+    {"sample_set"=> {
+      "sample_prep_kit_id"=>"4",
+      "reference_genome_id"=>"7",
+      "project_id"=>"4",
+      "desired_read_length"=>"36",
+      "alignment_start_position"=>"1",
+      "alignment_end_position"=>"36",
+      "eland_parameter_set_id"=>"3",
+      "budget_number"=>"12345678",
+      "submitted_by"=>"bmarzolf",
+      "insert_size"=>"100",
+      "naming_scheme_id"=>"5",
+      "samples"=>[
+        {"name_on_tube"=>"RM11-1apbp1::URA3","Sample Key"=>"YO1"},
+        {"name_on_tube"=>"DBVPG 1373","Sample Key"=>"YO2"}
+      ]
+    }}
+    ) %>
+  </textarea></br>
+</div>
