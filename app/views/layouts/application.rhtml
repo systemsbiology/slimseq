@@ -28,7 +28,7 @@
          <%= stylesheet_link_tag css %>
       <% end %><% end %>
   </head>
-  <body <% if @onload %><%= "onload='#{@onload}'" %><% end %>
+  <body> <% if @onload %><%= "onload='#{@onload}'" %><% end %>
     <div id="title_bar">
       <h1><%= SiteConfig.find(1).site_name %></h1>
     </div>
