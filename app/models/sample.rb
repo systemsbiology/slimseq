@@ -34,10 +34,10 @@ class Sample < ActiveRecord::Base
 
   acts_as_state_machine :initial => :submitted, :column => 'status'
   
-  state :submitted
-  state :clustered
-  state :sequenced
-  state :completed
+  state :submitted, :enter => :status_notification
+  state :clustered, :enter => :status_notification
+  state :sequenced, :enter => :status_notification
+  state :completed, :enter => :status_notification
 
   event :cluster do
     transitions :from => :submitted, :to => :clustered
@@ -59,6 +59,10 @@ class Sample < ActiveRecord::Base
     transitions :from => :sequenced, :to => :completed
   end
   
+  def status_notification
+    ExternalService.sample_status_change(self)
+  end
+
   def short_and_long_name
     "#{name_on_tube} (#{sample_description})"
   end

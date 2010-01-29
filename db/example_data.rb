@@ -158,4 +158,12 @@ module FixtureReplacement
     p.file_folder = random_string
     p.lab_group_id = 1
   end
+
+  attributes_for :external_service do |s|
+    s.uri = "http://localhost:4567/" + random_string(6)
+    s.authentication = false
+    s.username = random_string(8)
+    s.password = random_string(8)
+    s.sample_status_notification = true
+  end
 end

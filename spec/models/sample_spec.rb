@@ -851,4 +851,34 @@ describe Sample do
 
   end
 
+  describe "notifying external services of status changes" do
+
+    it "should notify external services when a sample is clustered" do
+      sample = create_sample
+      ExternalService.should_receive(:sample_status_change).with(sample).once
+      sample.cluster!
+    end
+
+    it "should notify external services when a sample is sequenced" do
+      sample = create_sample
+      ExternalService.should_receive(:sample_status_change).with(sample).twice
+      sample.cluster!
+      sample.sequence!
+    end
+
+    it "should notify external services when a sample is completed" do
+      sample = create_sample
+      ExternalService.should_receive(:sample_status_change).with(sample).exactly(3).times
+      sample.cluster!
+      sample.sequence!
+      sample.complete!
+    end
+
+    it "should notify external services when a sample goes back to the submitted state" do
+      sample = create_sample
+      ExternalService.should_receive(:sample_status_change).with(sample).twice
+      sample.cluster!
+      sample.uncluster!
+    end
+  end
 end
