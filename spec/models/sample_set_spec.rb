@@ -254,6 +254,53 @@ describe SampleSet do
       sample_set.errors.to_a.should == [["base",
         "The user login specified by 'submitted_by' was not found"]]
     end
+
+    it "should create a new sample set using sample_key instead of sample_description" do
+      Notifier.should_receive(:deliver_sample_submission_notification)
+
+      sample_set = SampleSet.new(
+        { 
+          "naming_scheme_id" => @naming_scheme.id.to_s,
+          "sample_prep_kit_id" => @sample_prep_kit.id.to_s,
+          "reference_genome_id" => @reference_genome.id.to_s,
+          "project_id" => @project.id.to_s,
+          "alignment_start_position" => "1",
+          "alignment_end_position" => "36",
+          "desired_read_length" => "36",
+          "eland_parameter_set_id" => "3",
+          "budget_number" => "12345678",
+          "insert_size" => "100",
+          "submitted_by" => "bmarzolf",
+          "samples" => [
+            { "name_on_tube" => "RM11-1a pbp1::URA3", "sample_key" => "YO%201" },
+            { "name_on_tube" => "DBVPG 1373", "sample_key" => "YO%202" }
+          ]
+        }
+      )
+      sample_set.should be_valid
+      sample_set.save
+      
+      new_sample_1 = Sample.find(:first, :conditions =>
+        "name_on_tube = 'RM11-1a pbp1::URA3' AND sample_description = 'YO%201'")
+      new_sample_2 = Sample.find(:first, :conditions =>
+        "name_on_tube = 'DBVPG 1373' AND sample_description = 'YO%202'")
+
+      shared_attributes = {
+        "naming_scheme_id" => @naming_scheme.id.to_s,
+        "sample_prep_kit_id" => @sample_prep_kit.id,
+        "reference_genome_id" => @reference_genome.id,
+        "project_id" => @project.id,
+        "alignment_start_position" => 1,
+        "alignment_end_position" => 36,
+        "desired_read_length" => 36,
+        "eland_parameter_set_id" => 3,
+        "budget_number" => "12345678",
+        "insert_size" => 100,
+        "submitted_by_id" => @user.id,
+      }
+
+      new_sample_1.attributes.should include(shared_attributes)
+    end
   end
 
 end

@@ -14,7 +14,6 @@ class SampleSet < ActiveRecord::BaseWithoutTable
   column :submitted_by, :string
 
   validates_numericality_of :number_of_samples, :greater_than_or_equal_to => 1
-  validates_numericality_of :insert_size
   validates_presence_of :budget_number, :reference_genome_id,
     :sample_prep_kit_id, :desired_read_length, :project_id
   validates_numericality_of :alignment_start_position, :greater_than_or_equal_to => 1
@@ -76,7 +75,7 @@ class SampleSet < ActiveRecord::BaseWithoutTable
 
         sample = Sample.new(attributes.merge( {
           :name_on_tube => sample_hash["name_on_tube"],
-          :sample_description => sample_hash["sample_description"] || "",
+          :sample_description => sample_hash["sample_description"] || sample_hash["sample_key"] || "",
           :submitted_by_id => user.id,
           :submission_date => sample_hash["submission_date"] || Date.today
         } ))
@@ -84,12 +83,13 @@ class SampleSet < ActiveRecord::BaseWithoutTable
         begin
           naming_scheme = NamingScheme.find(attributes["naming_scheme_id"])
         rescue ActiveRecord::RecordNotFound => e
-          raise "The sample information seems to include meta data using a naming scheme, " +
-            "but the naming scheme specified is invalid"
+          # do nothing
         end
 
         term_list = Array.new
         sample_hash.keys.grep(/^[A-Z]/).each do |element_name|
+          raise "The sample information seems to include meta data using a naming scheme, " +
+            "but the naming scheme specified is invalid" unless naming_scheme
           naming_element = naming_scheme.naming_elements.find_by_name(element_name)
           raise "Specified naming element #{element_name} wasn't found for the naming " +
             "scheme #{naming_scheme.name}" unless(naming_element)

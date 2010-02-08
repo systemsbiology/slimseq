@@ -24,7 +24,6 @@ class Sample < ActiveRecord::Base
     :reference_genome_id, :sample_prep_kit_id, :desired_read_length, :project_id
   validates_numericality_of :alignment_start_position, :greater_than_or_equal_to => 1
   validates_numericality_of :alignment_end_position, :greater_than_or_equal_to => 1
-  validates_numericality_of :insert_size
   
   attr_accessor :schemed_name
   
