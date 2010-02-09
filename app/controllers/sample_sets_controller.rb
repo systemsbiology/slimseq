@@ -45,7 +45,7 @@ class SampleSetsController < ApplicationController
         end
         format.json do
           error_text = (@sample_set.errors.collect {|e| e[1].to_s}).join(", ")
-          render :json => {:message => error_text}
+          render :json => {:message => error_text}, :status => :unprocessable_entity
         end
       end
     end
