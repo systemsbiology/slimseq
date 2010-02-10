@@ -13,19 +13,19 @@ class SampleSet < ActiveRecord::BaseWithoutTable
   column :eland_parameter_set_id, :integer
   column :submitted_by, :string
 
-  validates_numericality_of :number_of_samples, :greater_than_or_equal_to => 1
+  validates_numericality_of :number_of_samples, :greater_than_or_equal_to => 1, :allow_nil => true
   validates_presence_of :budget_number, :reference_genome_id,
     :sample_prep_kit_id, :desired_read_length, :project_id
   validates_numericality_of :alignment_start_position, :greater_than_or_equal_to => 1
   validates_numericality_of :alignment_end_position, :greater_than_or_equal_to => 1
   
-  has_many :samples
+  has_many :samples, :validate => false
   
   belongs_to :naming_scheme
 
   def self.new(attributes=nil, sample_form_hash = nil)
     sample_api_hash = attributes.delete("samples") if attributes
-    number_of_samples = attributes.delete("number_of_samples") if attributes
+    number_of_samples = attributes.delete("number_of_samples")
 
     sample_set = super(attributes)
 
@@ -44,7 +44,9 @@ class SampleSet < ActiveRecord::BaseWithoutTable
   end
 
   def valid?
-    errors.empty? ? true : false
+    return false unless errors.empty?
+
+    super
   end
 
   def save
@@ -124,6 +126,8 @@ class SampleSet < ActiveRecord::BaseWithoutTable
   end
 
   def initialize_samples(number, attributes)
+    errors.add(:number_of_samples, "must be provided") unless number && number != ""
+
     submitted_by = attributes.delete("submitted_by")
     user = User.find_by_login(submitted_by)
 

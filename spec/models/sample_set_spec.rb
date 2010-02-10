@@ -36,6 +36,43 @@ describe SampleSet do
       sample_set.should be_valid
       sample_set.samples.size.should == 2
     end
+
+    it "should not be valid if the budget number is missing" do
+      sample_set = SampleSet.new( {
+        "naming_scheme_id" => @naming_scheme.id.to_s,
+        "sample_prep_kit_id" => @sample_prep_kit.id.to_s,
+        "reference_genome_id" => @reference_genome.id.to_s,
+        "project_id" => @project.id.to_s,
+        "alignment_start_position" => "1",
+        "alignment_end_position" => "36",
+        "desired_read_length" => "36",
+        "eland_parameter_set_id" => "3",
+        "insert_size" => "100",
+        "submitted_by" => "bmarzolf",
+        "number_of_samples" => 2
+      })
+
+      sample_set.should_not be_valid
+    end
+
+    it "should not be valid if the number of samples is missing" do
+      sample_set = SampleSet.new( {
+        "naming_scheme_id" => @naming_scheme.id.to_s,
+        "sample_prep_kit_id" => @sample_prep_kit.id.to_s,
+        "reference_genome_id" => @reference_genome.id.to_s,
+        "project_id" => @project.id.to_s,
+        "alignment_start_position" => "1",
+        "alignment_end_position" => "36",
+        "desired_read_length" => "36",
+        "eland_parameter_set_id" => "3",
+        "insert_size" => "100",
+        "submitted_by" => "bmarzolf",
+        "budget_number" => "12345678",
+        "number_of_samples" => ""
+      })
+
+      sample_set.should_not be_valid
+    end
   end
 
   describe "using web form parameters" do
