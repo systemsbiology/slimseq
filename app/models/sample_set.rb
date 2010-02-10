@@ -25,7 +25,7 @@ class SampleSet < ActiveRecord::BaseWithoutTable
 
   def self.new(attributes=nil, sample_form_hash = nil)
     sample_api_hash = attributes.delete("samples") if attributes
-    number_of_samples = attributes.delete("number_of_samples")
+    number_of_samples = attributes.delete("number_of_samples") if attributes
 
     sample_set = super(attributes)
 
