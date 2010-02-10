@@ -14,6 +14,9 @@ describe SampleSet do
     @naming_element = create_naming_element(:naming_scheme => @naming_scheme, :name => "Sample Key")
     @yo1 = create_naming_term(:naming_element => @naming_element, :term => "YO 1")
     @yo2 = create_naming_term(:naming_element => @naming_element, :term => "YO 2")
+
+    # prevent RestClient from trying to hit external resources
+    RestClient.stub!(:post)
   end
 
   describe "creating a new sample set with intialized samples" do
@@ -152,16 +155,26 @@ describe SampleSet do
           "insert_size" => "100",
           "submitted_by" => "bmarzolf",
           "samples" => [
-            { "name_on_tube" => "RM11-1a pbp1::URA3", "Sample Key" => "YO 1" },
-            { "name_on_tube" => "DBVPG 1373", "Sample Key" => "YO 2" }
+            { "name_on_tube" => "RM11-1a pbp1::URA3",
+              "Sample Key" => "YO 1",
+              "postback_uri" => "http://localhost/samples/1" },
+            { "name_on_tube" => "DBVPG 1373",
+              "Sample Key" => "YO 2",
+              "postback_uri" => "http://localhost/samples/2" }
           ]
         }
       )
       sample_set.should be_valid
       sample_set.save
       
-      new_sample_1 = Sample.find(:first, :conditions => "name_on_tube = 'RM11-1a pbp1::URA3'")
-      new_sample_2 = Sample.find(:first, :conditions => "name_on_tube = 'DBVPG 1373'")
+      new_sample_1 = Sample.find(:first, :conditions => {
+        :name_on_tube => 'RM11-1a pbp1::URA3',
+        :postback_uri => "http://localhost/samples/1"
+      })
+      new_sample_2 = Sample.find(:first, :conditions => {
+        :name_on_tube => 'DBVPG 1373',
+        :postback_uri => "http://localhost/samples/2"
+      })
 
       shared_attributes = {
         "naming_scheme_id" => @naming_scheme.id.to_s,
@@ -178,6 +191,7 @@ describe SampleSet do
       }
 
       new_sample_1.attributes.should include(shared_attributes)
+      new_sample_2.attributes.should include(shared_attributes)
     end
 
     it "should not save and have an error if an invalid naming scheme is supplied" do

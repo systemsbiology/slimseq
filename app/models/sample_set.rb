@@ -76,6 +76,7 @@ class SampleSet < ActiveRecord::BaseWithoutTable
 
         sample = Sample.new(attributes.merge( {
           :name_on_tube => sample_hash["name_on_tube"],
+          :postback_uri => sample_hash["postback_uri"],
           :sample_description => sample_hash["sample_description"] || sample_hash["sample_key"] || "",
           :submitted_by_id => user.id,
           :submission_date => sample_hash["submission_date"] || Date.today
