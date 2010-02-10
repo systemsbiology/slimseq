@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100128210648) do
+ActiveRecord::Schema.define(:version => 20100210221639) do
 
   create_table "charge_periods", :force => true do |t|
     t.string   "name"
@@ -276,6 +276,11 @@ ActiveRecord::Schema.define(:version => 20100128210648) do
     t.integer  "eland_parameter_set_id"
     t.boolean  "ready_for_sequencing",     :default => true,        :null => false
     t.integer  "experiment_id"
+    t.string   "postback_uri"
+  end
+
+  create_table "schema_info", :id => false, :force => true do |t|
+    t.integer "version"
   end
 
   create_table "sequencing_runs", :force => true do |t|
