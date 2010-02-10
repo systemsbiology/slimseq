@@ -13,9 +13,8 @@ class SampleSet < ActiveRecord::BaseWithoutTable
   column :eland_parameter_set_id, :integer
   column :submitted_by, :string
 
-  validates_numericality_of :number_of_samples, :greater_than_or_equal_to => 1, :allow_nil => true
   validates_presence_of :budget_number, :reference_genome_id,
-    :sample_prep_kit_id, :desired_read_length, :project_id
+    :sample_prep_kit_id, :desired_read_length, :project_id, :eland_parameter_set_id
   validates_numericality_of :alignment_start_position, :greater_than_or_equal_to => 1
   validates_numericality_of :alignment_end_position, :greater_than_or_equal_to => 1
   
@@ -25,7 +24,7 @@ class SampleSet < ActiveRecord::BaseWithoutTable
 
   def self.new(attributes=nil, sample_form_hash = nil)
     sample_api_hash = attributes.delete("samples") if attributes
-    number_of_samples = attributes.delete("number_of_samples") if attributes
+    number_of_samples = attributes["number_of_samples"] if attributes
 
     sample_set = super(attributes)
 
