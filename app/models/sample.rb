@@ -33,10 +33,10 @@ class Sample < ActiveRecord::Base
 
   acts_as_state_machine :initial => :submitted, :column => 'status'
   
-  state :submitted, :enter => :status_notification
-  state :clustered, :enter => :status_notification
-  state :sequenced, :enter => :status_notification
-  state :completed, :enter => :status_notification
+  state :submitted, :after => :status_notification
+  state :clustered, :after => :status_notification
+  state :sequenced, :after => :status_notification
+  state :completed, :after => :status_notification
 
   event :cluster do
     transitions :from => :submitted, :to => :clustered
