@@ -36,6 +36,7 @@ class SampleSetsController < ApplicationController
         format.json { render :json => {:message => "Samples recorded"} }
       else
         format.html do
+          @samples = @sample_set.samples
           @naming_scheme = @sample_set.naming_scheme
           if(@naming_scheme != nil)
             @naming_elements = @naming_scheme.ordered_naming_elements

@@ -135,6 +135,42 @@ describe SampleSet do
 
       new_sample_1.attributes.should include(shared_attributes)
     end
+
+    it "should not save and have an error when a required field is missing" do
+      Notifier.should_not_receive(:deliver_sample_submission_notification)
+
+      sample_set = SampleSet.new(
+        { 
+          "naming_scheme_id" => @naming_scheme.id.to_s,
+          "sample_prep_kit_id" => @sample_prep_kit.id.to_s,
+          "reference_genome_id" => @reference_genome.id.to_s,
+          "project_id" => @project.id.to_s,
+          "alignment_start_position" => "1",
+          "alignment_end_position" => "36",
+          "desired_read_length" => "36",
+          "eland_parameter_set_id" => "3",
+          "budget_number" => "12345678",
+          "insert_size" => "100",
+        },
+        {
+          "0"=>{"status"=>"", "reference_genome_id"=>@reference_genome.id.to_s,
+             "name_on_tube"=>"", "desired_read_length"=>"36",
+             "schemed_name"=>{"Sample Key"=>@yo1.id.to_s},
+             "submission_date"=>"2008-10-02", "budget_number"=>"12345678", "insert_size"=>"100",
+             "project_id"=>@project.id.to_s, "alignment_end_position"=>"36",
+             "eland_parameter_set_id"=>"3", "submitted_by_id"=>@user.id.to_s,
+             "sample_prep_kit_id"=>@sample_prep_kit.id.to_s, "naming_scheme_id"=>@naming_scheme.id.to_s},
+          "1"=>{"status"=>"", "reference_genome_id"=>@reference_genome.id.to_s,
+             "name_on_tube"=>"DBVPG 1373", "desired_read_length"=>"36",
+             "schemed_name"=>{"Sample Key"=>@yo2.id.to_s},
+             "submission_date"=>"2008-10-02", "budget_number"=>"12345678", "insert_size"=>"100",
+             "project_id"=>@project.id.to_s, "alignment_end_position"=>"36",
+             "eland_parameter_set_id"=>"3", "submitted_by_id"=>@user.id.to_s,
+             "sample_prep_kit_id"=>@sample_prep_kit.id, "naming_scheme_id"=>@naming_scheme.id.to_s},
+        }
+      )
+      sample_set.save.should be_false
+    end
   end
 
   describe "using JSON API parameters" do

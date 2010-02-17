@@ -51,8 +51,13 @@ class SampleSet < ActiveRecord::BaseWithoutTable
   def save
     return false unless valid?
 
-    samples.each do |sample|
-      sample.save!
+    begin
+      samples.each do |sample|
+        sample.save!
+      end
+    rescue ActiveRecord::RecordInvalid => e
+      errors.add_to_base(e.message)
+      return false
     end
 
     # send notification email

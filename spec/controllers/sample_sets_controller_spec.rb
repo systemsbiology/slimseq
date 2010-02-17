@@ -205,6 +205,7 @@ describe SampleSetsController do
       @sample = mock_model(Sample)
       Sample.stub!(:new).and_return(@sample)
       @sample_set.stub!(:samples=).and_return(true)
+      @sample_set.stub!(:samples).and_return([mock_model(Sample)])
       Notifier.stub!(:deliver_sample_submission_notification)
     end
    
