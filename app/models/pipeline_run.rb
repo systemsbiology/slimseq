@@ -43,7 +43,12 @@ class PipelineRun < ActiveRecord::BaseWithoutTable
         if(summaries.keys == eland_outputs.keys)
           summaries.keys.sort.each do |gerald_folder|
             eland_outputs[gerald_folder].sort.each do |eland_output|
-              lane_number = /.*s_(\d)_(export|eland_result).txt/.match(eland_output)[1]
+              unless /.*s_(\d)_(\d_)*(export|eland_result).txt/.match(eland_output)
+                raise "Invalid eland output file name: #{eland_output}"
+                next
+              end
+
+              lane_number = /.*s_(\d)_(\d_)*(export|eland_result).txt/.match(eland_output)[1]
 
               lane = pipeline_run.sequencing_run.flow_cell.flow_cell_lanes.find(:first,
                 :conditions => {:lane_number => lane_number})
