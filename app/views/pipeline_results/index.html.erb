@@ -11,6 +11,7 @@
       <th><h3>Base Directory</h3></th>
       <th><h3>Eland Output File</h3></th>
       <th><h3>Summary File</h3></th>
+      <th><h3>Archived</h3></th>
       <th class="nosort"><h3>Edit</h3></th>
       <th class="nosort"><h3>Destroy</h3></th>
     </tr>
@@ -26,6 +27,7 @@
     <td><%=h pipeline_result.base_directory %></td>
     <td><%=h pipeline_result.eland_output_file %></td>
     <td><%=h pipeline_result.summary_file %></td>
+    <td><%=h pipeline_result.archived ? "Yes" : "No" %></td>
     <td><%= link_to 'Edit', edit_pipeline_result_path(pipeline_result) %></td>
     <td><%= link_to 'Destroy', pipeline_result, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>

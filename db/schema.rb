@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100210221639) do
+ActiveRecord::Schema.define(:version => 20100225204218) do
 
   create_table "charge_periods", :force => true do |t|
     t.string   "name"
@@ -205,6 +205,7 @@ ActiveRecord::Schema.define(:version => 20100210221639) do
     t.integer  "lock_version",      :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "archived",          :default => false, :null => false
   end
 
   create_table "projects", :force => true do |t|
@@ -219,11 +220,13 @@ ActiveRecord::Schema.define(:version => 20100210221639) do
   create_table "reference_genomes", :force => true do |t|
     t.string   "name"
     t.integer  "organism_id"
-    t.integer  "lock_version", :default => 0
+    t.integer  "lock_version",          :default => 0
     t.string   "fasta_path"
-    t.string   "description",  :default => ""
+    t.string   "description",           :default => ""
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "filter_reference_path"
+    t.string   "gene_gtf_path"
   end
 
   create_table "sample_prep_kits", :force => true do |t|
