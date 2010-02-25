@@ -16,6 +16,12 @@
     <p><label>FASTA File Path (e.g. /sequencing/genomes/mouse.fasta)</label><br>
     <%= f.text_field 'fasta_path' %></p>
     
+    <p><label>Filter Reference File Path (ABI SOLiD)</label><br>
+    <%= f.text_field 'filter_reference_path' %></p>
+
+    <p><label>Gene GTF File Path (ABI SOLiD)</label><br>
+    <%= f.text_field 'gene_gtf_path' %></p>
+
     <%= f.submit "Create" %>
   </p>
 <% end %>
