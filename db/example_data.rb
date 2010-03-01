@@ -82,6 +82,7 @@ module FixtureReplacement
 
   attributes_for :sample_prep_kit do |spk|
     spk.name = random_string
+    spk.paired_end = false
   end
 
   attributes_for :sample_term do |st|
@@ -144,7 +145,7 @@ module FixtureReplacement
     gd.email_list = "me@localhost"
     gd.email_server = "localhost"
     gd.email_domain = "localhost"
-    gd.header = "ANALYSIS eland_extended\nSEQUENCE_FORMAT --fasta\nELAND_MULTIPLE_INSTANCES 8"
+    gd.header = "SEQUENCE_FORMAT --fasta\nELAND_MULTIPLE_INSTANCES 8"
     gd.skip_last_base = false
   end
 

@@ -1,13 +1,14 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe SamplePrepKit do
-  before(:each) do
-    @valid_attributes = {
-      :name => "value for name"
-    }
+
+  it "should provide eland_extended for non-paired end sample prep kits" do
+    kit = SamplePrepKit.create(:name => "Regular", :paired_end => false)
+    kit.eland_analysis.should == "eland_extended"
   end
 
-  it "should create a new instance given valid attributes" do
-    SamplePrepKit.create!(@valid_attributes)
+  it "should provide eland_pair for paired end sample prep kits" do
+    kit = SamplePrepKit.create(:name => "Paired End", :paired_end => true)
+    kit.eland_analysis.should == "eland_pair"
   end
 end

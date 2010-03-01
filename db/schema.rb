@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100225204218) do
+ActiveRecord::Schema.define(:version => 20100225205406) do
 
   create_table "charge_periods", :force => true do |t|
     t.string   "name"
@@ -235,6 +235,7 @@ ActiveRecord::Schema.define(:version => 20100225204218) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "restriction_enzyme"
+    t.boolean  "paired_end",         :default => false
   end
 
   create_table "sample_terms", :force => true do |t|
@@ -280,10 +281,6 @@ ActiveRecord::Schema.define(:version => 20100225204218) do
     t.boolean  "ready_for_sequencing",     :default => true,        :null => false
     t.integer  "experiment_id"
     t.string   "postback_uri"
-  end
-
-  create_table "schema_info", :id => false, :force => true do |t|
-    t.integer "version"
   end
 
   create_table "sequencing_runs", :force => true do |t|

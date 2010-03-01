@@ -68,6 +68,7 @@ class SequencingRun < ActiveRecord::Base
     file << "WEB_DIR_ROOT #{instrument.web_root}\n"
     params.keys.sort.each do |i|
       hash = params[i]
+      file << "#{hash[:lane_number]}:ANALYSIS #{hash[:analysis]}\n"
       file << "#{hash[:lane_number]}:ELAND_GENOME #{hash[:eland_genome]}\n"
       file << "#{hash[:lane_number]}:ELAND_SEED_LENGTH #{hash[:eland_seed_length]}\n"
       file << "#{hash[:lane_number]}:ELAND_MAX_MATCHES #{hash[:eland_max_matches]}\n"
@@ -88,10 +89,11 @@ class SequencingRun < ActiveRecord::Base
 
       gerald_params[lane_counter.to_s] = {
         :lane_number => lane.lane_number,
+        :analysis => first_sample.sample_prep_kit.eland_analysis,
         :eland_genome => first_sample.reference_genome.fasta_path,
         :eland_seed_length => first_sample.eland_seed_length,
         :eland_max_matches => first_sample.eland_max_matches,
-        :use_bases => gerald_defaults.skip_last_base ? "Y#{first_sample.desired_read_length - 1}n" : 'all'
+        :use_bases => first_sample.use_bases_string(gerald_defaults.skip_last_base)
       }
       lane_counter += 1
     end

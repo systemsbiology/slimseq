@@ -49,7 +49,7 @@ describe Sample do
     fixtures :naming_schemes, :naming_elements, :naming_terms
     
     it "should provide an array of the sample terms" do
-      @sample = Sample.new(:naming_scheme_id => naming_schemes(:yeast_scheme))
+      @sample = new_sample(:naming_scheme_id => naming_schemes(:yeast_scheme))
       
       schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => naming_terms(:heat).id,
@@ -75,7 +75,7 @@ describe Sample do
     fixtures :naming_schemes, :naming_elements, :naming_terms
     
     it "should provide an array of the sample terms" do
-      @sample = Sample.new(:naming_scheme_id => naming_schemes(:yeast_scheme))
+      @sample = new_sample(:naming_scheme_id => naming_schemes(:yeast_scheme))
       
       schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => "-1",
@@ -99,7 +99,7 @@ describe Sample do
     fixtures :naming_schemes, :naming_elements, :naming_terms
     
     it "should provide a hash of the sample texts" do
-      @sample = Sample.new(:naming_scheme_id => naming_schemes(:yeast_scheme))
+      @sample = new_sample(:naming_scheme_id => naming_schemes(:yeast_scheme))
       
       schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => naming_terms(:heat).id,
@@ -434,25 +434,25 @@ describe Sample do
     describe "with last base skipping turned off" do
 
       it "should return 'all' if the alignment start and stop span the full desired read" do
-        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 1,
+        @sample = new_sample(:desired_read_length => 36, :alignment_start_position => 1,
                     :alignment_end_position => 36)
         @sample.use_bases_string(false).should == "Y36"
       end
       
       it "should return 'Y25n11' for the first 25 of 36 bases of the desired read length" do
-        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 1,
+        @sample = new_sample(:desired_read_length => 36, :alignment_start_position => 1,
                     :alignment_end_position => 25)
         @sample.use_bases_string(false).should == "Y25n11"
       end
       
       it "should return 'n2Y34' for the last 34 of 36 bases of the desired read length" do
-        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 3,
+        @sample = new_sample(:desired_read_length => 36, :alignment_start_position => 3,
                     :alignment_end_position => 36)
         @sample.use_bases_string(false).should == "n2Y34"
       end
 
       it "should return 'n4Y15n17' for the 5th through 19th bases of a 36 base read" do
-        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 5,
+        @sample = new_sample(:desired_read_length => 36, :alignment_start_position => 5,
                     :alignment_end_position => 19)
         @sample.use_bases_string(false).should == "n4Y15n17"
       end
@@ -461,30 +461,36 @@ describe Sample do
 
     describe "with last base skipping turned on" do
 
-      it "should return 'all' if the alignment start and stop span the full desired read" do
-        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 1,
+      it "should return 'Y35n' if the alignment start and stop span the full desired read" do
+        @sample = new_sample(:desired_read_length => 36, :alignment_start_position => 1,
                     :alignment_end_position => 36)
         @sample.use_bases_string(true).should == "Y35n1"
       end
       
       it "should return 'Y25n11' for the first 25 of 36 bases of the desired read length" do
-        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 1,
+        @sample = new_sample(:desired_read_length => 36, :alignment_start_position => 1,
                     :alignment_end_position => 25)
         @sample.use_bases_string(true).should == "Y25n11"
       end
       
-      it "should return 'n2Y34' for the last 34 of 36 bases of the desired read length" do
-        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 3,
+      it "should return 'n2Y33n1' for the last 34 of 36 bases of the desired read length" do
+        @sample = new_sample(:desired_read_length => 36, :alignment_start_position => 3,
                     :alignment_end_position => 36)
         @sample.use_bases_string(true).should == "n2Y33n1"
       end
 
       it "should return 'n4Y15n17' for the 5th through 19th bases of a 36 base read" do
-        @sample = Sample.new(:desired_read_length => 36, :alignment_start_position => 5,
+        @sample = new_sample(:desired_read_length => 36, :alignment_start_position => 5,
                     :alignment_end_position => 19)
         @sample.use_bases_string(true).should == "n4Y15n17"
       end
 
+      it "should return 'Y35n,Y35n' for a paired end sample with full read alignment" do
+        sample_prep_kit = create_sample_prep_kit(:paired_end => true)
+        @sample = new_sample(:desired_read_length => 36, :alignment_start_position => 1,
+                    :alignment_end_position => 36, :sample_prep_kit => sample_prep_kit)
+        @sample.use_bases_string(true).should == "Y35n1,Y35n1"
+      end
     end
 
   end
@@ -829,6 +835,10 @@ describe Sample do
       sample.eland_seed_length.should == 25
     end
 
+    it "should provide a seed length of 17 if the eland seed length is 25 but the desired read length is 18" do
+      sample = create_sample(:desired_read_length => 18)
+      sample.eland_seed_length.should == 17
+    end
   end
 
   describe "providing eland max matches" do

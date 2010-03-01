@@ -100,6 +100,7 @@ describe SequencingRun do
     params = {
       "0" => {
         :lane_number => 1,
+        :analysis => "eland_extended",
         :eland_genome => "/path/to/genome",
         :eland_seed_length => 20,
         :eland_max_matches => 1,
@@ -107,6 +108,7 @@ describe SequencingRun do
       },
       "1" => {
         :lane_number => 2,
+        :analysis => "eland_extended",
         :eland_genome => "/path/to/another/genome",
         :eland_seed_length => 25,
         :eland_max_matches => 2,
@@ -117,17 +119,18 @@ describe SequencingRun do
     
     f = File.new("tmp/txt/081010_HWI-EAS124_FC456DEF-config.txt")
     
-    f.readline.should == "ANALYSIS eland_extended\n"
     f.readline.should == "SEQUENCE_FORMAT --fasta\n"
     f.readline.should == "ELAND_MULTIPLE_INSTANCES 8\n"
     f.readline.should == "EMAIL_LIST me@localhost\n"
     f.readline.should == "EMAIL_SERVER localhost\n"
     f.readline.should == "EMAIL_DOMAIN localhost\n"
     f.readline.should == "WEB_DIR_ROOT http://pipeline1/\n"
+    f.readline.should == "1:ANALYSIS eland_extended\n"
     f.readline.should == "1:ELAND_GENOME /path/to/genome\n"
     f.readline.should == "1:ELAND_SEED_LENGTH 20\n"
     f.readline.should == "1:ELAND_MAX_MATCHES 1\n"
     f.readline.should == "1:USE_BASES all\n"
+    f.readline.should == "2:ANALYSIS eland_extended\n"
     f.readline.should == "2:ELAND_GENOME /path/to/another/genome\n"
     f.readline.should == "2:ELAND_SEED_LENGTH 25\n"
     f.readline.should == "2:ELAND_MAX_MATCHES 2\n"
@@ -148,17 +151,19 @@ describe SequencingRun do
     expected_params = {
       "0" => {
         :lane_number => 1,
+        :analysis => "eland_extended",
         :eland_genome => "/path/to/fasta",
         :eland_seed_length => @gerald_defaults.eland_seed_length,
         :eland_max_matches => @gerald_defaults.eland_max_matches,
-        :use_bases => "all"
+        :use_bases => "Y36"
       },
       "1" => {
         :lane_number => 2,
+        :analysis => "eland_extended",
         :eland_genome => "/path/to/fasta",
         :eland_seed_length => @gerald_defaults.eland_seed_length,
         :eland_max_matches => @gerald_defaults.eland_max_matches,
-        :use_bases => "all"
+        :use_bases => "Y36"
       }
     }
     
@@ -179,17 +184,19 @@ describe SequencingRun do
     expected_params = {
       "0" => {
         :lane_number => 1,
+        :analysis => "eland_extended",
         :eland_genome => "/path/to/fasta",
         :eland_seed_length => @gerald_defaults.eland_seed_length,
         :eland_max_matches => @gerald_defaults.eland_max_matches,
-        :use_bases => "Y35n"
+        :use_bases => "Y35n1"
       },
       "1" => {
         :lane_number => 2,
+        :analysis => "eland_extended",
         :eland_genome => "/path/to/fasta",
         :eland_seed_length => @gerald_defaults.eland_seed_length,
         :eland_max_matches => @gerald_defaults.eland_max_matches,
-        :use_bases => "Y35n"
+        :use_bases => "Y35n1"
       }
     }
     

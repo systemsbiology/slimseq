@@ -570,7 +570,12 @@ class Sample < ActiveRecord::Base
 
     s[-1] = "n" if skip_last_base
 
-    return compress_use_bases_string(s)
+    single_read_string = compress_use_bases_string(s)
+    if sample_prep_kit.paired_end
+      return "#{single_read_string},#{single_read_string}"
+    else
+      return single_read_string
+    end
   end
   
   def summary_hash
@@ -913,10 +918,16 @@ class Sample < ActiveRecord::Base
 
   def eland_seed_length
     if(eland_parameter_set)
-      return eland_parameter_set.eland_seed_length
+      max_length = eland_parameter_set.eland_seed_length
     else
-      gerald_defaults = GeraldDefaults.find(:first)
-      return gerald_defaults.eland_seed_length
+      gerald_defaults = GeraldDefaults.first
+      max_length = gerald_defaults.eland_seed_length
+    end
+
+    if desired_read_length > max_length
+      return max_length
+    else
+      return desired_read_length - 1
     end
   end
 
