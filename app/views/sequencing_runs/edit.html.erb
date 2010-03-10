@@ -9,6 +9,9 @@
   <p><label>Flow Cell</label><br>
   <%= f.collection_select 'flow_cell_id', @flow_cells, :id, :name %></p>
 
+  <p><label>Run Number</label><br>
+  <%= f.text_field :run_number %></p>
+
   <p><label>Instrument</label><br>
   <%= f.collection_select 'instrument_id', @instruments, :id, :name_with_version %></p>
   

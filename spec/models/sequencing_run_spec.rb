@@ -38,12 +38,22 @@ describe SequencingRun do
     @sequencing_run.date_yymmdd.should == "081010"
   end
   
-  it "should provide the 'run name'" do
-    @instrument = create_instrument(:serial_number => "HWI-EAS124")
-    @flow_cell = create_flow_cell(:name => "456DEF")
-    @sequencing_run = create_sequencing_run(:date => "2008-10-10", :instrument => @instrument,
-      :flow_cell => @flow_cell)
-    @sequencing_run.run_name.should == "081010_HWI-EAS124_FC456DEF"
+  describe "providing the 'run name'" do
+    it "should include the run number if available" do
+      @instrument = create_instrument(:serial_number => "HWI-EAS124")
+      @flow_cell = create_flow_cell(:name => "456DEF")
+      @sequencing_run = create_sequencing_run(:date => "2008-10-10", :instrument => @instrument,
+        :flow_cell => @flow_cell, :run_number => 80)
+      @sequencing_run.run_name.should == "081010_HWI-EAS124_0080_FC456DEF"
+    end
+
+    it "should exclude the run number if unavailable" do
+      @instrument = create_instrument(:serial_number => "HWI-EAS124")
+      @flow_cell = create_flow_cell(:name => "456DEF")
+      @sequencing_run = create_sequencing_run(:date => "2008-10-10", :instrument => @instrument,
+        :flow_cell => @flow_cell)
+      @sequencing_run.run_name.should == "081010_HWI-EAS124_FC456DEF"
+    end
   end
   
   it "should mark the newest run as 'best', others as not the best" do

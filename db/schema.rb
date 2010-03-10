@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100225205406) do
+ActiveRecord::Schema.define(:version => 20100310215547) do
 
   create_table "charge_periods", :force => true do |t|
     t.string   "name"
@@ -293,6 +293,7 @@ ActiveRecord::Schema.define(:version => 20100225205406) do
     t.datetime "updated_at"
     t.boolean  "best",          :default => true
     t.integer  "yield_kb"
+    t.integer  "run_number"
   end
 
   create_table "site_config", :force => true do |t|
