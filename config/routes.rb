@@ -55,7 +55,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect 'gerald_configurations/:sequencing_run_name',
     :controller => 'gerald_configurations', :action => 'default',
-    :sequencing_run_name => /.*_.*_.*/
+    :sequencing_run_name => /.*_.*_.*(_.*)*/
   
   map.resources :flow_cells
 

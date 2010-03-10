@@ -82,12 +82,20 @@ describe SequencingRun do
     @sequencing_run_2.reload.best.should == false
   end
   
-  it "should find a run based on the run name" do
+  it "should find a run based on the run name without a run number" do
     @instrument = create_instrument(:serial_number => "HWI-EAS124")
     @flow_cell = create_flow_cell(:name => "456DEF")
     @sequencing_run = create_sequencing_run(:date => "2008-10-10", :instrument => @instrument,
       :flow_cell => @flow_cell)
     SequencingRun.find_by_run_name("081010_HWI-EAS124_FC456DEF").should == @sequencing_run
+  end
+  
+  it "should find a run based on the run name with a run number" do
+    @instrument = create_instrument(:serial_number => "HWI-EAS124")
+    @flow_cell = create_flow_cell(:name => "456DEF")
+    @sequencing_run = create_sequencing_run(:date => "2008-10-10", :instrument => @instrument,
+      :flow_cell => @flow_cell, :run_number => 123)
+    SequencingRun.find_by_run_name("081010_HWI-EAS124_0123_FC456DEF").should == @sequencing_run
   end
   
   it "should return nil when finding a run based on the run name that doesn't exist" do

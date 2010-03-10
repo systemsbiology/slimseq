@@ -42,11 +42,12 @@ class SequencingRun < ActiveRecord::Base
   def self.find_by_run_name(run_name)
     sequencing_run = nil
 
-    name_match = run_name.match(/^(\d{6})_(.*)_FC(.*)$/)
+    name_match = run_name.match(/^(\d{6})_(.*?)_(\d{4})*_*FC(.*)$/)
     if(name_match)
       date = Date.strptime(name_match[1],"%y%m%d")
       instrument = name_match[2]
-      flow_cell = name_match[3]
+      run_number = name_match[3]
+      flow_cell = name_match[4]
 
       sequencing_run = SequencingRun.find(:first, :include => [:flow_cell, :instrument],
         :conditions => ["date = ? AND flow_cells.name = ? AND instruments.serial_number = ?",
