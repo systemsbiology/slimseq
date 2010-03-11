@@ -29,6 +29,7 @@ class SampleSet < ActiveRecord::BaseWithoutTable
     sample_set = super(attributes)
 
     # set the end position unless already specified
+    sample_set.desired_read_length = 36 unless sample_set.desired_read_length
     sample_set.alignment_end_position = 36 unless sample_set.alignment_end_position
     
     if sample_api_hash
