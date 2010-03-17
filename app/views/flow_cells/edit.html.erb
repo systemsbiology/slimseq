@@ -16,6 +16,7 @@
       <th>Sample</th>
       <th>Starting Concentration (ng/mL)</th>
       <th>Loaded Concentration (pM)</th>
+      <th>Number of cycles</th>
       <th>Lane Comment</th>
     </tr>
   <% for lane in @flow_cell.flow_cell_lanes %>
@@ -26,6 +27,7 @@
       <td><%= lane_form.collection_select :sample_ids, @samples, :id, :short_and_long_name %></td>
       <td><%= lane_form.text_field :starting_concentration %></td>
       <td><%= lane_form.text_field :loaded_concentration %></td>
+      <td><%= lane_form.text_field :number_of_cycles, :size => 10 %></td>
       <td><%= lane_form.text_field :comment %></td>
       <td></td>
     <% end %>

@@ -212,4 +212,15 @@ describe FlowCellLane do
     lane.default_result_path.should == "/solexa/genetics/mouse/090722_HWI-EAS123_FC2233AAXX"
   end
 
+  it "should use the provided number of cycles" do
+    sample = create_sample
+    lane = FlowCellLane.new(:number_of_cycles => 40, :sample_ids => [sample.id])
+    lane.number_of_cycles.should == 40
+  end
+
+  it "should use the desired read length from the sample if number of cycles isn't provided" do
+    sample = create_sample(:desired_read_length => 36)
+    lane = FlowCellLane.new(:sample_ids => [sample.id])
+    lane.number_of_cycles.should == 36
+  end
 end

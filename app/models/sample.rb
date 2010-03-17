@@ -65,6 +65,10 @@ class Sample < ActiveRecord::Base
   def short_and_long_name
     "#{name_on_tube} (#{sample_description})"
   end
+
+  def short_and_long_name_with_cycles
+    "#{name_on_tube} (#{sample_description}) - #{desired_read_length} cycles"
+  end
   
   # override new method to handle naming scheme stuff
   def self.new(attributes=nil)

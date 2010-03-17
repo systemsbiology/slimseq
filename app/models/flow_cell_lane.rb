@@ -28,6 +28,16 @@ class FlowCellLane < ActiveRecord::Base
     transitions :from => :sequenced, :to => :completed    
   end
 
+  def self.new(attributes=nil)
+    lane = super(attributes)
+
+    if lane.number_of_cycles.nil? && lane.samples.size > 0
+      lane.number_of_cycles = lane.samples.first.desired_read_length
+    end
+
+    return lane
+  end
+
   def mark_samples_as_clustered
     samples.each do |sample|
       sample = Sample.find(sample.id)
