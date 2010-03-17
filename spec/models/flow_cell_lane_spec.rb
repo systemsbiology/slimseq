@@ -223,4 +223,86 @@ describe FlowCellLane do
     lane = FlowCellLane.new(:sample_ids => [sample.id])
     lane.number_of_cycles.should == 36
   end
+
+  describe "producing a USE_BASES string for Gerald" do
+    describe "with a desired read length that matches the number of cycles on the lane" do
+      describe "with last base skipping turned off" do
+        it "should return 'Y36' if the alignment start and stop span the full desired read" do
+          sample = new_sample(:alignment_start_position => 1, :alignment_end_position => 36,
+            :desired_read_length => 36)
+          lane = create_flow_cell_lane(:samples => [sample], :number_of_cycles => 36)
+          lane.use_bases_string(false).should == "Y36"
+        end
+        
+        it "should return 'Y25n11' for the first 25 of 36 bases of the desired read length" do
+          sample = new_sample(:alignment_start_position => 1, :alignment_end_position => 25,
+            :desired_read_length => 36)
+          lane = create_flow_cell_lane(:samples => [sample], :number_of_cycles => 36)
+          lane.use_bases_string(false).should == "Y25n11"
+        end
+        
+        it "should return 'n2Y34' for the last 34 of 36 bases of the desired read length" do
+          sample = new_sample(:alignment_start_position => 3, :alignment_end_position => 36,
+            :desired_read_length => 36)
+          lane = create_flow_cell_lane(:samples => [sample], :number_of_cycles => 36)
+          lane.use_bases_string(false).should == "n2Y34"
+        end
+
+        it "should return 'n4Y15n17' for the 5th through 19th bases of a 36 base read" do
+          sample = new_sample(:alignment_start_position => 5, :alignment_end_position => 19,
+            :desired_read_length => 36)
+          lane = create_flow_cell_lane(:samples => [sample], :number_of_cycles => 36)
+          lane.use_bases_string(false).should == "n4Y15n17"
+        end
+      end
+
+      describe "with last base skipping turned on" do
+        it "should return 'Y35n' if the alignment start and stop span the full desired read" do
+          sample = new_sample(:alignment_start_position => 1, :alignment_end_position => 36,
+            :desired_read_length => 36)
+          lane = create_flow_cell_lane(:samples => [sample], :number_of_cycles => 36)
+          lane.use_bases_string(true).should == "Y35n1"
+        end
+        
+        it "should return 'Y25n11' for the first 25 of 36 bases of the desired read length" do
+          sample = new_sample(:alignment_start_position => 1, :alignment_end_position => 25,
+            :desired_read_length => 36)
+          lane = create_flow_cell_lane(:samples => [sample], :number_of_cycles => 36)
+          lane.use_bases_string(true).should == "Y25n11"
+        end
+        
+        it "should return 'n2Y33n1' for the last 34 of 36 bases of the desired read length" do
+          sample = new_sample(:alignment_start_position => 3, :alignment_end_position => 36,
+            :desired_read_length => 36)
+          lane = create_flow_cell_lane(:samples => [sample], :number_of_cycles => 36)
+          lane.use_bases_string(true).should == "n2Y33n1"
+        end
+
+        it "should return 'n4Y15n17' for the 5th through 19th bases of a 36 base read" do
+          sample = new_sample(:alignment_start_position => 5, :alignment_end_position => 19,
+            :desired_read_length => 36)
+          lane = create_flow_cell_lane(:samples => [sample], :number_of_cycles => 36)
+          lane.use_bases_string(true).should == "n4Y15n17"
+        end
+
+        it "should return 'Y35n,Y35n' for a paired end sample with full read alignment" do
+          sample_prep_kit = create_sample_prep_kit(:paired_end => true)
+          sample = new_sample(:alignment_start_position => 1, :alignment_end_position => 36,
+            :sample_prep_kit => sample_prep_kit, :desired_read_length => 36)
+          lane = create_flow_cell_lane(:samples => [sample], :number_of_cycles => 36)
+          lane.use_bases_string(true).should == "Y35n1,Y35n1"
+        end
+      end
+
+      describe "with number of cycles not matching desired read length" do
+        it "should override the sample alignement start and stop" do
+          sample = new_sample(:alignment_start_position => 5, :alignment_end_position => 19,
+            :desired_read_length => 36)
+          lane = create_flow_cell_lane(:samples => [sample], :number_of_cycles => 40)
+          lane.use_bases_string(true).should == "Y39n1"
+        end
+      end
+    end
+  end
+
 end

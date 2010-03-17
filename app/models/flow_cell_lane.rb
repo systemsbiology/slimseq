@@ -28,14 +28,10 @@ class FlowCellLane < ActiveRecord::Base
     transitions :from => :sequenced, :to => :completed    
   end
 
-  def self.new(attributes=nil)
-    lane = super(attributes)
-
-    if lane.number_of_cycles.nil? && lane.samples.size > 0
-      lane.number_of_cycles = lane.samples.first.desired_read_length
+  def after_initialize
+    if self.has_attribute?(:number_of_cycles) && number_of_cycles.nil? && samples.size > 0
+      self.number_of_cycles = samples.first.desired_read_length
     end
-
-    return lane
   end
 
   def mark_samples_as_clustered
@@ -129,6 +125,51 @@ class FlowCellLane < ActiveRecord::Base
     "#{samples[0].project.file_folder}/#{flow_cell.sequencing_runs.best[0].run_name}"
   end
   
+  def use_bases_string(skip_last_base)
+    # only use the alignment start and stop positions if the samples's desired read length
+    # matches the lane's number of cycles
+    sample = samples.first
+    if sample.desired_read_length == number_of_cycles
+      alignment_start_position = sample.alignment_start_position
+      alignment_end_position = sample.alignment_end_position
+      desired_read_length = number_of_cycles
+    else
+      alignment_start_position = 1
+      alignment_end_position = number_of_cycles
+      desired_read_length = number_of_cycles
+    end
+
+    s = ""
+
+    # starting at the beginning
+    if(alignment_start_position == 1)
+      if(alignment_end_position == desired_read_length)
+        s = "Y" * desired_read_length
+      else
+        s = "Y" * alignment_end_position + 
+            "n" * (desired_read_length-alignment_end_position)
+      end
+    # or starting later than the beginning, but going to the end
+    elsif(alignment_end_position == desired_read_length)
+      s = "n" * (alignment_start_position-1) +
+          "Y" * (desired_read_length-alignment_start_position+1)
+    # or in the middle
+    else
+      s = "n" * (alignment_start_position-1) +
+          "Y" * (alignment_end_position-alignment_start_position+1) +
+          "n" * (desired_read_length-alignment_end_position)
+    end
+
+    s[-1] = "n" if skip_last_base
+
+    single_read_string = compress_use_bases_string(s)
+    if sample.sample_prep_kit.paired_end
+      return "#{single_read_string},#{single_read_string}"
+    else
+      return single_read_string
+    end
+  end
+  
 private
   
   def sequence_samples
@@ -175,5 +216,20 @@ private
         :description => description,
         :cost => ChargeTemplate.default.cost)
     end
+  end
+
+  def compress_use_bases_string(original)
+    compressed = ""
+
+    repeats = original.scan(/(Y+|n+)/)
+    repeats.each do |r|
+      if(/Y+/.match(r[0]))
+        compressed += "Y#{r[0].length}"
+      elsif(/n+/.match(r[0]))
+        compressed += "n#{r[0].length}"
+      end
+    end
+
+    return compressed
   end
 end

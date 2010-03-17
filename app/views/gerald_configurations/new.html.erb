@@ -59,7 +59,7 @@
         <td><%= text_field_tag "lanes[#{n}][eland_max_matches]",
           first_sample.eland_max_matches %></td>
         <td><%= text_field_tag "lanes[#{n}][use_bases]",
-          first_sample.use_bases_string(@gerald_defaults.skip_last_base) %></td>
+          lane.use_bases_string(@gerald_defaults.skip_last_base) %></td>
       </tr>
     <% end %>
   </table>

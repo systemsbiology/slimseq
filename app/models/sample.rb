@@ -550,38 +550,6 @@ class Sample < ActiveRecord::Base
     return texts
   end
   
-  def use_bases_string(skip_last_base)
-    s = ""
-
-    # starting at the beginning
-    if(alignment_start_position == 1)
-      if(alignment_end_position == desired_read_length)
-        s = "Y" * desired_read_length
-      else
-        s = "Y" * alignment_end_position + 
-            "n" * (desired_read_length-alignment_end_position)
-      end
-    # or starting later than the beginning, but going to the end
-    elsif(alignment_end_position == desired_read_length)
-      s = "n" * (alignment_start_position-1) +
-          "Y" * (desired_read_length-alignment_start_position+1)
-    # or in the middle
-    else
-      s = "n" * (alignment_start_position-1) +
-          "Y" * (alignment_end_position-alignment_start_position+1) +
-          "n" * (desired_read_length-alignment_end_position)
-    end
-
-    s[-1] = "n" if skip_last_base
-
-    single_read_string = compress_use_bases_string(s)
-    if sample_prep_kit.paired_end
-      return "#{single_read_string},#{single_read_string}"
-    else
-      return single_read_string
-    end
-  end
-  
   def summary_hash
     return {
       :id => id,
@@ -976,21 +944,6 @@ private
       :search_string => prefix,
       :children => Sample.browse_by(samples, categories.dup, prefix)
     }
-  end
-
-  def compress_use_bases_string(original)
-    compressed = ""
-
-    repeats = original.scan(/(Y+|n+)/)
-    repeats.each do |r|
-      if(/Y+/.match(r[0]))
-        compressed += "Y#{r[0].length}"
-      elsif(/n+/.match(r[0]))
-        compressed += "n#{r[0].length}"
-      end
-    end
-
-    return compressed
   end
 
 end

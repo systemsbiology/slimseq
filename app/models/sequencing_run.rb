@@ -97,7 +97,7 @@ class SequencingRun < ActiveRecord::Base
         :eland_genome => first_sample.reference_genome.fasta_path,
         :eland_seed_length => first_sample.eland_seed_length,
         :eland_max_matches => first_sample.eland_max_matches,
-        :use_bases => first_sample.use_bases_string(gerald_defaults.skip_last_base)
+        :use_bases => lane.use_bases_string(gerald_defaults.skip_last_base)
       }
       lane_counter += 1
     end
