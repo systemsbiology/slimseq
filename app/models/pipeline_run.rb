@@ -27,10 +27,11 @@ class PipelineRun < ActiveRecord::BaseWithoutTable
     pipeline_run = super(attributes)
 
     if(pipeline_run.valid?)
-      original_date = /^\/.*\/.*\/(.*?)_(.*?)_(FC)*(.*?)\/*$/.match(attributes[:base_directory])[1]
+      match =  /^\/.*\/.*\/(.*?)_(.*?)_(\d{4})*_*(FC)*(.*?)\/*$/.match(attributes[:base_directory])
+      original_date = match[1]
       date = Date.strptime(original_date,"%y%m%d")
-      sequencer = /^\/.*\/.*\/(.*?)_(.*?)_(FC)*(.*?)\/*$/.match(attributes[:base_directory])[2]
-      flow_cell = /^\/.*\/.*\/(.*?)_(.*?)_(FC)*(.*?)\/*$/.match(attributes[:base_directory])[4]
+      sequencer = match[2]
+      flow_cell = match[5]
 
       pipeline_run.sequencing_run = SequencingRun.find(:first, 
         :include => [:instrument, :flow_cell],

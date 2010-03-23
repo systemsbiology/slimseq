@@ -74,6 +74,16 @@ describe PipelineRun do
       :eland_output_files => "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data" +
         "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/s_5_export.txt")
     end
+
+    it "should produce a valid pipeline run when the run folder is included in the base directory" do
+      @pipeline_run = PipelineRun.new(
+      :base_directory => "/solexa/facility/PhiX/081114_HWI-EAS427_0014_FC30LD7AAXX",
+      :summary_files => "/solexa/facility/PhiX/081114_HWI-EAS427_0014_FC30LD7AAXX/Data/" +
+        "IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/Summary.htm",
+      :eland_output_files => "/solexa/facility/PhiX/081114_HWI-EAS427_0014_FC30LD7AAXX/Data" +
+        "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/s_5_export.txt")
+      @pipeline_run.should be_valid
+    end
   end
   
   describe "making a new pipeline run with a single lane and two GERALD runs" do
