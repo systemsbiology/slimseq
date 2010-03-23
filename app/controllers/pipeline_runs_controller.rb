@@ -2,8 +2,8 @@ class PipelineRunsController < ApplicationController
   before_filter :login_required
   before_filter :staff_or_admin_required
   
-  # POST /pipeline_results.xml
-  # POST /pipeline_results.json
+  # POST /pipeline_runs.xml
+  # POST /pipeline_runs.json
   def create
     @pipeline_run = PipelineRun.new(
       :base_directory => params[:run_folder],
