@@ -133,7 +133,7 @@ Get detailed information about a single project.
   end
 
   def explore
-    @page_specific_javascripts=%w(../ext/adapter/ext/ext-base ../ext/ext-all-debug ext/explore_project_tree.js)
+    @page_specific_javascripts=%w(../ext/adapter/ext/ext-base ../ext/ext-all ext/explore_project_tree.js)
     @page_specific_css=%(../ext/resources/css/ext-all.css)
   end
 
