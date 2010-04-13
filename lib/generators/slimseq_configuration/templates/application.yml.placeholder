@@ -1,0 +1,29 @@
+# This is a fake application configuration file to keep the app happy until the correct one is
+# generated via 'rake setup'
+
+development:
+  rubycas_server: http://localhost:3020
+  slimcore_site: http://localhost:3030
+  slimcore_user: slimbot
+  slimcore_password: test
+  api_user: slimbot
+  api_password: test
+  skip_authentication: false
+
+test:
+  rubycas_server: http://localhost:3020
+  slimcore_site: http://localhost:3030
+  slimcore_user: slimbot
+  slimcore_password: test
+  api_user: slimbot
+  api_password: test
+  skip_authentication: true
+
+production:
+  rubycas_server: http://localhost:3020
+  slimcore_site: http://localhost:3030
+  slimcore_user: slimbot
+  slimcore_password: test
+  api_user: slimbot
+  api_password: test
+  skip_authentication: false
