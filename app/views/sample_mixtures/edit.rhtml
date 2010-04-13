@@ -1,11 +1,11 @@
 <%= error_messages_for 'sample' %>
 <%= error_messages_for_samples %>
 
-<h2>Editing Sample <i><%= @sample.name_on_tube %></i></h2>
+<h2>Editing Sample <i><%= @sample_mixture.name_on_tube %></i></h2>
 <%= link_to "Post Processing Pipeline", :controller=>:samples, :action=>:pipeline,
   :id=>@sample.id if APP_CONFIG['post_pipelines_enabled'] %>
 
-<% form_tag sample_path(@sample), :method => :put do -%>
+<% form_tag sample_mixture_path(@sample_mixture), :method => :put do -%>
 
   <p><label for="sample_0_set_sample_prep_kit_id">Submitted By</label><br/>
   <%= collection_select 'sample', 'submitted_by_id',

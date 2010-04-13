@@ -43,7 +43,12 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'samples/browseh/:project/:study', :controller=>'samples', :action=>'browseh'
   map.connect 'samples/browseh/:project', :controller=>'samples', :action=>'browseh'
   map.connect 'samples/browseh', :controller=>'samples', :action=>'browseh'
-  map.resources :samples, :collection => {:browse => :get, :search => :get, :all => :get}
+
+  # make sample_mixtures actions appear under the /samples URL
+  map.resources :sample_mixtures, :as => "samples", :except => [:index, :show],
+    :collection => {:browse => :get, :search => :get, :all => :get}
+  map.resources :sample_mixtures
+  map.resources :samples, :only => [:index, :show]
   
   map.resources :sample_sets, :only => [:new, :create]
   

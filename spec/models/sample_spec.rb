@@ -48,7 +48,7 @@ describe Sample do
   describe "making sample terms from schemed parameters" do
     fixtures :naming_schemes, :naming_elements, :naming_terms
     
-    it "should provide an array of the sample terms" do
+    it "should build the sample terms association" do
       @sample = new_sample(:naming_scheme_id => naming_schemes(:yeast_scheme))
       
       schemed_params = {
@@ -58,13 +58,14 @@ describe Sample do
       }
       
       expected_terms = [
-        @sample.sample_terms.build(:term_order => 1, :naming_term_id => naming_terms(:wild_type).id),
-        @sample.sample_terms.build(:term_order => 2, :naming_term_id => naming_terms(:heat).id),
-        @sample.sample_terms.build(:term_order => 3, :naming_term_id => naming_terms(:time024).id),
-        @sample.sample_terms.build(:term_order => 4, :naming_term_id => naming_terms(:replicateA).id)
+        SampleTerm.new(:term_order => 1, :naming_term_id => naming_terms(:wild_type).id),
+        SampleTerm.new(:term_order => 2, :naming_term_id => naming_terms(:heat).id),
+        SampleTerm.new(:term_order => 3, :naming_term_id => naming_terms(:time024).id),
+        SampleTerm.new(:term_order => 4, :naming_term_id => naming_terms(:replicateA).id)
       ]
 
-      @sample.terms_for(schemed_params).each do |observed_term|
+      @sample.build_terms(schemed_params)
+      @sample.sample_terms.each do |observed_term|
         expected_term = expected_terms.shift
         observed_term.attributes.should == expected_term.attributes
       end
@@ -84,11 +85,12 @@ describe Sample do
       }
       
       expected_terms = [
-        @sample.sample_terms.build(:term_order => 1, :naming_term_id => naming_terms(:wild_type).id),
-        @sample.sample_terms.build(:term_order => 2, :naming_term_id => naming_terms(:replicateA).id)
+        SampleTerm.new(:term_order => 1, :naming_term_id => naming_terms(:wild_type).id),
+        SampleTerm.new(:term_order => 2, :naming_term_id => naming_terms(:replicateA).id)
       ]
 
-      @sample.terms_for(schemed_params).each do |observed_term|
+      @sample.build_terms(schemed_params)
+      @sample.sample_terms.each do |observed_term|
         expected_term = expected_terms.shift
         observed_term.attributes.should == expected_term.attributes
       end
@@ -113,7 +115,8 @@ describe Sample do
                        :text => "3283"),
       ]
 
-      @sample.texts_for(schemed_params).each do |observed_text|
+      @sample.build_texts(schemed_params)
+      @sample.sample_texts.each do |observed_text|
         expected_text = expected_texts.shift
         observed_text.attributes.should == expected_text.attributes
       end
@@ -589,8 +592,10 @@ describe Sample do
     lab_group_1 = mock_model(LabGroup, :destroyed? => false)
     lab_group_2 = mock_model(LabGroup, :destroyed? => false)
     user = mock_model(User, :get_lab_group_ids => [lab_group_1.id])
-    sample_1 = create_sample( :project => create_project(:lab_group => lab_group_1) )
-    sample_2 = create_sample( :project => create_project(:lab_group => lab_group_2) )
+    sample_mixture_1 = create_sample_mixture( :project => create_project(:lab_group => lab_group_1) )
+    sample_mixture_2 = create_sample_mixture( :project => create_project(:lab_group => lab_group_2) )
+    sample_1 = create_sample(:sample_mixture => sample_mixture_1)
+    sample_2 = create_sample(:sample_mixture => sample_mixture_2)
     
     Sample.accessible_to_user(user).should == [sample_1]
   end
@@ -751,50 +756,6 @@ describe Sample do
     ]
   end
 
-  describe "providing eland seed length" do
-    
-    before(:each) do
-      GeraldDefaults.destroy_all
-      create_gerald_defaults(:eland_seed_length => 25, :eland_max_matches => 5)
-      @eland_parameter_set = create_eland_parameter_set(:name => "mouse", :eland_seed_length => 20, :eland_max_matches => 10)
-    end
-    
-    it "should provide the seed length from the sample's eland parameter set if one is specified" do
-      sample = create_sample(:eland_parameter_set_id => @eland_parameter_set.id)
-      sample.eland_seed_length.should == 20
-    end
-
-    it "should provide the application-wide gerald default seed length if no sample eland parameter set exists" do
-      sample = create_sample
-      sample.eland_seed_length.should == 25
-    end
-
-    it "should provide a seed length of 17 if the eland seed length is 25 but the desired read length is 18" do
-      sample = create_sample(:desired_read_length => 18)
-      sample.eland_seed_length.should == 17
-    end
-  end
-
-  describe "providing eland max matches" do
-    
-    before(:each) do
-      GeraldDefaults.destroy_all
-      create_gerald_defaults(:eland_seed_length => 25, :eland_max_matches => 5)
-      @eland_parameter_set = create_eland_parameter_set(:name => "mouse", :eland_seed_length => 20, :eland_max_matches => 10)
-    end
-    
-    it "should provide the max matches from the sample's eland parameter set if one is specified" do
-      sample = create_sample(:eland_parameter_set_id => @eland_parameter_set.id)
-      sample.eland_max_matches.should == 10
-    end
-
-    it "should provide the application-wide gerald default max matches if no sample eland parameter set exists" do
-      sample = create_sample
-      sample.eland_max_matches.should == 5
-    end
-
-  end
-
   describe "notifying external services of status changes" do
 
     it "should notify external services when a sample is clustered" do
@@ -823,6 +784,25 @@ describe Sample do
       ExternalService.should_receive(:sample_status_change).with(sample).twice
       sample.cluster!
       sample.uncluster!
+    end
+  end
+  
+  describe "generating sample description from naming scheme elements" do
+    fixtures :naming_schemes, :naming_elements, :naming_terms
+
+    it "should generate a sample description for samples with a naming scheme" do
+
+      sample = create_sample( :naming_scheme => naming_schemes(:yeast_scheme) )
+      
+      sample.sample_terms.build(:term_order => 1, :naming_term_id => naming_terms(:wild_type).id)
+      sample.sample_terms.build(:term_order => 2, :naming_term_id => naming_terms(:heat).id)
+      sample.sample_terms.build(:term_order => 3, :naming_term_id => naming_terms(:time024).id)
+      sample.sample_terms.build(:term_order => 4, :naming_term_id => naming_terms(:replicateA).id)
+      sample.sample_texts.build(:naming_element_id => naming_elements(:subject_number).id,
+        :text => "3283")
+
+      sample.generate_schemed_sample_description
+      sample.sample_description.should == "wt_HT_024_A_3283"
     end
   end
 end

@@ -13,7 +13,7 @@ Start by <%= link_to 'creating some lab groups', :controller => 'lab_groups', :a
 
 <h3>Samples Submitted</h3>
 
-<% if @samples != nil && @samples.size > 0 %>
+<% if @sample_mixtures != nil && @sample_mixtures.size > 0 %>
   <%= render :partial => 'sample_table' %>
 
   <%= link_to 'Cluster samples on a flow cell', new_flow_cell_path %>

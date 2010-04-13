@@ -1,20 +1,20 @@
 class FlowCellLane < ActiveRecord::Base
   belongs_to :flow_cell
   
-  has_and_belongs_to_many :samples
+  belongs_to :sample_mixture
   
   has_many :pipeline_results
   
   validates_numericality_of :starting_concentration, :loaded_concentration
 
-  after_create :mark_samples_as_clustered
-  before_destroy :mark_samples_as_submitted
+  after_create :mark_sample_mixture_as_clustered
+  before_destroy :mark_sample_mixture_as_submitted
 
   acts_as_state_machine :initial => :clustered, :column => 'status'
   
-  state :clustered, :after => [:unsequence_samples]
-  state :sequenced, :after => [:sequence_samples, :create_charge]
-  state :completed, :after => [:complete_samples_and_flow_cell]
+  state :clustered, :after => [:unsequence_sample_mixture]
+  state :sequenced, :after => [:sequence_sample_mixture]
+  state :completed, :after => [:complete_sample_mixture_and_flow_cell]
   
   event :sequence do
     transitions :from => :clustered, :to => :sequenced    
@@ -29,24 +29,18 @@ class FlowCellLane < ActiveRecord::Base
   end
 
   def after_initialize
-    if self.has_attribute?(:number_of_cycles) && number_of_cycles.nil? && samples.size > 0
-      self.number_of_cycles = samples.first.desired_read_length
+    if self.has_attribute?(:number_of_cycles) && number_of_cycles.nil? && sample_mixture
+      self.number_of_cycles = sample_mixture.desired_read_length
     end
   end
 
-  def mark_samples_as_clustered
-    samples.each do |sample|
-      sample = Sample.find(sample.id)
-      sample.cluster!
-    end
+  def mark_sample_mixture_as_clustered
+    sample_mixture.cluster!
   end
   
-  def mark_samples_as_submitted
-    samples.each do |sample|
-      sample = Sample.find(sample.id)
-      sample.unsequence!
-      sample.uncluster!
-    end
+  def mark_sample_mixture_as_submitted
+    sample_mixture.unsequence!
+    sample_mixture.uncluster!
   end
   
   def summary_hash
@@ -90,7 +84,9 @@ class FlowCellLane < ActiveRecord::Base
       :percent_pass_filter_clusters => percent_pass_filter_clusters,
       :percent_align => percent_align,
       :percent_error => percent_error,
-      :sample_uris => sample_ids.collect {|x| "#{SiteConfig.site_url}/samples/#{x}" }
+      :sample_uris => sample_mixture.sample_ids.collect {|x|
+        "#{SiteConfig.site_url}/samples/#{x}"
+      }
     }
   end
   
@@ -120,18 +116,17 @@ class FlowCellLane < ActiveRecord::Base
   end
   
   def default_result_path
-    lab_group_profile = LabGroupProfile.find_by_lab_group_id(samples[0].project.lab_group_id)
+    lab_group_profile = LabGroupProfile.find_by_lab_group_id(sample_mixture.project.lab_group_id)
     "#{SiteConfig.raw_data_root_path}/#{lab_group_profile.file_folder}/" +
-    "#{samples[0].project.file_folder}/#{flow_cell.sequencing_runs.best[0].run_name}"
+    "#{sample_mixture.project.file_folder}/#{flow_cell.sequencing_runs.best[0].run_name}"
   end
   
   def use_bases_string(skip_last_base)
     # only use the alignment start and stop positions if the samples's desired read length
     # matches the lane's number of cycles
-    sample = samples.first
-    if sample.desired_read_length == number_of_cycles
-      alignment_start_position = sample.alignment_start_position
-      alignment_end_position = sample.alignment_end_position
+    if sample_mixture.desired_read_length == number_of_cycles
+      alignment_start_position = sample_mixture.alignment_start_position
+      alignment_end_position = sample_mixture.alignment_end_position
       desired_read_length = number_of_cycles
     else
       alignment_start_position = 1
@@ -163,7 +158,7 @@ class FlowCellLane < ActiveRecord::Base
     s[-1] = "n" if skip_last_base
 
     single_read_string = compress_use_bases_string(s)
-    if sample.sample_prep_kit.paired_end
+    if sample_mixture.sample_prep_kit.paired_end
       return "#{single_read_string},#{single_read_string}"
     else
       return single_read_string
@@ -172,50 +167,17 @@ class FlowCellLane < ActiveRecord::Base
   
 private
   
-  def sequence_samples
-    samples.each do |s|
-      s = Sample.find(s.id)
-      s.sequence!
-    end
+  def sequence_sample_mixture
+    sample_mixture.sequence!
   end
   
-  def unsequence_samples
-    samples.each do |s|
-      s = Sample.find(s.id)
-      s.unsequence!
-    end
+  def unsequence_sample_mixture
+    sample_mixture.unsequence!
   end
 
-  def complete_samples_and_flow_cell
-    samples.each do |s|
-      s = Sample.find(s.id)
-      s.complete!
-    end
-    
+  def complete_sample_mixture_and_flow_cell
+    sample_mixture.complete!
     flow_cell.complete!
-  end
-
-  def create_charge
-    # charge tracking must be turned on, there must be a default charge,
-    # and the sample can't be a control
-    if( SiteConfig.track_charges? && ChargeTemplate.default != nil &&
-        samples[0].control == false )
-      charge_set = ChargeSet.find_or_create_for_latest_charge_period(
-        samples[0].project,
-        samples[0].budget_number
-      )
-
-      description = samples[0].name_on_tube
-      (1..samples.size-1).each do |i|
-        description << ", #{samples[i].name_on_tube}"
-      end
-
-      Charge.create(
-        :charge_set => charge_set,
-        :date => Date.today,
-        :description => description,
-        :cost => ChargeTemplate.default.cost)
-    end
   end
 
   def compress_use_bases_string(original)

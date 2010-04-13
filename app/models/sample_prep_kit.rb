@@ -1,6 +1,8 @@
 class SamplePrepKit < ActiveRecord::Base
   has_many :samples
 
+  belongs_to :multiplexing_scheme
+
   def detail_hash
     return {
       :id => id,

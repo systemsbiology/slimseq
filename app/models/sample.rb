@@ -4,26 +4,19 @@ class Sample < ActiveRecord::Base
   require 'csv'
   include Spreadsheet
   
-  belongs_to :user, :foreign_key => "submitted_by_id"
   belongs_to :organism
   belongs_to :naming_scheme
-  belongs_to :sample_prep_kit
   belongs_to :reference_genome
-  belongs_to :project
-  belongs_to :eland_parameter_set
   belongs_to :experiment
 
-  has_and_belongs_to_many :flow_cell_lanes
+  belongs_to :sample_mixture
   
   has_many :sample_terms, :dependent => :destroy
   has_many :sample_texts, :dependent => :destroy
 
   has_many :post_pipelines
 
-  validates_presence_of :sample_description, :name_on_tube, :submission_date, :budget_number,
-    :reference_genome_id, :sample_prep_kit_id, :desired_read_length, :project_id
-  validates_numericality_of :alignment_start_position, :greater_than_or_equal_to => 1
-  validates_numericality_of :alignment_end_position, :greater_than_or_equal_to => 1
+  validates_presence_of :sample_description, :reference_genome_id
   
   attr_accessor :schemed_name
   
@@ -31,75 +24,32 @@ class Sample < ActiveRecord::Base
   attr_accessor :sample_set_id
   belongs_to :sample_set
 
-  acts_as_state_machine :initial => :submitted, :column => 'status'
-  
-  state :submitted, :after => :status_notification
-  state :clustered, :after => :status_notification
-  state :sequenced, :after => :status_notification
-  state :completed, :after => :status_notification
-
-  event :cluster do
-    transitions :from => :submitted, :to => :clustered
-  end
-
-  event :uncluster do
-    transitions :from => :clustered, :to => :submitted
-  end
-  
-  event :sequence do
-    transitions :from => :clustered, :to => :sequenced
-  end
-
-  event :unsequence do
-    transitions :from => :sequenced, :to => :clustered
-  end
-  
-  event :complete do
-    transitions :from => :sequenced, :to => :completed
-  end
-  
-  def status_notification
-    ExternalService.sample_status_change(self)
-  end
-
-  def short_and_long_name
-    "#{name_on_tube} (#{sample_description})"
-  end
-
-  def short_and_long_name_with_cycles
-    "#{name_on_tube} (#{sample_description}) - #{desired_read_length} cycles"
-  end
-  
   # override new method to handle naming scheme stuff
   def self.new(attributes=nil)
-    sample = super(attributes)
+    schemed_params = attributes.delete("schemed_name") if attributes
 
-    # see if there's a naming scheme
-    begin
-      scheme = NamingScheme.find(sample.naming_scheme_id)
-    rescue
-      return sample
-    end
-    
-    schemed_params = attributes[:schemed_name]
-    if(schemed_params.nil?)
-      # use default selections if none are provided
-      @naming_element_visibility = scheme.default_visibilities
-      @text_values = scheme.default_texts
-    end
+    sample = super
+    sample.schemed_name = schemed_params
     
     return sample
   end
 
   def schemed_name=(attributes)
+    return unless naming_scheme
+
     # clear out old naming scheme records
     sample_terms.each {|t| t.destroy}
     sample_texts.each {|t| t.destroy}
 
-    # create the new records
-    self.sample_terms = terms_for(attributes)
-    self.sample_texts = texts_for(attributes)
-    self.sample_description = naming_scheme.generate_sample_description(attributes)   
+    if attributes
+      # create the new records
+      build_terms(attributes)
+      build_texts(attributes)
+      generate_schemed_sample_description
+    else
+      @naming_element_visibility = naming_scheme.default_visibilities
+      @text_values = naming_scheme.default_texts
+    end
   end
   
   def naming_element_visibility
@@ -127,14 +77,7 @@ class Sample < ActiveRecord::Base
   end  
   
   def validate
-    # make sure date/name_on_tube/sample_description combo is unique
-    s = Sample.find_by_submission_date_and_name_on_tube_and_sample_description(
-        submission_date, name_on_tube, sample_description)
-    if( s != nil && s.id != id )
-      errors.add("Duplicate submission date/name_on_tube/sample_description")
-    end
-    
-    # look for all the things that infuriate GCOS or SBEAMS:
+    # Don't allow:
     # * non-existent sample name
     # * spaces
     # * characters other than underscores and dashes
@@ -151,7 +94,7 @@ class Sample < ActiveRecord::Base
       errors.add("Sample description must contain only letters, numbers, underscores and dashes or it")
     end
   end
-  
+
   def self.to_csv(naming_scheme = "")
     ###########################################
     # set up spreadsheet
@@ -500,56 +443,65 @@ class Sample < ActiveRecord::Base
     return ""
   end
   
-  def terms_for(schemed_params)
-    terms = Array.new
-    
+  def build_terms(schemed_params)
     count = 1
+
     for element in naming_scheme.ordered_naming_elements
-      depends_upon_element_with_no_selection = false
+      # the element must not be:
+      # 1) a free text element
+      # 2) dependent on an element with no selection
       depends_upon_element = element.depends_upon_element
-      if(depends_upon_element != nil && schemed_params[depends_upon_element.name].to_i <= 0)
-        depends_upon_element_with_no_selection = true
-      end
+      next if element.free_text
+      next if depends_upon_element != nil && schemed_params[depends_upon_element.name].to_i <= 0
       
-      # the element must:
-      # 1) not be a free text element
-      # 2) have a selection
-      # 3) not be dependent on an element with no selection
-      if( !element.free_text &&
-          schemed_params[element.name].to_i > 0 &&
-          !depends_upon_element_with_no_selection )
-        terms << SampleTerm.new( :sample_id => id, :term_order => count,
-          :naming_term_id => NamingTerm.find(schemed_params[element.name]).id )
-        count += 1
-      end
+      term_selection = schemed_params[element.name]
+
+      naming_term = element.naming_terms.find_by_term(term_selection) ||
+        element.naming_terms.find_by_id(term_selection)
+      next unless naming_term
+
+      self.sample_terms.build(:term_order => count, :naming_term => naming_term)
+
+      count += 1
     end
-    
-    return terms
   end
 
-  def texts_for(schemed_params)
-    texts = Array.new
-    
+  def build_texts(schemed_params)
     for element in naming_scheme.ordered_naming_elements
-      depends_upon_element_with_no_selection = false
+      # the element must not be:
+      # 1) a free text element
+      # 2) dependent on an element with no selection
       depends_upon_element = element.depends_upon_element
-      if(depends_upon_element != nil && schemed_params[depends_upon_element.name].to_i <= 0)
-        depends_upon_element_with_no_selection = true
-      end
-      
-      # the element must:
-      # 1) be a free text element
-      # 3) not be dependent on an element with no selection
-      if( element.free_text &&
-          !depends_upon_element_with_no_selection )
-        texts << SampleText.new( :sample_id => id, :naming_element_id => element.id,
-          :text => schemed_params[element.name] )
-      end
+      next unless element.free_text
+      next if depends_upon_element != nil && schemed_params[depends_upon_element.name].to_i <= 0
+
+      sample_texts.build(:naming_element_id => element.id, :text => schemed_params[element.name] )
     end
-    
-    return texts
   end
   
+  def generate_schemed_sample_description
+    description = Array.new
+
+    for element in naming_scheme.ordered_naming_elements
+      term = sample_terms.select{|term| term.naming_term.naming_element_id == element.id}.first
+      text = sample_texts.select{|text| text.naming_element_id == element.id}.first
+      #term = sample_terms.find(:first, :include => :naming_term,
+      #  :conditions => {:naming_terms => {:naming_element_id => element.id}})
+      #text = sample_texts.find(:first, :include => :naming_element,
+      #  :conditions => {:naming_element_id => element.id})
+
+      if term
+        description << term.naming_term.abbreviated_term
+      elsif text
+        description << text.text
+      else
+        description << ""
+      end
+    end
+
+    self.sample_description = description.join "_"
+  end
+
   def summary_hash
     return {
       :id => id,
@@ -580,16 +532,16 @@ class Sample < ActiveRecord::Base
       :submitted_by => user ? user.full_name : "",
       :name_on_tube => name_on_tube,
       :sample_description => sample_description,
-      :project => project.name,
-      :submission_date => submission_date,
+      :project => sample_mixture.project.name,
+      :submission_date => sample_mixture.submission_date,
       :updated_at => updated_at,
       :sample_prep_kit => sample_prep_kit.name,
       :sample_prep_kit_restriction_enzyme => sample_prep_kit.restriction_enzyme,
       :sample_prep_kit_uri => "#{SiteConfig.site_url}/sample_prep_kits/#{sample_prep_kit.id}",
       :insert_size => insert_size,
-      :desired_number_of_cycles => desired_read_length,
-      :alignment_start_position => alignment_start_position,
-      :alignment_end_position => alignment_end_position,
+      :desired_number_of_cycles => sample_mixture.desired_read_length,
+      :alignment_start_position => sample_mixture.alignment_start_position,
+      :alignment_end_position => sample_mixture.alignment_end_position,
       :reference_genome_id => reference_genome_id,
       :reference_genome => {
         :name => reference_genome.name,
@@ -597,13 +549,13 @@ class Sample < ActiveRecord::Base
       },
       :status => status,
       :naming_scheme => naming_scheme ? naming_scheme.name : "",
-      :budget_number => budget_number,
-      :comment => comment,
+      :budget_number => sample_mixture.budget_number,
+      :comment => sample_mixture.comment,
       :sample_terms => sample_term_array,
       :sample_texts => sample_text_array,
-      :flow_cell_lane_uris => flow_cell_lane_ids.
+      :flow_cell_lane_uris => sample_mixture.flow_cell_lane_ids.
         collect {|x| "#{SiteConfig.site_url}/flow_cell_lanes/#{x}" },
-      :project_uri => "#{SiteConfig.site_url}/projects/#{project.id}"
+      :project_uri => "#{SiteConfig.site_url}/projects/#{sample_mixture.project.id}"
     }
   end
 
@@ -619,7 +571,7 @@ class Sample < ActiveRecord::Base
   def raw_data_paths
     path_string = ""
     
-    flow_cell_lanes.each do |l|
+    sample_mixture.flow_cell_lanes.each do |l|
       if(l.raw_data_path != nil)
         path_string += ", " if path_string.length > 0
         path_string += l.raw_data_path
@@ -643,7 +595,7 @@ class Sample < ActiveRecord::Base
 
     flow_cells = Array.new
     sequencing_runs = Array.new
-    flow_cell_lanes.each do |l|
+    sample_mixture.flow_cell_lanes.each do |l|
       result = add_comment(result, l.comment, "lane")
       flow_cells << l.flow_cell
       l.flow_cell.sequencing_runs.each do |s|
@@ -676,7 +628,7 @@ class Sample < ActiveRecord::Base
 
   def self.accessible_to_user(user)
     samples = Sample.find(:all, 
-      :include => 'project',
+      :include => {:sample_mixture => :project},
       :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
         user.get_lab_group_ids, false ],
       :order => "submission_date DESC, samples.id ASC")
@@ -850,7 +802,7 @@ class Sample < ActiveRecord::Base
     sanitized_conditions.each do |condition|
       search_samples = Sample.find(
         :all,
-        :include => [:sample_terms, :reference_genome, :flow_cell_lanes, :project],
+        :include => [:sample_terms, :reference_genome, :sample_mixture],
         :conditions => condition
       )
 
@@ -886,30 +838,6 @@ class Sample < ActiveRecord::Base
     end
 
     return categories
-  end
-
-  def eland_seed_length
-    if(eland_parameter_set)
-      max_length = eland_parameter_set.eland_seed_length
-    else
-      gerald_defaults = GeraldDefaults.first
-      max_length = gerald_defaults.eland_seed_length
-    end
-
-    if desired_read_length > max_length
-      return max_length
-    else
-      return desired_read_length - 1
-    end
-  end
-
-  def eland_max_matches
-    if(eland_parameter_set)
-      return eland_parameter_set.eland_max_matches
-    else
-      gerald_defaults = GeraldDefaults.find(:first)
-      return gerald_defaults.eland_max_matches
-    end
   end
 
 private

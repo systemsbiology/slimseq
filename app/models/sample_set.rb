@@ -1,72 +1,136 @@
-class SampleSet < ActiveRecord::BaseWithoutTable
-  column :submission_date, :date
-  column :number_of_samples, :integer
-  column :project_id, :integer
-  column :naming_scheme_id, :integer
-  column :sample_prep_kit_id, :integer
-  column :budget_number, :string
-  column :reference_genome_id, :integer
-  column :desired_read_length, :integer
-  column :insert_size, :integer
-  column :alignment_start_position, :integer, :default => 1
-  column :alignment_end_position, :integer
-  column :eland_parameter_set_id, :integer
-  column :submitted_by, :string
+#class SampleSet < ActiveRecord::BaseWithoutTable
+class SampleSet < ActiveRecord::Base
+  # use validatable gem since we're validating attributes that aren't fields
+  # in the sample_sets table (because they're transient)
+  include Validatable
+
+  attr_accessor :submission_date
+  attr_accessor :number_of_samples
+  attr_accessor :project_id
+  attr_accessor :naming_scheme_id
+  attr_accessor :sample_prep_kit_id
+  attr_accessor :budget_number
+  attr_accessor :reference_genome_id
+  attr_accessor :desired_read_length
+  attr_accessor :insert_size
+  attr_accessor :alignment_start_position
+  attr_accessor :alignment_end_position
+  attr_accessor :eland_parameter_set_id
+  attr_accessor :submitted_by
+  attr_accessor :multiplex_number
+  attr_accessor :submission_step
+
+  has_many :sample_mixtures
 
   validates_presence_of :budget_number, :reference_genome_id,
     :sample_prep_kit_id, :desired_read_length, :project_id, :eland_parameter_set_id
-  validates_numericality_of :alignment_start_position, :greater_than_or_equal_to => 1
-  validates_numericality_of :alignment_end_position, :greater_than_or_equal_to => 1
+  validates_presence_of :number_of_samples, :if => lambda { sample_mixtures.nil? || sample_mixtures.empty? }
+  validates_numericality_of :alignment_start_position
+  validates_numericality_of :alignment_end_position
+  validates_true_for :alignment_start_position,
+    :logic => lambda { alignment_start_position.to_i > 0 }
+  validates_true_for :alignment_end_position,
+    :logic => lambda { alignment_start_position.to_i > 0 }
   
-  has_many :samples, :validate => false
-  
-  belongs_to :naming_scheme
+  def self.new(attributes=nil)
+    mixture_attributes = attributes.delete("sample_mixtures_attributes") || attributes.delete("sample_mixtures") if attributes
 
-  def self.new(attributes=nil, sample_form_hash = nil)
-    sample_api_hash = attributes.delete("samples") if attributes
-    number_of_samples = attributes["number_of_samples"] if attributes
+    parse_multi_field_date(attributes)
+    sample_set = super
 
-    sample_set = super(attributes)
-
-    # set the end position unless already specified
-    sample_set.desired_read_length = 36 unless sample_set.desired_read_length
-    sample_set.alignment_end_position = 36 unless sample_set.alignment_end_position
-    
-    if sample_api_hash
-      sample_set.load_sample_api_hash(sample_api_hash, attributes)
-    elsif sample_form_hash
-      sample_set.load_sample_form_hash(sample_form_hash)
-    elsif number_of_samples
-      sample_set.initialize_samples(number_of_samples, attributes)
+    # build empty sample mixtures and samples
+    # these will be replaced if sample mixture attributes have been provided
+    sample_set.number_of_samples.to_i.times do
+      mixture = sample_set.sample_mixtures.build
+      sample_set.multiplex_number.to_i.times do
+        mixture.samples.build
+      end
     end
+    sample_set.submission_step = 1
+
+    normalized_mixture_attributes = normalize_mixture_attributes(mixture_attributes)
+    sample_set.load_mixture_attributes(normalized_mixture_attributes)
 
     return sample_set
+  end
+
+  # needed this to get fields_for to work in the view
+  def sample_mixtures_attributes=(attributes)
+  end
+
+  def load_mixture_attributes(attributes)
+    return unless attributes
+
+    self.sample_mixtures.clear
+
+    attributes.each do |mixture_attributes|
+      samples_attributes = mixture_attributes.delete("samples")
+
+      mixture_attributes.merge! mixture_specific_attributes
+      mixture = sample_mixtures.build(mixture_attributes)
+
+      if samples_attributes
+        samples_attributes.each do |sample_attributes|
+          sample_attributes.merge! sample_specific_attributes
+          mixture.samples.build(sample_attributes)
+        end
+      end
+    end
+
+    self.submission_step = 2
+
+    return sample_mixtures
+  end
+
+  def mixture_specific_attributes
+    return attribute_subset([
+      "submission_date", "project_id", "sample_prep_kit_id", "budget_number",
+      "desired_read_length", "alignment_start_position", "alignment_end_position",
+      "eland_parameter_set_id", "submitted_by"
+    ])
+  end
+
+  def sample_specific_attributes
+    return attribute_subset([
+      "naming_scheme_id", "reference_genome_id", "insert_size"
+    ])
+  end
+
+  def attribute_subset(keys)
+    Hash[
+      keys.collect{|key| [key, send(key)]}
+    ]
   end
 
   def valid?
     return false unless errors.empty?
 
+    if submission_step == 2
+      sample_mixtures.each do |mixture|
+        return false unless mixture.valid?
+      end
+    end
+
     super
   end
 
-  def save
-    return false unless valid?
+  def save(perform_validation = true)
+    return false if perform_validation && !valid?
 
-    begin
-      samples.each do |sample|
-        sample.save!
-      end
-    rescue ActiveRecord::RecordInvalid => e
-      errors.add_to_base(e.message)
-      return false
-    end
+    super
 
     # send notification email
-    Notifier.deliver_sample_submission_notification(samples, project.lab_group)
+    Notifier.deliver_sample_submission_notification(sample_mixtures, project.lab_group)
+
+    return true
   end
 
   def project
     return Project.find(project_id)
+  end
+
+  def naming_scheme
+    NamingScheme.find_by_id(naming_scheme_id)
   end
 
   def load_sample_api_hash(sample_api_hash, attributes)
@@ -139,19 +203,63 @@ class SampleSet < ActiveRecord::BaseWithoutTable
 
     number.to_i.times do
       samples << Sample.new(
-        :submission_date => submission_date,
-        :project_id => project_id,
         :naming_scheme_id => naming_scheme_id,
-        :sample_prep_kit_id => sample_prep_kit_id,
         :reference_genome_id => reference_genome_id,
-        :desired_read_length => desired_read_length,
-        :alignment_start_position => alignment_start_position,
-        :alignment_end_position => alignment_end_position,
-        :eland_parameter_set_id => eland_parameter_set_id,
         :insert_size => insert_size,
-        :budget_number => budget_number,
-        :submitted_by_id => user.id,
         :sample_set => self
+      )
+    end
+  end
+
+  private
+
+  def self.normalize_mixture_attributes(attributes)
+    return nil unless attributes
+
+    # if mixtures are given as key/value pairs, normalization is needed
+    if attributes.respond_to?(:keys)
+      attributes = hash_values_sorted_by_keys(attributes)
+    end
+
+    attributes.each_index do |i|
+      samples = attributes[i].delete("samples_attributes")
+      next unless samples
+
+      if samples.respond_to?(:keys)
+        samples = hash_values_sorted_by_keys(samples)
+
+        samples.each_index do |j|
+          # handle 'sample_key' being synonymous for 'sample_description'
+          sample_key = samples[j].delete("sample_key")
+          samples[j]["sample_description"] = sample_key if sample_key
+        end
+      end
+
+      attributes[i]["samples"] = samples
+    end
+
+    return attributes
+  end
+
+  def self.hash_values_sorted_by_keys(hash)
+    sorted = Array.new
+
+    hash.sort.each do |key, value|
+      sorted << value
+    end
+
+    return sorted
+  end
+
+  def self.parse_multi_field_date(attributes)
+    return unless attributes
+
+    # assume multi-field if year field is present
+    if attributes["submission_date(1i)"]
+      attributes["submission_date"] = Date.new(
+        attributes.delete("submission_date(1i)").to_i,
+        attributes.delete("submission_date(2i)").to_i,
+        attributes.delete("submission_date(3i)").to_i
       )
     end
   end

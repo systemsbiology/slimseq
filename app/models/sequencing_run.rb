@@ -89,14 +89,13 @@ class SequencingRun < ActiveRecord::Base
 
     lane_counter = 0
     flow_cell.flow_cell_lanes.each do |lane|
-      first_sample = lane.samples[0]
-
       gerald_params[lane_counter.to_s] = {
         :lane_number => lane.lane_number,
-        :analysis => first_sample.sample_prep_kit.eland_analysis,
-        :eland_genome => first_sample.reference_genome.fasta_path,
-        :eland_seed_length => first_sample.eland_seed_length,
-        :eland_max_matches => first_sample.eland_max_matches,
+        :analysis => sample_mixture.sample_prep_kit.eland_analysis,
+        #FIXME: Update gerald config generation w/ multiplexing support
+        :eland_genome => sample_mixture.samples.first.reference_genome.fasta_path,
+        :eland_seed_length => sample_mixture.eland_seed_length,
+        :eland_max_matches => sample_mixture.eland_max_matches,
         :use_bases => lane.use_bases_string(gerald_defaults.skip_last_base)
       }
       lane_counter += 1

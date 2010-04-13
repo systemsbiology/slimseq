@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100316205813) do
+ActiveRecord::Schema.define(:version => 20100330223412) do
 
   create_table "charge_periods", :force => true do |t|
     t.string   "name"
@@ -95,12 +95,7 @@ ActiveRecord::Schema.define(:version => 20100316205813) do
     t.float    "percent_align"
     t.float    "percent_error"
     t.integer  "number_of_cycles"
-  end
-
-  create_table "flow_cell_lanes_samples", :id => false, :force => true do |t|
-    t.integer "sample_id"
-    t.integer "flow_cell_lane_id"
-    t.integer "lock_version",      :default => 0
+    t.integer  "sample_mixture_id"
   end
 
   create_table "flow_cells", :force => true do |t|
@@ -154,6 +149,20 @@ ActiveRecord::Schema.define(:version => 20100316205813) do
     t.integer  "lab_group_id"
     t.integer  "user_id"
     t.integer  "lock_version", :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "multiplex_codes", :force => true do |t|
+    t.string   "sequence"
+    t.integer  "multiplexing_scheme_id"
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "multiplexing_schemes", :force => true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -230,13 +239,40 @@ ActiveRecord::Schema.define(:version => 20100316205813) do
     t.string   "gene_gtf_path"
   end
 
+  create_table "sample_mixtures", :force => true do |t|
+    t.string   "name_on_tube"
+    t.string   "sample_description"
+    t.integer  "project_id"
+    t.string   "budget_number"
+    t.integer  "desired_read_length"
+    t.integer  "alignment_start_position", :default => 1
+    t.integer  "alignment_end_position"
+    t.boolean  "control",                  :default => false
+    t.string   "comment"
+    t.boolean  "ready_for_sequencing",     :default => true
+    t.integer  "eland_parameter_set_id"
+    t.date     "submission_date"
+    t.string   "status"
+    t.integer  "submitted_by_id"
+    t.integer  "sample_prep_kit_id"
+    t.integer  "sample_set_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "sample_prep_kits", :force => true do |t|
     t.string   "name"
-    t.integer  "lock_version",       :default => 0
+    t.integer  "lock_version",           :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "restriction_enzyme"
-    t.boolean  "paired_end",         :default => false
+    t.boolean  "paired_end",             :default => false
+    t.integer  "multiplexing_scheme_id"
+  end
+
+  create_table "sample_sets", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "sample_terms", :force => true do |t|
@@ -258,30 +294,21 @@ ActiveRecord::Schema.define(:version => 20100316205813) do
   end
 
   create_table "samples", :force => true do |t|
-    t.integer  "sample_set_id"
-    t.integer  "submitted_by_id"
-    t.integer  "project_id"
-    t.date     "submission_date"
-    t.string   "name_on_tube"
     t.string   "sample_description"
-    t.integer  "sample_prep_kit_id"
     t.integer  "insert_size"
-    t.integer  "desired_read_length"
-    t.integer  "alignment_start_position", :default => 1
-    t.integer  "alignment_end_position"
     t.integer  "reference_genome_id"
-    t.string   "status",                   :default => "submitted"
     t.string   "naming_scheme_id"
-    t.string   "budget_number"
-    t.boolean  "control",                  :default => false
-    t.integer  "lock_version",             :default => 0
-    t.string   "comment"
+    t.integer  "lock_version",        :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "eland_parameter_set_id"
-    t.boolean  "ready_for_sequencing",     :default => true,        :null => false
     t.integer  "experiment_id"
     t.string   "postback_uri"
+    t.integer  "sample_mixture_id"
+    t.integer  "multiplex_code_id"
+  end
+
+  create_table "schema_info", :id => false, :force => true do |t|
+    t.integer "version"
   end
 
   create_table "sequencing_runs", :force => true do |t|
