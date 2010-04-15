@@ -73,6 +73,9 @@ class SampleMixture < ActiveRecord::Base
 
   # needed this to get fields_for to work in the view
   def samples_attributes=(attributes)
+    attributes.keys.collect{|k| k.to_i}.sort.each do |index|
+      self.samples[index].update_attributes(attributes[index.to_s])
+    end
   end
 
   def submitted_by=(login)
