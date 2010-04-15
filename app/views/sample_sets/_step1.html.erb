@@ -55,7 +55,7 @@
     <select id='sample_set_naming_scheme_id' name='sample_set[naming_scheme_id]'>
       <option value="">- None -</option>
       <%= options_from_collection_for_select @naming_schemes, "id", "name",
-        selected = @sample_set.naming_scheme_id %>
+        selected = @sample_set.naming_scheme_id.to_i %>
     </select></p>
   <% end %>
 
