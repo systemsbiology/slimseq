@@ -44,12 +44,7 @@ class SampleSet < ActiveRecord::Base
 
     # build empty sample mixtures and samples
     # these will be replaced if sample mixture attributes have been provided
-    sample_set.number_of_samples.to_i.times do
-      mixture = sample_set.sample_mixtures.build
-      sample_set.multiplex_number.to_i.times do
-        mixture.samples.build
-      end
-    end
+    sample_set.build_blank_mixtures_and_samples
     sample_set.submission_step = 1
 
     normalized_mixture_attributes = normalize_mixture_attributes(mixture_attributes, deprecated_sample_attributes)
@@ -60,6 +55,15 @@ class SampleSet < ActiveRecord::Base
 
   # needed this to get fields_for to work in the view
   def sample_mixtures_attributes=(attributes)
+  end
+
+  def build_blank_mixtures_and_samples
+    number_of_samples.to_i.times do
+      mixture = sample_mixtures.build(mixture_specific_attributes)
+      multiplex_number.to_i.times do
+        mixture.samples.build(sample_specific_attributes)
+      end
+    end
   end
 
   def load_mixture_attributes(attributes)

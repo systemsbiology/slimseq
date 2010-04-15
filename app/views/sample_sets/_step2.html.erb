@@ -20,33 +20,37 @@
     <thead>
     <tr>
       <th>Name on the sample tube</th>
-      <% if @sample_set.naming_scheme == nil %>
-        <th>Sample Description</th>
-      <% else %>
-        <% for element in @naming_elements %>
-          <th><%=h element.name %></th>
-        <% end %>
-      <% end %>
+      <th>Sample Description</th>
       <% unless @samples_need_approval %>
         <th>Ready For Sequencing</th>
       <% end %>
       <th>Sample Comment</th>
     </tr>
     </thead>
+    <% @n = nil %>
     <% sample_set_form.fields_for :sample_mixtures do |mixture_fields| %>
       <tr>
         <% @sample_mixture = mixture_fields.object %>
         <%= error_messages_for 'sample_mixture' %>
           <td><%= mixture_fields.text_field :name_on_tube, :size => 10 %></td>
 
-          <% @samples = mixture_fields.object.samples %>
-          <% mixture_fields.fields_for :samples do |sample_fields| %>
-            <% if @naming_scheme == nil %>
-              <td><%= sample_fields.text_field :sample_description, :size => 30 %></td>
-            <% else %>
-              <%= render :partial => 'samples/schemed_sample_description' %>
-            <% end %>
-          <% end %>
+          <td>
+            <table>
+              <% @samples = mixture_fields.object.samples %>
+              <% mixture_fields.fields_for :samples do |sample_fields| %>
+                <tr>
+                  <% @sample = sample_fields.object %>
+                  <% @n = @n ? @n+1 : 0 %>
+
+                  <% if @naming_scheme == nil %>
+                    <td><%= sample_fields.text_field :sample_description, :size => 30 %></td>
+                  <% else %>
+                    <%= render :partial => 'samples/schemed_sample_description', :locals => { :sample_fields => sample_fields } %>
+                  <% end %>
+                </tr>
+              <% end %>
+            </table>
+          </td>
           
           <% if @samples_need_approval %>
             <%= mixture_fields.hidden_field :ready_for_sequencing, :value => 0 %>
