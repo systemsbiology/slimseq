@@ -34,9 +34,13 @@ class SampleSet < ActiveRecord::Base
   
   def self.new(attributes=nil)
     mixture_attributes = attributes.delete("sample_mixtures_attributes") || attributes.delete("sample_mixtures") if attributes
+    deprecated_sample_attributes = attributes.delete("samples") if attributes
 
     parse_multi_field_date(attributes)
     sample_set = super
+
+    sample_set.alignment_start_position ||= 1
+    sample_set.submission_date ||= Date.today
 
     # build empty sample mixtures and samples
     # these will be replaced if sample mixture attributes have been provided
@@ -48,7 +52,7 @@ class SampleSet < ActiveRecord::Base
     end
     sample_set.submission_step = 1
 
-    normalized_mixture_attributes = normalize_mixture_attributes(mixture_attributes)
+    normalized_mixture_attributes = normalize_mixture_attributes(mixture_attributes, deprecated_sample_attributes)
     sample_set.load_mixture_attributes(normalized_mixture_attributes)
 
     return sample_set
@@ -82,26 +86,6 @@ class SampleSet < ActiveRecord::Base
     return sample_mixtures
   end
 
-  def mixture_specific_attributes
-    return attribute_subset([
-      "submission_date", "project_id", "sample_prep_kit_id", "budget_number",
-      "desired_read_length", "alignment_start_position", "alignment_end_position",
-      "eland_parameter_set_id", "submitted_by"
-    ])
-  end
-
-  def sample_specific_attributes
-    return attribute_subset([
-      "naming_scheme_id", "reference_genome_id", "insert_size"
-    ])
-  end
-
-  def attribute_subset(keys)
-    Hash[
-      keys.collect{|key| [key, send(key)]}
-    ]
-  end
-
   def valid?
     return false unless errors.empty?
 
@@ -133,112 +117,75 @@ class SampleSet < ActiveRecord::Base
     NamingScheme.find_by_id(naming_scheme_id)
   end
 
-  def load_sample_api_hash(sample_api_hash, attributes)
-    submitted_by = attributes.delete("submitted_by")
-
-    begin
-      sample_api_hash.each do |sample_hash|
-        begin
-          user = User.find_by_login(submitted_by)
-        rescue ActiveRecord::RecordNotFound
-          raise "The user login specified by 'submitted_by' was not found"
-        end
-
-        sample = Sample.new(attributes.merge( {
-          :name_on_tube => sample_hash["name_on_tube"],
-          :postback_uri => sample_hash["postback_uri"],
-          :sample_description => sample_hash["sample_description"] || sample_hash["sample_key"] || "",
-          :submitted_by_id => user.id,
-          :submission_date => sample_hash["submission_date"] || Date.today
-        } ))
-
-        begin
-          naming_scheme = NamingScheme.find(attributes["naming_scheme_id"])
-        rescue ActiveRecord::RecordNotFound => e
-          # do nothing
-        end
-
-        term_list = Array.new
-        sample_hash.keys.grep(/^[A-Z]/).each do |element_name|
-          raise "The sample information seems to include meta data using a naming scheme, " +
-            "but the naming scheme specified is invalid" unless naming_scheme
-          naming_element = naming_scheme.naming_elements.find_by_name(element_name)
-          raise "Specified naming element #{element_name} wasn't found for the naming " +
-            "scheme #{naming_scheme.name}" unless(naming_element)
-
-          if(naming_element.free_text)
-            sample.sample_texts.build(:text => sample_hash[element_name],
-                                      :naming_element_id => naming_element.id)
-            term_list << sample_hash[element_name]
-          else
-            naming_term = naming_element.naming_terms.find_by_term(sample_hash[element_name])
-            raise "The specified term is not in the controller vocabulary for #{element_name}" unless naming_term
-            sample.sample_terms.build(:naming_term => naming_term)
-
-            term_list << naming_term.abbreviated_term
-          end
-        end
-        sample.sample_description = term_list.join("_") unless term_list.empty?
-
-        error_text = (sample.errors.collect {|e| e.to_s}).join(", ") unless sample.valid?
-        raise "Sample parameters are invalid: #{error_text}" if error_text
-        samples << sample
-      end
-    rescue Exception => e
-      errors.add_to_base(e.message)
-    end
-  end
-
-  def load_sample_form_hash(sample_form_hash)
-    sample_form_hash.each_value do |sample_attributes|
-      samples << Sample.new(sample_attributes)
-    end
-  end
-
-  def initialize_samples(number, attributes)
-    errors.add(:number_of_samples, "must be provided") unless number && number != ""
-
-    submitted_by = attributes.delete("submitted_by")
-    user = User.find_by_login(submitted_by)
-
-    number.to_i.times do
-      samples << Sample.new(
-        :naming_scheme_id => naming_scheme_id,
-        :reference_genome_id => reference_genome_id,
-        :insert_size => insert_size,
-        :sample_set => self
-      )
-    end
-  end
-
   private
 
-  def self.normalize_mixture_attributes(attributes)
-    return nil unless attributes
+  def self.normalize_mixture_attributes(attributes, deprecated_sample_attributes = nil)
+    return nil unless attributes || deprecated_sample_attributes
 
-    # if mixtures are given as key/value pairs, normalization is needed
-    if attributes.respond_to?(:keys)
-      attributes = hash_values_sorted_by_keys(attributes)
-    end
-
-    attributes.each_index do |i|
-      samples = attributes[i].delete("samples_attributes")
-      next unless samples
-
-      if samples.respond_to?(:keys)
-        samples = hash_values_sorted_by_keys(samples)
-
-        samples.each_index do |j|
-          # handle 'sample_key' being synonymous for 'sample_description'
-          sample_key = samples[j].delete("sample_key")
-          samples[j]["sample_description"] = sample_key if sample_key
-        end
+    if attributes
+      # if mixtures are given as key/value pairs, normalization is needed
+      if attributes.respond_to?(:keys)
+        attributes = hash_values_sorted_by_keys(attributes)
       end
 
-      attributes[i]["samples"] = samples
-    end
+      attributes.each_index do |i|
+        samples = attributes[i].delete("samples_attributes") || attributes[i].delete("samples")
+        next unless samples
 
-    return attributes
+        if samples.respond_to?(:keys)
+          samples = hash_values_sorted_by_keys(samples)
+
+          samples.each_index do |j|
+            # handle 'sample_key' being synonymous for 'sample_description'
+            sample_key = samples[j].delete("sample_key")
+            samples[j]["sample_description"] = sample_key if sample_key
+          end
+        end
+
+        attributes[i]["samples"] = samples
+      end
+
+      return attributes
+    else
+      attributes = Array.new
+
+      deprecated_sample_attributes.each do |sample_attributes|
+        sample_mixture_attributes = {
+          "name_on_tube" => sample_attributes.delete("name_on_tube"),
+          "samples" => [{
+            "sample_description" => sample_attributes.delete("sample_description") || sample_attributes.delete("sample_key")
+          }]
+        }
+
+        sample_attributes.each do |key, value|
+          sample_mixture_attributes["samples"][0][key] = value
+        end
+
+        attributes << sample_mixture_attributes
+      end
+
+      return attributes
+    end
+  end
+
+  def mixture_specific_attributes
+    return attribute_subset([
+      "submission_date", "project_id", "sample_prep_kit_id", "budget_number",
+      "desired_read_length", "alignment_start_position", "alignment_end_position",
+      "eland_parameter_set_id", "submitted_by"
+    ])
+  end
+
+  def sample_specific_attributes
+    return attribute_subset([
+      "naming_scheme_id", "reference_genome_id", "insert_size"
+    ])
+  end
+
+  def attribute_subset(keys)
+    Hash[
+      keys.collect{|key| [key, send(key)]}
+    ]
   end
 
   def self.hash_values_sorted_by_keys(hash)
