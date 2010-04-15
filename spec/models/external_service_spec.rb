@@ -5,7 +5,9 @@ describe ExternalService do
     it "should notify appropriate external services" do
       service_1 = create_external_service(:uri => "http://localhost:4567/done")
       service_2 = create_external_service(:sample_status_notification => false)
-      sample = mock_model(Sample, :status => "completed", :postback_uri => "http://localhost:4568/samples/1")
+      sample_mixture = mock_model(SampleMixture, :status => "completed")
+      sample = mock_model(Sample, :postback_uri => "http://localhost:4568/samples/1",
+        :sample_mixture => sample_mixture)
 
       RestClient.should_receive(:post).with("http://localhost:4567/done",
         "{\"sample\":{\"status\":\"completed\",\"id\":#{sample.id}}}", {:content_type=>:json, :accept=>:json})
@@ -18,7 +20,9 @@ describe ExternalService do
 
     it "should log an error if connecting to an external service fails" do
       service_1 = create_external_service(:uri => "http://localhost:4567/done")
-      sample = mock_model(Sample, :status => "completed")
+      sample_mixture = mock_model(SampleMixture, :status => "completed")
+      sample = mock_model(Sample, :postback_uri => "http://localhost:4568/samples/1",
+        :sample_mixture => sample_mixture)
       
       RestClient.should_receive(:post).with("http://localhost:4567/done",
         "{\"sample\":{\"status\":\"completed\",\"id\":#{sample.id}}}", {:content_type=>:json, :accept=>:json}).
