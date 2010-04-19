@@ -139,6 +139,8 @@ class FlowCellLane < ActiveRecord::Base
       desired_read_length = number_of_cycles
     end
 
+    alignment_end_position = desired_read_length if alignment_end_position > desired_read_length
+
     s = ""
 
     # starting at the beginning
