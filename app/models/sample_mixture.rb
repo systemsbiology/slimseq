@@ -120,4 +120,11 @@ class SampleMixture < ActiveRecord::Base
     end
   end
 
+  def self.accessible_to_user(user)
+    sample_mixtures = SampleMixture.find(:all, 
+      :include => :project,
+      :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
+        user.get_lab_group_ids, false ],
+      :order => "submission_date DESC, sample_mixtures.id ASC")
+  end
 end

@@ -45,4 +45,14 @@ describe SampleMixture do
 
   end
 
+  it "should provide the sample mixtures accessible to a user" do
+    lab_group_1 = mock_model(LabGroup, :destroyed? => false)
+    lab_group_2 = mock_model(LabGroup, :destroyed? => false)
+    user = mock_model(User, :get_lab_group_ids => [lab_group_1.id])
+    sample_mixture_1 = create_sample_mixture( :project => create_project(:lab_group => lab_group_1) )
+    sample_mixture_2 = create_sample_mixture( :project => create_project(:lab_group => lab_group_2) )
+    
+    SampleMixture.accessible_to_user(user).should == [sample_mixture_1]
+  end
+
 end
