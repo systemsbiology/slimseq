@@ -236,9 +236,9 @@ describe FlowCellLane do
 
       describe "when the alignment end position is greater than the desired read length" do
         it "should use the read length as the alignment end position" do
-          sample = new_sample(:alignment_start_position => 5, :alignment_end_position => 41,
+          mixture = new_sample_mixture(:alignment_start_position => 5, :alignment_end_position => 41,
             :desired_read_length => 36)
-          lane = create_flow_cell_lane(:samples => [sample], :number_of_cycles => 36)
+          lane = create_flow_cell_lane(:sample_mixture => mixture, :number_of_cycles => 36)
           lane.use_bases_string(true).should == "n4Y31n1"
         end
       end
@@ -246,9 +246,9 @@ describe FlowCellLane do
 
     describe "with number of cycles not matching desired read length" do
       it "should override the sample alignement start and stop" do
-        sample = new_sample(:alignment_start_position => 5, :alignment_end_position => 19,
+        mixture = new_sample_mixture(:alignment_start_position => 5, :alignment_end_position => 19,
           :desired_read_length => 36)
-        lane = create_flow_cell_lane(:samples => [sample], :number_of_cycles => 40)
+        lane = create_flow_cell_lane(:sample_mixture => mixture, :number_of_cycles => 40)
         lane.use_bases_string(true).should == "Y39n1"
       end
     end
