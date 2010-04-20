@@ -1,91 +1,37 @@
 --- 
 sample5: 
-  status: submitted
-  name_on_tube: bb
+  sample_mixture: sample_mixture_5
   naming_scheme:
-  project: another
   sample_description: BobB
-  submission_date: 2006-09-10
   reference_genome: weevil_1
-  desired_read_length: 36
-  budget_number: 1234
   insert_size: 150
-  sample_prep_kit: chipseq
-  alignment_start_position: 1
-  alignment_end_position: 22
-  comment:
 sample6: 
-  status: submitted
-  name_on_tube: a1
-  project: another
+  sample_mixture: sample_mixture_6
   sample_description: wt_HT_024_B_32234
-  submission_date: 2007-05-31
   naming_scheme: yeast_scheme
   reference_genome: weevil_1
-  desired_read_length: 36
-  budget_number: 1234
   insert_size: 150
-  sample_prep_kit: chipseq
-  alignment_start_position: 1
-  alignment_end_position: 22
-  comment:
 sample1: 
-  status: submitted
-  name_on_tube: yng
+  sample_mixture: sample_mixture_1
   naming_scheme:
-  project: first
   sample_description: Young
-  submission_date: 2006-02-10
   reference_genome: weevil_1
-  desired_read_length: 36
-  budget_number: 1234
   insert_size: 150
-  sample_prep_kit: chipseq
-  alignment_start_position: 1
-  alignment_end_position: 22
-  comment:
 sample2: 
-  status: sequenced
-  name_on_tube: old
+  sample_mixture: sample_mixture_2
   naming_scheme:
-  project: first
   sample_description: Old
-  submission_date: 2006-02-10
   reference_genome: weevil_1
-  desired_read_length: 36
-  budget_number: 1234
   insert_size: 150
-  sample_prep_kit: chipseq
-  alignment_start_position: 1
-  alignment_end_position: 22
-  comment:
 sample3: 
-  status: clustered
-  name_on_tube: vold
+  sample_mixture: sample_mixture_3
   naming_scheme:
-  project: first
   sample_description: Very Old
-  submission_date: 2006-02-10
   reference_genome: weevil_1
-  desired_read_length: 36
-  budget_number: 1234
   insert_size: 150
-  sample_prep_kit: chipseq
-  alignment_start_position: 1
-  alignment_end_position: 22
-  comment:
 sample4: 
-  status: clustered
-  name_on_tube: vvold
+  sample_mixture: sample_mixture_4
   naming_scheme:
-  project: first
   sample_description: Very Very Old
-  submission_date: 2006-02-10
   reference_genome: weevil_1
-  desired_read_length: 36
-  budget_number: 1234
   insert_size: 150
-  sample_prep_kit: chipseq
-  alignment_start_position: 1
-  alignment_end_position: 22
-  comment:
