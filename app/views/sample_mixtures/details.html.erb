@@ -1,15 +1,11 @@
 <h2>Samples</h2>
 
-<% if(@samples != nil && @samples.size > 0) %>
+<% if(@sample_mixtures != nil && @sample_mixtures.size > 0) %>
 
   <h3>Sample Information</h3>
-  <% for sample in @samples %>
-    <b><%=h sample.name_on_tube %></b>: <%=h sample.sample_description %><br>
-  <% end %>
-
-  <h3>Facility Comments</h3>
-  <% for sample in @samples %>
-    <b><%=h sample.name_on_tube %></b>: <%=h sample.associated_comments %><br>
+  <% for sample_mixture in @sample_mixtures %>
+    <b><%=h sample_mixture.name_on_tube %> (<%=h sample_mixture.sample_description %>)</b>: 
+    <%=h sample_mixture.associated_comments %><br/>
   <% end %>
 
   <h3>Quality Information</h3>
@@ -29,10 +25,10 @@
       </tr>
     </thead>
     <tbody>
-      <% for sample in @samples %>
-        <% for lane in sample.flow_cell_lanes %>
+      <% for sample_mixture in @sample_mixtures %>
+        <% for lane in sample_mixture.flow_cell_lanes %>
           <tr>
-            <td><%=h sample.name_on_tube %></td>
+            <td><%=h sample_mixture.name_on_tube %></td>
             <td><%=h lane.flow_cell.name %></td>
             <td><%=h lane.lane_number %></td>
             <td><%=h lane.starting_concentration %></td>
@@ -50,9 +46,9 @@
   <%= render :partial => 'shared/tinytable_nonpaged', :locals => {:sort_column => nil} %>
 
   <h3>Data Locations</h3>
-  <% for sample in @samples %>
-    <% for lane in sample.flow_cell_lanes %>
-      <p><b><%=h sample.name_on_tube %></b>: 
+  <% for sample_mixture in @sample_mixtures %>
+    <% for lane in sample_mixture.flow_cell_lanes %>
+      <p><b><%=h sample_mixture.name_on_tube %></b>: 
       <%= lane.eland_output_file %><br></p>
     <% end %>
   <% end %> 
