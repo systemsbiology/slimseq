@@ -89,6 +89,8 @@ class SequencingRun < ActiveRecord::Base
 
     lane_counter = 0
     flow_cell.flow_cell_lanes.each do |lane|
+      sample_mixture = lane.sample_mixture
+
       gerald_params[lane_counter.to_s] = {
         :lane_number => lane.lane_number,
         :analysis => sample_mixture.sample_prep_kit.eland_analysis,
