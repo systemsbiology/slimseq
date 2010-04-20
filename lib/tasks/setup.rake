@@ -5,14 +5,27 @@ task :setup => ["gems:install", "setup:configuration", "setup:naming_schemer", "
 namespace :setup do
   desc "Use the example database and application YAML configuration files"
   task :configuration do
-    puts "== Using the default application and database configuration files"
-    FileUtils.cp "config/database.yml.example", "config/database.yml" unless File.exists? "config/database.yml"
-    FileUtils.cp "config/application.yml.example", "config/application.yml" unless File.exists? "config/application.yml"
+    puts "== Generating application and database configuration"
+
+    unless ENV['authorizer']
+      raise "Please specify and authorizer e.g. rake setup authorizer=slimsolo"
+    end
+
+    # need to have an application.yml and database.yml to run a generator, so put a temporary 
+    # ones in place if needed
+    unless File.exists?("config/database.yml") || File.exists?("config/application.yml")
+      FileUtils.cp "lib/generators/slimseq_configuration/templates/database.yml.placeholder",
+        "config/database.yml"
+      FileUtils.cp "lib/generators/slimseq_configuration/templates/application.yml.placeholder",
+        "config/application.yml"
+    end
+
+    system("ruby script/generate slimseq_configuration #{ENV['authorizer']}")
   end
 
-  desc "Install the naming schemer plugin"
+  desc "Install the naming schemer plugin and ExtJSs"
   task :naming_schemer do
-    puts "== Downloading naming_schemer submodule =="
+    puts "== Downloading Naming Schemer and ExtJS external components =="
     `git submodule init`
     `git submodule update`
   end
@@ -40,9 +53,12 @@ namespace :setup do
   task :external_data => :environment do
     puts "== Setting up external data =="
 
-    facility_group = LabGroup.create(:name => "Sequencing Facility")
-    LabGroupProfile.create(:lab_group_id => facility_group.id, :file_folder => "facility")
-    facility_project = Project.find_by_name("Sequencing Facility")
+    # Not sure why, but APP_CONFIG isn't always loaded when this task runs
+    require 'config/initializers/1-load_application_config'
+
+    facility_group = LabGroup.find_or_create_by_name("Microarray Facility")
+    LabGroupProfile.create(:lab_group_id => facility_group.id)
+    facility_project = Project.find_or_create_by_name("Microarray Facility")
     facility_project.update_attributes(:lab_group_id => facility_group.id)
   end
 

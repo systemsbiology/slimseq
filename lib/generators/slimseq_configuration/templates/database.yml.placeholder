@@ -1,0 +1,23 @@
+# This is a fake database configuration file to keep the app happy until the correct one is
+# generated via 'rake setup'
+
+production:
+  adapter: mysql
+  host: localhost
+  database: slimseq_production
+  username: slimseq
+  password: slimseq
+
+development:
+  adapter: mysql
+  host: localhost 
+  database: slimseq_development
+  username: test
+  password: test
+  
+test:
+  adapter: mysql
+  host: localhost 
+  database: slimseq_test
+  username: test
+  password: test

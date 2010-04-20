@@ -1,0 +1,20 @@
+production:
+  adapter: mysql
+  host: localhost
+  database: slimseq_production
+  username: slimseq
+  password: slimseq
+
+development:
+  adapter: mysql
+  host: <%= dev_mysql_server || "localhost" %>
+  database: <%= dev_mysql_database || "slimseq_development" %>
+  username: <%= dev_mysql_username || "slimseq" %>
+  password: <%= dev_mysql_password || "slimseq" %>
+  
+test:
+  adapter: mysql
+  host: <%= test_mysql_server || "localhost" %>
+  database: <%= test_mysql_database || "slimseq_development" %>
+  username: <%= test_mysql_username || "slimseq" %>
+  password: <%= test_mysql_password || "slimseq" %>

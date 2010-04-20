@@ -148,5 +148,7 @@ module FixtureReplacement
     s.username = random_string(8)
     s.password = random_string(8)
     s.sample_status_notification = true
+    s.json_style = "JSON-wrapped"
+    s.authentication_method = "in-JSON"
   end
 end
