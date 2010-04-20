@@ -127,4 +127,45 @@ class SampleMixture < ActiveRecord::Base
         user.get_lab_group_ids, false ],
       :order => "submission_date DESC, sample_mixtures.id ASC")
   end
+
+  def associated_comments
+    result = ""
+
+    result = add_comment(result, comment, "sample_mixture")
+
+    flow_cells = Array.new
+    sequencing_runs = Array.new
+    flow_cell_lanes.each do |l|
+      result = add_comment(result, l.comment, "lane")
+      flow_cells << l.flow_cell
+      l.flow_cell.sequencing_runs.each do |s|
+        sequencing_runs << s
+      end
+    end
+
+    flow_cells.uniq.each do |f|
+      result = add_comment(result, f.comment, "flow cell")
+    end
+
+    sequencing_runs.uniq.each do |s|
+      result = add_comment(result, s.comment, "sequencing")
+    end
+
+    if(result.length > 0)
+      return result
+    else
+      return "No comments"
+    end
+  end
+  
+  private
+
+  def add_comment(base, comment, type)
+    if(comment && comment.length > 0)
+      base += ", " if base.length > 0
+      base += "#{type}: #{comment}" 
+    end
+
+    return base
+  end
 end

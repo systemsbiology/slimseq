@@ -55,4 +55,30 @@ describe SampleMixture do
     SampleMixture.accessible_to_user(user).should == [sample_mixture_1]
   end
 
+  describe "providing comments from associated flow cell lanes, flow cells and sequencing runs" do
+
+    it "should provide a concatenated string when there are some comments" do
+      sample_mixture = create_sample_mixture(:comment => "weird IP")
+      flow_cell = create_flow_cell(:comment => "Flow was all wrong")
+      lane_1 = create_flow_cell_lane(:sample_mixture => sample_mixture, :flow_cell => flow_cell,
+                                     :comment => "Concentration unsually high")
+      lane_2 = create_flow_cell_lane(:sample_mixture => sample_mixture, :flow_cell => flow_cell)
+      sequencing_run = create_sequencing_run(:flow_cell => flow_cell, :comment => "Prism messed up")
+      
+      sample_mixture.associated_comments.should == "sample_mixture: weird IP, lane: Concentration unsually high, " +
+        "flow cell: Flow was all wrong, sequencing: Prism messed up"
+    end
+
+    it "should provide 'No comments' when there aren't any" do
+      sample_mixture = create_sample_mixture
+      flow_cell = create_flow_cell
+      lane_1 = create_flow_cell_lane(:sample_mixture => sample_mixture, :flow_cell => flow_cell)
+      lane_2 = create_flow_cell_lane(:sample_mixture => sample_mixture, :flow_cell => flow_cell)
+      sequencing_run = create_sequencing_run(:flow_cell => flow_cell)
+      
+      sample_mixture.associated_comments.should == "No comments"
+    end
+
+  end
+
 end

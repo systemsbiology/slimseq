@@ -556,32 +556,6 @@ describe Sample do
     sample.raw_data_paths.should == "/new/lane_1/path, /new/lane_2/path"
   end
 
-  describe "providing comments from associated flow cell lanes, flow cells and sequencing runs" do
-
-    it "should provide a concatenated string when there are some comments" do
-      sample = create_sample(:comment => "weird IP")
-      flow_cell = create_flow_cell(:comment => "Flow was all wrong")
-      lane_1 = create_flow_cell_lane(:samples => [sample], :flow_cell => flow_cell,
-                                     :comment => "Concentration unsually high")
-      lane_2 = create_flow_cell_lane(:samples => [sample], :flow_cell => flow_cell)
-      sequencing_run = create_sequencing_run(:flow_cell => flow_cell, :comment => "Prism messed up")
-      
-      sample.associated_comments.should == "sample: weird IP, lane: Concentration unsually high, " +
-        "flow cell: Flow was all wrong, sequencing: Prism messed up"
-    end
-
-    it "should provide 'No comments' when there aren't any" do
-      sample = create_sample
-      flow_cell = create_flow_cell
-      lane_1 = create_flow_cell_lane(:samples => [sample], :flow_cell => flow_cell)
-      lane_2 = create_flow_cell_lane(:samples => [sample], :flow_cell => flow_cell)
-      sequencing_run = create_sequencing_run(:flow_cell => flow_cell)
-      
-      sample.associated_comments.should == "No comments"
-    end
-
-  end
-
   it "should provide the associated user" do
     sample = create_sample(:submitted_by_id => 1)
     User.should_receive(:find).with(1).and_return( mock_user = mock_model(User) )
