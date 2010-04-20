@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100316205813) do
+ActiveRecord::Schema.define(:version => 20100419173009) do
 
   create_table "charge_periods", :force => true do |t|
     t.string   "name"
@@ -77,6 +77,8 @@ ActiveRecord::Schema.define(:version => 20100316205813) do
     t.boolean  "sample_status_notification", :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "json_style"
+    t.string   "authentication_method"
   end
 
   create_table "flow_cell_lanes", :force => true do |t|
