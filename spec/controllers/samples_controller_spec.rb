@@ -41,7 +41,7 @@ describe SamplesController do
       @accessible_lab_group_ids = [1,2,3]
       @current_user.should_receive(:get_lab_group_ids).any_number_of_times.
         and_return(@accessible_lab_group_ids)
-      Sample.should_receive(:browsing_categories).and_return( mock("Browsing categories") )
+      SampleMixture.should_receive(:browsing_categories).and_return( mock("Browsing categories") )
       #User.should_receive(:all_by_id).and_return( mock("User hash") )
       controller.stub!(:paginate).and_return(["Samples Pages", @accessible_samples])
     end
