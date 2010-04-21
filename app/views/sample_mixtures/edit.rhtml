@@ -63,17 +63,14 @@
     <% end %>
 
     <p>Sample Description<br/>
-      <% if false && @sample_mixture.naming_scheme != nil %>
+      <% if @sample.naming_scheme != nil %>
+        <% @naming_scheme = @sample.naming_scheme %>
+        <% @naming_elements = @naming_scheme.naming_elements %>
         <% @n = 0 %>
         <table class="sortable" id="samples">
-          <tr>      
-            <% for element in @naming_elements %>
-              <th><%=h element.name %></th>
-            <% end %>
+          <tr>
+            <%= render :partial => 'samples/schemed_sample_description', :locals => { :sample_fields => sample_fields } %>
           </tr>
-            <tr>
-              <%= render :partial => 'samples/schemed_sample_description' %>
-            </tr>
         </table>
       <% else %>
         <%= sample_fields.text_field :sample_description,
