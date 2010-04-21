@@ -72,10 +72,10 @@ class SampleMixturesController < ApplicationController
   end
   
   def browse
-    @sample_mixtures = SampleMixture.accessible_to_user(current_user)
+    samples = Sample.accessible_to_user(current_user)
     categories = sorted_categories(params)
 
-    @tree = SampleMixture.browse_by(@sample_mixtures, categories)
+    @tree = Sample.browse_by(samples, categories)
 
     respond_to do |format|
       format.html  #browse.html

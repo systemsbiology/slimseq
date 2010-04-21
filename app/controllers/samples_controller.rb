@@ -30,7 +30,7 @@ available when retrieving single samples (see GET /samples/[sample id]).
 
     @samples = Sample.accessible_to_user(current_user)
 
-    @browse_categories = Sample.browsing_categories
+    @browse_categories = SampleMixture.browsing_categories
 
     respond_to do |format|
       format.html  #index.html

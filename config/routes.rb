@@ -46,7 +46,7 @@ ActionController::Routing::Routes.draw do |map|
 
   # make sample_mixtures actions appear under the /samples URL
   map.resources :sample_mixtures, :as => "samples", :except => [:index, :show],
-    :collection => {:browse => :get, :search => :get, :all => :get}
+    :collection => {:browse => :post, :search => :get, :all => :get}
   map.resources :sample_mixtures
   map.resources :samples, :only => [:index, :show]
   

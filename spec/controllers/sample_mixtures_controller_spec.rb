@@ -249,11 +249,11 @@ describe SampleMixturesController do
     before(:each) do
       login_as_user
 
-      mock_sample_mixtures = mock("Array of samples")
-      SampleMixture.should_receive(:accessible_to_user).and_return(mock_sample_mixtures)
+      mock_samples = mock("Array of samples")
+      Sample.should_receive(:accessible_to_user).and_return(mock_samples)
 
       @mock_tree = mock("Sample tree")
-      SampleMixture.should_receive(:browse_by).and_return(@mock_tree)
+      Sample.should_receive(:browse_by).and_return(@mock_tree)
     end
 
     it "should expose a sample tree as @tree" do
