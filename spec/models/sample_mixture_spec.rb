@@ -81,4 +81,39 @@ describe SampleMixture do
 
   end
 
+  describe "notifying external services of status changes" do
+
+    it "should notify external services when a sample_mixture is clustered" do
+      sample_mixture = create_sample_mixture
+      sample = create_sample(:sample_mixture => sample_mixture)
+      ExternalService.should_receive(:sample_status_change).with(sample).once
+      sample_mixture.reload.cluster!
+    end
+
+    it "should notify external services when a sample_mixture is sequenced" do
+      sample_mixture = create_sample_mixture
+      sample = create_sample(:sample_mixture => sample_mixture)
+      ExternalService.should_receive(:sample_status_change).with(sample).twice
+      sample_mixture.reload.cluster!
+      sample_mixture.sequence!
+    end
+
+    it "should notify external services when a sample_mixture is completed" do
+      sample_mixture = create_sample_mixture
+      sample = create_sample(:sample_mixture => sample_mixture)
+      ExternalService.should_receive(:sample_status_change).with(sample).exactly(3).times
+      sample_mixture.reload.cluster!
+      sample_mixture.sequence!
+      sample_mixture.complete!
+    end
+
+    it "should notify external services when a sample_mixture goes back to the submitted state" do
+      sample_mixture = create_sample_mixture
+      sample = create_sample(:sample_mixture => sample_mixture)
+      ExternalService.should_receive(:sample_status_change).with(sample).twice
+      sample_mixture.reload.cluster!
+      sample_mixture.uncluster!
+    end
+  end
+  
 end
