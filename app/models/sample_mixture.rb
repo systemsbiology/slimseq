@@ -157,8 +157,80 @@ class SampleMixture < ActiveRecord::Base
       return "No comments"
     end
   end
-  
-  private
+
+  def self.find_by_sanitized_conditions(conditions)
+    accepted_keys = {
+      'project_id' => 'sample_mixtures.project_id',
+      'submitted_by_id' => 'sample_mixtures.submitted_by_id',
+      'submission_date' => 'sample_mixtures.submission_date',
+      'insert_size' => 'samples.insert_size',
+      'reference_genome_id' => 'samples.reference_genome_id',
+      'organism_id' => 'reference_genomes.organism_id',
+      'status' => 'sample_mixtures.status',
+      'naming_scheme_id' => 'naming_scheme_id',
+      'flow_cell_id' => 'flow_cell_lanes.flow_cell_id',
+      'naming_term_id' => 'sample_terms.naming_term_id',
+      'lab_group_id' => 'projects.lab_group_id',
+      'sample_prep_kit_id' => 'sample_mixtures.sample_prep_kit_id'
+    }
+
+    sanitized_conditions = Array.new
+
+    conditions.each do |key, value|
+      if accepted_keys.include?(key)
+        value.to_s.split(/,/).each do |subvalue|
+          sanitized_conditions << {accepted_keys[key] => subvalue}
+        end
+      end
+    end
+
+    samples = Array.new
+
+    sanitized_conditions.each do |condition|
+      search_samples = Sample.find(
+        :all,
+        :include => [:sample_terms, :reference_genome, {
+          :sample_mixture => [:project, :flow_cell_lanes]}
+        ],
+        :conditions => condition
+      )
+
+      if(samples.size > 0)
+        samples = samples & search_samples
+      else
+        samples = search_samples
+      end
+    end
+
+    # return the sample mixtures
+    return samples.collect{|s| s.sample_mixture}
+  end
+
+  def self.browsing_categories
+    categories = [
+      ['Flow Cell', 'flow_cell'],
+      ['Insert Size', 'insert_size'],
+      ['Lab Group', 'lab_group'],
+      ['Naming Scheme', 'naming_scheme'],
+      ['Organism', 'organism'],
+      ['Project', 'project'],
+      ['Reference Genome', 'reference_genome'],
+      ['Sample Prep Kit', 'sample_prep_kit'],
+      ['Status', 'status'],
+      ['Submission Date', 'submission_date'],
+      ['Submitter', 'submitter'],
+    ]
+
+    NamingScheme.find(:all, :order => "name ASC").each do |scheme|
+      scheme.naming_elements.find(:all, :order => "element_order ASC").each do |element|
+        categories << ["#{scheme.name}: #{element.name}", "naming_element-#{element.id}"]
+      end
+    end
+
+    return categories
+  end
+
+private
 
   def add_comment(base, comment, type)
     if(comment && comment.length > 0)

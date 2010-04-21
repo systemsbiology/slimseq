@@ -116,4 +116,77 @@ describe SampleMixture do
     end
   end
   
+  it "should provide browsing categories" do
+    # make sure there are no other schemes to get in the way
+    NamingScheme.destroy_all
+
+    scheme = create_naming_scheme(:name => "Mouse")
+    strain = create_naming_element(:naming_scheme => scheme, :name => "Strain")
+
+    SampleMixture.browsing_categories.should == [
+      ['Flow Cell', 'flow_cell'],
+      ['Insert Size', 'insert_size'],
+      ['Lab Group', 'lab_group'],
+      ['Naming Scheme', 'naming_scheme'],
+      ['Organism', 'organism'],
+      ['Project', 'project'],
+      ['Reference Genome', 'reference_genome'],
+      ['Sample Prep Kit', 'sample_prep_kit'],
+      ['Status', 'status'],
+      ['Submission Date', 'submission_date'],
+      ['Submitter', 'submitter'],
+      ['Mouse: Strain', "naming_element-#{strain.id}"]
+    ]
+  end
+
+  it "should find by a set of conditions after sanitizing them" do
+    scheme = create_naming_scheme(:name => "Mouse")
+    strain = create_naming_element(:naming_scheme => scheme, :name => "Strain")
+    bl6 = create_naming_term(:naming_element => strain, :term => "Bl6")
+    mutant = create_naming_term(:naming_element => strain, :term => "Mutant")
+    age = create_naming_element(:naming_scheme => scheme, :name => "Age")
+    one_week = create_naming_term(:naming_element => age, :term => "One Week")
+    two_weeks = create_naming_term(:naming_element => age, :term => "Two Weeks")
+    lab_group_1 = mock_model(LabGroup, :name => "Smith Lab", :destroyed? => false)
+    project_1 = create_project(:name => "ChIP-Seq", :lab_group => lab_group_1)
+    project_2 = create_project(:name => "RNA-Seq")
+    flow_cell = create_flow_cell
+    genome = create_reference_genome
+    prep_kit = create_sample_prep_kit
+    sample_mixture_1 = create_sample_mixture(:project => project_1, :submission_date => '2009-05-01',
+      :sample_prep_kit => prep_kit)
+    sample_mixture_2 = create_sample_mixture(:project => project_1, :submission_date => '2009-05-02')
+    sample_mixture_3 = create_sample_mixture(:project => project_1, :submission_date => '2009-05-01')
+    sample_1 = create_sample(:insert_size => 100, :naming_scheme_id => scheme.id,
+                             :reference_genome => genome, :sample_mixture => sample_mixture_1)
+    sample_2 = create_sample(:insert_size => 150, :sample_mixture => sample_mixture_2)
+    sample_3 = create_sample(:insert_size => 100, :naming_scheme_id => scheme.id,
+                             :reference_genome => genome, :sample_mixture => sample_mixture_1)
+    sample_4 = create_sample(:sample_mixture => sample_mixture_3)
+    flow_cell_lane = create_flow_cell_lane(:sample_mixture => sample_mixture_1, :flow_cell => flow_cell)
+    create_sample_term(:sample => sample_1, :naming_term => bl6)
+    create_sample_term(:sample => sample_2, :naming_term => mutant)
+    create_sample_term(:sample => sample_3, :naming_term => bl6)
+    create_sample_term(:sample => sample_4, :naming_term => bl6)
+    create_sample_term(:sample => sample_1, :naming_term => one_week)
+    create_sample_term(:sample => sample_2, :naming_term => one_week)
+    create_sample_term(:sample => sample_3, :naming_term => two_weeks)
+    create_sample_term(:sample => sample_4, :naming_term => two_weeks)
+
+    SampleMixture.find_by_sanitized_conditions(
+      "controller" => "this",
+      "action" => "that",
+      "project_id" => project_1.id,
+      "submission_date" => '2009-05-01',
+      "insert_size" => 100,
+      "reference_genome_id" => genome.id,
+      "organism_id" => genome.organism_id,
+      "status" => "clustered",
+      "naming_scheme_id" => scheme.id,
+      "naming_term_id" => "#{one_week.id},#{bl6.id}",
+      "flow_cell_id" => flow_cell.id,
+      "lab_group_id" => lab_group_1.id,
+      "bob_id" => 123
+    ).should == [sample_mixture_1]
+  end
 end
