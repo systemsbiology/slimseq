@@ -1,0 +1,11 @@
+<ul>
+  <% branches.each do |branch| %>
+    <li>
+      <%=h branch[:name] %> (<%=h branch[:number] %>)
+      <%= link_to 'Show', url_for(:controller => 'samples', :action => 'search') + "?" + branch[:search_string] %>
+      <% if branch[:children] != nil %>
+        <%= render :partial => 'branch', :locals => {:branches => branch[:children]} %>
+      <% end %>
+    </li>
+  <% end %>
+</ul>
