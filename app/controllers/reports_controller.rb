@@ -4,10 +4,10 @@ class ReportsController < ApplicationController
 
   def billing
     @paged_lanes = FlowCellLane.find(:all,
-        :include => [:samples => [:sample_prep_kit] , :flow_cell => :sequencing_runs ],
-        :order => 'sequencing_runs.date DESC, samples.budget_number ASC',
-        :conditions => "(samples.status = 'completed' OR samples.status = 'sequenced')" +
-          " AND samples.control = 'false'")
+        :include => [:sample_mixture => [:samples, :sample_prep_kit] , :flow_cell => :sequencing_runs ],
+        :order => 'sequencing_runs.date DESC, sample_mixtures.budget_number ASC',
+        :conditions => "(sample_mixtures.status = 'completed' OR sample_mixtures.status = 'sequenced')" +
+          " AND sample_mixtures.control = 'false'")
     @users_by_id = User.all_by_id
   end
 
