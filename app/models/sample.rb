@@ -688,7 +688,7 @@ class Sample < ActiveRecord::Base
       FlowCell.find(:all).each do |flow_cell|
         flow_cell_samples = Array.new
         flow_cell.flow_cell_lanes.each do |lane|
-          flow_cell_samples.concat(lane.samples)
+          flow_cell_samples.concat(lane.sample_mixture.samples)
         end
         sub_samples = samples & flow_cell_samples
 
@@ -702,8 +702,9 @@ class Sample < ActiveRecord::Base
       LabGroup.find(:all).each do |lab_group|
         lab_group_samples = Array.new
         Project.for_lab_group(lab_group).each do |project|
-          lab_group_samples.concat(project.samples)
+          lab_group_samples.concat(project.sample_mixtures.collect{|m| m.samples})
         end
+        lab_group_samples.flatten!
         sub_samples = samples & lab_group_samples
 
         next if sub_samples.size == 0
