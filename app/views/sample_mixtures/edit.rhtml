@@ -91,6 +91,12 @@
       <%= sample_fields.collection_select :naming_scheme_id, @naming_schemes, :id, :name, {:prompt => "- None -"} %>
     <% end %>
 
+    <% if @samples.size > 1 %>
+      <p><label>Multiplex Code</label><br/>
+      <%= sample_fields.collection_select :multiplex_code_id,
+        @sample_mixture.sample_prep_kit.multiplexing_scheme.multiplex_codes, :id, :name %></p>
+    <% end %>
+
     <p>
       <label><b>Raw Data Directory/Directories</b></label><br/>
       <%# @sample_mixture.flow_cell_lanes.each do |lane| %>
