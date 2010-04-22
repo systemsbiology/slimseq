@@ -577,13 +577,6 @@ class Sample < ActiveRecord::Base
     return path_string
   end
   
-  def lane_paths=(lane_paths)
-    lane_paths.each do |lane_id, path_hash|
-      lane = FlowCellLane.find(lane_id)
-      lane.raw_data_path = path_hash['raw_data_path']
-    end
-  end
-
   def user
     sample_mixture.user
   end

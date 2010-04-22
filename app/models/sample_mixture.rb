@@ -230,6 +230,13 @@ class SampleMixture < ActiveRecord::Base
     return categories
   end
 
+  def lane_paths=(lane_paths)
+    lane_paths.each do |lane_id, path_hash|
+      lane = FlowCellLane.find(lane_id)
+      lane.raw_data_path = path_hash['raw_data_path']
+    end
+  end
+
 private
 
   def add_comment(base, comment, type)
