@@ -11,7 +11,7 @@ describe ExternalService do
         :username => "bob", :password => "1234", :authentication => true)
       sample = create_sample(:postback_uri => "http://localhost:4567/samples/1",
         :sample_description => "YO1")
-      flow_cell = create_flow_cell(:name => "123ABC")
+      flow_cell = create_flow_cell(:name => "123ABCD")
       lane = create_flow_cell_lane(:samples => [sample], :flow_cell => flow_cell)
       pipeline_result = create_pipeline_result(:flow_cell_lane => lane, :summary_file => "/path/to/summary.file",
         :eland_output_file => "/path/to/eland.file")
@@ -27,15 +27,28 @@ describe ExternalService do
       ExternalService.sample_status_change(sample)
     end
 
-    it "should log an error if connecting to an external service fails" do
+    it "should log an error if connecting to an external service raises Errno::ECONNREFUSED" do
       service_1 = create_external_service(:uri => "http://localhost:4567/done")
       sample = create_sample(:sample_description => "YO1")
-      flow_cell = create_flow_cell(:name => "123ABC")
+      flow_cell = create_flow_cell(:name => "123ABCD")
       lane = create_flow_cell_lane(:samples => [sample], :flow_cell => flow_cell)
       pipeline_result = create_pipeline_result(:flow_cell_lane => lane, :summary_file => "/path/to/summary.file",
         :eland_output_file => "/path/to/eland.file")
       
       RestClient.should_receive(:post).and_raise(Errno::ECONNREFUSED)
+
+      lambda {ExternalService.sample_status_change(sample)}.should_not raise_error
+    end
+
+    it "should log an error if connecting to an external service raises RestClient::RequestFailed" do
+      service_1 = create_external_service(:uri => "http://localhost:4567/done")
+      sample = create_sample(:sample_description => "YO1")
+      flow_cell = create_flow_cell(:name => "123ABCD")
+      lane = create_flow_cell_lane(:samples => [sample], :flow_cell => flow_cell)
+      pipeline_result = create_pipeline_result(:flow_cell_lane => lane, :summary_file => "/path/to/summary.file",
+        :eland_output_file => "/path/to/eland.file")
+      
+      RestClient.should_receive(:post).and_raise(RestClient::RequestFailed)
 
       lambda {ExternalService.sample_status_change(sample)}.should_not raise_error
     end

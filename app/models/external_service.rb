@@ -16,7 +16,7 @@ class ExternalService < ActiveRecord::Base
           service.post_sample(sample, postback_uri, false)
         end
       end
-    rescue Errno::ECONNREFUSED => e
+    rescue Errno::ECONNREFUSED, RestClient::RequestFailed => e
       logger.error "Connection refused for external service notification on sample id #{sample.id}"
     end
   end
