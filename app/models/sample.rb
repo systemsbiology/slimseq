@@ -8,6 +8,7 @@ class Sample < ActiveRecord::Base
   belongs_to :naming_scheme
   belongs_to :reference_genome
   belongs_to :experiment
+  belongs_to :multiplex_code
 
   belongs_to :sample_mixture
   

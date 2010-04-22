@@ -35,7 +35,11 @@
           <td><%= mixture_fields.text_field :name_on_tube, :size => 10 %></td>
 
           <td>
-            <table>
+            <% @multiplexing_scheme = SamplePrepKit.find(@sample_set.sample_prep_kit_id).multiplexing_scheme %>
+            <% if @multiplexing_scheme %>
+              Multiplexed samples
+            <% end %>
+            <table class="nonsortable">
               <% @samples = mixture_fields.object.samples %>
               <% mixture_fields.fields_for :samples do |sample_fields| %>
                 <tr>
@@ -47,6 +51,12 @@
                   <% else %>
                     <%= render :partial => 'samples/schemed_sample_description', :locals => { :sample_fields => sample_fields } %>
                   <% end %>
+                  <td>
+                    <% if @multiplexing_scheme %>
+                      Barcode: <%= sample_fields.collection_select :multiplex_code_id, @multiplexing_scheme.multiplex_codes,
+                        :id, :name, {:prompty => true} %>
+                    <% end %>
+                  </td>
                 </tr>
               <% end %>
             </table>
