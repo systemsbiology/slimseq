@@ -91,13 +91,24 @@ class SampleSet < ActiveRecord::Base
   end
 
   def valid?
-    return false unless errors.empty?
-
     if submission_step == 2
+      # manually collect errors across sample_mixtures and samples, rather than use the automatic
+      # nested error reporting that isn't as user-friendly
       sample_mixtures.each do |mixture|
-        return false unless mixture.valid?
+        unless mixture.valid?
+          error_message = mixture.errors.full_messages.join(",")
+          errors.add(:sample, error_message) unless errors.on(:sample) && errors.on(:sample).include?(error_message)
+          mixture.samples.each do |sample|
+            unless sample.valid?
+              error_message = sample.errors.full_messages.join(",")
+              errors.add(:sample, error_message) unless errors.on(:sample) && errors.on(:sample).include?(error_message)
+            end
+          end
+        end
       end
     end
+
+    return false unless errors.empty?
 
     super
   end

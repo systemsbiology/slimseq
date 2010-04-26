@@ -86,7 +86,7 @@ class Sample < ActiveRecord::Base
     # * spaces
     # * characters other than underscores and dashes
     if sample_description == nil
-      errors.add("Sample description must be supplied")
+      errors.add("Description must be supplied")
     elsif sample_description[/\ /] != nil ||
         sample_description[/\+/] != nil ||
         sample_description[/\&/] != nil ||
@@ -95,7 +95,7 @@ class Sample < ActiveRecord::Base
         sample_description[/\)/] != nil ||
         sample_description[/\//] != nil ||
         sample_description[/\\/] != nil
-      errors.add("Sample description must contain only letters, numbers, underscores and dashes or it")
+      errors.add("Description must contain only letters, numbers, underscores and dashes or it")
     end
   end
 

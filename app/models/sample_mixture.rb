@@ -1,5 +1,5 @@
 class SampleMixture < ActiveRecord::Base
-  has_many :samples, :dependent => :destroy
+  has_many :samples, :dependent => :destroy, :validate => false
   has_many :flow_cell_lanes
 
   belongs_to :user, :foreign_key => "submitted_by_id"
@@ -51,14 +51,6 @@ class SampleMixture < ActiveRecord::Base
     end
   end
   
-  def valid?
-    samples.each do |sample|
-      return false unless sample.valid?
-    end
-
-    super
-  end
-
   def save(perform_validates = true)
     unless sample_description
       if samples.size > 1

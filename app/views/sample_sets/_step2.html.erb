@@ -31,7 +31,6 @@
     <% sample_set_form.fields_for :sample_mixtures do |mixture_fields| %>
       <tr>
         <% @sample_mixture = mixture_fields.object %>
-        <%= error_messages_for 'sample_mixture' %>
           <td><%= mixture_fields.text_field :name_on_tube, :size => 10 %></td>
 
           <td>
