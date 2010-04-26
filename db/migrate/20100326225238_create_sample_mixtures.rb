@@ -89,14 +89,14 @@ class CreateSampleMixtures < ActiveRecord::Migration
     add_column :samples, :project_id, :integer
     add_column :samples, :budget_number, :string
     add_column :samples, :desired_read_length, :integer
-    add_column :samples, :alignment_start_position, :integer
+    add_column :samples, :alignment_start_position, :integer, :default => 1
     add_column :samples, :alignment_end_position, :integer
-    add_column :samples, :control, :boolean
+    add_column :samples, :control, :boolean, :default => false
     add_column :samples, :comment, :string
     add_column :samples, :ready_for_sequencing, :boolean
     add_column :samples, :eland_parameter_set_id, :integer
     add_column :samples, :submission_date, :date
-    add_column :samples, :status, :string
+    add_column :samples, :status, :string, :default => 'submitted'
     add_column :samples, :submitted_by_id, :integer
     add_column :samples, :sample_prep_kit_id, :integer
 
