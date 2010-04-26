@@ -1,5 +1,5 @@
 class Project < ActiveRecord::Base
-  has_many :samples
+  has_many :sample_mixtures
   has_many :studies
 
   belongs_to :lab_group
@@ -64,6 +64,8 @@ class Project < ActiveRecord::Base
   end
   
   def detail_hash
+    sample_ids = sample_mixtures.collect{|m| m.sample_ids}
+
     return {
       :id => id,
       :name => name,

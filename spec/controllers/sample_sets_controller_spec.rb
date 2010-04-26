@@ -98,15 +98,13 @@ describe SampleSetsController do
           @lab_group = mock_model(LabGroup, :lab_group_profile => @lab_group_profile) 
           @project = mock_model(Project, :lab_group => @lab_group)
 
-          @sample_1 = mock_model(Sample)
-          @sample_2 = mock_model(Sample)
-          @samples = [@sample_1, @sample_2]
+          @sample_mixture_1 = mock_model(SampleMixture)
+          @sample_mixture_2 = mock_model(SampleMixture)
+          @sample_mixtures = [@sample_mixture_1, @sample_mixture_2]
 
           @sample_set.stub!(:valid?).and_return(true)
-          @sample_set.stub!(:samples).and_return(@samples)
+          @sample_set.stub!(:sample_mixtures).and_return(@sample_mixturess)
           @sample_set.stub!(:project).and_return(@project)
-          @sample.stub!(:populate_default_visibilities_and_texts)
-          Sample.stub!(:new).and_return( @sample )
         end
 
         describe "without a naming scheme" do
@@ -204,8 +202,7 @@ describe SampleSetsController do
       SampleSet.stub!(:new).and_return(@sample_set)
       @sample = mock_model(Sample)
       Sample.stub!(:new).and_return(@sample)
-      @sample_set.stub!(:samples=).and_return(true)
-      @sample_set.stub!(:samples).and_return([mock_model(Sample)])
+      @sample_set.stub!(:sample_mixtures).and_return([mock_model(SampleMixture)])
       Notifier.stub!(:deliver_sample_submission_notification)
     end
    
@@ -216,23 +213,33 @@ describe SampleSetsController do
   
       def do_post
         post :create,
-          :sample_set => {"submission_date(2i)"=>"10", "naming_scheme_id"=>"",
-                          "sample_prep_kit_id"=>"1", "number_of_samples"=>"2",
-                          "submission_date(3i)"=>"6", "alignment_end_position"=>"18",
-                          "desired_read_length"=>"18", "reference_genome_id"=>"2",
-                          "alignment_start_position"=>"1", "lab_group_id"=>"1",
-                          "budget_number"=>"1234", "insert_size"=>"150",
-                          "submission_date(1i)"=>"2008"},
-           :sample => {"0"=>{"status"=>"", "reference_genome_id"=>"1",
-             "name_on_tube"=>"1121", "desired_read_length"=>"18",
-             "schemed_name"=>{"Protocol"=>"203", "Cell Type"=>"197", "Time"=>"184",
-             "Biological Replicate"=>"", "Antibody"=>"291", "Stimulus"=>"189",
-             "Exclude From Analysis"=>"204", "Technical Replicate"=>"202", "Date"=>""},
-             "submission_date"=>"2008-10-02", "budget_number"=>"1234", "insert_size"=>"150",
-             "sample_prep_kit_id"=>"1"} }
+          :sample_set => {
+            "submission_date(2i)"=>"10", "naming_scheme_id"=>"",
+            "sample_prep_kit_id"=>"1", "number_of_samples"=>"2",
+            "submission_date(3i)"=>"6", "alignment_end_position"=>"18",
+            "desired_read_length"=>"18", "reference_genome_id"=>"2",
+            "alignment_start_position"=>"1", "lab_group_id"=>"1",
+            "budget_number"=>"1234", "insert_size"=>"150",
+            "submission_date(1i)"=>"2008",
+            "sample_mixtures" => {
+              "0"=>{
+                "name_on_tube"=>"1121",
+                "sample_description" => "Sample 1121",
+                "samples" => {
+                  "0" => {
+                    "schemed_name"=>{
+                      "Protocol"=>"203", "Cell Type"=>"197", "Time"=>"184",
+                      "Biological Replicate"=>"", "Antibody"=>"291", "Stimulus"=>"189",
+                      "Exclude From Analysis"=>"204", "Technical Replicate"=>"202", "Date"=>""
+                    }
+                  }
+                }
+              }
+            }
+          }
       end
   
-      it "should create a new sample_set" do
+      it "should create a new sample_set that" do
         SampleSet.should_receive(:new).and_return(@sample_set)
         do_post
       end
@@ -259,20 +266,30 @@ describe SampleSetsController do
 
       def do_post
         post :create,
-          :sample_set => {"submission_date(2i)"=>"10", "naming_scheme_id"=>"",
-                          "sample_prep_kit_id"=>"1", "number_of_samples"=>"2",
-                          "submission_date(3i)"=>"6", "alignment_end_position"=>"18",
-                          "desired_read_length"=>"18", "reference_genome_id"=>"2",
-                          "alignment_start_position"=>"1", "lab_group_id"=>"1",
-                          "budget_number"=>"1234", "insert_size"=>"150",
-                          "submission_date(1i)"=>"2008"},
-           :sample => {"0"=>{"status"=>"", "reference_genome_id"=>"1",
-             "name_on_tube"=>"1121", "desired_read_length"=>"18",
-             "schemed_name"=>{"Protocol"=>"203", "Cell Type"=>"197", "Time"=>"184",
-             "Biological Replicate"=>"", "Antibody"=>"291", "Stimulus"=>"189",
-             "Exclude From Analysis"=>"204", "Technical Replicate"=>"202", "Date"=>""},
-             "submission_date"=>"2008-10-02", "budget_number"=>"1234", "insert_size"=>"150",
-             "sample_prep_kit_id"=>"1"} }
+          :sample_set => {
+            "submission_date(2i)"=>"10", "naming_scheme_id"=>"",
+            "sample_prep_kit_id"=>"1", "number_of_samples"=>"2",
+            "submission_date(3i)"=>"6", "alignment_end_position"=>"18",
+            "desired_read_length"=>"18", "reference_genome_id"=>"2",
+            "alignment_start_position"=>"1", "lab_group_id"=>"1",
+            "budget_number"=>"1234", "insert_size"=>"150",
+            "submission_date(1i)"=>"2008",
+            "sample_mixtures" => {
+              "0"=>{
+                "name_on_tube"=>"1121",
+                "sample_description" => "Sample 1121",
+                "samples" => {
+                  "0" => {
+                    "schemed_name"=>{
+                      "Protocol"=>"203", "Cell Type"=>"197", "Time"=>"184",
+                      "Biological Replicate"=>"", "Antibody"=>"291", "Stimulus"=>"189",
+                      "Exclude From Analysis"=>"204", "Technical Replicate"=>"202", "Date"=>""
+                    }
+                  }
+                }
+              }
+            }
+          }
       end
 
       it "should not save the new sample set" do
@@ -319,8 +336,7 @@ describe SampleSetsController do
         "samples" => [
           { "name_on_tube" => "RM11-1a pbp1::URA3", "Sample Key" => "YO 1" },
           { "name_on_tube" => "DBVPG 1373", "Sample Key" => "YO 2" },
-        ]},
-        nil
+        ]}
       ).and_return(sample_set)
       sample_set.should_receive(:save).and_return(true)
 

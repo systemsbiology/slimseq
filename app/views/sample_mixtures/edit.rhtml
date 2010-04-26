@@ -1,0 +1,120 @@
+<%= error_messages_for 'sample_mixture' %>
+<%#= error_messages_for_samples %>
+
+<h2>Editing <i><%= @sample_mixture.name_on_tube %></i></h2>
+<%= link_to "Post Processing Pipeline", :controller=>:samples, :action=>:pipeline,
+  :id=>@sample_mixture.samples.first.id if APP_CONFIG['post_pipelines_enabled'] %>
+
+<% form_for @sample_mixture do |mixture_form| %>
+
+  <p><label for="sample_mixture_submitted_by_id">Submitted By</label><br/>
+  <%= collection_select 'sample_mixture', 'submitted_by_id',
+    @users, 'id', 'full_name', {:prompt => true} %></p>
+
+  <p><label for="sample_mixture_submission_date">Date</label><br/>
+  <%= date_select 'sample_mixture', 'submission_date' %></p>
+
+  <p><label for="sample_mixture_name_on_tube">Name On Tube</label><br/>
+  <%= text_field 'sample_mixture', 'name_on_tube' %></p>
+
+  <p><label for="sample_mixture_project_id">Project</label><br>
+  <select id="sample_mixture_project_id" name="sample[0][project_id]">
+  <%= options_from_collection_for_select @projects, "id", "name", selected_value=@sample_mixture.project_id %></select></p>
+
+    <p><label for="sample_mixture_sample_prep_kit_id">Sample Prep Kit</label><br/>
+  <%= collection_select 'sample_mixture', 'sample_prep_kit_id',
+    @sample_prep_kits, 'id', 'name', {:prompt => true} %></p>
+
+  <p><label for="sample_mixture_desired_read_length">Desired Number of Cycles</label><br/>
+  <%= text_field 'sample_mixture', 'desired_read_length' %></p>
+
+  <p>Alignment bases</p>
+  <p><label for="sample_mixture_alignment_start_position">Start</label>
+    <%= text_field 'sample_mixture', 'alignment_start_position', :size => 4,
+      :default => 1 %> 
+
+  <label for="sample_mixture_alignment_end_position">End</label>
+  <%= text_field 'sample_mixture', 'alignment_end_position', :size => 4 %></p>
+
+  <%= observe_field :sample_mixture_desired_read_length,
+    :function => "$('sample_mixture_alignment_end_position').value = value;" %>
+  
+  <p><label for="sample_mixture_budget_number">Budget Number</label><br/>
+  <%= text_field 'sample_mixture', 'budget_number' %></p>
+  
+  <% if current_user.manager? || current_user.staff_or_admin? %>
+    <p><label for="sample_mixture_ready_for_sequencing">Ready For Sequencing?</label><br/>
+    <%= check_box :sample_mixture, :ready_for_sequencing %></p>
+  <% end %>
+
+  <p><label>ELAND Parameters</label><br/>
+  <%= mixture_form.collection_select 'eland_parameter_set_id',
+    @eland_parameter_sets, 'id', 'info', {:prompt => "Not specified - Using SLIMseq defaults"} %><br/>
+      
+  <p><label for="sample_mixture_comment">Sample Comment</label><br/>
+  <%= text_field 'sample_mixture', 'comment' %></p>
+
+  <% @samples = @sample_mixture.samples %>
+  <% mixture_form.fields_for :samples do |sample_fields| %>
+    <% @sample = sample_fields.object %>
+    <% if @samples.size > 1 %>
+      <div style="border: 1px solid; padding: 10px">
+        <h3>Sample: <%=h @sample.sample_description %></h3>
+    <% end %>
+
+    <p>Sample Description<br/>
+      <% if @sample.naming_scheme != nil %>
+        <% @naming_scheme = @sample.naming_scheme %>
+        <% @naming_elements = @naming_scheme.naming_elements %>
+        <% @n = 0 %>
+        <table class="sortable" id="samples">
+          <tr>
+            <%= render :partial => 'samples/schemed_sample_description', :locals => { :sample_fields => sample_fields } %>
+          </tr>
+        </table>
+      <% else %>
+        <%= sample_fields.text_field :sample_description,
+          :size => 30 %>
+      <% end %>
+    </p>
+
+    <p><label>Reference Genome</label><br/>
+    <%= sample_fields.collection_select 'reference_genome_id',
+      @reference_genomes, 'id', 'description', {:prompt => true} %><br/>
+      * Contact the facility to add a new reference genome</p>
+
+    <p><label>Insert Size</label><br/>
+    <%= sample_fields.text_field 'insert_size', :size => 8 %></p>
+
+    <% if @naming_schemes.size > 0 %>
+      <p><label>Naming Scheme</label><br/>
+      <%= sample_fields.collection_select :naming_scheme_id, @naming_schemes, :id, :name, {:prompt => "- None -"} %>
+    <% end %>
+
+    <% if @samples.size > 1 %>
+      <p><label>Multiplex Code</label><br/>
+      <%= sample_fields.collection_select :multiplex_code_id,
+        @sample_mixture.sample_prep_kit.multiplexing_scheme.multiplex_codes, :id, :name %></p>
+    <% end %>
+
+    <% if @samples.size > 1 %>
+      </div>
+    <% end %>
+
+    <p>
+      <label><b>Raw Data Directory/Directories</b></label><br/>
+      <% @sample_mixture.flow_cell_lanes.each do |lane| %>
+        <% if lane.pipeline_results.size > 0 %>
+          <% mixture_form.fields_for "lane_paths[]", lane do |lane_form| %>
+            <li>Flow cell <%=h lane.flow_cell.name %>, Lane #<%=h lane.lane_number %>: 
+            <%= lane_form.text_field :raw_data_path, :size => 60 %>
+          <% end %>
+        <% end %>
+      <% end  %>
+    </p>
+  <% end %>
+
+  <%= submit_tag 'Update' %>
+<% end %>
+
+<%= link_to 'Back to List', samples_path %>

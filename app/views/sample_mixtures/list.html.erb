@@ -14,14 +14,14 @@
         </tr>
       </thead>
 
-    <% for sample in @samples %>
+    <% for sample_mixture in @sample_mixtures %>
       <tr>
-        <td><%= check_box 'selected_samples', sample.id %></td>
-        <td><%=h sample.submission_date.strftime("%Y/%m/%d") %></td>
-        <td><%=h sample.short_and_long_name %></td>
-        <td><%=h sample.status %></td>
-        <td><%= link_to 'Edit', edit_sample_path(sample) %></td>
-        <td><%= link_to 'Destroy', sample, :confirm => 'Are you sure?', :method => :delete %></td>
+        <td><%= check_box 'selected_sample_mixtures', sample_mixture.id %></td>
+        <td><%=h sample_mixture.submission_date.strftime("%Y/%m/%d") %></td>
+        <td><%=h sample_mixture.short_and_long_name %></td>
+        <td><%=h sample_mixture.status %></td>
+        <td><%= link_to 'Edit', edit_sample_mixture_path(sample_mixture) %></td>
+        <td><%= link_to 'Destroy', sample_mixture, :confirm => 'Are you sure?', :method => :delete %></td>
       </tr>
     <% end %>
     </table>

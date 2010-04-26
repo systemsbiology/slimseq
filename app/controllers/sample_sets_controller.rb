@@ -14,7 +14,7 @@ class SampleSetsController < ApplicationController
           @naming_elements = @naming_scheme.ordered_naming_elements
         end
 
-        @samples = @sample_set.samples
+        @sample_mixtures = @sample_set.sample_mixtures
       else
         # if the sample set info is invalid, kick back to step 1
         params[:step] = "1"
@@ -25,7 +25,7 @@ class SampleSetsController < ApplicationController
   end
 
   def create
-    @sample_set = SampleSet.new(params[:sample_set], params[:sample])
+    @sample_set = SampleSet.new(params[:sample_set])
 
     respond_to do |format|
       if @sample_set.save
@@ -36,7 +36,7 @@ class SampleSetsController < ApplicationController
         format.json { render :json => {:message => "Samples recorded"} }
       else
         format.html do
-          @samples = @sample_set.samples
+          @sample_mixtures = @sample_set.sample_mixtures
           @naming_scheme = @sample_set.naming_scheme
           if(@naming_scheme != nil)
             @naming_elements = @naming_scheme.ordered_naming_elements

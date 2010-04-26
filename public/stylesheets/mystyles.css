@@ -223,9 +223,9 @@ table { empty-cells: show; }
 #text {float:left; width:200px; text-align:right; margin-top:2px}
 
 /* Tables that shouldn't be sorted */
-.nonsortable {border-collapse: collapse; width:800px; border-left:1px solid #bbb; border-top:1px solid #c6d5e1; border-bottom:none; margin:0 auto 15px}
-.nonsortable th {font-size: 12px; text-align:left; color:#000; border:1px solid #bbb; border-right:none}
-.nonsortable td {padding:4px 6px 6px; border-bottom:1px solid #bbb; border-right:1px solid #bbb}
+.nonsortable {border-collapse: collapse; width:800px; border-left:1px solid #bbb; border-top:1px solid #c6d5e1; border-bottom:none; margin:0 0 15px}
+.nonsortable th {font-size: 12px; text-align:left; color:#000; border:1px solid #bbb; padding: 5px}
+.nonsortable td {padding:4px 6px 6px; border:1px solid #bbb; text-align: left;}
 .nonsortable .head h3 {background:url(../images/sort.gif) 7px center no-repeat; cursor:pointer; padding-left:18px}
 .nonsortable .head:hover, .sortable .desc:hover, .sortable .asc:hover {color:#fff}
 .nonsortable .evenrow td {background:#fff}

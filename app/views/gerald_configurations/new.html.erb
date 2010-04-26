@@ -45,19 +45,20 @@
     </tr>
     <% for n in 0..@flow_cell_lanes.size-1 %>
       <% lane = @flow_cell_lanes[n] 
-         first_sample = lane.samples.first %>
+         sample_mixture = lane.sample_mixture
+         first_sample = sample_mixture.samples.first%>
       <tr>
         <td><%=h lane.lane_number %>
           <%= hidden_field_tag "lanes[#{n}][lane_number]", lane.lane_number %></td>
-        <td><%=h first_sample.short_and_long_name %></td>
+        <td><%=h sample_mixture.short_and_long_name %></td>
         <td><%= text_field_tag "lanes[#{n}][eland_genome]",
           first_sample.reference_genome.fasta_path, :size => 50 %></td>
         <td><%= text_field_tag "lanes[#{n}][analysis]",
-          first_sample.sample_prep_kit.eland_analysis, :size => 20 %></td>
+          sample_mixture.sample_prep_kit.eland_analysis, :size => 20 %></td>
         <td><%= text_field_tag "lanes[#{n}][eland_seed_length]", 
-          first_sample.eland_seed_length %></td>
+          sample_mixture.eland_seed_length %></td>
         <td><%= text_field_tag "lanes[#{n}][eland_max_matches]",
-          first_sample.eland_max_matches %></td>
+          sample_mixture.eland_max_matches %></td>
         <td><%= text_field_tag "lanes[#{n}][use_bases]",
           lane.use_bases_string(@gerald_defaults.skip_last_base) %></td>
       </tr>

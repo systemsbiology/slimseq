@@ -19,6 +19,12 @@
   </p>
 
   <p>
+    <b>Multiplexing</b><br />
+    <%= f.collection_select :multiplexing_scheme_id, MultiplexingScheme.all,
+      :id, :name, {:prompt => "None"} %>
+  </p>
+
+  <p>
     <%= f.submit "Update" %>
   </p>
 <% end %>

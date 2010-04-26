@@ -26,6 +26,6 @@ config.gem "rspec", :version => "~> 1.3.0", :lib => false
 config.gem "rspec-rails", :version => "~> 1.3.2", :lib => false
 config.gem "cucumber", :version => '0.3.1'
 config.gem "ruby-debug", :version => "0.10.3"
-config.gem "spork", :version => "0.7.3"
+config.gem "spork", :version => "~> 0.8.2"
 
 AUTHENTICATION_SALT = 'test-salt'

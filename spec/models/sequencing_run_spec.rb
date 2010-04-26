@@ -159,9 +159,13 @@ describe SequencingRun do
     GeraldDefaults.destroy_all
     @gerald_defaults = create_gerald_defaults
     @instrument = create_instrument(:serial_number => "HWI-EAS124")
+    @sample_mixture_1 = create_sample_mixture
+    @sample_mixture_2 = create_sample_mixture
+    @sample_1 = create_sample(:sample_mixture => @sample_mixture_1)
+    @sample_2 = create_sample(:sample_mixture => @sample_mixture_2)
     @flow_cell = create_flow_cell(:name => "456DEF")
-    @flow_cell_lane = create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 1)
-    @flow_cell_lane = create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 2)
+    create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 1, :sample_mixture => @sample_mixture_1)
+    create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 2, :sample_mixture => @sample_mixture_2)
     @flow_cell.reload
     @sequencing_run = create_sequencing_run(:date => "2008-10-10", :instrument => @instrument,
       :flow_cell => @flow_cell)
@@ -193,8 +197,12 @@ describe SequencingRun do
     @gerald_defaults = create_gerald_defaults(:skip_last_base => true)
     @instrument = create_instrument(:serial_number => "HWI-EAS124")
     @flow_cell = create_flow_cell(:name => "456DEF")
-    @flow_cell_lane = create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 1)
-    @flow_cell_lane = create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 2)
+    @sample_mixture_1 = create_sample_mixture
+    @sample_mixture_2 = create_sample_mixture
+    @sample_1 = create_sample(:sample_mixture => @sample_mixture_1)
+    @sample_2 = create_sample(:sample_mixture => @sample_mixture_2)
+    create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 1, :sample_mixture => @sample_mixture_1)
+    create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 2, :sample_mixture => @sample_mixture_2)
     @flow_cell.reload
     @sequencing_run = create_sequencing_run(:date => "2008-10-10", :instrument => @instrument,
       :flow_cell => @flow_cell)

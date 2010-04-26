@@ -69,6 +69,7 @@ Rails::Initializer.run do |config|
   config.gem "nokogiri", :version => '1.2.3'
   config.gem "rubycas-client", :version => '2.1.0'
   config.gem "highline", :version => '1.4.0'
+  config.gem "validatable", :version => '1.6.7'
 end
 
 AUTHENTICATION_SALT = 'mmm_kosher_rocks' unless defined? AUTHENTICATION_SALT

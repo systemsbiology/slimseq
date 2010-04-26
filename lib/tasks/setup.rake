@@ -1,6 +1,6 @@
 desc "Initial set up of SLIMseq"
-task :setup => ["setup:configuration", "setup:naming_schemer", "setup:authorizer",
-                "gems:install", "db:load", "setup:external_data", "setup:admin_user"]
+task :setup => ["gems:install", "setup:configuration", "setup:naming_schemer", "setup:authorizer",
+                "db:load", "setup:external_data", "setup:admin_user"]
 
 namespace :setup do
   desc "Use the example database and application YAML configuration files"

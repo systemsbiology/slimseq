@@ -23,14 +23,14 @@ class ExternalService < ActiveRecord::Base
 
   def post_sample(sample, postback_uri, include_id=true)
     # use latest flow cell lane and pipeline results
-    lane = sample.flow_cell_lanes.last
+    lane = sample.sample_mixture.flow_cell_lanes.last
     result = lane.pipeline_results.last if lane
 
     postback_body = ""
     postback_body += "JSON=" if json_style == "JSON-wrapped"
     json_attributes = {
       :sample_description => sample.sample_description,
-      :status => sample.status
+      :status => sample.sample_mixture.status
     }
     if include_id
       json_attributes.merge!({:id => sample.id})
