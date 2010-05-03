@@ -51,7 +51,7 @@ class SampleMixture < ActiveRecord::Base
     end
   end
   
-  def save(perform_validates = true)
+  def save(perform_validation = true)
     unless sample_description
       if samples.size > 1
         self.sample_description = "#{samples.size} multiplexed samples"
