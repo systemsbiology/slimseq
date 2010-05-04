@@ -299,7 +299,7 @@ ActiveRecord::Schema.define(:version => 20100419173009) do
     t.string   "sample_description"
     t.integer  "insert_size"
     t.integer  "reference_genome_id"
-    t.string   "naming_scheme_id"
+    t.integer   "naming_scheme_id"
     t.integer  "lock_version",        :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
