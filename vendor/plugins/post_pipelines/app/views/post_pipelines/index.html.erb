@@ -1,0 +1,35 @@
+<h1>Listing post_pipelines</h1>
+
+<style>
+table.post_pipelines td { text-align: center; }
+</style>
+
+<table class='post_pipelines'>
+  <tr>
+    <th>Job Name</th>
+    <th>Sample Name</th>
+    <th>Alignment Algo.</th>
+    <th>Max mismatches</th>
+    <th>Aligner Params</th>
+    <th>Status</th>
+  </tr>
+
+<% for post_pipeline in @post_pipelines %>
+  <tr>
+    <td><%=h post_pipeline.label %></td>
+    <td><%=h post_pipeline.sample.name_on_tube %></td>
+    <td><%=h post_pipeline.sample.post_pipeline_aligner %></td>
+    <td><%=h post_pipeline.align_params %></td>
+    <td><%=h post_pipeline.max_mismatches %></td>
+    <td><%=h post_pipeline.status %></td>
+
+    <td><%= link_to 'Show', post_pipeline %></td>
+    <td><%= link_to 'Edit', edit_post_pipeline_path(post_pipeline) %></td>
+    <td><%= link_to 'Destroy', post_pipeline, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New post_pipeline', new_post_pipeline_path %>

@@ -1,0 +1,14 @@
+<script type='text/javascript'>
+<%= @opts_array_values.as_json %>
+    function set_selection_options(s_id,opts_array,i) {
+    var t1=opts_array[i].map(function(e) { return "<option value='"+e[0]+"'>"+e[1]+"</option>" }).join("\n");
+    var sel=document.getElementById(s_id).innerHTML=t1;
+}
+</script>
+<tr>
+  <td><%= label_tag :runtype, 'Run Type' %></td>
+  <td><select name='post_pipeline[runtype]' id='fred'></select>
+  </td>
+</tr>
+<script type='text/javascript'>set_selection_options('fred',opts_array,0)</script>
+

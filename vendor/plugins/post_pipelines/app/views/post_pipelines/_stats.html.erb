@@ -1,0 +1,33 @@
+<style>
+td.rjus { text-align: right }
+</style>
+<table>
+<tr>
+  <td>Total Reads</td>
+  <td><%= stats[:total_reads].to_s_nice %></td>
+</tr>
+
+<tr>
+  <td>Total Aligned Reads</td>
+  <td class='rjus'><%= stats[:total_aligned].to_s_nice %> </td>
+  <td> (<%= stats[:total_aligned].percent_of(stats[:total_reads]) %>)</td>
+</tr>
+
+<tr>
+  <td>Uniquely Aligned Reads (including splice junctions)</td>
+  <td class='rjus'><%= (stats[:unique_aligned]+stats[:spliced_aligned]).to_s_nice %> </td>
+  <td>(<%= (stats[:spliced_aligned]+stats[:unique_aligned]).percent_of stats[:total_aligned]%> of aligned reads)</td>
+</tr>
+
+<tr>
+  <td>Multiply Aligned Reads</td>
+  <td class='rjus'><%= stats[:multi_aligned].to_s_nice %> </td>
+  <td>(<%= stats[:multi_aligned].percent_of(stats[:total_aligned])%> of aligned reads)</td>
+</tr>
+
+<tr>
+  <td>Observed Genes</td>
+  <td class='rjus'><%= stats[:n_genes].to_s_nice %></td>
+</tr>
+</table>
+

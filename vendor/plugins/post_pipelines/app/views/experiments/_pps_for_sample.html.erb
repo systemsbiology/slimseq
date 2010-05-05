@@ -1,0 +1,4 @@
+<span>
+Previously started/running pipelines: <%= sample.post_pipelines.size %>
+<%= sample.post_pipelines.collect { |pp| link_to (pp.status, pp) }.join('&nbsp; | &nbsp;') %>
+</span>

@@ -1,0 +1,124 @@
+<style type='text/css'>
+div.help { width: 600px; height: 100%; padding:0 margin:0 }
+</style>
+<div class=help>
+<h2>RNA-Seq Pipeline Help</h2>
+
+<h3>Overview</h3>
+<p>The purpose of the RNA-Seq pipeline is to determine gene expression of
+a given biological sample after it has been sequenced by a
+Solexa/Illumina (or similar) sequencer.  It transforms the generated
+output file of Illumina's ELAND processing pipeline into a file that
+maps genes to expression levels as measured in "Reads per
+Kilobase-Million" (RPKM).  To do so it uses the ERANGE software suite
+developed by the Wold lab (Caltech).  More information about ERANGE
+can be found 
+<a href='http://woldlab.caltech.edu/html/rnaseq'>here</a>.</p>
+
+<h3>Launching Pipelines</h3>
+<p>
+Access to the RNA-Seq pipeline at ISB is through the Slimseq website.
+Once a sample is sequenced and the ELAND computation pipeline has
+completed, it is available for post-processing by the RNA-Seq
+pipeline.  Each sample has a page from which the pipeline can be
+launched, accessible from the the 'edit' page for that sample.
+</p><p>
+Additionally, multiple samples can be processed through the RNA-Seq
+pipeline simaltaneously by using Slimseq's Search utility.  To do so,
+perform a search in the normal manner.  When the results are
+displayed, click the checkbox next to each sample of interest and then
+click the "RNA Seq Pipeline" button at the bottom of the page.  Only
+pipelines for "compatible" samples may be launched simaltaneously.  In
+order to be compatible, samples must a) have been prepared with the
+RNA Seq sample prep kit; b) come from the same organism; and c) have
+the same read lengths. 
+<p></p>
+Once the "launch" page is visible, you may alter the default
+parameters used in running the RNA Seq pipeline.  There parameters
+currently relate to the alignment portion of the pipeline, but more
+may be added in the future.
+<p></p>
+Once the parameters are set as desired, click the "Launch Pipeline" at
+the bottom, and the pipelines will be launched.  In general, there
+will be one pipeline launched per sample, but if a sample was spread
+over more than one flow cell lane during sequencing, there will be one
+pipeline job launched for each flow cell lane (ie, there may be two or
+more pipeline jobs per sample).
+</p>
+<h3>Results Page</h3>
+<p>
+When each pipeline job starts and finishes, email is sent to the user.
+The email address can be changed if desired before the jobs are
+launched.
+<p></p>
+In the case of pipeline errors, email will also be sent to the user.
+If you receive such an email, it is best to <a
+href='mailto:vcassen@systemsbiology.org'>contact the pipeline
+administrator</a> to resolve the problem.  
+<p></p>
+If the pipeline is successful in its completion, it will be visible on
+the website.  To access a sample's pipeline(s), return to the launch
+page.  For each sample, there will be a link to any pipelines that
+have run for that sample, indicating the pipeline's status.  When the
+status is 'Finished', the output of the pipeline will be available on
+the pipeline's webpage.
+<p></p>
+The results of each pipeline job consist of a file that contains the
+mapping between genes and their expression levels found in the
+sample.  That file is a tab-delimited file, and it's location in the
+filesystem is displayed on the pipeline's page.  Each line of the file
+lists one gene (identified by it's locuslink identifier and symbol),
+the length of the mRNA transcript, and an expression measurement (in
+RPKM). 
+</p>
+
+<!--
+<h3>Projects, Studies, Experiments, and Samples</h3> 
+
+<p>An additional means of organizing your samples has been added to
+Slimseq, in conjunction with the RNA Seq pipeline.  Under each
+project, and number of studies may be added, and under each study, and
+number of experiments may be added.  Each experiment, in turn, may
+have related samples assigned to it.  For any experiment, RNA Seq
+pipelines for all (or some) of the samples assigned to that experiment
+may launched simaltaneously.
+</p><p>
+To add studies to a project, navigate to that project "edit" page, and
+click on the "Add a new study" page.  Fill out the presented form and
+click "Create".  The project's edit page will be displayed again, but
+now the new study will be evident.  Clicking on the study's link will
+allow you to add experiments to the study in the same manner.
+</p><p>
+To add samples to an experiment, navigate to the experiments "edit"
+page, and click the "Manage Samples" link.  This page will show all
+samples accessible to the user, even if they are currently assigned to
+a different experiemnt.  The user adds a sample to the current
+experiment by clicking the radio button in the "Owned by Current
+Experiment" column, removing it from the "Unassigned" column or the
+"Owned by Other Experiment" column.  It is thus possible to "steal"
+samples from one experiment to another, but as only samples owned by
+the user are displayed it is assumed that this is permissable.
+</p><p>
+Once samples are assigned to experiments satisfactorily, click the
+"Update" button to make the changes permanent, and the experiment's
+edit page will be again displayed.  Note the "RNA Seq Pipeline" link
+on this page, which will take the user to the pipeline launch page
+described earlier.
+</p>
+-->
+<h3>Troubleshooting</h3>
+<h4>The "Launch RNA Seq Pipeline" button is disabled.</h4>
+<p>If the launch button is disabled, it means that all of the samples
+listed cannot be run together in the pipeline.  Although there are
+checkboxes next to each pipeline on the launch page, unclicking
+incompatible samples will not result in the launch button becoming
+enabled (that may be a future feature, however).  Instead, you must go
+back to the search page and unclick the offending samples there, then
+re-click that page's "launch" button.
+</p>
+<h4>My pipeline job failed</h4>
+<p>In this case, it is probably best to <a
+href='mailto:vcassen@systemsbiology.org'>contact the RNA Seq Pipeline
+administrator</a>.
+</p>
+</div>

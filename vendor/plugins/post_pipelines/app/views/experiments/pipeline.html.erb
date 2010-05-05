@@ -1,0 +1,17 @@
+<h3>Post-processing Pipeine for Samples in Experiment <%=h @experiment.name %></h3>
+<% form_for :post_pipeline, :url=>{:controller=>:post_pipelines, :action=>:launch_exp, :id=>nil} do |form| %>
+<%= hidden_field_tag :experiment_id, @experiment.id %>
+<p>Description: <%=h @experiment.description %></p>
+<p>Choose the samples to process:</p>
+<ul><% @samples.each do |s| %>
+  <li>
+    <input type='checkbox' name='include_sample[]' value='<%= s.id %>' checked='1'/>
+    <%=h s.name_on_tube %>
+    <%= render :partial=>'pps_for_sample', :locals=>{:sample=>s} %>
+</li>
+<% end %></ul>
+
+<%= render :partial=>'post_pipeline_params' %>
+
+<p><%= form.submit "Launch Pipeline" %></p>
+<% end %>
