@@ -98,11 +98,11 @@ class SampleSet < ActiveRecord::Base
         unless mixture.valid?
           error_message = mixture.errors.full_messages.join(",")
           errors.add(:sample, error_message) unless errors.on(:sample) && errors.on(:sample).include?(error_message)
-          mixture.samples.each do |sample|
-            unless sample.valid?
-              error_message = sample.errors.full_messages.join(",")
-              errors.add(:sample, error_message) unless errors.on(:sample) && errors.on(:sample).include?(error_message)
-            end
+        end
+        mixture.samples.each do |sample|
+          unless sample.valid?
+            error_message = sample.errors.full_messages.join(",")
+            errors.add(:sample, error_message) unless errors.on(:sample) && errors.on(:sample).include?(error_message)
           end
         end
       end
