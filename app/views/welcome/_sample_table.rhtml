@@ -5,7 +5,7 @@ function toggle_sample_approval(elem) {
   sample_mixture_id = html_id.match(/.*\-(\d+)/)[1];
   checked = e.checked;
   url = '<%= sample_mixtures_path %>/' + sample_mixture_id + ".json"
-  params = 'sample_mixture[0][ready_for_sequencing]=' + checked
+  params = 'sample_mixture[ready_for_sequencing]=' + checked
   new Ajax.Request(
     url, {
       method: 'put',
