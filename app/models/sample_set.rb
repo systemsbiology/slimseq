@@ -199,7 +199,7 @@ class SampleSet < ActiveRecord::Base
 
   def attribute_subset(keys)
     Hash[
-      keys.collect{|key| [key, send(key)]}
+      *keys.collect{|key| [key, send(key)]}
     ]
   end
 
