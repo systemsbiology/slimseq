@@ -25,7 +25,7 @@
 <%= link_to 'Edit', edit_experiment_path(@experiment) %> &nbsp; |  &nbsp; 
 <%= link_to 'Back', experiments_path %>
 
-<% if AppConfig.post_pipelines_enabled %>
+<% if APP_CONFIG['post_pipelines_enabled'] %>
   &nbsp; |  &nbsp; 
   <%= link_to 'Pipeline', :action=>:pipeline, :id=>@experiment.id %>
 <% end %>

@@ -4,9 +4,6 @@ ActionController::Routing::Routes.draw do |map|
   # backward compatibility with bookmarked login page
   map.connect 'session/new', :controller => "welcome", :action => "home"
 
-  # victor/phonybone
-  map.connect '/post_pipelines/help', :controller=>:post_pipelines, :action=>:help
-
   # logout
   map.connect 'logout', :controller => "sessions", :action => "destroy"
 
@@ -89,7 +86,6 @@ ActionController::Routing::Routes.draw do |map|
 
   # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
   map.root :controller => "welcome", :action => "home"
-
 
   # See how all your routes lay out with "rake routes"
 

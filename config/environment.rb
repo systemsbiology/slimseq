@@ -60,18 +60,30 @@ Rails::Initializer.run do |config|
 
   # Make Active Record use UTC-base instead of local time
   # config.active_record.default_timezone = :utc
-
-  # Fix for SubURI issue with Passenger
-  config.action_controller.relative_url_root = "/slimarray_staging"
+  
+  # Required gems
+  config.gem "json", :version => '1.1.3'
+  config.gem "parseexcel", :version => '0.5.2'
+  config.gem "rest-client", :lib => "rest_client", :version => '0.8.2'
+  config.gem "hpricot", :version => '0.6.161'
+  config.gem "nokogiri", :version => '1.2.3'
+  config.gem "rubycas-client", :version => '2.1.0'
+  config.gem "highline", :version => '1.4.0'
 end
 
 AUTHENTICATION_SALT = 'mmm_kosher_rocks' unless defined? AUTHENTICATION_SALT
 
 # Exception Notifier plugin configuration
-if( ENV["RAILS_ENV"] == "test" )
+# Hackish way of handling the case where the database is empty
+begin
+  if( ENV["RAILS_ENV"] == "test" )
+    ExceptionNotifier.exception_recipients = "admin@example.com"
+  else
+    ExceptionNotifier.exception_recipients = SiteConfig.administrator_email
+  end
+rescue
   ExceptionNotifier.exception_recipients = "admin@example.com"
-else
-#  ExceptionNotifier.exception_recipients = SiteConfig.administrator_email
-end  
-#ExceptionNotifier.sender_address =
-#    %("Application Error" <slimseq@#{`hostname`.strip}>)
+end
+ExceptionNotifier.sender_address =
+    %("Application Error" <slimseq@#{`hostname`.strip}>)
+

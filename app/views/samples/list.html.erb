@@ -29,10 +29,7 @@
     <%= render :partial => 'shared/tinytable', :locals => {:sort_column => 0} %>
 
     <p>
-	Apply to checked samples: 
       <%= submit_tag 'Show Details' %>
-      <%= submit_tag 'RNA Seq Pipeline' %>
-
       <% if current_user.staff_or_admin? %>
         <%= submit_tag 'Delete Selected Samples',
           :confirm => "Are you sure you want to delete all the selected samples?" %>

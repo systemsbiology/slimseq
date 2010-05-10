@@ -1,4 +1,4 @@
-10# Transfer users, lab groups and lab memberships between in-house db and SLIMcore
+# Transfer users, lab groups and lab memberships between in-house db and SLIMcore
 namespace :db do
   namespace :migrate do
 
@@ -8,10 +8,10 @@ namespace :db do
 
       # custom model declarations here to prevent model name conflicts
       class CoreUser < ActiveResource::Base
-        self.site = AppConfig.slimcore_site
+        self.site = APP_CONFIG['slimcore_site']
         self.element_name = "user"
-        self.user = AppConfig.slimcore_user
-        self.password = AppConfig.slimcore_password 
+        self.user = APP_CONFIG['slimcore_user']
+        self.password = APP_CONFIG['slimcore_password'] 
 
         def self.find_by_login(login)
           self.find(:all, :params => {:login => login}).first
@@ -19,10 +19,10 @@ namespace :db do
       end
 
       class CoreLabGroup < ActiveResource::Base
-        self.site = AppConfig.slimcore_site 
+        self.site = APP_CONFIG['slimcore_site'] 
         self.element_name = "lab_group"
-        self.user = AppConfig.slimcore_user
-        self.password = AppConfig.slimcore_password 
+        self.user = APP_CONFIG['slimcore_user']
+        self.password = APP_CONFIG['slimcore_password'] 
 
         def self.find_by_name(name)
           self.find(:all, :params => {:name => name}).first
@@ -30,10 +30,10 @@ namespace :db do
       end
 
       class CoreLabMembership < ActiveResource::Base
-        self.site = AppConfig.slimcore_site 
+        self.site = APP_CONFIG['slimcore_site'] 
         self.element_name = "lab_membership"
-        self.user = AppConfig.slimcore_user
-        self.password = AppConfig.slimcore_password 
+        self.user = APP_CONFIG['slimcore_user']
+        self.password = APP_CONFIG['slimcore_password'] 
       end
 
       class SoloUser < ActiveRecord::Base

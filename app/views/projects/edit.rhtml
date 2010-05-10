@@ -7,13 +7,12 @@
 
 <!-- display the studies in the project -->
 <div>
-<h2>Studies for this project: <%= @project.studies.length %></h2>
+<h2>Studies for this project:</h2>
+<table>
 <% @project.studies.each do |s| %>
-<ul>
-<li><%= link_to s.name, edit_study_path(s) %></li>
+<tr><td><%= link_to s.name, edit_study_path(s) %></td></tr>
 <% end %>
-</ul>
-<%= link_to 'Add a new study', { :controller=>:projects, :action=>:new_study, :id=>@project.id} %>
+</table>
 </div>
-<br/>
+<%= link_to 'Add a new study', { :controller=>:projects, :action=>:new_study, :id=>@project.id} %>
 <%= link_to 'Back to Projects', projects_path %>

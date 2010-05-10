@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   include Authorization
 
   # Exception Notifier plugin
-#  include ExceptionNotifiable
+  include ExceptionNotifiable
   
   # filter passwords out of logs
   filter_parameter_logging "password"

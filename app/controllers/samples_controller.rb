@@ -144,29 +144,8 @@ Get detailed information about a single sample.
       end
 
       redirect_to(samples_url)
-
-    elsif (params[:commit] == "Show Details")
+    elsif(params[:commit] == "Show Details")
       render :action => "details"
-
-    elsif (params[:commit] == "RNA Seq Pipeline")
-      begin
-        Sample.rnaseq_compatible?(@samples)
-      rescue RuntimeError => e
-        @disable_launch=true    # used in launch_multi.html.erb
-        @why_disabled=e.message
-      end
-
-      begin
-        render :template => "post_pipelines/launch_multi"
-        # Can't use a redirect without losing all form info (ie, param[])????
-      rescue Exception => e
-        logger.warn "INTERNAL ERROR: #{e.message}"
-        render :template => "post_pipelines/error", :collection => e.message
-      end
-
-    else
-      raise "params[:commit] is #{params[:commit]}"
-      
     end
   end
   

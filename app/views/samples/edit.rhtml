@@ -2,8 +2,8 @@
 <%= error_messages_for_samples %>
 
 <h2>Editing Sample <i><%= @sample.name_on_tube %></i></h2>
-<%= link_to "Rna Seq Pipeline", :controller=>:samples, :action=>:pipeline,
-  :id=>@sample.id if AppConfig.post_pipelines_enabled %>
+<%= link_to "Post Processing Pipeline", :controller=>:samples, :action=>:pipeline,
+  :id=>@sample.id if APP_CONFIG['post_pipelines_enabled'] %>
 
 <% form_tag sample_path(@sample), :method => :put do -%>
 

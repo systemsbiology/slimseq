@@ -1,6 +1,5 @@
 <h2>Editing experiment <i><%= @experiment.name %></i></h2>
 
-<%= link_to @experiment.study.project.name, :controller=>:experiments, :action=>:edit, :id=>@experiment.study.project.id %>
 <% form_for(@experiment) do |f| %>
   <%= f.error_messages %>
 
@@ -24,8 +23,8 @@
     <li><%= link_to s.name_on_tube, edit_sample_path(s) %>
     </ul><% end %>
     <%= link_to "Manage samples", :controller=>:experiments, :action=>:add_samples, :id=>@experiment.id %>
-    <%= link_to "RNA Seq Pipeline", :controller=>:experiments, :action=>:pipeline,
-      :id=>@experiment.id if AppConfig.post_pipelines_enabled %>
+    <%= link_to "Post Processing Pipeline", :controller=>:experiments, :action=>:pipeline,
+      :id=>@experiment.id if APP_CONFIG['post_pipelines_enabled'] %>
   </p>
 
   <p>

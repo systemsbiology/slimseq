@@ -9,8 +9,8 @@ Given /I am logged in as a customer/i do
     )
     
     visits "/sessions/new"  
-    fills_in("username", :with => AppConfig.test_login)  
-    fills_in("password", :with => AppConfig.test_password)  
+    fills_in("username", :with => APP_CONFIG['test_login'])  
+    fills_in("password", :with => APP_CONFIG['test_password'])  
     clicks_button("LOGIN")  
   else
     @user = User.create(:firstname => "Jim",  
@@ -20,8 +20,8 @@ Given /I am logged in as a customer/i do
       :password => "password",  
       :password_confirmation => "password")  
     visits "/sessions/new"  
-    fills_in("login", :with => AppConfig.test_login)  
-    fills_in("password", :with => AppConfig.test_password)  
+    fills_in("login", :with => APP_CONFIG['test_login'])  
+    fills_in("password", :with => APP_CONFIG['test_password'])  
     clicks_button("Log in")  
   end
 end  

@@ -926,110 +926,6 @@ class Sample < ActiveRecord::Base
     end
   end
 
-  def rna_seq_ref_genome
-    org_name=reference_genome.organism.name
-    conditions={:org=>org_name}
-
-    real_readlen=real_read_length
-    if real_readlen <= 75
-      conditions[:read_length]=real_readlen
-      conditions[:align]='bowtie'
-    else
-      conditions[:align]='blat'
-    end
-    
-#    raise "conditions: #{conditions.inspect}"
-
-    # first search:
-    genomes=RnaSeqRefGenome.find(:all, :conditions=>conditions)
-#    if genomes.length == 0
-    if false
-      # skip this until blat support is implemented:
-      # second search, with relaxed conditions:
-      conditions.delete :read_length
-      conditions[:align]='blat'
-      genomes=RnaSeqRefGenome.find(:all, :conditions=>conditions)
-    end
-
-    # report results if no perfect fit:
-    if genomes.length == 0
-      raise "no appropriate RNA-Seq ref. genomes."
-#      raise "no appropriate RNA-Seq ref. genomes found for org=#{org_name} and read size=#{real_readlen}; please contact RNA-Seq admin for further help."
-    elsif genomes.length > 1
-      raise "multiple genomes found for org=#{org_name} and read size=#{real_readlen}??? (internal error)"
-    else
-      genome=genomes[0]
-    end
-
-    # have to expand genome file glob (BLAT case, but works for bowtie, too):
-    genome
-  end
-
-
-  def real_read_length
-    fcls=flow_cell_lanes()
-    return nil if fcls.size==0
-    export_file=fcls[0].eland_output_file
-    return nil if export_file.nil?
-    len=0
-    begin
-      File.open export_file do |f|
-        l=f.gets
-        read=l.split()[8]
-        len=read.length
-      end
-    rescue Exception => e
-      logger.warn "Sample#real_read_length (id=#{id}): error reading export_file: #{e.message}"
-      len=0                     # I guess...
-    end
-    len
-  end
-
-  def post_pipeline_aligner
-    real_read_length >= 50? 'blat' : 'bowtie'
-  end
-
-  #-----------------------------------------------------------------------
-  # check to see if all samples in a list 
-  # throws an exception if they're not, so wrap call in a begin/rescue block.
-  # exception.message contains reasons for why not compatible
-
-  def self.rnaseq_compatible?(samples)
-    raise "samples: #{samples.class}: not an Array" unless samples.class.to_s=='Array'
-
-    readlen=samples[0].real_read_length
-    ref_genome_name=samples[0].rna_seq_ref_genome.name
-    @msgs=Array.new
-
-    samples.each do |sample|
-      msg="Sample #{sample.name_on_tube}: "
-      if sample.status != 'completed'
-        msg+="not completed"
-        @msgs<<msg
-        next
-      end
-      if sample.sample_prep_kit.name != 'mRNASeq'
-        msg+="not an RNA-Seq sample (as determined by prep kit: #{sample.sample_prep_kit.name})"
-        @msgs<<msg
-        next
-      end
-      if sample.real_read_length != readlen
-        msg+="different read length: #{readlen.to_s} vs. #{sample.read_read_length.to_s}"
-        @msgs<<msg
-        next
-      end
-      if sample.rna_seq_ref_genome.name != ref_genome_name
-        msg+="different reference genome: #{sample.rna_seq_ref_genome.name} vs. #{ref_genome_name}"
-        @msgs<<msg
-        next
-      end
-    end
-    
-    raise @msgs.join("<br />\n") if @msgs.length>0
-
-  end
-
-########################################################################
 private
 
   def add_comment(base, comment, type)
@@ -1078,6 +974,5 @@ private
 
     return compressed
   end
-
 
 end

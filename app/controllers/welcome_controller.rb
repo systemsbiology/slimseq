@@ -37,7 +37,6 @@ class WelcomeController < ApplicationController
   end
 
   def staff
-
     # Make an array of the accessible lab group ids, and use this
     # to find the current user's accessible samples in a nice sorted list
     @lab_groups = LabGroup.find(:all, :order => "name ASC")
