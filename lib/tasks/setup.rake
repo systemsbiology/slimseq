@@ -53,12 +53,15 @@ namespace :setup do
   task :external_data => :environment do
     puts "== Setting up external data =="
 
-    # need this to get LabGroup model from authorizer plugin if it was 
-    # installed during the running of rake
-    ActionController::Dispatcher.reload_application
-
     # Not sure why, but APP_CONFIG isn't always loaded when this task runs
     require 'config/initializers/1-load_application_config'
+
+    # need this to get LabGroup model from authorizer plugin if it was 
+    # installed during the running of rake
+    slimcore_file = 'vendor/plugins/slimcore_authorizer/app/models/lab_group.rb'
+    slimsolo_file = 'vendor/plugins/slimsolo_authorizer/app/models/lab_group.rb'
+    load slimcore_file if File.exists? slimcore_file
+    load slimsolo_file if File.exists? slimsolo_file
 
     facility_group = LabGroup.find_or_create_by_name("Microarray Facility")
     LabGroupProfile.create(:lab_group_id => facility_group.id)
