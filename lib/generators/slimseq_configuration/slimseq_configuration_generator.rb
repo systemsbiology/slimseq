@@ -12,12 +12,12 @@ class SlimseqConfigurationGenerator < Rails::Generator::Base
       end
 
       dev_mysql_server = ask_or_nil("Development MySQL Server [localhost]: ")
-      dev_mysql_database = ask_or_nil("Development MySQL Database [slimseq_dev]: ")
+      dev_mysql_database = ask_or_nil("Development MySQL Database [slimseq_development]: ")
       dev_mysql_username = ask_or_nil("Development MySQL username [slimseq]: ")
       dev_mysql_password = ask_or_nil("Development MySQL password [slimseq]: ")
 
       test_mysql_server = ask_or_nil("Test MySQL Server [localhost]: ")
-      test_mysql_database = ask_or_nil("Test MySQL Database [slimseq_dev]: ")
+      test_mysql_database = ask_or_nil("Test MySQL Database [slimseq_test]: ")
       test_mysql_username = ask_or_nil("Test MySQL username [slimseq]: ")
       test_mysql_password = ask_or_nil("Test MySQL password [slimseq]: ")
 
