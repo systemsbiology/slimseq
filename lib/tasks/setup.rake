@@ -56,12 +56,16 @@ namespace :setup do
     # Not sure why, but APP_CONFIG isn't always loaded when this task runs
     require 'config/initializers/1-load_application_config'
 
-    # need this to get LabGroup model from authorizer plugin if it was 
-    # installed during the running of rake
-    slimcore_file = 'vendor/plugins/slimcore_authorizer/app/models/lab_group.rb'
-    slimsolo_file = 'vendor/plugins/slimsolo_authorizer/app/models/lab_group.rb'
-    load slimcore_file if File.exists? slimcore_file
-    load slimsolo_file if File.exists? slimsolo_file
+    # need this to get models from authorizer plugin if it was 
+    # installed while rake has been running
+
+    if File.exists? 'vendor/plugins/slimcore_authorizer'
+      model_folder = 'vendor/plugins/slimcore_authorizer/app/models/'
+    elsif File.exists? 'vendor/plugins/slimsolo_authorizer'
+      model_folder = 'vendor/plugins/slimsolo_authorizer/app/models'
+    end
+    load model_folder + "lab_group.rb"
+    load model_folder + "user.rb"
 
     facility_group = LabGroup.find_or_create_by_name("Microarray Facility")
     LabGroupProfile.create(:lab_group_id => facility_group.id)
