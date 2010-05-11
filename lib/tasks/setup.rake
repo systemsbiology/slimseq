@@ -1,5 +1,5 @@
 desc "Initial set up of SLIMseq"
-task :setup => ["gems:install", "setup:configuration", "setup:naming_schemer", "setup:authorizer",
+task :setup => ["setup:configuration", "gems:install", "setup:naming_schemer", "setup:authorizer",
                 "db:load", "setup:external_data", "setup:admin_user"]
 
 namespace :setup do
@@ -52,6 +52,10 @@ namespace :setup do
   desc "Create initial lab group and project for the facility"
   task :external_data => :environment do
     puts "== Setting up external data =="
+
+    # need this to get LabGroup model from authorizer plugin if it was 
+    # installed during the running of rake
+    ActionController::Dispatcher.reload_application
 
     # Not sure why, but APP_CONFIG isn't always loaded when this task runs
     require 'config/initializers/1-load_application_config'
