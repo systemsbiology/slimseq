@@ -45,10 +45,10 @@ projects:
   - - "1"
     - Sequencing Facility
     - PhiX
-    - "1"
-    - "0"
     - 
-    - 2008-11-21 10:41:54
+    - "1"
+    - 
+    - 2010-05-11 12:19:14
 
 --- 
 reference_genomes: 
@@ -61,6 +61,8 @@ reference_genomes:
   - description
   - created_at
   - updated_at
+  - filter_reference_path
+  - gene_gtf_path
   records: 
   - - "1"
     - PhiX
@@ -68,6 +70,8 @@ reference_genomes:
     - "0"
     - /data/Genomes/ELAND/PhiX/PhiX
     - PhiX
+    - 
+    - 
     - 
     - 
 
@@ -80,6 +84,8 @@ sample_prep_kits:
   - created_at
   - updated_at
   - restriction_enzyme
+  - paired_end
+  - multiplexing_scheme_id
   records: 
   - - "1"
     - PhiX Control
@@ -87,53 +93,8 @@ sample_prep_kits:
     - 
     - 
     - 
-
---- 
-samples: 
-  columns: 
-  - id
-  - sample_set_id
-  - submitted_by_id
-  - project_id
-  - submission_date
-  - name_on_tube
-  - sample_description
-  - sample_prep_kit_id
-  - insert_size
-  - desired_read_length
-  - alignment_start_position
-  - alignment_end_position
-  - reference_genome_id
-  - status
-  - naming_scheme_id
-  - budget_number
-  - control
-  - lock_version
-  - comment
-  - created_at
-  - updated_at
-  records: 
-  - - "1"
+    - false
     - 
-    - 
-    - "1"
-    - "2008-08-21"
-    - PhiX
-    - PhiX_Control
-    - "1"
-    - "100"
-    - "18"
-    - "1"
-    - "18"
-    - "1"
-    - completed
-    - ""
-    - "00000000"
-    - true
-    - "60"
-    - ""
-    - 
-    - 2008-12-02 08:58:15
 
 --- 
 site_config: 
@@ -221,3 +182,75 @@ users:
     - "0"
     - false
     - false
+
+--- 
+sample_mixtures: 
+  columns: 
+  - id
+  - name_on_tube
+  - sample_description
+  - project_id
+  - budget_number
+  - desired_read_length
+  - alignment_start_position
+  - alignment_end_position
+  - control
+  - comment
+  - ready_for_sequencing
+  - eland_parameter_set_id
+  - submission_date
+  - status
+  - submitted_by_id
+  - sample_prep_kit_id
+  - sample_set_id
+  - created_at
+  - updated_at
+  records: 
+  - - "1"
+    - PhiX
+    - PhiX_Control
+    - "1"
+    - "00000000"
+    - "18"
+    - "1"
+    - "18"
+    - true
+    - ""
+    - true
+    - 
+    - "2008-08-21"
+    - completed
+    - 
+    - "1"
+    - 
+    - 2010-05-11 12:23:53
+    - 2010-05-11 12:23:53
+
+--- 
+samples: 
+  columns: 
+  - id
+  - sample_description
+  - insert_size
+  - reference_genome_id
+  - naming_scheme_id
+  - lock_version
+  - created_at
+  - updated_at
+  - experiment_id
+  - postback_uri
+  - sample_mixture_id
+  - multiplex_code_id
+  records: 
+  - - "1"
+    - PhiX_Control
+    - "100"
+    - "1"
+    - ""
+    - "61"
+    - 
+    - 2010-05-11 12:23:53
+    - 
+    - 
+    - "1"
+    - 
