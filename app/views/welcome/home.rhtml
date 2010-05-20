@@ -5,9 +5,9 @@ software for <%= SiteConfig.organization_name %>.</p>
 
 <%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %>
 
-<h3>Samples Not Yet Competed</h3>
+<h3>Samples Not Yet Completed</h3>
 
-<% if @samples != nil && @samples.size > 0 %>
+<% if @sample_mixtures != nil && @sample_mixtures.size > 0 %>
   <%= render :partial => 'sample_table' %>
 <% else %>
     <p>Your lab groups have no submitted samples that have not been sequenced.</p>
@@ -15,7 +15,7 @@ software for <%= SiteConfig.organization_name %>.</p>
 
 <h3>Last 10 Completed Samples (<%= link_to 'See Older Samples', samples_path %>)</h3>
 
-<% if @completed_samples != nil && @completed_samples.size > 0 %>
+<% if @completed_sample_mixtures != nil && @completed_sample_mixtures.size > 0 %>
   <%= render :partial => 'completed_sample_table' %>
 <% else %>
     <p>Your lab groups have no samples that have been completed in the past month.</p>

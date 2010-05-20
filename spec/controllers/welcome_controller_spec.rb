@@ -44,25 +44,25 @@ describe WelcomeController do
 
       it "should find incomplete and complete samples if the user belongs to lab groups" do
         @current_user.should_receive(:get_lab_group_ids).and_return([42,47])
-        samples = mock("Incomplete Samples")
-        complete_samples = mock("Complete Samples")
+        sample_mixtures = mock("Incomplete Sample Mixtures")
+        complete_sample_mixtures = mock("Complete Sample Mixtures")
 
-        Sample.should_receive(:find).with(
+        SampleMixture.should_receive(:find).with(
           :all, 
           :include => 'project',
           :conditions => [ "status != ? AND projects.lab_group_id IN (?) AND control = ?",
             'completed', [42,47], false ],
-          :order => "samples.id ASC"
-        ).and_return(samples)
+          :order => "sample_mixtures.id ASC"
+        ).and_return(sample_mixtures)
 
-        Sample.should_receive(:find).with(
+        SampleMixture.should_receive(:find).with(
           :all, 
           :include => 'project',
           :conditions => [ "status = ? AND projects.lab_group_id IN (?) AND control = ?",
             'completed', [42,47], false ],
-          :order => "samples.submission_date DESC",
+          :order => "sample_mixtures.submission_date DESC",
           :limit => 10
-        ).and_return(complete_samples)
+        ).and_return(complete_sample_mixtures)
 
         User.should_receive(:all_by_id).and_return( mock("Users by id Hash") )
 

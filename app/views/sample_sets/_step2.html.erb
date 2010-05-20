@@ -1,88 +1,76 @@
-<% form_tag :action => 'create' do -%>
-  <%= hidden_field 'sample_set', 'submission_date'  %>
-  <%= hidden_field 'sample_set', 'number_of_samples' %>
-  <%= hidden_field 'sample_set', 'project_id' %>
-  <%= hidden_field 'sample_set', 'sample_prep_kit_id' %>
-  <%= hidden_field 'sample_set', 'reference_genome_id' %>
-  <%= hidden_field 'sample_set', 'desired_read_length' %>
-  <%= hidden_field 'sample_set', 'alignment_start_position' %> 
-  <%= hidden_field 'sample_set', 'alignment_end_position' %>
-  <%= hidden_field 'sample_set', 'eland_parameter_set_id' %>
-  <%= hidden_field 'sample_set', 'insert_size' %>
-  <%= hidden_field 'sample_set', 'naming_scheme_id' %>
-  <%= hidden_field 'sample_set', 'budget_number' %>
+<% form_for @sample_set do |sample_set_form| -%>
+  <%= sample_set_form.hidden_field 'submission_date'  %>
+  <%= sample_set_form.hidden_field 'number_of_samples' %>
+  <%= sample_set_form.hidden_field 'project_id' %>
+  <%= sample_set_form.hidden_field 'sample_prep_kit_id' %>
+  <%= sample_set_form.hidden_field 'reference_genome_id' %>
+  <%= sample_set_form.hidden_field 'desired_read_length' %>
+  <%= sample_set_form.hidden_field 'alignment_start_position' %> 
+  <%= sample_set_form.hidden_field 'alignment_end_position' %>
+  <%= sample_set_form.hidden_field 'eland_parameter_set_id' %>
+  <%= sample_set_form.hidden_field 'insert_size' %>
+  <%= sample_set_form.hidden_field 'naming_scheme_id' %>
+  <%= sample_set_form.hidden_field 'budget_number' %>
+  <%= sample_set_form.hidden_field 'submitted_by' %>
+  <%= sample_set_form.hidden_field 'multiplex_number' %>
+
+  <%= error_messages_for 'sample_set' %>
 
   <table id="table" class="nonsortable" cellpadding="0" cellspacing="0" border="0">
     <thead>
     <tr>
-      <th>Date</th>
       <th>Name on the sample tube</th>
-      <% if @sample_set.naming_scheme_id == nil %>
-        <th>Sample Description</th>
-      <% else %>
-        <% for element in @naming_elements %>
-          <th><%=h element.name %></th>
-        <% end %>
-      <% end %>
+      <th>Sample Description</th>
       <% unless @samples_need_approval %>
         <th>Ready For Sequencing</th>
       <% end %>
       <th>Sample Comment</th>
-      <th>Sample Prep Kit</th>
-      <th>Reference Genome</th>
-      <th>Desired Read Length</th>
-      <th>Alignment Bases</th>
-      <th>Insert Size</th>
-      <th>Budget Number</th>
     </tr>
     </thead>
-    <% for @n in 0..@samples.size-1 %>    
+    <% @n = nil %>
+    <% sample_set_form.fields_for :sample_mixtures do |mixture_fields| %>
       <tr>
-        <% @sample = @samples[@n] %>
-        <%= error_messages_for 'sample' %>
-          <td><%=h @sample.submission_date %>
-              <%= hidden_field :sample, :submission_date, :index =>@n %></td>
-          <td><%= text_field :sample, :name_on_tube, :index =>@n,
-                  :size => 10 %></td>
+        <% @sample_mixture = mixture_fields.object %>
+          <td><%= mixture_fields.text_field :name_on_tube, :size => 10 %></td>
 
-          <% if @naming_scheme == nil %>
-            <td><%= text_field :sample, :sample_description, :index =>@n,
-                    :size => 30 %></td>
-          <% else %>
-            <%= render :partial => 'samples/schemed_sample_description' %>
-          <% end %>
+          <td>
+            <% @multiplexing_scheme = SamplePrepKit.find(@sample_set.sample_prep_kit_id).multiplexing_scheme %>
+            <% if @multiplexing_scheme %>
+              Multiplexed samples
+            <% end %>
+            <table class="nonsortable">
+              <% @samples = mixture_fields.object.samples %>
+              <% mixture_fields.fields_for :samples do |sample_fields| %>
+                <tr>
+                  <% @sample = sample_fields.object %>
+                  <% @n = @n ? @n+1 : 0 %>
+
+                  <% if @naming_scheme == nil %>
+                    <td><%= sample_fields.text_field :sample_description, :size => 30 %></td>
+                  <% else %>
+                    <%= render :partial => 'samples/schemed_sample_description', :locals => { :sample_fields => sample_fields } %>
+                  <% end %>
+                  <td>
+                    <% if @multiplexing_scheme %>
+                      Barcode: <%= sample_fields.collection_select :multiplex_code_id, @multiplexing_scheme.multiplex_codes,
+                        :id, :name, {:prompty => true} %>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </table>
+          </td>
           
           <% if @samples_need_approval %>
-            <%= hidden_field :sample, :ready_for_sequencing, :index => @n, :value => 0 %>
+            <%= mixture_fields.hidden_field :ready_for_sequencing, :value => 0 %>
           <% else %>
-            <td><%= check_box :sample, :ready_for_sequencing, :index => @n %></td>
+            <td><%= mixture_fields.check_box :ready_for_sequencing %></td>
           <% end %>
 
-          <td><%= text_field :sample, :comment, :index =>@n %></td>
-          
-          <td><%=h @sample.sample_prep_kit.name %>
-              <%= hidden_field :sample, :sample_prep_kit_id, :index =>@n %></td>
-          <td><%=h @sample.reference_genome.name %>
-              <%= hidden_field :sample, :reference_genome_id, :index =>@n %></td>
-          <td><%=h @sample.desired_read_length %>
-              <%= hidden_field :sample, :desired_read_length, :index =>@n %></td>
-          <td><%=h @sample.alignment_start_position %> - <%=h @sample.alignment_end_position %>
-              <%= hidden_field :sample, :alignment_start_position, :index =>@n %>
-              <%= hidden_field :sample, :alignment_end_position, :index =>@n %></td>
-          <td><%=h @sample.insert_size %>
-              <%= hidden_field :sample, :insert_size, :index =>@n %></td>
-          <td><%=h @sample.budget_number %>
-              <%= hidden_field :sample, :budget_number, :index =>@n %></td>
-          <%= hidden_field :sample, :status, :index =>@n %>
-          <%= hidden_field :sample, :project_id, :index =>@n %>
-          <%= hidden_field :sample, :naming_scheme_id, :index =>@n %>
-          <%= hidden_field :sample, :submitted_by_id, :index =>@n %>
-          <%= hidden_field :sample, :eland_parameter_set_id, :index =>@n %></td>
+          <td><%= mixture_fields.text_field :comment %></td>
       </tr>
     <% end %>
   </table>
 
-  <%= hidden_field :sample, :submission_date, :index =>@n %>
-  
   <%= submit_tag "Create Samples" %>
 <% end -%>

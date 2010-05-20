@@ -6,12 +6,10 @@ describe LabGroupProfile do
   it "should provide a destroy warning" do
     lab_group_profile = LabGroupProfile.create(:lab_group_id => 3)
 
-    ChargeSet.should_receive(:find).and_return( [mock_model(ChargeSet), mock_model(ChargeSet)] )
     Project.should_receive(:find).and_return( [mock_model(Project)] )
 
     lab_group_profile.destroy_warning.should ==
       "Destroying this lab group will also destroy:\n" + 
-           "2 charge set(s)\n" +
            "1 project(s)\n" +
            "Are you sure you want to destroy it?"
   end

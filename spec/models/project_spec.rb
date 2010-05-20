@@ -24,8 +24,10 @@ describe "Project" do
     project.stub!(:lab_group_id).and_return(3)
     project.stub!(:lab_group).and_return(lab_group)
 
-    sample_1 = create_sample(:project => project)
-    sample_2 = create_sample(:project => project)
+    sample_mixture_1 = create_sample_mixture(:project => project)
+    sample_mixture_2 = create_sample_mixture(:project => project)
+    sample_1 = create_sample(:sample_mixture => sample_mixture_1)
+    sample_2 = create_sample(:sample_mixture => sample_mixture_2)
 
     project.detail_hash.should == {
       :id => project.id,

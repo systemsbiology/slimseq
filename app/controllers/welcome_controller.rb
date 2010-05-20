@@ -20,16 +20,16 @@ class WelcomeController < ApplicationController
       # to find the current user's accessible samples in a nice sorted list
       lab_group_ids = current_user.get_lab_group_ids
       if(lab_group_ids != nil && lab_group_ids.size > 0)
-        @samples = Sample.find(:all, 
+        @sample_mixtures = SampleMixture.find(:all, 
            :include => 'project',
            :conditions => [ "status != ? AND projects.lab_group_id IN (?) AND control = ?",
             'completed', lab_group_ids, false ],
-           :order => "samples.id ASC")
-        @completed_samples = Sample.find(:all, 
+           :order => "sample_mixtures.id ASC")
+        @completed_sample_mixtures = SampleMixture.find(:all, 
            :include => 'project',
            :conditions => [ "status = ? AND projects.lab_group_id IN (?) AND control = ?",
             'completed', lab_group_ids, false ],
-           :order => "samples.submission_date DESC",
+           :order => "sample_mixtures.submission_date DESC",
            :limit => 10)
         @users_by_id = User.all_by_id
       end
@@ -40,8 +40,8 @@ class WelcomeController < ApplicationController
     # Make an array of the accessible lab group ids, and use this
     # to find the current user's accessible samples in a nice sorted list
     @lab_groups = LabGroup.find(:all, :order => "name ASC")
-    @samples = Sample.find(:all, :conditions => [ "status = ? AND control = ?", 'submitted', false],
-                              :order => "samples.id ASC")
+    @sample_mixtures = SampleMixture.find(:all, :conditions => [ "status = ? AND control = ?", 'submitted', false],
+                              :order => "sample_mixtures.id ASC")
     @users_by_id = User.all_by_id
     @flow_cells = FlowCell.find(:all, :conditions => "status = 'clustered'")
   end

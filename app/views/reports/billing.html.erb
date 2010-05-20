@@ -16,14 +16,14 @@
       <% next if lane.flow_cell.sequencing_runs.size == 0 %>
       <tr>
         <td><%=h lane.flow_cell.sequencing_runs.best[0].date.strftime("%Y/%m/%d") %></td>
-        <td><%=h lane.samples[0].short_and_long_name %></td>
+        <td><%=h lane.sample_mixture.short_and_long_name %></td>
         <td>
-          <%=h lane.samples[0].submitted_by_id && @users_by_id[lane.samples[0].submitted_by_id] ?
-            @users_by_id[lane.samples[0].submitted_by_id].full_name : "" %>
+          <%=h lane.sample_mixture.submitted_by_id && @users_by_id[lane.sample_mixture.submitted_by_id] ?
+            @users_by_id[lane.sample_mixture.submitted_by_id].full_name : "" %>
         </td>
-        <td><%=h lane.samples[0].budget_number %></td>
-        <td><%=h lane.samples[0].sample_prep_kit.name %></td>
-        <td><%=h lane.samples[0].desired_read_length %></td>
+        <td><%=h lane.sample_mixture.budget_number %></td>
+        <td><%=h lane.sample_mixture.sample_prep_kit.name %></td>
+        <td><%=h lane.sample_mixture.desired_read_length %></td>
       </tr>
     <% end %>
   </table>

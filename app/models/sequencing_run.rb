@@ -16,8 +16,11 @@ class SequencingRun < ActiveRecord::Base
   end
   
   def run_name
-    "#{date_yymmdd}_" +
-    "#{instrument.serial_number}_#{flow_cell.prefixed_name}"
+    if run_number
+      [date_yymmdd, instrument.serial_number, "%04d" % run_number, flow_cell.prefixed_name].join("_")
+    else
+      [date_yymmdd, instrument.serial_number, flow_cell.prefixed_name].join("_")
+    end
   end
 
   def update_attributes(attributes)  
@@ -39,11 +42,12 @@ class SequencingRun < ActiveRecord::Base
   def self.find_by_run_name(run_name)
     sequencing_run = nil
 
-    name_match = run_name.match(/^(\d{6})_(.*)_FC(.*)$/)
+    name_match = run_name.match(/^(\d{6})_(.*?)_(\d{4})*_*FC(.*)$/)
     if(name_match)
       date = Date.strptime(name_match[1],"%y%m%d")
       instrument = name_match[2]
-      flow_cell = name_match[3]
+      run_number = name_match[3]
+      flow_cell = name_match[4]
 
       sequencing_run = SequencingRun.find(:first, :include => [:flow_cell, :instrument],
         :conditions => ["date = ? AND flow_cells.name = ? AND instruments.serial_number = ?",
@@ -68,6 +72,7 @@ class SequencingRun < ActiveRecord::Base
     file << "WEB_DIR_ROOT #{instrument.web_root}\n"
     params.keys.sort.each do |i|
       hash = params[i]
+      file << "#{hash[:lane_number]}:ANALYSIS #{hash[:analysis]}\n"
       file << "#{hash[:lane_number]}:ELAND_GENOME #{hash[:eland_genome]}\n"
       file << "#{hash[:lane_number]}:ELAND_SEED_LENGTH #{hash[:eland_seed_length]}\n"
       file << "#{hash[:lane_number]}:ELAND_MAX_MATCHES #{hash[:eland_max_matches]}\n"
@@ -84,14 +89,16 @@ class SequencingRun < ActiveRecord::Base
 
     lane_counter = 0
     flow_cell.flow_cell_lanes.each do |lane|
-      first_sample = lane.samples[0]
+      sample_mixture = lane.sample_mixture
 
       gerald_params[lane_counter.to_s] = {
         :lane_number => lane.lane_number,
-        :eland_genome => first_sample.reference_genome.fasta_path,
-        :eland_seed_length => first_sample.eland_seed_length,
-        :eland_max_matches => first_sample.eland_max_matches,
-        :use_bases => gerald_defaults.skip_last_base ? "Y#{first_sample.desired_read_length - 1}n" : 'all'
+        :analysis => sample_mixture.sample_prep_kit.eland_analysis,
+        #FIXME: Update gerald config generation w/ multiplexing support
+        :eland_genome => sample_mixture.samples.first.reference_genome.fasta_path,
+        :eland_seed_length => sample_mixture.eland_seed_length,
+        :eland_max_matches => sample_mixture.eland_max_matches,
+        :use_bases => lane.use_bases_string(gerald_defaults.skip_last_base)
       }
       lane_counter += 1
     end

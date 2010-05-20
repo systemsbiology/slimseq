@@ -7,11 +7,9 @@ class LabGroupProfile < ActiveRecord::Base
   @index_columns = ['file_folder']
 
   def destroy_warning
-    charge_sets = ChargeSet.find(:all, :conditions => ["lab_group_id = ?", lab_group_id])
     projects = Project.find(:all, :conditions => ["lab_group_id = ?", lab_group_id])
     
     return "Destroying this lab group will also destroy:\n" + 
-           charge_sets.size.to_s + " charge set(s)\n" +
            projects.size.to_s + " project(s)\n" +
            "Are you sure you want to destroy it?"
   end

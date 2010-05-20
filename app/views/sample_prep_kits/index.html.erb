@@ -7,6 +7,8 @@
     <tr>
       <th><h3>Name</h3></th>
       <th><h3>Restriction Enzyme</h3></th>
+      <th><h3>Paired End</h3></th>
+      <th><h3>Multiplexing</h3></th>
       <th class="nosort"><h3>Edit</h3></td>
       <th class="nosort"><h3>Destroy</h3></td>
     </tr>
@@ -15,6 +17,8 @@
   <tr>
     <td><%=h sample_prep_kit.name %></td>
     <td><%=h sample_prep_kit.restriction_enzyme %></td>
+    <td><%= sample_prep_kit.paired_end ? "<b>Yes</b>" : "No" %></td>
+    <td><%=h sample_prep_kit.multiplexing_scheme && sample_prep_kit.multiplexing_scheme.name %></td>
     <td><%= link_to 'Edit', edit_sample_prep_kit_path(sample_prep_kit) %></td>
     <td><%= link_to 'Destroy', sample_prep_kit, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>

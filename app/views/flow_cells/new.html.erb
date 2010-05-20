@@ -19,6 +19,7 @@
       <th>Sample</th>
       <th>Starting Concentration (ng/mL)</th>
       <th>Loaded Concentration (pM)</th>
+      <th>Number of cycles</th>
       <th>Lane Comment</th>
     </tr>
   <% for lane in @flow_cell.flow_cell_lanes %>
@@ -26,11 +27,11 @@
     <% fields_for "flow_cell[new_lane_attributes][]", lane do |lane_form| %>
       <td><%=h lane.lane_number %>
           <%= lane_form.hidden_field :lane_number %></td>
-      <td><%= lane_form.collection_select :sample_ids, @samples, :id, :short_and_long_name %></td>
+      <td><%= lane_form.collection_select :sample_mixture_id, @sample_mixtures, :id, :short_and_long_name_with_cycles %></td>
       <td><%= lane_form.text_field :starting_concentration, :size => 10 %></td>
       <td><%= lane_form.text_field :loaded_concentration, :size => 10 %></td>
+      <td><%= lane_form.text_field :number_of_cycles, :size => 10 %></td>
       <td><%= lane_form.text_field :comment %></td>
-      <td></td>
     <% end %>
     </tr>
   <% end %>

@@ -7,6 +7,7 @@
   <tr>
     <th><h3>Date</h3></th>
     <th><h3>Flow Cell</h3></th>
+    <th><h3>Run Number</h3></th>
     <th><h3>Instrument</h3></th>
     <th><h3>Comment</h3></th>
     <th><h3>Run Yield (mb)</h3></th>
@@ -22,6 +23,7 @@
   <tr>
     <td><%=h sequencing_run.date.strftime("%Y/%m/%d") %></td>
     <td><%=h sequencing_run.flow_cell.name %></td>
+    <td><%=h sequencing_run.run_number %></td>
     <td><%=h sequencing_run.instrument.name_with_version %></td>
     <td><%=h sequencing_run.comment %></td>
     <td><%=h sequencing_run.yield_kb ? sequencing_run.yield_kb / 1000 : "" %></td>

@@ -1,6 +1,6 @@
 <h2>Enter Samples</h2>
 
-<% if(@projects.size > 0 || current_user.staff_or_admin?) %>
+<% if(current_user.lab_groups.size > 0 || current_user.staff_or_admin?) %>
   <% if params[:step] == "2" %>
     <%= render :partial => 'step2' %>
   <% else %>

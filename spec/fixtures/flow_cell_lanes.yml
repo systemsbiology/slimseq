@@ -1,12 +1,12 @@
 lane_1:
   flow_cell: flow_cell_1
   lane_number: 1
-  samples: sample3
+  sample_mixture: sample_mixture_3
   starting_concentration: 4353
   loaded_concentration: 1
 lane_2:
   flow_cell: flow_cell_1
   lane_number: 2
-  samples: sample4
+  sample_mixture: sample_mixture_4
   starting_concentration: 3243
   loaded_concentration: 2

@@ -25,6 +25,9 @@
     <p><label>Summary File</label><br>
     <%= f.text_field 'summary_file', :size => 120 %></p>
     
+    <p><label>Archived (Results are no longer at the locations provided)</label><br>
+    <%= f.check_box 'archived' %></p>
+
     <%= f.submit "Update" %>
   </p>
 <% end %>

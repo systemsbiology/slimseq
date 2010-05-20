@@ -11,18 +11,18 @@
     <th>Sample</th>
     <th>Starting Concentration (ng/mL)</th>
     <th>Loaded Concentration (pM)</th>
+    <th>Number of cycles</th>
     <th>Lane Comment</th>
   </tr>
 <% for lane in @flow_cell.flow_cell_lanes %>
   <tr>
     <td><%=h lane.lane_number %></td>
     <td>
-      <% lane.samples.each do |sample| %>
-        <%=h sample.name_on_tube %> (<%=h sample.sample_description %>)
-      <% end %>
+        <%=h lane.sample_mixture.name_on_tube %> (<%=h lane.sample_mixture.sample_description %>)
     </td>
     <td><%=h lane.starting_concentration %> ng/mL</td>
     <td><%=h lane.loaded_concentration %> pM</td>
+    <td><%=h lane.number_of_cycles %></td>
     <td><%=h lane.comment %></td>
   </tr>
 <% end %>

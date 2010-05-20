@@ -13,7 +13,16 @@
   
   <p><label for="sample_set_sample_prep_kit_id">Sample Prep Kit</label><br/>
   <%= collection_select 'sample_set', 'sample_prep_kit_id',
-    @sample_prep_kits, 'id', 'name', {:prompt => true} %></p>
+    @sample_prep_kits, 'id', 'name', {:prompt => true} %>
+  </p>
+
+  <p id="multiplexing" style="display:none">
+    <label for="sample_set_multiplex_number">Multiplexed Samples/Tube</label><br/>
+    <%= text_field 'sample_set', 'multiplex_number', :size => 5, :value => 1 %>
+  </p>
+
+  <%= observe_field :sample_set_sample_prep_kit_id,
+    :function => "determine_multiplexing_support(value)" %>
 
   <p><label for="sample_set_reference_genome_id">Reference Genome</label><br/>
   <%= collection_select 'sample_set', 'reference_genome_id',
@@ -21,10 +30,7 @@
     * Contact the facility to add a new reference genome</p>
 
   <p><label for="sample_set_desired_read_length">Desired Number of Cycles</label><br/>
-    <select id='sample_set_desired_read_length' name='sample_set[desired_read_length]'>
-      <option value="">Please select</option>
-      <%= options_from_collection_for_select (1..36).to_a, "to_i", "to_s", selected = 36 %>
-    </select></p>
+  <%= text_field 'sample_set', 'desired_read_length', :size => 6 %></p>
 
   <p>Alignment bases</p>
   <p><label for="sample_set_alignment_start_position">Start</label>
@@ -49,7 +55,7 @@
     <select id='sample_set_naming_scheme_id' name='sample_set[naming_scheme_id]'>
       <option value="">- None -</option>
       <%= options_from_collection_for_select @naming_schemes, "id", "name",
-        selected = @sample_set.naming_scheme_id %>
+        selected = @sample_set.naming_scheme_id.to_i %>
     </select></p>
   <% end %>
 
@@ -58,3 +64,20 @@
 
   <%= submit_tag "Next ->" %>
 <% end -%>
+
+<script>
+  function determine_multiplexing_support(kit_id) {
+    var kit_multiplexing = {
+      <% @sample_prep_kits.each do |kit| %>
+        <%= "\"#{kit.id}\": #{kit.multiplexing_scheme_id ? "true" : "false"}," %>
+      <% end %>
+    }
+
+    if(kit_multiplexing[kit_id]) {
+      $('multiplexing').show();
+    }
+    else {
+      $('multiplexing').hide();
+    }
+  }
+</script>

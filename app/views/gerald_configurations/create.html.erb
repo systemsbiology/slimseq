@@ -4,19 +4,20 @@
                :sequencing_run_id => @sequencing_run.id %></p>
 
 <code>
-<%= @gerald_defaults.header.gsub(/\n/,'<br>') %><br>
+<%= @gerald_defaults.header.gsub(/\n/,'<br>') %><br/>
 
-EMAIL_LIST <%=h @gerald_defaults.email_list %><br>
-EMAIL_SERVER <%=h @gerald_defaults.email_server %><br>
-EMAIL_DOMAIN <%=h @gerald_defaults.email_domain %><br>
+EMAIL_LIST <%=h @gerald_defaults.email_list %><br/>
+EMAIL_SERVER <%=h @gerald_defaults.email_server %><br/>
+EMAIL_DOMAIN <%=h @gerald_defaults.email_domain %><br/>
 
-WEB_DIR_ROOT <%=h @sequencing_run.instrument.web_root %><br>
+WEB_DIR_ROOT <%=h @sequencing_run.instrument.web_root %><br/>
 
 <% @lanes.keys.sort.each do |i| %>
 <% hash = @lanes[i]  %>
-  <%=h "#{hash[:lane_number]}:ELAND_GENOME #{hash[:eland_genome]}" %><br>
-  <%=h "#{hash[:lane_number]}:ELAND_SEED_LENGTH #{hash[:eland_seed_length]}" %><br>
-  <%=h "#{hash[:lane_number]}:ELAND_MAX_MATCHES #{hash[:eland_max_matches]}" %><br>
-  <%=h "#{hash[:lane_number]}:USE_BASES #{hash[:use_bases]}" %><br>
+  <%=h "#{hash[:lane_number]}:ANALYSIS #{hash[:analysis]}\n" %><br/>
+  <%=h "#{hash[:lane_number]}:ELAND_GENOME #{hash[:eland_genome]}" %><br/>
+  <%=h "#{hash[:lane_number]}:ELAND_SEED_LENGTH #{hash[:eland_seed_length]}" %><br/>
+  <%=h "#{hash[:lane_number]}:ELAND_MAX_MATCHES #{hash[:eland_max_matches]}" %><br/>
+  <%=h "#{hash[:lane_number]}:USE_BASES #{hash[:use_bases]}" %><br/>
 <% end  %>
 </code>

@@ -1,0 +1,58 @@
+<h2>Samples</h2>
+
+<% if(@sample_mixtures != nil && @sample_mixtures.size > 0) %>
+
+  <h3>Sample Information</h3>
+  <% for sample_mixture in @sample_mixtures %>
+    <b><%=h sample_mixture.name_on_tube %> (<%=h sample_mixture.sample_description %>)</b>: 
+    <%=h sample_mixture.associated_comments %><br/>
+  <% end %>
+
+  <h3>Quality Information</h3>
+  <table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
+    <thead>
+      <tr>
+        <th><h3>Sample</h3></th>
+        <th><h3>Flow Cell</h3></th>
+        <th><h3>Lane</h3></th>
+        <th><h3>Concentration (ng/uL)</h3></th>
+        <th><h3>Loaded (pM)</h3></th>
+        <th><h3>Lane Yield (kbases)</h3></th>
+        <th><h3>Average Clusters / Tile</h3></th>
+        <th><h3>% PF Clusters</h3></th>
+        <th><h3>% Align (PF)</h3></th>
+        <th><h3>% Error Rate (PF)</h3></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for sample_mixture in @sample_mixtures %>
+        <% for lane in sample_mixture.flow_cell_lanes %>
+          <tr>
+            <td><%=h sample_mixture.name_on_tube %></td>
+            <td><%=h lane.flow_cell.name %></td>
+            <td><%=h lane.lane_number %></td>
+            <td><%=h lane.starting_concentration %></td>
+            <td><%=h lane.loaded_concentration %></td>
+            <td><%=h lane.lane_yield_kb %></td>
+            <td><%=h lane.average_clusters %></td>
+            <td><%=h lane.percent_pass_filter_clusters %>%</td>
+            <td><%=h lane.percent_align %>%</td>
+            <td><%=h lane.percent_error %>%</td>
+          </tr>
+        <% end %>
+      <% end %> 
+    </tbody>
+  </table>
+  <%= render :partial => 'shared/tinytable_nonpaged', :locals => {:sort_column => nil} %>
+
+  <h3>Data Locations</h3>
+  <% for sample_mixture in @sample_mixtures %>
+    <% for lane in sample_mixture.flow_cell_lanes %>
+      <p><b><%=h sample_mixture.name_on_tube %></b>: 
+      <%= lane.eland_output_file %><br></p>
+    <% end %>
+  <% end %> 
+
+<% else %>
+  No samples were selected. <%= link_to "Go Back", url_for(:back) %>
+<% end %>

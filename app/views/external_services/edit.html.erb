@@ -1,0 +1,40 @@
+<h1>Editing External Service</h1>
+
+<% form_for(@external_service) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :uri %><br />
+    <%= f.text_field :uri %>
+  </p>
+  <p>
+    <%= f.label :authentication %><br />
+    <%= f.check_box :authentication %>
+  </p>
+  <p>
+    <%= f.label :username %><br />
+    <%= f.text_field :username %>
+  </p>
+  <p>
+    <%= f.label :password %><br />
+    <%= f.text_field :password %>
+  </p>
+  <p>
+    <%= f.label 'Notify of changes on ALL samples' %><br />
+    <%= f.check_box :sample_status_notification %>
+  </p>
+  <p>
+    <%= f.label :json_style %><br />
+    <%= f.select :json_style, ["JSON-wrapped"] %>
+  </p>
+  <p>
+    <%= f.label :authentication_method %><br />
+    <%= f.select :authentication_method, ["in-JSON"] %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @external_service %> |
+<%= link_to 'Back', external_services_path %>

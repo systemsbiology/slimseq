@@ -1,0 +1,29 @@
+<h1>Listing external_services</h1>
+
+<p><%= link_to 'New External Service', new_external_service_path %></p>
+
+<table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
+  <thead>
+    <tr>
+      <% for column in ["URI", "Authentication", "Username", "Password",
+        "Sample Status NOtification", "Edit", "Destroy"] %>
+      <th><h3><%= column %></h3></th>
+    <% end %>
+    </tr>
+  </thead> 
+<% @external_services.each do |external_service| %>
+  <tr>
+    <td><%=h external_service.uri %></td>
+    <td><%=h external_service.authentication %></td>
+    <td><%=h external_service.username %></td>
+    <td><%=h external_service.password %></td>
+    <td><%=h external_service.sample_status_notification %></td>
+    <td><%= link_to 'Edit', edit_external_service_path(external_service) %></td>
+    <td><%= link_to 'Destroy', external_service, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= render :partial => 'shared/tinytable', :locals => {:sort_column => 0} %>

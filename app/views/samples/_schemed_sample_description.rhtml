@@ -1,15 +1,20 @@
+<% for element in @naming_elements %>
+  <th><%=h element.name %></th>
+<% end %>
+</tr>
+<tr>
 <% for @m in 0..@naming_elements.size-1 
    @element = @naming_elements[@m]
    @dependent_elements = NamingElement.find(:all,
      :conditions => ["dependent_element_id = ?", @element.id]) %>
     <td>
-        <div id="sample_<%=@n%>_schemed_name_<%=@element.name%>_block">
-            <% if @sample.naming_element_visibility[@m] == true %>
-                <%= render :partial => 'samples/shown_naming_element' %>
-            <% else %>
-                <%= render :partial => 'samples/hidden_naming_element' %>
-            <% end %>
-        </div>
+      <div id="sample_<%=@n%>_schemed_name_<%=@element.name%>_block">
+        <% if @sample.naming_element_visibility[@m] == true %>
+            <%= render :partial => 'samples/shown_naming_element', :locals => { :sample_fields => sample_fields } %>
+        <% else %>
+            <%= render :partial => 'samples/hidden_naming_element', :locals => { :sample_fields => sample_fields } %>
+        <% end %>
+      </div>
     </td>
     
     <%= observe_field "sample_#{@n}_schemed_name_#{@element.name}",

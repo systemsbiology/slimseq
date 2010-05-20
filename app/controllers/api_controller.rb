@@ -4,16 +4,4 @@ require 'rest_client'
 require 'json'
 
 class ApiController < ApplicationController
-  
-  def index
-  end
-  
-  def test
-  end
-  
-  
-  def sample
-  end
-  
-    
 end

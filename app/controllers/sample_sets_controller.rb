@@ -4,7 +4,7 @@ class SampleSetsController < ApplicationController
   
   def new
     if(params[:step] == "2")
-      @sample_set = SampleSet.new(params[:sample_set])
+      @sample_set = SampleSet.new( params[:sample_set].merge(:submitted_by => current_user.login) )
 
       if(@sample_set.valid?)
         @samples_need_approval = @sample_set.project.lab_group.lab_group_profile.samples_need_approval
@@ -14,26 +14,7 @@ class SampleSetsController < ApplicationController
           @naming_elements = @naming_scheme.ordered_naming_elements
         end
 
-        @samples = Array.new
-        params[:sample_set][:number_of_samples].to_i.times do
-          sample = Sample.new(
-            :submission_date => @sample_set.submission_date,
-            :project_id => @sample_set.project_id,
-            :naming_scheme_id => @sample_set.naming_scheme_id,
-            :sample_prep_kit_id => @sample_set.sample_prep_kit_id,
-            :reference_genome_id => @sample_set.reference_genome_id,
-            :desired_read_length => @sample_set.desired_read_length,
-            :alignment_start_position => @sample_set.alignment_start_position,
-            :alignment_end_position => @sample_set.alignment_end_position,
-            :eland_parameter_set_id => @sample_set.eland_parameter_set_id,
-            :insert_size => @sample_set.insert_size,
-            :budget_number => @sample_set.budget_number,
-            :submitted_by_id => current_user.id,
-            :sample_set => @sample_set
-          )
-
-          @samples << sample
-        end        
+        @sample_mixtures = @sample_set.sample_mixtures
       else
         # if the sample set info is invalid, kick back to step 1
         params[:step] = "1"
@@ -46,26 +27,28 @@ class SampleSetsController < ApplicationController
   def create
     @sample_set = SampleSet.new(params[:sample_set])
 
-    @samples = Array.new
-    params[:sample].each_value { |sample| @samples << Sample.new(sample) }
-    @sample_set.samples = @samples
-    if @sample_set.valid?
-      @samples.each do |s|
-        s.save
+    respond_to do |format|
+      if @sample_set.save
+        format.html do
+          flash[:notice] = 'Samples were successfully created.'
+          redirect_to(samples_url)
+        end
+        format.json { render :json => {:message => "Samples recorded"} }
+      else
+        format.html do
+          @sample_mixtures = @sample_set.sample_mixtures
+          @naming_scheme = @sample_set.naming_scheme
+          if(@naming_scheme != nil)
+            @naming_elements = @naming_scheme.ordered_naming_elements
+          end
+          params[:step] = '2'
+          render :action => 'new'
+        end
+        format.json do
+          error_text = (@sample_set.errors.collect {|e| e[1].to_s}).join(", ")
+          render :json => {:message => error_text}, :status => :unprocessable_entity
+        end
       end
-      
-      # send notification email
-      Notifier.deliver_sample_submission_notification(@samples, @sample_set.project.lab_group)
-      
-      flash[:notice] = 'Samples were successfully created.'
-      redirect_to(samples_url)
-    else
-      @naming_scheme = @sample_set.naming_scheme
-      if(@naming_scheme != nil)
-        @naming_elements = @naming_scheme.ordered_naming_elements
-      end
-      params[:step] = '2'
-      render :action => 'new'
     end
   end
 

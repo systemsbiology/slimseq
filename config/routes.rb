@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :external_services
+
   map.resources :eland_parameter_sets
 
   # backward compatibility with bookmarked login page
@@ -41,7 +43,14 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'samples/browseh/:project/:study', :controller=>'samples', :action=>'browseh'
   map.connect 'samples/browseh/:project', :controller=>'samples', :action=>'browseh'
   map.connect 'samples/browseh', :controller=>'samples', :action=>'browseh'
-  map.resources :samples, :collection => {:browse => :get, :search => :get, :all => :get}
+
+  # make sample_mixtures actions appear under the /samples URL
+  map.resources :sample_mixtures, :as => "samples", :except => [:index, :show],
+    :collection => {:browse => :post, :search => :get, :all => :get}
+  map.resources :sample_mixtures
+  map.resources :samples, :only => [:index, :show]
+  
+  map.resources :sample_sets, :only => [:new, :create]
   
   map.resources :instruments
 
@@ -51,7 +60,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect 'gerald_configurations/:sequencing_run_name',
     :controller => 'gerald_configurations', :action => 'default',
-    :sequencing_run_name => /.*_.*_.*/
+    :sequencing_run_name => /.*_.*_.*(_.*)*/
   
   map.resources :flow_cells
 

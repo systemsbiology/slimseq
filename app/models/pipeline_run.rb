@@ -27,10 +27,11 @@ class PipelineRun < ActiveRecord::BaseWithoutTable
     pipeline_run = super(attributes)
 
     if(pipeline_run.valid?)
-      original_date = /^\/.*\/.*\/(.*?)_(.*?)_(FC)*(.*?)\/*$/.match(attributes[:base_directory])[1]
+      match =  /^\/.*\/.*\/(.*?)_(.*?)_(\d{4})*_*(FC)*(.*?)\/*$/.match(attributes[:base_directory])
+      original_date = match[1]
       date = Date.strptime(original_date,"%y%m%d")
-      sequencer = /^\/.*\/.*\/(.*?)_(.*?)_(FC)*(.*?)\/*$/.match(attributes[:base_directory])[2]
-      flow_cell = /^\/.*\/.*\/(.*?)_(.*?)_(FC)*(.*?)\/*$/.match(attributes[:base_directory])[4]
+      sequencer = match[2]
+      flow_cell = match[5]
 
       pipeline_run.sequencing_run = SequencingRun.find(:first, 
         :include => [:instrument, :flow_cell],
@@ -43,7 +44,12 @@ class PipelineRun < ActiveRecord::BaseWithoutTable
         if(summaries.keys == eland_outputs.keys)
           summaries.keys.sort.each do |gerald_folder|
             eland_outputs[gerald_folder].sort.each do |eland_output|
-              lane_number = /.*s_(\d)_(export|eland_result).txt/.match(eland_output)[1]
+              unless /.*s_(\d)_(\d_)*(export|eland_result).txt/.match(eland_output)
+                raise "Invalid eland output file name: #{eland_output}"
+                next
+              end
+
+              lane_number = /.*s_(\d)_(\d_)*(export|eland_result).txt/.match(eland_output)[1]
 
               lane = pipeline_run.sequencing_run.flow_cell.flow_cell_lanes.find(:first,
                 :conditions => {:lane_number => lane_number})

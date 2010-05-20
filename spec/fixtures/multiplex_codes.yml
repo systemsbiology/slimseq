@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  sequence: MyString
+  multiplexing_scheme_id: 1
+  name: MyString
+
+two:
+  sequence: MyString
+  multiplexing_scheme_id: 1
+  name: MyString

@@ -1,0 +1,38 @@
+<p>
+  <b>Uri:</b>
+  <%=h @external_service.uri %>
+</p>
+
+<p>
+  <b>Authentication:</b>
+  <%=h @external_service.authentication %>
+</p>
+
+<p>
+  <b>Username:</b>
+  <%=h @external_service.username %>
+</p>
+
+<p>
+  <b>Login:</b>
+  <%=h @external_service.password %>
+</p>
+
+<p>
+  <b>Notify of changes on ALL samples:</b>
+  <%=h @external_service.sample_status_notification %>
+</p>
+
+<p>
+  <b>JSON style:</b>
+  <%=h @external_service.json_style %>
+</p>
+
+<p>
+  <b>Authentication method:</b>
+  <%=h @external_service.authentication_method %>
+</p>
+
+
+<%= link_to 'Edit', edit_external_service_path(@external_service) %> |
+<%= link_to 'Back', external_services_path %>

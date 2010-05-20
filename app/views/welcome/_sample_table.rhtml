@@ -2,21 +2,21 @@
 function toggle_sample_approval(elem) {
   e = Event.element(elem);
   html_id = e.id;
-  sample_id = html_id.match(/.*\-(\d+)/)[1];
+  sample_mixture_id = html_id.match(/.*\-(\d+)/)[1];
   checked = e.checked;
-  url = '<%= samples_path %>/' + sample_id + ".json"
-  params = 'sample[0][ready_for_sequencing]=' + checked
+  url = '<%= sample_mixtures_path %>/' + sample_mixture_id + ".json"
+  params = 'sample_mixture[ready_for_sequencing]=' + checked
   new Ajax.Request(
     url, {
       method: 'put',
       parameters: params,
       onLoading: function(req) {
-        Element.show('sample_approval-'+sample_id+'-loading');
+        Element.show('sample_approval-'+sample_mixture_id+'-loading');
         $$('.sample_approval').invoke('disable');
       },
       onComplete: function(req) {
         $$('.sample_approval').invoke('enable');
-        Element.hide('sample_approval-'+sample_id+'-loading');
+        Element.hide('sample_approval-'+sample_mixture_id+'-loading');
       }
     }
   );
@@ -33,6 +33,7 @@ window.onload = function() {
     <tr>
       <th><h3>Date</h3></th>
       <th><h3>Sample</h3></th>
+      <th><h3>Sample Prep Kit</h3></th>
       <th><h3>Submitted By</h3></th>
       <th><h3>Status</h3></th>
       <% if @current_user.staff_or_admin? || @current_user.manager? %>
@@ -43,31 +44,32 @@ window.onload = function() {
       <th class="nosort"><h3>Destroy</h3></th>
     </tr>
   </thead>
-<% for sample in @samples %>
+<% for sample_mixture in @sample_mixtures %>
   <tr>
-    <td><%=h sample.submission_date.strftime("%Y/%m/%d") %></td>
-    <td><%=h sample.short_and_long_name %></td>
+    <td><%=h sample_mixture.submission_date.strftime("%Y/%m/%d") %></td>
+    <td><%=h sample_mixture.short_and_long_name %></td>
+    <td><%=h sample_mixture.sample_prep_kit.name %></td>
     <td>
-      <%=h sample.submitted_by_id && @users_by_id[sample.submitted_by_id] ? @users_by_id[sample.submitted_by_id].full_name : "" %>
+      <%=h sample_mixture.submitted_by_id && @users_by_id[sample_mixture.submitted_by_id] ? @users_by_id[sample_mixture.submitted_by_id].full_name : "" %>
     </td>
-    <td><%=h sample.status %></td>
+    <td><%=h sample_mixture.status %></td>
     <% if @current_user.staff_or_admin? %>
       <td>
-        <%= sample.ready_for_sequencing ? "Yes" : "<b>No</b>" %>
+        <%= sample_mixture.ready_for_sequencing ? "Yes" : "<b>No</b>" %>
       </td>
     <% elsif @current_user.manager? %>
       <td>
-        <input id="sample_approval-<%= sample.id %>" class="sample_approval" type="checkbox"
-          value="1" <%= sample.ready_for_sequencing ? "checked=\"checked\"" : "" %>"
+        <input id="sample_approval-<%= sample_mixture.id %>" class="sample_approval" type="checkbox"
+          value="1" <%= sample_mixture.ready_for_sequencing ? "checked=\"checked\"" : "" %>"
           style="display: inline" />
-        <div id="sample_approval-<%= sample.id %>-loading" style="display:none">
+        <div id="sample_approval-<%= sample_mixture.id %>-loading" style="display:none">
           <%= image_tag("/images/ajax-loader.gif") %>
         </div>
       </td>
       <% end %>
-    <td><%=h sample.comment %></td>
-    <td><%= link_to 'Edit', edit_sample_path(sample) %></td>
-    <td><%= link_to 'Destroy', sample, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%=h sample_mixture.comment %></td>
+    <td><%= link_to 'Edit', edit_sample_mixture_path(sample_mixture) %></td>
+    <td><%= link_to 'Destroy', sample_mixture, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>

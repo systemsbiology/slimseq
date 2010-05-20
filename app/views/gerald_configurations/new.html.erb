@@ -1,8 +1,7 @@
 <h2>Default Gerald Parameters</h2>
 
-<% form_for(
-  @gerald_defaults,
-  :url => { :controller => 'gerald_defaults', :id => 1, :action => 'update'}) do |g| %>
+<% form_for(@gerald_defaults,
+  :url => { :controller => 'gerald_defaults', :id => @gerald_defaults.id, :action => 'update'}) do |g| %>
   <p>
     <p><label>ELAND Seed Length</label><br>
     <%= g.text_field 'eland_seed_length' %></p>
@@ -39,24 +38,29 @@
       <th>Lane</th>
       <th>Sample</th>
       <th>Reference Genome</th>
+      <th>Analysis</th>
       <th>ELAND Seed Length</th>
       <th>ELAND Max Matches</th>
       <th>Use Bases</th>
     </tr>
     <% for n in 0..@flow_cell_lanes.size-1 %>
       <% lane = @flow_cell_lanes[n] 
-         first_sample = lane.samples[0] %>
+         sample_mixture = lane.sample_mixture
+         first_sample = sample_mixture.samples.first%>
       <tr>
         <td><%=h lane.lane_number %>
-            <%= hidden_field_tag "lanes[#{n}][lane_number]", lane.lane_number %></td>
-        <td><%=h first_sample.short_and_long_name %></td>
+          <%= hidden_field_tag "lanes[#{n}][lane_number]", lane.lane_number %></td>
+        <td><%=h sample_mixture.short_and_long_name %></td>
         <td><%= text_field_tag "lanes[#{n}][eland_genome]",
           first_sample.reference_genome.fasta_path, :size => 50 %></td>
+        <td><%= text_field_tag "lanes[#{n}][analysis]",
+          sample_mixture.sample_prep_kit.eland_analysis, :size => 20 %></td>
         <td><%= text_field_tag "lanes[#{n}][eland_seed_length]", 
-          first_sample.eland_seed_length %></td>
+          sample_mixture.eland_seed_length %></td>
         <td><%= text_field_tag "lanes[#{n}][eland_max_matches]",
-          first_sample.eland_max_matches %></td>
-        <td><%= text_field_tag "lanes[#{n}][use_bases]", lane.samples[0].use_bases_string(@gerald_defaults.skip_last_base) %></td>
+          sample_mixture.eland_max_matches %></td>
+        <td><%= text_field_tag "lanes[#{n}][use_bases]",
+          lane.use_bases_string(@gerald_defaults.skip_last_base) %></td>
       </tr>
     <% end %>
   </table>

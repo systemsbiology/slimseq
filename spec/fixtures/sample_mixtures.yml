@@ -1,0 +1,60 @@
+sample_mixture_1:
+  status: submitted
+  name_on_tube: yng
+  project: first
+  submission_date: 2006-02-10
+  desired_read_length: 36
+  sample_prep_kit: chipseq
+  alignment_start_position: 1
+  alignment_end_position: 22
+  budget_number: 1234
+sample_mixture_2:
+  status: sequenced
+  name_on_tube: old
+  project: first
+  submission_date: 2006-02-10
+  desired_read_length: 36
+  budget_number: 1234
+  sample_prep_kit: chipseq
+  alignment_start_position: 1
+  alignment_end_position: 22
+sample_mixture_3:
+  status: clustered
+  name_on_tube: vold
+  project: first
+  submission_date: 2006-02-10
+  desired_read_length: 36
+  budget_number: 1234
+  sample_prep_kit: chipseq
+  alignment_start_position: 1
+  alignment_end_position: 22
+sample_mixture_4:
+  status: clustered
+  project: first
+  name_on_tube: vvold
+  submission_date: 2006-02-10
+  desired_read_length: 36
+  budget_number: 1234
+  sample_prep_kit: chipseq
+  alignment_start_position: 1
+  alignment_end_position: 22
+sample_mixture_5:
+  status: submitted
+  name_on_tube: bb
+  project: another
+  submission_date: 2006-09-10
+  desired_read_length: 36
+  budget_number: 1234
+  sample_prep_kit: chipseq
+  alignment_start_position: 1
+  alignment_end_position: 22
+sample_mixture_6:
+  status: submitted
+  name_on_tube: a1
+  project: another
+  submission_date: 2007-05-31
+  desired_read_length: 36
+  budget_number: 1234
+  sample_prep_kit: chipseq
+  alignment_start_position: 1
+  alignment_end_position: 22
