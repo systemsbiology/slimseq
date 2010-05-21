@@ -6,3 +6,5 @@ vendor/plugins/slim*_authorizer
 db/*sqlite3
 config/application.yml
 config/database.yml
+*~
+#*
