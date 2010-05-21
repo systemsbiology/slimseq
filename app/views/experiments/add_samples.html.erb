@@ -19,6 +19,7 @@ page and click the 'Owned by Current sample' button.</p>
 <table>
 <tr>
   <th>Sample name</th>
+  <th>Project</th>
   <th>Owned by <br />Current Experiment</th>
   <th>Unassigned</th>
   <th>Owned by <br />Other Experiment</th>
@@ -27,7 +28,8 @@ page and click the 'Owned by Current sample' button.</p>
 <% @all_samples.each do |sample| %>
 <% owned_other = !sample.experiment_id.nil? && sample.experiment_id != @experiment.id %>
 <tr>
-  <td style='text-align: center'><%=h sample.name_on_tube %></td>
+  <td style='text-align: center'><%= link_to sample.sample_mixture.name_on_tube, edit_sample_mixture_path(sample.sample_mixture) %></td>
+  <td style='text-align: center'><%= link_to sample.sample_mixture.project.name, edit_project_path(sample.sample_mixture.project) %></td>
   <td style='text-align: center'><input type='radio' name='sample_<%= sample.id %>' value='current' <%= sample.experiment_id == @experiment.id ? "checked='1'" : ''%> 
 	     <%= owned_other ? "disabled='1'" : '' %> /></td>
   <td style='text-align: center'><input type='radio' name='sample_<%= sample.id %>' value='unassigned' <%= sample.experiment_id.nil? ? "checked='1'" : ''%> <%= owned_other ? "disabled='1'" : '' %> /></td>

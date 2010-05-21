@@ -1,5 +1,6 @@
 <h2>Editing experiment <i><%= @experiment.name %></i></h2>
 
+<%= link_to @experiment.study.project.name, :controller=>:experiments, :action=>:edit, :id=>@experiment.study.project.id %>
 <% form_for(@experiment) do |f| %>
   <%= f.error_messages %>
 
@@ -18,19 +19,23 @@
   </p>
 
   <p>
-    <%= f.label :Samples %>
-    <% @samples.each do |s| %><ul>
-    <li><%= link_to s.name_on_tube, edit_sample_path(s) %>
-    </ul><% end %>
-    <%= link_to "Manage samples", :controller=>:experiments, :action=>:add_samples, :id=>@experiment.id %>
-    <%= link_to "Post Processing Pipeline", :controller=>:experiments, :action=>:pipeline,
-      :id=>@experiment.id if APP_CONFIG['post_pipelines_enabled'] %>
-  </p>
-
-  <p>
     <%= f.submit "Update" %>
   </p>
 <% end %>
+
+  <% form_tag({:controller => 'rnaseq_pipelines', :action=>'launch_prep'}) do |f| %>
+  <p>Samples:
+    <ul><% @samples.each do |s| %>
+        <li>
+        <%= check_box 'selected_sample_mixtures', s.sample_mixture.id, {:checked=>'checked'} %>
+	<%= link_to s.sample_mixture.name_on_tube, edit_sample_mixture_path(s.sample_mixture) %>
+        </li>
+    <% end %></ul>
+    <%= link_to "Manage samples", :controller=>:experiments, :action=>:add_samples, :id=>@experiment.id %>
+    <%= submit_tag 'RNA Seq Pipeline' if AppConfig.rnaseq_pipelines_enabled %>
+
+  </p>
+  <% end %><!-- form_tag -->
 
 <%= link_to 'Show', @experiment %> |
 <%= link_to 'Back', experiments_path %>

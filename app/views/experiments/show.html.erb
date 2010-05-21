@@ -17,7 +17,7 @@
 <p>
   <b>Samples:</b>
   <%= @experiment.samples.collect {|sample|
-      link_to( sample.name_on_tube, :controller=>:samples, :action=>:edit, :id=>sample.id )
+      link_to( sample.sample_mixture.name_on_tube, :controller=>:samples, :action=>:edit, :id=>sample.id )
   }.join('&nbsp; | &nbsp');
   %>
 </p>
@@ -25,7 +25,7 @@
 <%= link_to 'Edit', edit_experiment_path(@experiment) %> &nbsp; |  &nbsp; 
 <%= link_to 'Back', experiments_path %>
 
-<% if APP_CONFIG['post_pipelines_enabled'] %>
+<% if AppConfig.rnaseq_pipelines_enabled %>
   &nbsp; |  &nbsp; 
-  <%= link_to 'Pipeline', :action=>:pipeline, :id=>@experiment.id %>
+  <%= link_to 'Rnaseq Pipeline', :controller=>:rnaseq_pipelines, :action=>:launch_prep %>
 <% end %>

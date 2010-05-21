@@ -3,14 +3,14 @@
 <table>
   <tr>
     <th>Name</th>
-    <th>Desc</th>
+    <th>Description</th>
     <th>Study</th>
   </tr>
 
 <% for experiment in @experiments %>
   <tr>
     <td><%=h experiment.name %></td>
-    <td><%=h experiment.desc %></td>
+    <td><%=h experiment.description %></td>
     <td><%= link_to experiment.study.name, study_path(experiment.study) %></td>
     <td><%= link_to 'Show', experiment %></td>
     <td><%= link_to 'Edit', edit_experiment_path(experiment) %></td>
