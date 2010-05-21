@@ -2,8 +2,8 @@
 <%#= error_messages_for_samples %>
 
 <h2>Editing <i><%= @sample_mixture.name_on_tube %></i></h2>
-<%= link_to "Post Processing Pipeline", :controller=>:samples, :action=>:pipeline,
-  :id=>@sample_mixture.samples.first.id if APP_CONFIG['post_pipelines_enabled'] %>
+<%= link_to "Rnaseq Pipeline", :controller=>:samples, :action=>:pipeline,
+  :id=>@sample_mixture.samples.first.id if APP_CONFIG['rnaseq_pipelines_enabled'] %>
 
 <% form_for @sample_mixture do |mixture_form| %>
 
