@@ -3,10 +3,11 @@ class Experiment < ActiveRecord::Base
   belongs_to :study
 
   def tree_hash 
+    site_url=ENV['RAILS_RELATIVE_URL_ROOT']
     children=samples.map {|s| s.tree_hash}
     { :id => "e_#{id}",
       :text => name,
-      :href => "#{SiteConfig.site_url}/experiments/edit/#{id}",
+      :href => "#{site_url}/experiments/edit/#{id}",
       :children=>children }
   end
 end

@@ -79,10 +79,11 @@ class Project < ActiveRecord::Base
   end
 
   def tree_hash 
+    site_url=ENV['RAILS_RELATIVE_URL_ROOT']
     children=studies.map {|st| st.tree_hash}
     { :id => "p_#{id}",
       :text=>name,
-      :href => "#{SiteConfig.site_url}/projects/edit/#{id}",
+      :href => "#{site_url}/projects/edit/#{id}",
       :children=>children }
   end
 
