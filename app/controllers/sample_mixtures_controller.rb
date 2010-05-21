@@ -68,6 +68,37 @@ class SampleMixturesController < ApplicationController
       redirect_to(sample_mixtures_url)
     elsif(params[:commit] == "Show Details")
       render :action => "details"
+
+    elsif(params[:commit] == "RNA Seq Pipeline")
+      if AppConfig.rnaseq_pipelines_enabled
+        if @sample_mixtures.length==0
+          render :action=>"details"
+          return
+        end
+        begin
+          @ref_genome_name=@sample_mixtures[0].rna_seq_ref_genome.name
+          @email=current_user.email
+          @aligner_params=RnaseqPipeline.config[:bowtie_opts]
+          @msgs=Array.new
+          SampleMixture.rnaseq_compatible?(@sample_mixtures)
+
+        rescue RuntimeError => e
+          @disable_launch=true
+          @why_disabled="Incompatible samples:<br /> #{e.message}"
+        end
+
+
+        render :template => "rnaseq_pipelines/launch_prep" 
+        # only drawback is repeated code, here and in rnaseq_pipelines_controller.  Would prefer to consolidate...
+        # What does code do?  Finds samples (from sample_ids) (now sample_mixture_ids), checks compatibility
+      else
+        flash[:notice]+= "RNA-Seq pipelines not enabled"
+      end
+
+    else
+      raise "unknown submit: params[:commit]=#{params[:commit]}"
+
+
     end
   end
   
