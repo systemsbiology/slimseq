@@ -15,8 +15,6 @@ class Sample < ActiveRecord::Base
   has_many :sample_terms, :dependent => :destroy
   has_many :sample_texts, :dependent => :destroy
 
-  has_many :post_pipelines
-
   validates_presence_of :sample_description, :reference_genome_id
   
   attr_accessor :schemed_name
@@ -556,10 +554,10 @@ class Sample < ActiveRecord::Base
   end
 
   def tree_hash
-    require 'application_helper'
+    site_url=ENV['RAILS_RELATIVE_URL_ROOT']
     { :id=> "s_#{id}",
-      :text => name_on_tube,
-      :href => "#{SiteConfig.site_url}/samples/edit/#{id}",
+      :text => sample_mixture.name_on_tube,
+      :href => "#{site_url}/samples/#{id}/edit",
       :leaf => true
     }
   end   
@@ -749,5 +747,5 @@ class Sample < ActiveRecord::Base
       :children => Sample.browse_by(samples, categories.dup, prefix)
     }
   end
-  
+
 end
