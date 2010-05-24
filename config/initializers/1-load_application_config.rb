@@ -16,7 +16,7 @@ class AppConfig
 
     raise "#{config_file}: doesn't exist or is unreadable" unless File.exists? config_file
     yml_contents=YAML.load(File.read(config_file))
-    section=ENV["RAILS_ENV"] if section.nil? and defined? ENV["RAIL_ENV"]
+    section=Rails.env if section.nil? && Rails
 #    puts "section is #{section} (#{section.nil? ? 'nil':''})"
 
     if ((!section.nil?) and (not defined? yml_contents[section] or yml_contents[section].nil?))

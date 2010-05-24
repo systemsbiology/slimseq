@@ -3,7 +3,7 @@
 
 <h2>Editing <i><%= @sample_mixture.name_on_tube %></i></h2>
 <%= link_to "Rnaseq Pipeline", :controller=>:samples, :action=>:pipeline,
-  :id=>@sample_mixture.samples.first.id if APP_CONFIG['rnaseq_pipelines_enabled'] %>
+  :id=>@sample_mixture.samples.first.id if AppConfig.rnaseq_pipelines_enabled %>
 
 <% form_for @sample_mixture do |mixture_form| %>
 

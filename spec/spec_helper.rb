@@ -59,13 +59,6 @@ Spork.prefork do
   end
 
   FixtureReplacement.validate!
-
-  # Can't seem to get first spec to run passing without having this here.
-  APP_CONFIG = {
-    'slimcore_site' => "http://localhost:3030",
-    'slimcore_user' => "test",
-    'slimcore_password' => "test"
-  }
 end
 
 Spork.each_run do

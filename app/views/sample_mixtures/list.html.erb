@@ -31,8 +31,8 @@
     <p>
 	Apply to checked samples: 
       <%= submit_tag 'Show Details' %>
-      <% unless AppConfig[:rnaseq_pipelines_enabled].nil? %>
-      <%= submit_tag 'RNA Seq Pipeline' %>
+      <% if AppConfig.rnaseq_pipelines_enabled %>
+        <%= submit_tag 'RNA Seq Pipeline' %>
       <% end %>   
       <% if current_user.staff_or_admin? %>
         <%= submit_tag 'Delete Selected Samples',
