@@ -49,7 +49,7 @@ describe Sample do
     fixtures :naming_schemes, :naming_elements, :naming_terms
     
     it "should build the sample terms association" do
-      @sample = new_sample(:naming_scheme_id => naming_schemes(:yeast_scheme))
+      @sample = new_sample(:naming_scheme => naming_schemes(:yeast_scheme))
       
       schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => naming_terms(:heat).id,
@@ -76,7 +76,7 @@ describe Sample do
     fixtures :naming_schemes, :naming_elements, :naming_terms
     
     it "should provide an array of the sample terms" do
-      @sample = new_sample(:naming_scheme_id => naming_schemes(:yeast_scheme))
+      @sample = new_sample(:naming_scheme => naming_schemes(:yeast_scheme))
       
       schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => "-1",
@@ -101,7 +101,7 @@ describe Sample do
     fixtures :naming_schemes, :naming_elements, :naming_terms
     
     it "should provide a hash of the sample texts" do
-      @sample = new_sample(:naming_scheme_id => naming_schemes(:yeast_scheme))
+      @sample = new_sample(:naming_scheme => naming_schemes(:yeast_scheme))
       
       schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => naming_terms(:heat).id,
