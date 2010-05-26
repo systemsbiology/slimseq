@@ -71,6 +71,12 @@ class AppConfig
     @@all
   end
 
+  # treat missing methods as configurations that haven't been loaded, rather
+  # than raising an error
+  def self.method_missing(method_name, *args)
+    return nil
+  end
+
 #  puts "#{__FILE__} checking in"
 end
 AppConfig.load("#{RAILS_ROOT}/config/application.yml")
