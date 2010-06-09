@@ -173,12 +173,12 @@ describe SampleSet do
           "sample_mixtures" => {
             "0"=>{"name_on_tube"=>"RM11-1a pbp1::URA3", "sample_description" => "S1",
               "samples" => {
-                "0" => { "schemed_name"=>{"Sample Key"=>"YO 1"} }
+                "0" => { "schemed_name"=>{"SampleKey"=>"YO 1"} }
               }
             },
             "1"=>{"name_on_tube"=>"DBVPG 1373", "sample_description" => "S2",
               "samples" => {
-                "0" => { "schemed_name"=>{"Sample Key"=>"YO 2"} }
+                "0" => { "schemed_name"=>{"SampleKey"=>"YO 2"} }
               }
             }
           }

@@ -446,9 +446,9 @@ class Sample < ActiveRecord::Base
       # 2) dependent on an element with no selection
       depends_upon_element = element.depends_upon_element
       next if element.free_text
-      next if depends_upon_element != nil && schemed_params[depends_upon_element.name].to_i <= 0
+      next if depends_upon_element != nil && schemed_params[depends_upon_element.safe_name].to_i <= 0
       
-      term_selection = schemed_params[element.name]
+      term_selection = schemed_params[element.safe_name]
 
       naming_term = element.naming_terms.find_by_term(term_selection) ||
         element.naming_terms.find_by_id(term_selection)
@@ -467,9 +467,9 @@ class Sample < ActiveRecord::Base
       # 2) dependent on an element with no selection
       next unless element.free_text
       depends_upon_element = element.depends_upon_element
-      next if depends_upon_element != nil && schemed_params[depends_upon_element.name].to_i <= 0
+      next if depends_upon_element != nil && schemed_params[depends_upon_element.safe_name].to_i <= 0
 
-      sample_texts.build(:naming_element_id => element.id, :text => schemed_params[element.name] )
+      sample_texts.build(:naming_element_id => element.id, :text => schemed_params[element.safe_name] )
     end
   end
   

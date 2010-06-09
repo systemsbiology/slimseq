@@ -8,7 +8,7 @@
    @dependent_elements = NamingElement.find(:all,
      :conditions => ["dependent_element_id = ?", @element.id]) %>
     <td>
-      <div id="sample_<%=@n%>_schemed_name_<%=@element.name%>_block">
+      <div id="sample_<%=@n%>_schemed_name_<%=@element.safe_name%>_block">
         <% if @sample.naming_element_visibility[@m] == true %>
             <%= render :partial => 'samples/shown_naming_element', :locals => { :sample_fields => sample_fields } %>
         <% else %>
@@ -17,13 +17,13 @@
       </div>
     </td>
     
-    <%= observe_field "sample_#{@n}_schemed_name_#{@element.name}",
+    <%= observe_field "sample_#{@n}_schemed_name_#{@element.safe_name}",
       :function => update_page { |page|
         @dependent_elements.each do |dependent_element|
           page << "if(value == -1) {"
-            page["sample_#{@n}_schemed_name_#{dependent_element.name}"].hide
+            page["sample_#{@n}_schemed_name_#{dependent_element.safe_name}"].hide
           page << "} else {"
-            page["sample_#{@n}_schemed_name_#{dependent_element.name}"].show
+            page["sample_#{@n}_schemed_name_#{dependent_element.safe_name}"].show
           page << "}"
         end
       }

@@ -65,7 +65,7 @@
     <p>Sample Description<br/>
       <% if @sample.naming_scheme != nil %>
         <% @naming_scheme = @sample.naming_scheme %>
-        <% @naming_elements = @naming_scheme.naming_elements %>
+        <% @naming_elements = @naming_scheme.ordered_naming_elements %>
         <% @n = 0 %>
         <table class="sortable" id="samples">
           <tr>

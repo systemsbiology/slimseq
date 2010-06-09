@@ -53,8 +53,8 @@ describe Sample do
       
       schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => naming_terms(:heat).id,
-        "Replicate" => naming_terms(:replicateA).id, "Perturbation Time" => naming_terms(:time024).id,
-        "Subject Number" => "3283"
+        "Replicate" => naming_terms(:replicateA).id, "PerturbationTime" => naming_terms(:time024).id,
+        "SubjectNumber" => "3283"
       }
       
       expected_terms = [
@@ -80,8 +80,8 @@ describe Sample do
       
       schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => "-1",
-        "Perturbation Time" => naming_terms(:time024).id,
-        "Replicate" => naming_terms(:replicateA).id, "Subject Number" => "3283"
+        "PerturbationTime" => naming_terms(:time024).id,
+        "Replicate" => naming_terms(:replicateA).id, "SubjectNumber" => "3283"
       }
       
       expected_terms = [
@@ -105,8 +105,8 @@ describe Sample do
       
       schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => naming_terms(:heat).id,
-        "Replicate" => naming_terms(:replicateA), "Perturbation Time" => naming_terms(:time024),
-        "Subject Number" => "3283"
+        "Replicate" => naming_terms(:replicateA), "PerturbationTime" => naming_terms(:time024),
+        "SubjectNumber" => "3283"
       }
       
       expected_texts = [
@@ -131,7 +131,7 @@ describe Sample do
       schemed_params = {
         "Strain" => naming_terms(:wild_type).id, "Perturbation" => naming_terms(:heat).id,
         "Replicate" => naming_terms(:replicateA).id, "Perturbation Time" => naming_terms(:time024).id,
-        "Subject Number" => "3283"
+        "SubjectNumber" => "3283"
       }
       @sample.schemed_name = schemed_params
     end
