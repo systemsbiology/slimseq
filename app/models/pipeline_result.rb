@@ -5,8 +5,8 @@ class PipelineResult < ActiveRecord::Base
 
   # should only have one result per combination of sequencing run, flow cell lane and 
   # date gerald was run
-  validates_uniqueness_of :base_directory, :scope => [
-    :sequencing_run_id, :flow_cell_lane_id, :gerald_date
+  validates_uniqueness_of :flow_cell_lane_id, :scope => [
+    :sequencing_run_id, :gerald_date
   ]
   validates_presence_of :base_directory, :eland_output_file, :summary_file
   
