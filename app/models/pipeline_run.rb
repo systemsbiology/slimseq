@@ -27,7 +27,7 @@ class PipelineRun < ActiveRecord::BaseWithoutTable
     pipeline_run = super(attributes)
 
     if(pipeline_run.valid?)
-      match =  /^\/.*\/.*\/(.*?)_(.*?)_(\d{4})*_*(FC)*(.*?)\/*$/.match(attributes[:base_directory])
+      match =  /^\/.*\/.*\/(.*?)_(.*?)_(\d+)*_*(FC)*(.*?)\/*$/.match(attributes[:base_directory])
       original_date = match[1]
       date = Date.strptime(original_date,"%y%m%d")
       sequencer = match[2]
