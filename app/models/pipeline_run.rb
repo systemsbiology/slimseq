@@ -27,7 +27,7 @@ class PipelineRun < ActiveRecord::BaseWithoutTable
     pipeline_run = super(attributes)
 
     if(pipeline_run.valid?)
-      match =  /^\/.*\/.*\/(.*?)_(.*?)_((\d+)_)*(FC)*(.*?)\/*$/.match(attributes[:base_directory])
+      match = /^\/.*\/.*\/(.*?)_(.*?)_((\d+)_)*(FC)*(.*?)\/*$/.match(attributes[:base_directory])
       original_date = match[1]
       date = Date.strptime(original_date,"%y%m%d")
       sequencer = match[2]
@@ -39,46 +39,38 @@ class PipelineRun < ActiveRecord::BaseWithoutTable
           date, sequencer, flow_cell])
 
       unless(pipeline_run.sequencing_run.nil?)
-        summaries = hash_summaries_by_gerald(pipeline_run.summary_files)
-        eland_outputs = hash_eland_outputs_by_gerald(pipeline_run.eland_output_files)
-        if(summaries.keys == eland_outputs.keys)
-          summaries.keys.sort.each do |gerald_folder|
-            eland_outputs[gerald_folder].sort.each do |eland_output|
-              unless /.*s_(\d)_(\d_)*(export|eland_result).txt/.match(eland_output)
-                raise "Invalid eland output file name: #{eland_output}"
-                next
-              end
+        summaries = pipeline_run.summary_files.split(/,/)
+        eland_by_gerald_and_lane = eland_outputs_by_gerald_and_lane(pipeline_run.eland_output_files)
+        eland_by_gerald_and_lane.sort.each do |gerald, eland_by_lane|
+          eland_by_lane.sort.each do |lane_number, eland_output_paths|
+            lane = pipeline_run.sequencing_run.flow_cell.flow_cell_lanes.find(:first,
+              :conditions => {:lane_number => lane_number})
 
-              lane_number = /.*s_(\d)_(\d_)*(export|eland_result).txt/.match(eland_output)[1]
+            original_gerald_date = 
+              /GERALD_(\d+-\d+-\d+)/.match(gerald)[1]
+            gerald_date = Date.strptime(original_gerald_date,"%d-%m-%Y")
 
-              lane = pipeline_run.sequencing_run.flow_cell.flow_cell_lanes.find(:first,
-                :conditions => {:lane_number => lane_number})
-
-              original_gerald_date = 
-                /GERALD_(\d+-\d+-\d+)_.*/.match(gerald_folder)[1]
-              gerald_date = Date.strptime(original_gerald_date,"%d-%m-%Y")
-              
-              existing_result = PipelineResult.find(:first, :conditions => {
-                  :base_directory => pipeline_run.base_directory,
-                  :summary_file => summaries[gerald_folder],
-                  :eland_output_file => eland_output,
-                  :gerald_date => gerald_date,
-                  :sequencing_run_id => pipeline_run.sequencing_run_id,
-                  :flow_cell_lane_id => lane.id
-                }
+            summary_file = summaries.grep(/#{gerald}/).first
+            
+            existing_result = PipelineResult.find(:first, :conditions => {
+                :base_directory => pipeline_run.base_directory,
+                :summary_file => summary_file,
+                :gerald_date => gerald_date,
+                :sequencing_run_id => pipeline_run.sequencing_run_id,
+                :flow_cell_lane_id => lane.id
+              }
+            )
+            
+            # only add a result if one doesn't already exist
+            if(existing_result == nil)
+              pipeline_run.pipeline_results << PipelineResult.new(
+                :base_directory => pipeline_run.base_directory,
+                :summary_file => summary_file,
+                :output_files => eland_output_paths,
+                :gerald_date => gerald_date,
+                :sequencing_run => pipeline_run.sequencing_run,
+                :flow_cell_lane => lane
               )
-              
-              # only add a result if one doesn't already exist
-              if(existing_result == nil)
-                pipeline_run.pipeline_results << PipelineResult.new(
-                  :base_directory => pipeline_run.base_directory,
-                  :summary_file => summaries[gerald_folder],
-                  :eland_output_file => eland_output,
-                  :gerald_date => gerald_date,
-                  :sequencing_run => pipeline_run.sequencing_run,
-                  :flow_cell_lane => lane
-                )
-              end
             end
           end
         end
@@ -92,38 +84,24 @@ class PipelineRun < ActiveRecord::BaseWithoutTable
     return pipeline_run
   end
   
-  def self.hash_summaries_by_gerald(file_string)
-    by_date = Hash.new
-    
-    files = file_string.split(/\s*,\s*/)
-    
+  def self.eland_outputs_by_gerald_and_lane(file_string)
+    files = file_string.split(/,/)
+
+    result = Hash.new
+
     files.each do |file|
-      match = /.*(GERALD_\d+-\d+-\d+_.*)\/(\w|\.)+$/.match(file)
-      if(match != nil)
-        gerald_folder = /.*(GERALD_\d+-\d+-\d+_.*)\/(\w|\.)+$/.match(file)[1]
-        
-        by_date[gerald_folder] = file
+      match = /(GERALD_\d+-\d+-\d+)_.*s_(\d)_(\d_)*(export|eland_result).txt/.match(file)
+      gerald = match[1]
+      lane_number = match[2]
+
+      if match
+        result[gerald] ||= Hash.new
+        result[gerald][lane_number] ||= Array.new
+        result[gerald][lane_number] << file
       end
     end
-    
-    return by_date
+
+    return result
   end
-  
-  def self.hash_eland_outputs_by_gerald(file_string)
-    by_date = Hash.new
-    
-    files = file_string.split(/\s*,\s*/)
-    
-    files.each do |file|
-      match = /.*(GERALD_\d+-\d+-\d+_.*)\/(\w|\.)+$/.match(file)
-      if(match != nil)
-        gerald_folder = /.*(GERALD_\d+-\d+-\d+_.*)\/(\w|\.)+$/.match(file)[1]
-        
-        by_date[gerald_folder] ||= Array.new
-        by_date[gerald_folder] << file
-      end
-    end
-    
-    return by_date
-  end
+
 end
