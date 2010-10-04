@@ -39,7 +39,7 @@ describe PipelineRun do
 
     it "should have the correct eland output file for the pipeline result" do
       do_new
-      @pipeline_run.pipeline_results[0].eland_output_file.should == 
+      @pipeline_run.pipeline_results[0].result_file_paths.first.should == 
         "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data" +
         "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/s_5_export.txt"
     end
@@ -51,7 +51,7 @@ describe PipelineRun do
         "IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/Summary.htm",
       :eland_output_files => "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data" +
         "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/s_5_eland_result.txt")
-      @pipeline_run.pipeline_results[0].eland_output_file.should == 
+      @pipeline_run.pipeline_results[0].result_file_paths.first.should == 
         "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data" +
         "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/s_5_eland_result.txt"
     end
@@ -118,10 +118,10 @@ describe PipelineRun do
 
     it "should have the correct eland output file for the pipeline result" do
       do_new
-      @pipeline_run.pipeline_results[0].eland_output_file.should == 
+      @pipeline_run.pipeline_results[0].result_file_paths.first.should == 
         "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data" +
         "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/s_5_export.txt"
-      @pipeline_run.pipeline_results[1].eland_output_file.should == 
+      @pipeline_run.pipeline_results[1].result_file_paths.first.should == 
         "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data" +
         "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_19-11-2008_kdeutsch/s_5_export.txt"
     end
@@ -179,16 +179,16 @@ describe PipelineRun do
 
     it "should have the correct eland output file for the pipeline result" do
       do_new
-      @pipeline_run.pipeline_results[0].eland_output_file.should == 
+      @pipeline_run.pipeline_results[0].result_file_paths.first.should == 
         "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data" +
         "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/s_5_export.txt"
-      @pipeline_run.pipeline_results[1].eland_output_file.should == 
+      @pipeline_run.pipeline_results[1].result_file_paths.first.should == 
         "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data" +
         "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/s_6_export.txt"
-      @pipeline_run.pipeline_results[2].eland_output_file.should == 
+      @pipeline_run.pipeline_results[2].result_file_paths.first.should == 
         "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data" +
         "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_19-11-2008_kdeutsch/s_5_export.txt"
-      @pipeline_run.pipeline_results[3].eland_output_file.should == 
+      @pipeline_run.pipeline_results[3].result_file_paths.first.should == 
         "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data" +
         "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_19-11-2008_kdeutsch/s_6_export.txt"
     end
@@ -221,14 +221,12 @@ describe PipelineRun do
 
     it "should make an accompanying pipeline result record" do
       do_new
-      @pipeline_run.pipeline_results.size.should == 2
+      @pipeline_run.pipeline_results.size.should == 1
     end
 
     it "should have the correct base directory for the pipeline result" do
       do_new
       @pipeline_run.pipeline_results[0].base_directory.should == 
-        "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX"
-      @pipeline_run.pipeline_results[1].base_directory.should == 
         "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX"
     end
 
@@ -237,17 +235,14 @@ describe PipelineRun do
       @pipeline_run.pipeline_results[0].summary_file.should == 
         "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data/" +
         "IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/Summary.htm"
-      @pipeline_run.pipeline_results[1].summary_file.should == 
-        "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data/" +
-        "IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/Summary.htm"
     end
 
-    it "should have the correct eland output file for the pipeline result" do
+    it "should have the correct eland output files for the pipeline result" do
       do_new
-      @pipeline_run.pipeline_results[0].eland_output_file.should == 
+      @pipeline_run.pipeline_results[0].result_file_paths[0].should == 
         "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data" +
         "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/s_5_1_export.txt"
-      @pipeline_run.pipeline_results[1].eland_output_file.should == 
+      @pipeline_run.pipeline_results[0].result_file_paths[1].should == 
         "/solexa/facility/PhiX/081114_HWI-EAS427_FC30LD7AAXX/Data" +
         "/IPAR_1.01/Bustard1.9.5_17-11-2008_kdeutsch/GERALD_17-11-2008_kdeutsch/s_5_2_export.txt"
     end

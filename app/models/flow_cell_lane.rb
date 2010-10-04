@@ -74,7 +74,7 @@ class FlowCellLane < ActiveRecord::Base
       :starting_concentration => starting_concentration,
       :loaded_concentration => loaded_concentration,
       :raw_data_path => raw_data_path,
-      :eland_output_file => eland_output_file,
+      :eland_output_files => eland_output_files,
       :summary_file => summary_file,
       :status => status,
       :comment => comment,
@@ -103,9 +103,9 @@ class FlowCellLane < ActiveRecord::Base
     end
   end
   
-  def eland_output_file
+  def eland_output_files
     if(pipeline_results.size > 0)
-      return pipeline_results.find(:first, :order => "gerald_date DESC").eland_output_file
+      return pipeline_results.find(:first, :order => "gerald_date DESC").result_file_paths
     end
   end
 

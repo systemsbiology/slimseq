@@ -42,7 +42,7 @@ class ExternalService < ActiveRecord::Base
       json_attributes.merge!({:username => username, :password => password})
     end
     if result
-      json_attributes.merge!({:raw_data_path => result.eland_output_file, :summary_path => result.summary_file})
+      json_attributes.merge!({:raw_data_paths => result.result_file_paths, :summary_path => result.summary_file})
     end
     postback_body += json_attributes.to_json
     postback_body.gsub!(/\"/, "'")
