@@ -1,0 +1,31 @@
+<h1>New platform</h1>
+
+<% form_for(@platform) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :samples_per_flow_cell %><br />
+    <%= f.text_field :samples_per_flow_cell %>
+  </p>
+  <p>
+    <%= f.label :loading_location_name %><br />
+    <%= f.text_field :loading_location_name %>
+  </p>
+  <p>
+    <%= f.label :uses_gerald %><br />
+    <%= f.check_box :uses_gerald %>
+  </p>
+  <p>
+    <%= f.label :requires_concentrations %><br />
+    <%= f.check_box :requires_concentrations %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', platforms_path %>

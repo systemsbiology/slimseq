@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :platforms
+
   map.resources :external_services
 
   map.resources :eland_parameter_sets

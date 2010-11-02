@@ -1,0 +1,33 @@
+<h2>Listing Platforms</h2>
+
+<p><%= link_to 'New platform', new_platform_path %></p>
+
+<table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
+  <thead>
+    <tr>
+      <th><h3>Name</h3></th>
+      <th><h3>Samples per flow cell</h3></th>
+      <th><h3>Loading location name</h3></th>
+      <th><h3>Uses gerald</h3></th>
+      <th><h3>Requires concentrations</h3></th>
+      <th class="nosort"><h3>Edit</h3></td>
+      <th class="nosort"><h3>Destroy</h3></td>
+    </tr>
+  </thead>
+
+<% @platforms.each do |platform| %>
+  <tr>
+    <td><%=h platform.name %></td>
+    <td><%=h platform.samples_per_flow_cell %></td>
+    <td><%=h platform.loading_location_name %></td>
+    <td><%=h platform.uses_gerald %></td>
+    <td><%=h platform.requires_concentrations %></td>
+    <td><%= link_to 'Edit', edit_platform_path(platform) %></td>
+    <td><%= link_to 'Destroy', platform, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= render :partial => 'shared/tinytable', :locals => {:sort_column => 0} %>

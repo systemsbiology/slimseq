@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyString
+  samples_per_flow_cell: MyString
+  loading_location_name: MyString
+  uses_gerald: false
+  requires_concentrations: false
+
+two:
+  name: MyString
+  samples_per_flow_cell: MyString
+  loading_location_name: MyString
+  uses_gerald: false
+  requires_concentrations: false

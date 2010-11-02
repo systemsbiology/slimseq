@@ -60,6 +60,7 @@ module FixtureReplacement
   attributes_for :sample_prep_kit do |spk|
     spk.name = random_string
     spk.paired_end = false
+    spk.platform = create_platform
   end
 
   attributes_for :sample_term do |st|
@@ -149,5 +150,9 @@ module FixtureReplacement
     s.sample_status_notification = true
     s.json_style = "JSON-wrapped"
     s.authentication_method = "in-JSON"
+  end
+
+  attributes_for :platform do |p|
+    p.name = random_string(8)
   end
 end

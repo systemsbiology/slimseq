@@ -1,7 +1,10 @@
 class SamplePrepKit < ActiveRecord::Base
+  belongs_to :platform
   has_many :samples
 
   belongs_to :multiplexing_scheme
+
+  validates_presence_of :platform_id
 
   def detail_hash
     return {

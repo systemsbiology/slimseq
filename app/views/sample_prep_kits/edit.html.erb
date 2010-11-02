@@ -4,6 +4,12 @@
 
 <% form_for(@sample_prep_kit) do |f| %>
   <p>
+    <b>Platform</b><br />
+    <%= f.collection_select :platform_id, Platform.all,
+      :id, :name, {:prompt => "None"} %>
+  </p>
+
+  <p>
     <b>Name</b><br />
     <%= f.text_field :name %>
   </p>

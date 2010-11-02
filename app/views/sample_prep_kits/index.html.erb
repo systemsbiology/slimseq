@@ -5,6 +5,7 @@
 <table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
   <thead>
     <tr>
+      <th><h3>Platform</h3></th>
       <th><h3>Name</h3></th>
       <th><h3>Restriction Enzyme</h3></th>
       <th><h3>Paired End</h3></th>
@@ -15,6 +16,7 @@
   </thead>
 <% for sample_prep_kit in @sample_prep_kits %>
   <tr>
+    <td><%=h sample_prep_kit.platform.name %></td>
     <td><%=h sample_prep_kit.name %></td>
     <td><%=h sample_prep_kit.restriction_enzyme %></td>
     <td><%= sample_prep_kit.paired_end ? "<b>Yes</b>" : "No" %></td>
