@@ -9,6 +9,14 @@ class SampleMixture < ActiveRecord::Base
   belongs_to :sample_set
   belongs_to :sample_prep_kit
 
+  named_scope :accessible_to_user, lambda {|*args|
+    { :include => :project,
+      :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
+        args.first.get_lab_group_ids, false ],
+      :order => "submission_date DESC, sample_mixtures.id ASC"
+    }
+  }
+
   validates_presence_of :name_on_tube, :submission_date, :budget_number,
     :desired_read_length, :project_id, :sample_prep_kit_id
   validates_numericality_of :alignment_start_position, :greater_than_or_equal_to => 1
@@ -109,14 +117,6 @@ class SampleMixture < ActiveRecord::Base
       gerald_defaults = GeraldDefaults.find(:first)
       return gerald_defaults.eland_max_matches
     end
-  end
-
-  def self.accessible_to_user(user)
-    sample_mixtures = SampleMixture.find(:all, 
-      :include => :project,
-      :conditions => [ "projects.lab_group_id IN (?) AND control = ?",
-        user.get_lab_group_ids, false ],
-      :order => "submission_date DESC, sample_mixtures.id ASC")
   end
 
   def associated_comments
