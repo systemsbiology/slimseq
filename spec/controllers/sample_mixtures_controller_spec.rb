@@ -11,6 +11,7 @@ describe SampleMixturesController do
     lab_groups = [mock_model(LabGroup), mock_model(LabGroup)]
     @current_user.stub!(:accessible_lab_groups).and_return(lab_groups)
     @current_user.stub!(:lab_groups).and_return(lab_groups)
+    @current_user.stub!(:get_lab_group_ids).and_return(lab_groups.collect{|g| g.id})
 
     users = [mock_model(User), mock_model(User)]
     @current_user.stub!(:accessible_users).and_return(users)

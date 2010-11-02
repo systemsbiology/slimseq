@@ -3,9 +3,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe ProjectsController do
   include AuthenticatedSpecHelper
 
-
   before(:each) do
     login_as_staff
+    @current_user.stub!(:get_lab_group_ids).and_return([1,4,7])
   end
   
   describe "responding to GET index" do
@@ -19,7 +19,7 @@ describe ProjectsController do
     describe "with a mime type of html" do
 
       it "should render all the projects as html" do
-        Project.should_receive(:find).with(:all, :order => "name ASC").and_return(@projects)
+        Project.should_receive(:find).with(:all).and_return(@projects)
         get :index
         response.should be_success
         response.should render_template('index')
@@ -35,7 +35,7 @@ describe ProjectsController do
         @project_2.should_receive(:summary_hash).and_return( {:n => 2} )
 
         request.env["HTTP_ACCEPT"] = "application/xml"
-        Project.should_receive(:find).with(:all, :order => "name ASC").and_return(@projects)
+        Project.should_receive(:find).with(:all).and_return(@projects)
         get :index
         response.body.should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
           "<records type=\"array\">\n  <record>\n    <n type=\"integer\">1</n>\n  " +
@@ -51,8 +51,7 @@ describe ProjectsController do
         @project_2.should_receive(:summary_hash).and_return( {:n => 2} )
         
         request.env["HTTP_ACCEPT"] = "application/json"
-        Project.should_receive(:find).with(:all, :order => "name ASC").
-          and_return(@projects)
+        Project.should_receive(:find).with(:all).and_return(@projects)
         get :index
         response.body.should == "[{\"n\":1},{\"n\":2}]"
       end
