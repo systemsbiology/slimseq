@@ -9,7 +9,7 @@
       <th><h3>Flow Cell</h3></th>
       <th><h3>Flow Cell Lane</h3></th>
       <th><h3>Base Directory</h3></th>
-      <th><h3>Eland Output File</h3></th>
+      <th><h3>Output Files</h3></th>
       <th><h3>Summary File</h3></th>
       <th><h3>Archived</h3></th>
       <th class="nosort"><h3>Edit</h3></th>
@@ -25,7 +25,7 @@
     <td><%=h pipeline_result.flow_cell_lane.flow_cell.name %></td>
     <td><%=h pipeline_result.flow_cell_lane.lane_number %></td>
     <td><%=h pipeline_result.base_directory %></td>
-    <td><%=h pipeline_result.eland_output_file %></td>
+    <td><%=h pipeline_result.output_file_paths %></td>
     <td><%=h pipeline_result.summary_file %></td>
     <td><%=h pipeline_result.archived ? "Yes" : "No" %></td>
     <td><%= link_to 'Edit', edit_pipeline_result_path(pipeline_result) %></td>

@@ -19,8 +19,10 @@
     <p><label>Base Directory</label><br>
     <%= f.text_field 'base_directory', :size => 80 %></p>
 
-    <p><label>Eland Output File</label><br>
-    <%= f.text_field 'eland_output_file', :size => 120 %></p>
+    <% f.fields_for :pipeline_result_files do |file_fields| %>
+      <p><label>Output File</label><br>
+      <%= file_fields.text_field :file_path, :size => 120 %></p>
+    <% end %>
     
     <p><label>Summary File</label><br>
     <%= f.text_field 'summary_file', :size => 120 %></p>

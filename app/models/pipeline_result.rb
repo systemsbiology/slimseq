@@ -4,6 +4,8 @@ class PipelineResult < ActiveRecord::Base
   has_many :rnaseq_pipeline
   has_many :pipeline_result_files
 
+  accepts_nested_attributes_for :pipeline_result_files
+
   # should only have one result per combination of sequencing run, flow cell lane and 
   # date gerald was run
   validates_uniqueness_of :flow_cell_lane_id, :scope => [
@@ -11,6 +13,10 @@ class PipelineResult < ActiveRecord::Base
   ]
   validates_presence_of :base_directory, :summary_file
   
+  def output_file_paths
+    pipeline_result_files.collect{|f| f.file_path}.join(",")
+  end
+
   def output_files=(file_paths)
     file_paths.each do |file_path|
       pipeline_result_files.build(:file_path => file_path)
