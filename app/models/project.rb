@@ -4,6 +4,11 @@ class Project < ActiveRecord::Base
 
   belongs_to :lab_group
   
+  named_scope :accessible_to_user, lambda {|*args|
+    { :conditions => ["lab_group_id IN (?)", args.first.get_lab_group_ids],
+      :order => "name ASC" }
+  }
+
   validates_presence_of :name
   validates_format_of :file_folder, :with => /\A([a-z0-9_-]+|)\Z/i,
     :message => "can only have letters, numbers, dashes, and underscores"
@@ -18,38 +23,6 @@ class Project < ActiveRecord::Base
     return "#{name} (#{lab_group_id})"
   end
   
-  def self.accessible_to_user(user, active_only = false)
-    # Administrators and staff can see all projects, otherwise users
-    # are restricted to seeing only projects for lab groups they belong to
-    if(user.staff_or_admin?)
-      return Project.find(:all, :order => "name ASC")
-    else
-      projects = Array.new
-      
-      lab_groups = user.lab_groups
-      lab_groups.each do |g|
-        if(active_only)
-          projects << Project.find(
-            :all,
-            :conditions => { :lab_group_id => g.id, :active => true },
-            :order => "name ASC"
-          )
-        else
-          projects << Project.find(
-            :all,
-            :conditions => { :lab_group_id => g.id },
-            :order => "name ASC"
-          )
-        end
-      end
-      
-      # put it all down to a 1D Array
-      projects.flatten!
-      
-      return projects.sort {|x,y| x.name <=> y.name }
-    end  
-  end
-
   def self.for_lab_group(lab_group)
     return Project.find(:all, :conditions => {:lab_group_id => lab_group.id})    
   end
