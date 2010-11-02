@@ -3,11 +3,11 @@ class SampleMixturesController < ApplicationController
   before_filter :load_dropdown_selections, :only => :edit
 
   def edit
-    @sample_mixture = SampleMixture.find(params[:id])
+    @sample_mixture = SampleMixture.accessible_to_user(current_user).find(params[:id])
   end
 
   def update
-    @sample_mixture = SampleMixture.find(params[:id])
+    @sample_mixture = SampleMixture.accessible_to_user(current_user).find(params[:id])
 
     respond_to do |format|
       if @sample_mixture.update_attributes(params[:sample_mixture])
@@ -27,7 +27,7 @@ class SampleMixturesController < ApplicationController
   end
 
   def destroy
-    sample_mixture = SampleMixture.find(params[:id])
+    sample_mixture = SampleMixture.accessible_to_user(current_user).find(params[:id])
 
     if(sample_mixture.status == "submitted")
       sample_mixture.destroy
@@ -42,9 +42,10 @@ class SampleMixturesController < ApplicationController
     selected_sample_mixtures = params[:selected_sample_mixtures]
     
     @sample_mixtures = Array.new
+    available_sample_mixtures = SampleMixture.accessible_to_user(current_user)
     for sample_mixture_id in selected_sample_mixtures.keys
       if selected_sample_mixtures[sample_mixture_id] == '1'
-        @sample_mixtures << SampleMixture.find(sample_mixture_id)
+        @sample_mixtures << available_sample_mixtures.find(sample_mixture_id)
       end
     end
 
