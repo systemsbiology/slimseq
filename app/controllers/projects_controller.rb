@@ -27,7 +27,7 @@ available when retrieving single projects (see GET /projects/[project id]).
 =end
   
   def index
-    @projects = Project.find(:all, :order => "name ASC")
+    @projects = Project.accessible_to_user(current_user)
     
     respond_to do |format|
       format.html # index.rhtml
@@ -53,7 +53,7 @@ Get detailed information about a single project.
 =end
   
   def show
-    @project = Project.find(params[:id])
+    @project = Project.accessible_to_user(current_user).find(params[:id])
 
     respond_to do |format|
       format.xml  { render :xml => @project.detail_hash }
@@ -92,11 +92,11 @@ Get detailed information about a single project.
   end
   
   def edit
-    @project = Project.find(params[:id])
+    @project = Project.accessible_to_user(current_user).find(params[:id])
   end
 
   def update
-    @project = Project.find(params[:id])
+    @project = Project.accessible_to_user(current_user).find(params[:id])
     
     begin
       if @project.update_attributes(params[:project])
@@ -107,23 +107,23 @@ Get detailed information about a single project.
       end
     rescue ActiveRecord::StaleObjectError
       flash[:warning] = "Unable to update information. Another user has modified this project."
-      @project = Project.find(params[:id])
+      @project = Project.accessible_to_user(current_user).find(params[:id])
       render :action => 'edit'
     end
   end
 
   def destroy    
-    Project.find(params[:id]).destroy
+    Project.accessible_to_user(current_user).find(params[:id]).destroy
     redirect_to projects_url
   end
 
 ########################################################################
   def new_study
-    @project=Project.find(params[:id])
+    @project=Project.accessible_to_user(current_user).find(params[:id])
   end
 
   def add_study
-    @project=Project.find(params[:project_id])
+    @project=Project.accessible_to_user(current_user).find(params[:project_id])
     @study=Study.new(params[:study])
     @study.project_id=@project.id
     @study.save
