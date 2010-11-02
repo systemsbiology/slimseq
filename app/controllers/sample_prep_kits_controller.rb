@@ -9,6 +9,7 @@ A sample_prep_kit can be associated with any number of samples.
 
 class SamplePrepKitsController < ApplicationController
   before_filter :login_required
+  before_filter :staff_or_admin_required
 
 =begin rapidoc
 url:: /sample_prep_kits

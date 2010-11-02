@@ -1,4 +1,5 @@
 class StudiesController < ApplicationController
+  before_filter :login_required
 
   # GET /studies
   # GET /studies.xml

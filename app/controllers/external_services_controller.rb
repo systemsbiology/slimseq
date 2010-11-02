@@ -1,4 +1,7 @@
 class ExternalServicesController < ApplicationController
+  before_filter :login_required
+  before_filter :staff_or_admin_required
+
   # GET /external_services
   # GET /external_services.xml
   def index

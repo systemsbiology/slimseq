@@ -1,5 +1,6 @@
 class SequencingRunsController < ApplicationController
   before_filter :login_required
+  before_filter :staff_or_admin_required
   before_filter :load_dropdown_selections_all, :only => [:edit, :update]
   before_filter :load_dropdown_selections_subset, :only => [:new, :create]
 

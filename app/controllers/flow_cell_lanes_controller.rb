@@ -7,6 +7,8 @@ a particular flow cell lane.
 
 class FlowCellLanesController < ApplicationController
   before_filter :login_required
+  before_filter :staff_or_admin_required
+
   
 =begin rapidoc
 url:: /flow_cell_lanes

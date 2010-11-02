@@ -11,6 +11,7 @@ if it has been sequenced.
 
 class FlowCellsController < ApplicationController
   before_filter :login_required
+  before_filter :staff_or_admin_required
   before_filter :load_dropdown_selections_only_submitted, :only => [:new, :create]
   before_filter :load_dropdown_selections_all, :only => [:edit, :update]
 
