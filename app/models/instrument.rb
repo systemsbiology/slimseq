@@ -1,5 +1,8 @@
 class Instrument < ActiveRecord::Base
+  belongs_to :platform
   has_many :sequencing_runs
+  
+  validates_presence_of :platform
 
   named_scope :active, :conditions => {:active => true}
 

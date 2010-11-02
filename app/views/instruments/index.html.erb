@@ -5,6 +5,7 @@
 <table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
   <thead>
     <tr>
+      <th><h3>Platform</h3></th>
       <th><h3>Name</h3></th>
       <th><h3>Serial Number</h3></th>
       <th><h3>Instrument Version</h3></th>
@@ -16,6 +17,7 @@
   </thead>
 <% for instrument in @instruments %>
   <tr>
+    <td><%=h instrument.platform.name %></td>
     <td><%=h instrument.name %></td>
     <td><%=h instrument.serial_number %></td>
     <td><%=h instrument.instrument_version %></td>

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101101224541) do
+ActiveRecord::Schema.define(:version => 20101102222510) do
 
   create_table "bioanalyzer_runs", :force => true do |t|
     t.string   "name",         :limit => 100
@@ -202,6 +202,7 @@ ActiveRecord::Schema.define(:version => 20101101224541) do
     t.string   "instrument_version"
     t.boolean  "active",             :default => true
     t.string   "web_root"
+    t.integer  "platform_id"
   end
 
   create_table "inventory_checks", :force => true do |t|

@@ -4,6 +4,10 @@
   <%= f.error_messages %>
 
   <p>
+    <p><label>Platform</label><br>
+    <%= f.collection_select :platform_id, Platform.all,
+      :id, :name, {:prompt => "None"} %></p>
+
     <p><label>Name</label><br>
     <%= f.text_field 'name' %></p>
     
