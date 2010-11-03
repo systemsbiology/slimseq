@@ -31,8 +31,14 @@ class PipelineResult < ActiveRecord::Base
 
       doc = Nokogiri::Slop( open(summary_file) )
       
+      run_yield_description = doc.xpath("/html/body/table[2]/tr[1]/td[3]").first.content
       run_yield = doc.xpath("/html/body/table[2]/tr[2]/td[3]").first.content
+
+      # handle some runs reporting Mbases instead of Kbases 
+      run_yield = run_yield.to_i * 1000 if /.*Mbases.*/.match(run_yield_description)
+
       sequencing_run.update_attributes(:yield_kb => run_yield)
+
       doc.xpath("/html/body/table[4]/tr").each do |tr|
         # skip header and footer rows
         if( tr.xpath(".//td").first.content.match(/\A\d/) )

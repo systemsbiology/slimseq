@@ -36,4 +36,18 @@ describe PipelineResult do
       @lane_2.percent_error.should == 5.40
     end
   end
+
+  it "should handle a run summary with yield in Mbases" do
+    @flow_cell = create_flow_cell
+    @lane_1 = create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 1)
+    @lane_2 = create_flow_cell_lane(:flow_cell => @flow_cell, :lane_number => 2)
+    @sequencing_run = create_sequencing_run(:flow_cell => @flow_cell)
+    @result = PipelineResult.new(
+      :sequencing_run => @sequencing_run,
+      :summary_file => "#{RAILS_ROOT}/spec/fixtures/html/SummaryMbases.htm"
+    )
+    @result.import_run_summary
+    @sequencing_run.reload.yield_kb.should == 4912000
+  end
+
 end
