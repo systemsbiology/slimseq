@@ -44,10 +44,10 @@ class PipelineResult < ActiveRecord::Base
         if( tr.xpath(".//td").first.content.match(/\A\d/) )
           lane = tr.xpath(".//td").first.content
           yield_kb = tr.xpath(".//td")[1].content
-          clusters = tr.xpath(".//td")[2].content.match(/\A(\d+) /)[1]
-          pass = tr.xpath(".//td")[6].content.match(/\A(\d+\.\d+) /)[1]
-          align = tr.xpath(".//td")[7].content.match(/\A(\d+\.\d+) /)[1]
-          error = tr.xpath(".//td")[9].content.match(/\A(\d+\.\d+) /)[1]
+          clusters = match_integer( tr.xpath(".//td")[2].content )
+          pass = match_float( tr.xpath(".//td")[6].content )
+          align = match_float( tr.xpath(".//td")[7].content )
+          error = match_float( tr.xpath(".//td")[9].content )
 
           lane = FlowCellLane.find(:first, :conditions => {
             :flow_cell_id => sequencing_run.flow_cell_id,
@@ -68,6 +68,24 @@ class PipelineResult < ActiveRecord::Base
       end
     rescue StandardError => e
       logger.error "Run summary import error: #{e.to_s}\n"
+    end
+  end
+
+  private
+
+  def match_integer(string)
+    if string.match(/\A(\d+) /)
+      return string.match(/\A(\d+) /)[1]
+    else
+      return "0"
+    end
+  end
+
+  def match_float(string)
+    if string.match(/\A(\d+\.\d+) /)
+      return string.match(/\A(\d+\.\d+) /)[1]
+    else
+      return "0"
     end
   end
 end
