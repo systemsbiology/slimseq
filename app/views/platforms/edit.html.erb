@@ -24,6 +24,14 @@
     <%= f.check_box :requires_concentrations %>
   </p>
   <p>
+    <%= f.label :flow_cell_and_sequencing_separate %><br />
+    <%= f.check_box :flow_cell_and_sequencing_separate %>
+  </p>
+  <p>
+    <%= f.label :uses_run_number %><br />
+    <%= f.check_box :uses_run_number %>
+  </p>
+  <p>
     <%= f.submit 'Update' %>
   </p>
 <% end %>

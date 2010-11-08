@@ -19,6 +19,7 @@ class SampleSet < ActiveRecord::Base
   attr_accessor :submitted_by
   attr_accessor :multiplex_number
   attr_accessor :submission_step
+  attr_accessor :platform_id
 
   has_many :sample_mixtures
 
@@ -187,7 +188,7 @@ class SampleSet < ActiveRecord::Base
     return attribute_subset([
       "submission_date", "project_id", "sample_prep_kit_id", "budget_number",
       "desired_read_length", "alignment_start_position", "alignment_end_position",
-      "eland_parameter_set_id", "submitted_by"
+      "eland_parameter_set_id", "submitted_by", "platform_id"
     ])
   end
 

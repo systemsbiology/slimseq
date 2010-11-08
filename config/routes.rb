@@ -1,5 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :platforms
+  map.resources :platforms do |platforms|
+    platforms.resources :sequencing_runs, :only => [:new, :create]
+    platforms.resources :sample_sets, :only => [:new, :create], :collection => {:new => :post}
+  end
 
   map.resources :external_services
 
@@ -56,7 +59,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :instruments
 
-  map.resources :sequencing_runs do |sequencing_runs|
+  map.resources :sequencing_runs, :except => :new do |sequencing_runs|
     sequencing_runs.resources :gerald_configurations, :name_prefix => "sequencing_run_"
   end
 

@@ -9,7 +9,11 @@ Start by <%= link_to 'creating some lab groups', :controller => 'lab_groups', :a
 .</p>
 <% end %>
 
-<p><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></p>
+<p>
+  <% Platform.all.each do |platform| %>
+    <%= link_to "Submit #{platform.name} Samples", new_platform_sample_set_path(platform) %> |
+  <% end %>
+</p>
 
 <h3>Samples Submitted</h3>
 
@@ -48,7 +52,11 @@ Start by <%= link_to 'creating some lab groups', :controller => 'lab_groups', :a
   <% end %>
   </table>
 
-  <%= link_to 'Sequence flow cell', new_sequencing_run_path %>
+  <p>
+    <% Platform.all.each do |platform| %>
+      <%= link_to "New #{platform.name} Sequencing Run", new_platform_sequencing_run_path(platform) %> |
+    <% end %>
+  </p>
 <% else %>
   <p>There are no flow cells for sequencing.</p>  
 <% end %>

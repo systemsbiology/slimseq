@@ -114,14 +114,23 @@ class SequencingRunsController < ApplicationController
 private
 
   def load_dropdown_selections_all
+    @platform = Platform.find_by_id(params[:platform_id])
     @flow_cells = FlowCell.find(:all, :order => "name ASC")
     @instruments = Instrument.find(:all, :order => "name ASC")
+
+    mixtures = @platform ? @platform.sample_mixtures : SampleMixture
+    @sample_mixtures = mixtures.find_all_by_control(true, :order => "name_on_tube ASC")
+    @sample_mixtures += mixtures.find_all_by_control(false, :order => "name_on_tube ASC")
   end
   
   def load_dropdown_selections_subset
+    @platform = Platform.find(params[:platform_id])
     @flow_cells = FlowCell.find_all_by_status('clustered', :order => "name ASC")
-    
-    # only show active instruments
-    @instruments = Instrument.active.find(:all, :order => "name ASC")
+    @instruments = @platform.instruments.active.find(:all, :order => "name ASC")
+
+    mixtures = @platform ? @platform.sample_mixtures : SampleMixture
+    @sample_mixtures = mixtures.find_all_by_control(true, :order => "name_on_tube ASC")
+    @sample_mixtures += mixtures.find_all_by_control_and_status_and_ready_for_sequencing(false, 'submitted',
+      true, :order => "name_on_tube ASC")
   end
 end

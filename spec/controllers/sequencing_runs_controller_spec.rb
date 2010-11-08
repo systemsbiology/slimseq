@@ -68,8 +68,10 @@ describe SequencingRunsController do
   describe "responding to GET new" do
   
     it "should expose a new sequencing_run as @sequencing_run" do
+      @platform = mock_model(Platform)
+      Platform.should_receive(:find).with(@platform.id).and_return(@platform)
       SequencingRun.should_receive(:new).and_return(mock_sequencing_run)
-      get :new
+      get :new, :platform => @platform.id
       assigns[:sequencing_run].should equal(mock_sequencing_run)
     end
 

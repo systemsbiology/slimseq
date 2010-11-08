@@ -1,6 +1,10 @@
 <h2>Listing Sequencing Runs</h2>
 
-<p><%= link_to 'New Sequencing Run', new_sequencing_run_path %></p>
+<p>
+  <% Platform.all.each do |platform| %>
+    <%= link_to "New #{platform.name} Sequencing Run", new_platform_sequencing_run_path(platform) %> |
+  <% end %>
+</p>
 
 <table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
   <thead>

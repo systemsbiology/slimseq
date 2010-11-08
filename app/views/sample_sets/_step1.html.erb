@@ -2,6 +2,7 @@
 
 <% form_tag :action => 'new' do -%>
   <%= hidden_field_tag 'step', '2' %>
+  <%= hidden_field_tag 'sample_set[platform_id]', @platform.id %>
 
   <p><label for="sample_set_submission_date">Date Samples will be submitted</label><br/>
   <%= date_select 'sample_set', 'submission_date'  %></p>

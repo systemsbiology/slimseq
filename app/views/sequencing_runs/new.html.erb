@@ -1,27 +1,80 @@
-<h1>New Sequencing Run</h1>
+<h1>New <%=h @platform.name %> Sequencing Run</h1>
 
 <%= error_messages_for :sequencing_run %>
 
-<% form_for(@sequencing_run) do |f| %>
-  <p><label>Date</label><br>
-  <%= f.date_select 'date' %></p>
+<% if @platform.flow_cell_and_sequencing_separate %>
+  <% form_for [@platform, @sequencing_run] do |run_form| %>
+    <p><label>Date</label><br>
+    <%= run_form.date_select 'date' %></p>
 
-  <p><label>Flow Cell</label><br>
-  <%= f.collection_select 'flow_cell_id', @flow_cells, :id, :name %>
-  <%= link_to 'Show Flow Cells That Have Already Been Processed',
-    new_sequencing_run_path(:show_all_flow_cells => true) %>
-  </p>
+    <p><label>Flow Cell</label><br>
+    <%= run_form.collection_select 'flow_cell_id', @flow_cells, :id, :name %>
+    <%= link_to 'Show Flow Cells That Have Already Been Processed',
+      new_platform_sequencing_run_path(@platform, :show_all_flow_cells => true) %>
+    </p>
 
-  <p><label>Run Number</label><br>
-  <%= f.text_field :run_number %></p>
+    <% if @platform.uses_run_number %>
+      <p><label>Run Number</label><br>
+      <%= run_form.text_field :run_number %></p>
+    <% end %>
 
-  <p><label>Instrument</label><br>
-  <%= f.collection_select 'instrument_id', @instruments, :id, :name_with_version %></p>
-  
-  <p><label>Comment</label><br>
-  <%= f.text_field :comment %></p>
+    <p><label>Instrument</label><br>
+    <%= run_form.collection_select 'instrument_id', @instruments, :id, :name_with_version %></p>
+    
+    <p><label>Comment</label><br>
+    <%= run_form.text_field :comment %></p>
 
-  <p><%= f.submit "Create" %></p>
+    <p><%= run_form.submit "Create" %></p>
+  <% end %>
+<% else %>
+    <p><label>Lanes per flow cell</label><br>
+    <select id="number_of_lanes">
+      <option>Please choose</option>
+      <%= options_for_select @platform.lane_number_options %>
+    </select></p>
+
+    <% @platform.lane_number_options.each do |lane_number| %>
+      <div id="<%= lane_number %>-lanes" class="lanes_form" style="display:none">
+        <% form_for [@platform, @sequencing_run] do |run_form| %>
+          <p><label>Date</label><br>
+          <%= run_form.date_select 'date' %></p>
+
+          <% flow_cell = @sequencing_run.build_flow_cell
+             (1..lane_number).to_a.each{ |n| flow_cell.flow_cell_lanes.build(:lane_number => n) } %>
+          <% run_form.fields_for :flow_cell do |flow_cell_fields| %>
+            <p><label>Run Name</label><br>
+            <%= flow_cell_fields.text_field :name %></p>
+            <%= render :partial => "flow_cells/lanes", :locals => {:form => flow_cell_fields, :lanes => flow_cell.flow_cell_lanes} %>
+
+            <div style="display:none">
+              <%= flow_cell_fields.date_select :date_generated %>
+            </div>
+          <% end %>
+
+          <% if @platform.uses_run_number %>
+            <p><label>Run Number</label><br>
+            <%= run_form.text_field :run_number %></p>
+          <% end %>
+
+          <p><label>Instrument</label><br>
+          <%= run_form.collection_select 'instrument_id', @instruments, :id, :name_with_version %></p>
+          
+          <p><label>Comment</label><br>
+          <%= run_form.text_field :comment %></p>
+
+          <p><%= run_form.submit "Create" %></p>
+        </div>
+    <% end %>
+  <% end %>
 <% end %>
 
 <%= link_to 'Back', sequencing_runs_path %>
+
+<script>
+  $("number_of_lanes").observe('change', function(event) {
+    var selected_form = event.target.value + "-lanes";
+
+    $$(".lanes_form").invoke('hide');
+    $(selected_form).show();
+  });
+</script>

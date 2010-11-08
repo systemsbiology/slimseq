@@ -5,12 +5,14 @@ class SequencingRun < ActiveRecord::Base
   belongs_to :instrument
   has_many :pipeline_results
   
-  validates_presence_of :flow_cell_id
+  validates_associated :flow_cell
 
   before_create :set_best_run
   after_create :mark_flow_cell_as_sequenced
   before_destroy :mark_flow_cell_as_clustered
    
+  accepts_nested_attributes_for :flow_cell
+
   def date_yymmdd
     date.strftime("%y%m%d")
   end

@@ -10,6 +10,8 @@
       <th><h3>Loading location name</h3></th>
       <th><h3>Uses gerald</h3></th>
       <th><h3>Requires concentrations</h3></th>
+      <th><h3>Flow cell and sequencing separate</h3></th>
+      <th><h3>Uses run number</h3></th>
       <th class="nosort"><h3>Edit</h3></td>
       <th class="nosort"><h3>Destroy</h3></td>
     </tr>
@@ -20,8 +22,10 @@
     <td><%=h platform.name %></td>
     <td><%=h platform.samples_per_flow_cell %></td>
     <td><%=h platform.loading_location_name %></td>
-    <td><%=h platform.uses_gerald %></td>
-    <td><%=h platform.requires_concentrations %></td>
+    <td><%=h platform.uses_gerald ? "Yes" : "No" %></td>
+    <td><%=h platform.requires_concentrations ? "Yes" : "No" %></td>
+    <td><%=h platform.flow_cell_and_sequencing_separate ? "Yes" : "No" %></td>
+    <td><%=h platform.uses_run_number ? "Yes" : "No" %></td>
     <td><%= link_to 'Edit', edit_platform_path(platform) %></td>
     <td><%= link_to 'Destroy', platform, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>

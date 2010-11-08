@@ -3,6 +3,8 @@ class SampleSetsController < ApplicationController
   before_filter :load_dropdown_selections
   
   def new
+    @platform = Platform.find_by_id(params[:platform_id])
+
     if(params[:step] == "2")
       @sample_set = SampleSet.new( params[:sample_set].merge(:submitted_by => current_user.login) )
 
