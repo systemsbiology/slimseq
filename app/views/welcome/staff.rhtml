@@ -20,7 +20,14 @@ Start by <%= link_to 'creating some lab groups', :controller => 'lab_groups', :a
 <% if @sample_mixtures != nil && @sample_mixtures.size > 0 %>
   <%= render :partial => 'sample_table' %>
 
-  <%= link_to 'Cluster samples on a flow cell', new_flow_cell_path %>
+  <p>
+    <% Platform.flow_cell_and_sequencing_separate.each do |platform| %>
+      <%= link_to "Cluster #{platform.name} Samples on a Flow Cell", new_flow_cell_path %> |
+    <% end %>
+    <% Platform.flow_cell_and_sequencing_combined.each do |platform| %>
+      <%= link_to "New #{platform.name} Sequencing Run", new_platform_sequencing_run_path(platform) %> |
+    <% end %>
+  </p>
 <% else %>
   <p>There are no samples submitted for sequencing.</p>  
 <% end %>
@@ -53,7 +60,7 @@ Start by <%= link_to 'creating some lab groups', :controller => 'lab_groups', :a
   </table>
 
   <p>
-    <% Platform.all.each do |platform| %>
+    <% Platform.flow_cell_and_sequencing_separate.each do |platform| %>
       <%= link_to "New #{platform.name} Sequencing Run", new_platform_sequencing_run_path(platform) %> |
     <% end %>
   </p>
