@@ -22,9 +22,11 @@ class SampleSet < ActiveRecord::Base
   attr_accessor :platform_id
 
   has_many :sample_mixtures
+  belongs_to :platform
 
   validates_presence_of :budget_number, :reference_genome_id,
-    :sample_prep_kit_id, :desired_read_length, :project_id, :eland_parameter_set_id
+    :sample_prep_kit_id, :desired_read_length, :project_id
+  validates_presence_of :eland_parameter_set_id, :if => Proc.new{|sample_set| Platform.find_by_id(sample_set.platform_id).uses_gerald}
   validates_presence_of :number_of_samples, :if => lambda { sample_mixtures.nil? || sample_mixtures.empty? }
   validates_numericality_of :alignment_start_position
   validates_numericality_of :alignment_end_position

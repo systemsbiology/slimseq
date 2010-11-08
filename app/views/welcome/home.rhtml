@@ -3,7 +3,11 @@
 <p>This is <b><%= SiteConfig.site_name %></b>, an installation of the SLIMseq 
 software for <%= SiteConfig.organization_name %>.</p>
 
-<%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %>
+<p>
+  <% Platform.all.each do |platform| %>
+    <%= link_to "Submit #{platform.name} Samples", new_platform_sample_set_path(platform) %> |
+  <% end %>
+</p>
 
 <h3>Samples Not Yet Completed</h3>
 

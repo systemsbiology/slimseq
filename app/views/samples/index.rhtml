@@ -3,7 +3,11 @@
 <% if(@lab_groups != nil && @lab_groups.size > 0) %>
   <div id="samples-index">
     <ul>
-      <li><%= link_to 'Submit New Samples', :controller => 'sample_sets', :action => 'new' %></li>
+      <li>
+        <% Platform.all.each do |platform| %>
+          <%= link_to "Submit #{platform.name} Samples", new_platform_sample_set_path(platform) %> |
+        <% end %>
+      </li>
 
       <li><%= link_to "Show All #{@samples.size} Samples", :controller => 'samples', :action => 'all' %></li>
 
