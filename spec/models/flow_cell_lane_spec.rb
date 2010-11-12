@@ -81,14 +81,14 @@ describe FlowCellLane do
       :starting_concentration => 1000,
       :loaded_concentration => 2,
       :raw_data_path => nil,
-      :eland_output_file => nil,
+      :eland_output_files => nil,
       :summary_file => nil,
       :sequencer => {},
       :lane_yield_kb => 4200,
       :average_clusters => 20000,
-      :percent_pass_filter_clusters => 60,
-      :percent_align => 50,
-      :percent_error => 20,
+      :percent_pass_filter_clusters => 60.0,
+      :percent_align => 50.0,
+      :percent_error => 20.0,
       :sample_uris => ["http://example.com/samples/#{sample_1.id}",
                        "http://example.com/samples/#{sample_2.id}"]
     }
