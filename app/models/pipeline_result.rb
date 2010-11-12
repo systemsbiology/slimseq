@@ -3,11 +3,8 @@ class PipelineResult < ActiveRecord::Base
   belongs_to :flow_cell_lane
   has_many :rnaseq_pipeline
   has_many :pipeline_result_files
-<<<<<<< HEAD
 
   accepts_nested_attributes_for :pipeline_result_files
-=======
->>>>>>> 643d1871abbb3fe0197b6719b6b6f9623c2a73be
 
   # should only have one result per combination of sequencing run, flow cell lane and 
   # date gerald was run
