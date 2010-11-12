@@ -113,7 +113,6 @@ module FixtureReplacement
     pr.gerald_date = Date.today
     pr.base_directory = "/solexa/lab/project/#{run_name}"
     pr.summary_file = "/solexa/lab/project/#{run_name}/summary.htm"
-    pr.eland_output_file = "/solexa/lab/project/#{run_name}/s_1_eland_output.txt"
   end
 
   attributes_for :user_profile do |up|

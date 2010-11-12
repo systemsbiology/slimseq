@@ -14,10 +14,10 @@ describe ExternalService do
         :sample_description => "YO1", :sample_mixture => sample_mixture)
       flow_cell = create_flow_cell(:name => "123ABCD")
       lane = create_flow_cell_lane(:sample_mixture => sample_mixture, :flow_cell => flow_cell)
-      pipeline_result = create_pipeline_result(:flow_cell_lane => lane, :summary_file => "/path/to/summary.file",
-        :eland_output_file => "/path/to/eland.file")
+      pipeline_result = create_pipeline_result(:flow_cell_lane => lane, :summary_file => "/path/to/summary.file")
+      pipeline_result.pipeline_result_files.create(:file_path => "/path/to/eland.file")
 
-      # TODO: Figure out a little brittle way to do these tests
+      # TODO: Figure out a less brittle way to do these tests
       #RestClient.should_receive(:post).with(
       #  "http://localhost:4567/done", "JSON={'status':'submitted','raw_data_path':'/path/to/eland.file','sample_description':'YO1','summary_path':'/path/to/summary.file','flow_cell_name':'123ABC','lane':1,'id':#{sample.id}}"
       #) 
@@ -38,8 +38,8 @@ describe ExternalService do
         :sample_description => "YO1", :sample_mixture => sample_mixture)
       flow_cell = create_flow_cell(:name => "123ABCD")
       lane = create_flow_cell_lane(:sample_mixture => sample_mixture, :flow_cell => flow_cell)
-      pipeline_result = create_pipeline_result(:flow_cell_lane => lane, :summary_file => "/path/to/summary.file",
-        :eland_output_file => "/path/to/eland.file")
+      pipeline_result = create_pipeline_result(:flow_cell_lane => lane, :summary_file => "/path/to/summary.file")
+      pipeline_result.pipeline_result_files.create(:file_path => "/path/to/eland.file")
       
       RestClient.should_receive(:post).and_raise(Errno::ECONNREFUSED)
 
@@ -52,8 +52,8 @@ describe ExternalService do
       flow_cell = create_flow_cell(:name => "123ABCD")
       sample_mixture = create_sample_mixture
       lane = create_flow_cell_lane(:sample_mixture => sample_mixture, :flow_cell => flow_cell)
-      pipeline_result = create_pipeline_result(:flow_cell_lane => lane, :summary_file => "/path/to/summary.file",
-        :eland_output_file => "/path/to/eland.file")
+      pipeline_result = create_pipeline_result(:flow_cell_lane => lane, :summary_file => "/path/to/summary.file")
+      pipeline_result.pipeline_result_files.create(:file_path => "/path/to/eland.file")
       
       RestClient.should_receive(:post).and_raise(RestClient::RequestFailed)
 

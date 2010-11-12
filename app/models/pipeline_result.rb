@@ -2,14 +2,34 @@ class PipelineResult < ActiveRecord::Base
   belongs_to :sequencing_run
   belongs_to :flow_cell_lane
   has_many :rnaseq_pipeline
+  has_many :pipeline_result_files
+<<<<<<< HEAD
+
+  accepts_nested_attributes_for :pipeline_result_files
+=======
+>>>>>>> 643d1871abbb3fe0197b6719b6b6f9623c2a73be
 
   # should only have one result per combination of sequencing run, flow cell lane and 
   # date gerald was run
   validates_uniqueness_of :flow_cell_lane_id, :scope => [
     :sequencing_run_id, :gerald_date
   ]
-  validates_presence_of :base_directory, :eland_output_file, :summary_file
+  validates_presence_of :base_directory, :summary_file
   
+  def output_file_paths
+    pipeline_result_files.collect{|f| f.file_path}.join(",")
+  end
+
+  def output_files=(file_paths)
+    file_paths.each do |file_path|
+      pipeline_result_files.build(:file_path => file_path)
+    end
+  end
+
+  def result_file_paths
+    pipeline_result_files.collect{|f| f.file_path}
+  end
+
   def after_create
     # mark the flow cell lane as complete
     flow_cell_lane = FlowCellLane.find(flow_cell_lane_id)

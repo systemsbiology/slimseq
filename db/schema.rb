@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100419173009) do
+ActiveRecord::Schema.define(:version => 20101004163922) do
 
   create_table "charge_periods", :force => true do |t|
     t.string   "name"
@@ -207,12 +207,18 @@ ActiveRecord::Schema.define(:version => 20100419173009) do
     t.datetime "updated_at"
   end
 
+  create_table "pipeline_result_files", :force => true do |t|
+    t.string   "file_path"
+    t.integer  "pipeline_result_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "pipeline_results", :force => true do |t|
     t.integer  "flow_cell_lane_id"
     t.integer  "sequencing_run_id"
     t.string   "base_directory"
     t.string   "summary_file"
-    t.string   "eland_output_file"
     t.date     "gerald_date"
     t.integer  "lock_version",      :default => 0
     t.datetime "created_at"
@@ -299,7 +305,7 @@ ActiveRecord::Schema.define(:version => 20100419173009) do
     t.string   "sample_description"
     t.integer  "insert_size"
     t.integer  "reference_genome_id"
-    t.integer   "naming_scheme_id"
+    t.integer  "naming_scheme_id"
     t.integer  "lock_version",        :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
