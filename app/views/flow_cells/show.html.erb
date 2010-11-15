@@ -5,6 +5,8 @@
 <p>Flow Cell Comment: <%=h @flow_cell.comment %></p>
 <p>Status: <%=h @flow_cell.status %></p>
 
+<p><%= link_to 'Download Summary', summary_file_flow_cell_url(@flow_cell) %></p>
+
 <table id="table" class="nonsortable" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <th>Lane Number</th>
@@ -13,6 +15,11 @@
     <th>Loaded Concentration (pM)</th>
     <th>Number of cycles</th>
     <th>Lane Comment</th>
+    <th>Lane Yield (kbases)</th>
+    <th>Average Clusters / Tile</th>
+    <th>% PF Clusters</th>
+    <th>% Align (PF)</th>
+    <th>% Error Rate (PF)</th>
   </tr>
 <% for lane in @flow_cell.flow_cell_lanes %>
   <tr>
@@ -24,6 +31,11 @@
     <td><%=h lane.loaded_concentration %> pM</td>
     <td><%=h lane.number_of_cycles %></td>
     <td><%=h lane.comment %></td>
+    <td><%=h lane.lane_yield_kb %></td>
+    <td><%=h lane.average_clusters %></td>
+    <td><%=h lane.percent_pass_filter_clusters %>%</td>
+    <td><%=h lane.percent_align %>%</td>
+    <td><%=h lane.percent_error %>%</td>
   </tr>
 <% end %>
 </table>

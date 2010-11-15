@@ -140,6 +140,23 @@ Get detailed information about a single flow cell.
     end
   end
   
+  def summary_file
+    @flow_cell = FlowCell.find(params[:id])
+
+    file = nil
+    @flow_cell.flow_cell_lanes.each do |lane|
+      if !file && File.exists?(lane.summary_file)
+        file = lane.summary_file
+      end
+    end
+
+    if file
+      render :file => file
+    else
+      render :text => "Summary file could not be found"
+    end
+  end
+
 private
 
   def load_dropdown_selections_only_submitted

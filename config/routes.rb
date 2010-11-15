@@ -62,7 +62,7 @@ ActionController::Routing::Routes.draw do |map|
     :controller => 'gerald_configurations', :action => 'default',
     :sequencing_run_name => /.*_.*_.*(_.*)*/
   
-  map.resources :flow_cells
+  map.resources :flow_cells, :member => {:summary_file => :get}
 
   map.resources :sample_prep_kits
 
