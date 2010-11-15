@@ -49,7 +49,7 @@
   <% for sample_mixture in @sample_mixtures %>
     <% for lane in sample_mixture.flow_cell_lanes %>
       <p><b><%=h sample_mixture.name_on_tube %></b>: 
-      <%= lane.eland_output_file %><br></p>
+      <%= lane.eland_output_files %><br></p>
     <% end %>
   <% end %> 
 
