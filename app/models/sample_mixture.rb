@@ -275,7 +275,7 @@ class SampleMixture < ActiveRecord::Base
   def real_read_length
     fcls=flow_cell_lanes()
     return nil if fcls.size==0
-    export_file=fcls[0].eland_output_file
+    export_file=fcls[0].eland_output_files.first
     return nil if export_file.nil?
     len=0
     begin
