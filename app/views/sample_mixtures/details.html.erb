@@ -22,6 +22,7 @@
         <th><h3>% PF Clusters</h3></th>
         <th><h3>% Align (PF)</h3></th>
         <th><h3>% Error Rate (PF)</h3></th>
+        <th><h3>Summary File</h3></th>
       </tr>
     </thead>
     <tbody>
@@ -38,6 +39,7 @@
             <td><%=h lane.percent_pass_filter_clusters %>%</td>
             <td><%=h lane.percent_align %>%</td>
             <td><%=h lane.percent_error %>%</td>
+            <td><%= link_to 'Summary', summary_file_flow_cell_url(lane.flow_cell) %></td>
           </tr>
         <% end %>
       <% end %> 

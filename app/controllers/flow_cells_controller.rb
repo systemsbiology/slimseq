@@ -145,7 +145,7 @@ Get detailed information about a single flow cell.
 
     file = nil
     @flow_cell.flow_cell_lanes.each do |lane|
-      if !file && File.exists?(lane.summary_file)
+      if !file && lane.summary_file && File.exists?(lane.summary_file)
         file = lane.summary_file
       end
     end
