@@ -151,7 +151,7 @@ Get detailed information about a single flow cell.
     end
 
     if file
-      render :file => file
+      send_file file, :filename => "#{@flow_cell.name}-Summary.htm", :type => 'text/html'
     else
       render :text => "Summary file could not be found"
     end
