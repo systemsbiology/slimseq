@@ -1,31 +1,28 @@
 <script>
-function toggle_sample_approval(elem) {
-  e = Event.element(elem);
-  html_id = e.id;
-  sample_mixture_id = html_id.match(/.*\-(\d+)/)[1];
-  checked = e.checked;
-  url = '<%= sample_mixtures_path %>/' + sample_mixture_id + ".json"
-  params = 'sample_mixture[ready_for_sequencing]=' + checked
-  new Ajax.Request(
-    url, {
-      method: 'put',
-      parameters: params,
-      onLoading: function(req) {
-        Element.show('sample_approval-'+sample_mixture_id+'-loading');
-        $$('.sample_approval').invoke('disable');
-      },
-      onComplete: function(req) {
-        $$('.sample_approval').invoke('enable');
-        Element.hide('sample_approval-'+sample_mixture_id+'-loading');
-      }
-    }
-  );
-}
-
-// Register the onclick event for all sample approval checkboxes  
-window.onload = function() {  
-  $$('.sample_approval').invoke('observe', 'click', toggle_sample_approval);
-}  
+  // sample approval checkboxes  
+	$(document).ready(function() {
+    $('.sample_approval').click(function() {
+      sample_mixture_id = $(this).attr('id').match(/.*\-(\d+)/)[1];
+      checked = $(this).attr('checked');
+      url = '<%= sample_mixtures_path %>/' + sample_mixture_id + ".json"
+      params = 'sample_mixture[ready_for_sequencing]=' + checked
+      $.ajax({
+        type: 'PUT',
+        url: url,
+        data: params,
+        dataType: "html",
+        processData : false,
+        beforeSend: function(data) {
+          $('sample_approval-'+sample_mixture_id+'-loading').show();
+          $('.sample_approval').attr("disabled", true);
+        },
+        success: function(data, textStatus) {
+          $('sample_approval-'+sample_mixture_id+'-loading').hide();
+          $('.sample_approval').removeAttr("disabled");
+        }
+      });
+    });
+  });
 </script>
 
 <table id="table1" class="sortable" cellpadding="0" cellspacing="0" border="0">
