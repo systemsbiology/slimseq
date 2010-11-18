@@ -3,8 +3,6 @@ class SampleSetsController < ApplicationController
   before_filter :load_dropdown_selections
   
   def new
-    @platform = Platform.find_by_id(params[:platform_id])
-
     if(params[:step] == "2")
       @sample_set = SampleSet.new( params[:sample_set].merge(:submitted_by => current_user.login) )
 
@@ -58,6 +56,18 @@ class SampleSetsController < ApplicationController
     render :partial => 'projects'
   end
   
+  def sample_mixture_fields
+    @naming_scheme = NamingScheme.find(params[:samples][:naming_scheme_id]) if params[:samples][:naming_scheme_id]
+    Rails.logger.info "naming_scheme id = #{@naming_scheme.id}" if @naming_scheme
+    @number_of_samples = params[:samples][:number_of_samples].to_i
+    @project = Project.find(params[:samples][:project_id])
+    @multiplexing_scheme = MultiplexingScheme.find(params[:samples][:multiplexing_scheme_id]) if params[:samples][:multiplexing_scheme_id]
+    @samples_need_approval = @project.lab_group.lab_group_profile.samples_need_approval
+    @samples_per_mixture = params[:samples][:samples_per_mixture].to_i
+
+    render :partial => 'sample_mixture_fields'
+  end
+
 private
 
   def load_dropdown_selections

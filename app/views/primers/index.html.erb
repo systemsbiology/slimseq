@@ -1,0 +1,27 @@
+<h1>Listing primers</h1>
+
+<p><%= link_to 'New primer', new_primer_path %></p>
+
+<table id="table" class="sortable" cellpadding="0" cellspacing="0" border="0">
+  <thead>
+    <tr>
+      <% for column in ["Name", "Platform", "Custom", "Edit", "Destroy"] %>
+        <th><h3><%= column %></h3></th>
+      <% end %>
+    </tr>
+  </thead>
+
+<% @primers.each do |primer| %>
+  <tr>
+    <td><%=h primer.name %></td>
+    <td><%=h primer.platform_id %></td>
+    <td><%= primer.custom ? "<b>Yes</b>" : "No" %></td>
+    <td><%= link_to 'Edit', edit_primer_path(primer) %></td>
+    <td><%= link_to 'Destroy', primer, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= render :partial => 'shared/tinytable', :locals => {:sort_column => 0} %>

@@ -1,9 +1,10 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :primers
+
   map.resources :platforms do |platforms|
     platforms.resources :sequencing_runs, :only => [:new, :create]
-    platforms.resources :sample_sets, :only => [:new, :create], :collection => {:new => :post}
   end
-
+  
   map.resources :external_services
 
   map.resources :eland_parameter_sets
@@ -55,7 +56,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :sample_mixtures
   map.resources :samples, :only => [:index, :show]
   
-  map.resources :sample_sets, :only => [:new, :create]
+  map.resources :sample_sets, :only => [:new, :create], :collection => {:sample_mixture_fields => :get}
   
   map.resources :instruments
 

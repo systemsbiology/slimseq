@@ -4,9 +4,7 @@
 software for <%= SiteConfig.organization_name %>.</p>
 
 <p>
-  <% Platform.all.each do |platform| %>
-    <%= link_to "Submit #{platform.name} Samples", new_platform_sample_set_path(platform) %> |
-  <% end %>
+  <%= link_to "Submit Samples", new_sample_set_path %>
 </p>
 
 <h3>Samples Not Yet Completed</h3>

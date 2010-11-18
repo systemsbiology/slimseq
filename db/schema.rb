@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101104222513) do
+ActiveRecord::Schema.define(:version => 20101116213553) do
 
   create_table "bioanalyzer_runs", :force => true do |t|
     t.string   "name",         :limit => 100
@@ -376,6 +376,14 @@ ActiveRecord::Schema.define(:version => 20101104222513) do
     t.boolean  "uses_run_number",                   :default => true
   end
 
+  create_table "primers", :force => true do |t|
+    t.string   "name"
+    t.boolean  "custom",      :default => false
+    t.integer  "platform_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "projects", :force => true do |t|
     t.string   "name"
     t.string   "file_folder"
@@ -528,6 +536,7 @@ ActiveRecord::Schema.define(:version => 20101104222513) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "platform_id"
+    t.integer  "primer_id"
   end
 
   create_table "sample_prep_kits", :force => true do |t|
@@ -539,6 +548,7 @@ ActiveRecord::Schema.define(:version => 20101104222513) do
     t.boolean  "paired_end",             :default => false
     t.integer  "multiplexing_scheme_id"
     t.integer  "platform_id"
+    t.boolean  "custom",                 :default => false
   end
 
   create_table "sample_sets", :force => true do |t|

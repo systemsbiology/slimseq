@@ -1,0 +1,23 @@
+<h1>Editing primer</h1>
+
+<% form_for(@primer) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :platform_id %><br />
+    <%= f.collection_select :platform_id, Platform.all, :id, :name %>
+  </p>
+  <p>
+    <%= f.label :custom %><br />
+    <%= f.check_box :custom %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', primers_path %>

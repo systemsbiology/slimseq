@@ -4,9 +4,7 @@
   <div id="samples-index">
     <ul>
       <li>
-        <% Platform.all.each do |platform| %>
-          <%= link_to "Submit #{platform.name} Samples", new_platform_sample_set_path(platform) %> |
-        <% end %>
+        <%= link_to "Submit Samples", new_sample_set_path %>
       </li>
 
       <li><%= link_to "Show All #{@samples.size} Samples", :controller => 'samples', :action => 'all' %></li>
