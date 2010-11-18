@@ -55,6 +55,9 @@ $(document).ready(function() {
   });
 
   $('#samples_sample_prep_kit_id').change(function() {
+    var kit_id = $('#samples_sample_prep_kit_id').attr('value');
+    $('#samples_primer_id').attr('value', default_primers[kit_id]);
+
     setup_fields();
   });
 
@@ -97,6 +100,11 @@ $(document).ready(function() {
   $('#samples_custom_primer_name').change(function() {
     setup_fields();
   });
+
+  function set_genomic_primer() {
+    primer_id = $('option:contains(Genomic primer)').attr('value');
+    $('#samples_primer_id').attr('value', primer_id);
+  }
 
   function setup_fields() {
     if( $('#samples_sample_prep_kit_id').attr('value') === "-1" ) {
@@ -144,6 +152,8 @@ $(document).ready(function() {
       $('#samples_desired_read_length,#samples_alignment_start_position,#samples_alignment_end_position').removeClass('required');
       $('#samples_desired_read_length_1,#samples_alignment_start_position_1,#samples_alignment_end_position_1').addClass('required');
       $('#samples_desired_read_length_2,#samples_alignment_start_position_2,#samples_alignment_end_position_2').addClass('required');
+      //$('#samples_primer_id').attr('value', null);
+      set_genomic_primer();
     }
     else {
       $('#single_read').hide();
@@ -155,6 +165,8 @@ $(document).ready(function() {
     }
     else {
       $('#multiplexing').show();
+      //$('#samples_primer_id').attr('value', null);
+      set_genomic_primer();
     }
 
     $('#samples_alignment_end_position').attr('value', $('#samples_desired_read_length').attr('value'));

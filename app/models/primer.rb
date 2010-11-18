@@ -1,6 +1,7 @@
 class Primer < ActiveRecord::Base
   belongs_to :platform
   has_many :sample_mixtures
+  has_many :sample_prep_kits
 
   validates_presence_of :name
   validates_uniqueness_of :name

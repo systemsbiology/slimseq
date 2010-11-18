@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101116213553) do
+ActiveRecord::Schema.define(:version => 20101118232601) do
 
   create_table "bioanalyzer_runs", :force => true do |t|
     t.string   "name",         :limit => 100
@@ -549,6 +549,7 @@ ActiveRecord::Schema.define(:version => 20101116213553) do
     t.integer  "multiplexing_scheme_id"
     t.integer  "platform_id"
     t.boolean  "custom",                 :default => false
+    t.integer  "default_primer_id"
   end
 
   create_table "sample_sets", :force => true do |t|

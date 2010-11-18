@@ -147,6 +147,14 @@
       <input class="navigation_button" id="next" value="Next" type="submit" />
     </div>
   <% end %>
+
+  <script>
+    var default_primers = {
+      <% SamplePrepKit.all.each do |kit| -%>
+        "<%= kit.id %>": <%= kit.default_primer_id || 'null' %>,
+      <% end -%>
+    }
+  </script>
 <% else %>
   <p>You need to belong to one or more lab groups before you can see or submit any samples.
   Please contact your administrator at <a href="mailto:<%=h SiteConfig.administrator_email %>">

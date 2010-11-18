@@ -36,6 +36,12 @@
   </p>
 
   <p>
+    <b>Default Primer</b><br />
+    <%= f.collection_select :default_primer_id, Primer.all,
+      :id, :name, {:prompt => true} %>
+  </p>
+
+  <p>
     <%= f.submit "Update" %>
   </p>
 <% end %>
