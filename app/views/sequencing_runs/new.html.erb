@@ -71,10 +71,10 @@
 <%= link_to 'Back', sequencing_runs_path %>
 
 <script>
-  $("number_of_lanes").observe('change', function(event) {
-    var selected_form = event.target.value + "-lanes";
+  $("#number_of_lanes").change(function() {
+    var selected_form = "#" + $(this).attr('value') + "-lanes";
 
-    $$(".lanes_form").invoke('hide');
+    $(".lanes_form").hide();
     $(selected_form).show();
   });
 </script>
