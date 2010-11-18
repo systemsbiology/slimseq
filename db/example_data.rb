@@ -20,6 +20,7 @@ module FixtureReplacement
   attributes_for :instrument do |i|
     i.name = random_string
     i.serial_number = random_string    
+    i.platform = create_platform
   end
 
   attributes_for :naming_element do |ne|

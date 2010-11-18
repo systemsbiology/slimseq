@@ -4,16 +4,14 @@ describe SequencingRun do
   fixtures :site_config
 
   it "should mark the flow cell associated with a sequencing run being created as sequenced" do
-    @flow_cell = mock_model(FlowCell, :destroyed? => false)
+    @flow_cell = create_flow_cell
     @flow_cell.should_receive(:sequence!).and_return(true)
-    @flow_cell.stub!(:sequencing_runs).and_return([create_sequencing_run])
     @sequencing_run = create_sequencing_run(:flow_cell => @flow_cell)
   end
 
   it "should mark the flow cell associated with a sequencing run being destroyed as clustered" do
-    @flow_cell = mock_model(FlowCell, :destroyed? => false)
-    @flow_cell.stub!(:sequence!).and_return(true)
-    @flow_cell.stub!(:sequencing_runs).and_return([create_sequencing_run])
+    @flow_cell = create_flow_cell
+    @flow_cell.should_receive(:sequence!).and_return(true)
     @sequencing_run = create_sequencing_run(:flow_cell => @flow_cell)
     
     @flow_cell.should_receive(:unsequence!).and_return(true)
@@ -22,9 +20,9 @@ describe SequencingRun do
   
   it "should leave the flow cell associated with a sequencing run being destroyed as sequenced " +
      "if there is another sequencing run associated with this flow cell" do
-    @flow_cell = mock_model(FlowCell, :destroyed? => false)
-    @flow_cell.stub!(:sequence!).and_return(true)
-    @flow_cell.stub!(:sequencing_runs).and_return([
+    @flow_cell = create_flow_cell
+    @flow_cell.should_receive(:sequence!).and_return(true)
+    @flow_cell.should_receive(:sequencing_runs).and_return([
         create_sequencing_run, create_sequencing_run
       ])
     @sequencing_run = create_sequencing_run(:flow_cell => @flow_cell)

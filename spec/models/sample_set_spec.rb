@@ -9,11 +9,14 @@ describe SampleSet do
     @yo2 = create_naming_term(:naming_element => @naming_element, :term => "YO 2")
     @user = mock_model(User)
     User.stub!(:find_by_login).and_return(@user)
+    @platform = mock_model(Platform, :uses_gerald => true)
+    Platform.stub!(:find_by_id).and_return(@platform)
   end
 
   describe "making a new sample set with JSON-style attributes" do
     before(:each) do
       @set_attributes = {
+       "platform_id" => 1,
        "submission_date" => "2010-04-05",
        "number_of_samples" => 2,
        "project_id" => 1,
@@ -116,6 +119,7 @@ describe SampleSet do
 
     it "should not be valid if the budget number is missing" do
       sample_set = SampleSet.new( {
+        "platform_id" => "1",
         "naming_scheme_id" => "1",
         "sample_prep_kit_id" => "1",
         "reference_genome_id" => "1",
@@ -134,6 +138,7 @@ describe SampleSet do
 
     it "should not be valid if the number of samples is missing" do
       sample_set = SampleSet.new( {
+        "platform_id" => "1",
         "naming_scheme_id" => "1",
         "sample_prep_kit_id" => "1",
         "reference_genome_id" => "1",

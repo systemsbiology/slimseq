@@ -68,10 +68,15 @@ describe SequencingRunsController do
   describe "responding to GET new" do
   
     it "should expose a new sequencing_run as @sequencing_run" do
-      @platform = mock_model(Platform)
-      Platform.should_receive(:find).with(@platform.id).and_return(@platform)
+      instruments = mock("instruments", :active => mock("active instruments", :find => []))
+      mixtures = mock("mixtures", :find_all_by_control => [], :find_all_by_control_and_status_and_ready_for_sequencing => [])
+      platform = mock_model(Platform, :instruments => instruments, :sample_mixtures => mixtures)
+      Platform.should_receive(:find).with("23").and_return(platform)
+      instruments = mock("instruments", :active => mock("active instruments", :find => []))
+      mixtures = mock("mixtures", :find_all_by_control => [], :find_all_by_control_and_status_and_ready_for_sequencing => [])
+      platform = mock_model(Platform, :instruments => instruments, :sample_mixtures => mixtures)
       SequencingRun.should_receive(:new).and_return(mock_sequencing_run)
-      get :new, :platform => @platform.id
+      get :new, :platform_id => 23
       assigns[:sequencing_run].should equal(mock_sequencing_run)
     end
 
@@ -89,6 +94,13 @@ describe SequencingRunsController do
 
   describe "responding to POST create" do
 
+    before(:each) do
+      instruments = mock("instruments", :active => mock("active instruments", :find => []))
+      mixtures = mock("mixtures", :find_all_by_control => [], :find_all_by_control_and_status_and_ready_for_sequencing => [])
+      platform = mock_model(Platform, :instruments => instruments, :sample_mixtures => mixtures)
+      Platform.should_receive(:find).with("23").and_return(platform)
+    end
+
     describe "with valid params" do
 
       before(:each) do
@@ -98,18 +110,18 @@ describe SequencingRunsController do
       
       it "should expose a newly created sequencing_run as @sequencing_run" do
         SequencingRun.should_receive(:new).with({'these' => 'params'}).and_return(mock_sequencing_run(:save => true))
-        post :create, :sequencing_run => {:these => 'params'}
+        post :create, :sequencing_run => {:these => 'params'}, :platform_id => 23
         assigns(:sequencing_run).should equal(mock_sequencing_run)
       end
 
       it "should redirect to the created sequencing_run" do
-        post :create, :sequencing_run => {}
+        post :create, :sequencing_run => {}, :platform_id => 23
         response.should redirect_to(sequencing_runs_url)
       end
       
       it "should send email notifications" do
         Notifier.should_receive(:deliver_sequencing_run_notification)
-        post :create, :sequencing_run => {}
+        post :create, :sequencing_run => {}, :platform_id => 23
       end
       
     end
@@ -118,13 +130,13 @@ describe SequencingRunsController do
 
       it "should expose a newly created but unsaved sequencing_run as @sequencing_run" do
         SequencingRun.stub!(:new).with({'these' => 'params'}).and_return(mock_sequencing_run(:save => false))
-        post :create, :sequencing_run => {:these => 'params'}
+        post :create, :sequencing_run => {:these => 'params'}, :platform_id => 23
         assigns(:sequencing_run).should equal(mock_sequencing_run)
       end
 
       it "should re-render the 'new' template" do
         SequencingRun.stub!(:new).and_return(mock_sequencing_run(:save => false))
-        post :create, :sequencing_run => {}
+        post :create, :sequencing_run => {}, :platform_id => 23
         response.should render_template('new')
       end
       
@@ -132,7 +144,7 @@ describe SequencingRunsController do
     
   end
 
-  describe "responding to PUT udpate" do
+  describe "responding to PUT update" do
 
     describe "with valid params" do
 

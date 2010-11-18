@@ -50,7 +50,7 @@ describe PrimersController do
       it "redirects to the created primer" do
         Primer.stub(:new).and_return(mock_primer(:save => true))
         post :create, :primer => {}
-        response.should redirect_to(primer_url(mock_primer))
+        response.should redirect_to(primers_url)
       end
     end
 
@@ -88,7 +88,7 @@ describe PrimersController do
       it "redirects to the primer" do
         Primer.stub(:find).and_return(mock_primer(:update_attributes => true))
         put :update, :id => "1"
-        response.should redirect_to(primer_url(mock_primer))
+        response.should redirect_to(primers_url)
       end
     end
 
