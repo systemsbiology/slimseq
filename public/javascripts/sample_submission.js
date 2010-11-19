@@ -44,8 +44,6 @@ $(document).ready(function() {
           samples: params
         },
         type: 'GET',
-        //beforeSend : function(){alert("Starting validation.")},
-        //complete : function(){alert("Validation complete.")},
         success : function(data){
           $('#sample_mixture_fields').replaceWith(data);
           return true; //return true to make the wizard move to the next step
@@ -152,7 +150,6 @@ $(document).ready(function() {
       $('#samples_desired_read_length,#samples_alignment_start_position,#samples_alignment_end_position').removeClass('required');
       $('#samples_desired_read_length_1,#samples_alignment_start_position_1,#samples_alignment_end_position_1').addClass('required');
       $('#samples_desired_read_length_2,#samples_alignment_start_position_2,#samples_alignment_end_position_2').addClass('required');
-      //$('#samples_primer_id').attr('value', null);
       set_genomic_primer();
     }
     else {
@@ -162,10 +159,11 @@ $(document).ready(function() {
 
     if( $('.multiplexing_scheme_id').attr('value') === "" ) {
       $('#multiplexing').hide();
+      $('#samples_multiplexed_number').removeClass('required');
     }
     else {
       $('#multiplexing').show();
-      //$('#samples_primer_id').attr('value', null);
+      $('#samples_multiplexed_number').addClass('required');
       set_genomic_primer();
     }
 
