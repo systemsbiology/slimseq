@@ -1,4 +1,6 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
   <head>
       <title><%= SiteConfig.site_name %> | <%= controller.controller_name %> | <%= controller.action_name %></title>
       <%= stylesheet_link_tag 'mystyles' %>
@@ -33,45 +35,46 @@
     </div>
     <div id="wrap">
       <div id="menu">
-        <% if logged_in? %>
-            <li><%= link_to 'Home', {:controller => 'welcome', :action => 'home'} %></li>
-            <li class="category">Samples</li>
-            <li><%= link_to 'Samples', samples_path %></li>
-            <% if current_user.staff_or_admin? %>
-              <li><%= link_to 'Flow Cells', flow_cells_path %></li>
-              <li><%= link_to 'Sequencing Runs', sequencing_runs_path %></li>
-              <li><%= link_to 'Pipeline Results', pipeline_results_path %></li>
+        <ul>
+          <% if logged_in? %>
+              <li><%= link_to 'Home', {:controller => 'welcome', :action => 'home'} %></li>
+              <li class="category">Samples</li>
+              <li><%= link_to 'Samples', samples_path %></li>
+              <% if current_user.staff_or_admin? %>
+                <li><%= link_to 'Flow Cells', flow_cells_path %></li>
+                <li><%= link_to 'Sequencing Runs', sequencing_runs_path %></li>
+                <li><%= link_to 'Pipeline Results', pipeline_results_path %></li>
+              <% end %>
+            <% if SiteConfig.track_charges? %>
+              <% if current_user.staff_or_admin? %>
+                <li class="category">Charges</li>
+                <li><%= link_to 'Charges', {:controller => 'charge_sets', :action => 'list'} %></li>
+                <li><%= link_to 'Charge Templates', {:controller => 'charge_templates', :action => 'list'} %></li>
+              <% end %>
             <% end %>
-          <% if SiteConfig.track_charges? %>
             <% if current_user.staff_or_admin? %>
-              <li class="category">Charges</li>
-              <li><%= link_to 'Charges', {:controller => 'charge_sets', :action => 'list'} %></li>
-              <li><%= link_to 'Charge Templates', {:controller => 'charge_templates', :action => 'list'} %></li>
+              <li class="category">Facility</li>
+              <li><%= link_to 'Sample Prep Kits', sample_prep_kits_path %></li>
+              <li><%= link_to 'Primers', primers_path %></li>
+              <li><%= link_to 'Reference Genomes', {:controller => 'reference_genomes'} %></li>
+              <li><%= link_to 'Organisms', {:controller => 'organisms', :action => 'list'} %></li>
+              <li><%= link_to 'Instruments', instruments_path %></li>
+              <li><%= link_to 'Platforms', platforms_path %></li>
+              <li><%= link_to 'Eland Parameters', eland_parameter_sets_path %></li>
+              <li><%= link_to 'Billing Report', :controller => 'reports', :action => 'billing' %></li>
+              <li class="category">Users</li>
+              <li><%= link_to 'Users', users_path %></li>
+              <li><%= link_to 'Lab Groups', lab_groups_path %></li>
+              <li><%= link_to 'Projects', projects_path %></li>
+              <li><%= link_to 'Naming Schemes', naming_schemes_path %></li>            
             <% end %>
-          <% end %>
-          <% if current_user.staff_or_admin? %>
-            <li class="category">Facility</li>
-            <li><%= link_to 'Sample Prep Kits', sample_prep_kits_path %></li>
-            <li><%= link_to 'Primers', primers_path %></li>
-            <li><%= link_to 'Reference Genomes', {:controller => 'reference_genomes'} %></li>
-            <li><%= link_to 'Organisms', {:controller => 'organisms', :action => 'list'} %></li>
-            <li><%= link_to 'Instruments', instruments_path %></li>
-            <li><%= link_to 'Platforms', platforms_path %></li>
-            <li><%= link_to 'Eland Parameters', eland_parameter_sets_path %></li>
-            <li><%= link_to 'Billing Report', :controller => 'reports', :action => 'billing' %></li>
-            <li class="category">Users</li>
-            <li><%= link_to 'Users', users_path %></li>
-            <li><%= link_to 'Lab Groups', lab_groups_path %></li>
-            <li><%= link_to 'Projects', projects_path %></li>
-            <li><%= link_to 'Naming Schemes', naming_schemes_path %></li>            
-          <% end %>
-          <% if current_user.admin? %>
-            <li class="category">Admin</li>
-            <li><%= link_to 'Site Config', {:controller => 'site_config', :action => 'edit'} %></li>
-          <% end %>
-          <br/>
-          <li><%= link_to 'Log Out', {:controller => 'sessions', :action => 'destroy'} %></li>
-        <% end %>    
+            <% if current_user.admin? %>
+              <li class="category">Admin</li>
+              <li><%= link_to 'Site Config', {:controller => 'site_config', :action => 'edit'} %></li>
+            <% end %>
+            <li><%= link_to 'Log Out', {:controller => 'sessions', :action => 'destroy'} %></li>
+          <% end %>    
+        </ul>
       </div>
       <div id="main">
         <p style="color: green"><%= flash[:notice] %></p>

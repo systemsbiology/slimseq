@@ -35,16 +35,6 @@ p.flash{
   width:3000px;
 }
 
-#menu {
-  font-size: 12px;
-  line-height: 20px;
-  color: #333333;
-  background: #E3E8F7;
-  float: left;
-  padding: 1ex 0 4ex 1ex;
-  margin:2px;
-}
-
 #main {
 	color: #333333;
 	background: #FFFFFF;
@@ -54,6 +44,15 @@ p.flash{
 	padding-left: 3ex;
 }
 
+#menu {
+  line-height: 20px;
+  color: #333333;
+  background: #E3E8F7;
+  float: left;
+  padding: 1ex 0 4ex 1ex;
+  margin:2px;
+}
+
 #menu a{
     padding-left: 1ex;
     padding-right: 1ex;
@@ -61,14 +60,20 @@ p.flash{
     /*color: #004;   */
 }
 
+#menu ul {
+  padding: 0;
+  margin: 0;
+}
+
 #menu li {
 	list-style-type: none;
+  font-size: 12px;
 }
 
 #menu li.category {
 	padding-top: 0.5ex;
     font-weight: bold;
-    font-size: 110%;
+    font-size: 120%;
 }
 
 .fieldset {

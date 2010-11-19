@@ -5,7 +5,7 @@
 <% if(current_user.lab_groups.size > 0 || current_user.staff_or_admin?) %>
   <% form_for @sample_set, :html => {:class => "bbq"} do |sample_set_form| -%>
     <div id="fieldWrapper">
-    <span class="step" id="platform">
+    <div class="step" id="platform">
       <p><%= label :samples, :platform_id, 'Platform' %><br/>
       <%= select :samples, :platform_id, options_from_collection_for_select(Platform.all, :id, :name), {}, :class => "link" %></p>
 
@@ -32,9 +32,9 @@
 
       <p><label for="samples_budget_number">Budget Number</label><br/>
       <%= text_field 'samples', 'budget_number', :class => "required" %></p>
-    </span>
+    </div>
     <% Platform.all.each do |platform| %>
-      <span class="step" id="<%= platform.id %>">
+      <div class="step" id="<%= platform.id %>">
         <p><%= label :samples, :sample_prep_kit_id, 'Sample Prep Kit' %><br/>
         <%= collection_select :samples, :sample_prep_kit_id,
           sample_prep_kit_choices(platform), :id, :name, {:prompt => true}, :class => "required" %></p>
@@ -135,12 +135,12 @@
         <%= text_field 'samples', 'insert_size', :size => 8, :class => "required" %></p>
 
         <%= hidden_field :samples, :next_step, :value => "samples", :class => "link" %>
-      </span>
+      </div>
     <% end %>
-    <span id="samples" class="step submit_step">
+    <div id="samples" class="step submit_step">
       <div id="sample_mixture_fields">
       </div>
-    </span>
+    </div>
     </div>
     <div id="demoNavigation"> 							
       <input class="navigation_button" id="back" value="Back" type="reset" />
@@ -148,7 +148,7 @@
     </div>
   <% end %>
 
-  <script>
+  <script type="text/javascript">
     var default_primers = {
       <% SamplePrepKit.all.each do |kit| -%>
         "<%= kit.id %>": <%= kit.default_primer_id || 'null' %>,

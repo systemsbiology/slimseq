@@ -53,9 +53,7 @@ $(document).ready(function() {
   });
 
   $('#samples_sample_prep_kit_id').change(function() {
-    var kit_id = $('#samples_sample_prep_kit_id').attr('value');
-    $('#samples_primer_id').attr('value', default_primers[kit_id]);
-
+    set_default_primer();
     setup_fields();
   });
 
@@ -64,6 +62,7 @@ $(document).ready(function() {
   });
 
   $('#samples_read_format').change(function() {
+    set_default_primer();
     setup_fields();
   });
 
@@ -80,6 +79,7 @@ $(document).ready(function() {
   });
 
   $('.multiplexing_scheme_id').change(function() {
+    set_default_primer();
     setup_fields();
   });
 
@@ -102,6 +102,11 @@ $(document).ready(function() {
   function set_genomic_primer() {
     primer_id = $('option:contains(Genomic primer)').attr('value');
     $('#samples_primer_id').attr('value', primer_id);
+  }
+
+  function set_default_primer() {
+    var kit_id = $('#samples_sample_prep_kit_id').attr('value');
+    $('#samples_primer_id').attr('value', default_primers[kit_id]);
   }
 
   function setup_fields() {
