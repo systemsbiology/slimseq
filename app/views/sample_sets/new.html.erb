@@ -3,87 +3,87 @@
 <h2>Enter Samples</h2>
 
 <% if(current_user.lab_groups.size > 0 || current_user.staff_or_admin?) %>
-  <% form_for @sample_set, :html => {:class => "bbq"} do |sample_set_form| -%>
+  <% form_for :sample_set, :url => {:action => :create}, :html => {:class => "bbq"} do -%>
     <div id="fieldWrapper">
     <div class="step" id="platform">
-      <p><%= label :samples, :platform_id, 'Platform' %><br/>
-      <%= select :samples, :platform_id, options_from_collection_for_select(Platform.all, :id, :name), {}, :class => "link" %></p>
+      <p><%= label :sample_set, :platform_id, 'Platform' %><br/>
+      <%= select :sample_set, :platform_id, options_from_collection_for_select(Platform.all, :id, :name), {}, :class => "link" %></p>
 
-      <p><%= label :samples, :date, 'Date Submitted' %><br/>
-      <%= date_select :samples, :date %></p>
+      <p><%= label :sample_set, :date, 'Date Submitted' %><br/>
+      <%= date_select :sample_set, :date %></p>
 
-      <p><%= label :samples, :number, 'Number of Samples' %><br/>
-      <%= text_field :samples, :number, :size => 4, :class => "required" %></p>
+      <p><%= label :sample_set, :number, 'Number of Samples' %><br/>
+      <%= text_field :sample_set, :number, :size => 4, :class => "required" %></p>
 
       <%= render :partial => 'projects' %>
 
-      <p><%= label :samples, :reference_genome_id, 'Reference Genome' %><br/>
-      <%= collection_select :samples, :reference_genome_id, @reference_genomes, :id, :description,
+      <p><%= label :sample_set, :reference_genome_id, 'Reference Genome' %><br/>
+      <%= collection_select :sample_set, :reference_genome_id, @reference_genomes, :id, :description,
         {:prompt => true}, :class => "required" %><br/>
       * Contact the facility to add a new reference genome</p>
 
       <% if @naming_schemes.size > 0 %>
-        <p><label for="samples_naming_scheme_id">Naming Scheme</label><br/>
-        <select id='samples_naming_scheme_id' name='samples[naming_scheme_id]'>
+        <p><label for="sample_set_naming_scheme_id">Naming Scheme</label><br/>
+        <select id='sample_set_naming_scheme_id' name='sample_set[naming_scheme_id]'>
           <option value="">- None -</option>
           <%= options_from_collection_for_select @naming_schemes, "id", "name" %>
         </select></p>
       <% end %>
 
-      <p><label for="samples_budget_number">Budget Number</label><br/>
-      <%= text_field 'samples', 'budget_number', :class => "required" %></p>
+      <p><label for="sample_set_budget_number">Budget Number</label><br/>
+      <%= text_field 'sample_set', 'budget_number', :class => "required" %></p>
     </div>
     <% Platform.all.each do |platform| %>
       <div class="step" id="<%= platform.id %>">
-        <p><%= label :samples, :sample_prep_kit_id, 'Sample Prep Kit' %><br/>
-        <%= collection_select :samples, :sample_prep_kit_id,
+        <p><%= label :sample_set, :sample_prep_kit_id, 'Sample Prep Kit' %><br/>
+        <%= collection_select :sample_set, :sample_prep_kit_id,
           sample_prep_kit_choices(platform), :id, :name, {:prompt => true}, :class => "required" %></p>
 
         <div id="custom_prep" style="display:none;">
-          <p><%= label :samples, :custom_prep_kit_id, 'Custom Prep' %><br/>
-          <%= collection_select :samples, :custom_prep_kit_id,
+          <p><%= label :sample_set, :custom_prep_kit_id, 'Custom Prep' %><br/>
+          <%= collection_select :sample_set, :custom_prep_kit_id,
             SamplePrepKit.custom, :id, :name, {:prompt => true} %>
           or <a href="#" id="add_custom_prep">Add your own</a>
           <div id="new_custom_prep_kit" class="field_grouping" style="display:none;">
             New custom prep kit<br/>
             <p>Name<br/>
-            <%= text_field :samples, :custom_prep_kit_name %><p/>
+            <%= text_field :sample_set, :custom_prep_kit_name %><p/>
             <p>Comments<br/>
-            <%= text_field :samples, :custom_prep_kit_comments %><p/>
+            <%= text_field :sample_set, :custom_prep_kit_comments %><p/>
           </div>
         </div>
 
-        <p><%= label :samples, :primer_id, 'Primer' %><br/>
-        <%= collection_select :samples, :primer_id,
+        <p><%= label :sample_set, :primer_id, 'Primer' %><br/>
+        <%= collection_select :sample_set, :primer_id,
           primer_choices(platform), :id, :name, {:prompt => true}, :class => "required" %></p>
 
         <div id="custom_primer" style="display:none;">
-          <p><%= label :samples, :custom_primer_id, 'Custom Primer' %><br/>
-          <%= collection_select :samples, :custom_primer_id,
+          <p><%= label :sample_set, :custom_primer_id, 'Custom Primer' %><br/>
+          <%= collection_select :sample_set, :custom_primer_id,
             Primer.custom, :id, :name, {:prompt => true} %>
           or <a href="#" id="add_custom_primer">Add your own</a>
           <div id="new_custom_primer" class="field_grouping" style="display:none;">
             New custom primer<br/>
             <p>Name<br/>
-            <%= text_field :samples, :custom_primer_name %></p>
+            <%= text_field :sample_set, :custom_primer_name %></p>
             <p>Comments<br/>
-            <%= text_field :samples, :custom_primer_comments %><p/>
+            <%= text_field :sample_set, :custom_primer_comments %><p/>
           </div>
         </div>
 
-        <p><%= label :samples, :read_format, 'Read Format and Alignment' %><br/>
-        <%= select :samples, :read_format, options_for_select(["Single read", "Paired end"]),
+        <p><%= label :sample_set, :read_format, 'Read Format and Alignment' %><br/>
+        <%= select :sample_set, :read_format, options_for_select(["Single read", "Paired end"]),
           {:prompt => true}, :class => "required" %></p>
 
         <div id="single_read" style="display:none;">
-          <p><%= label :samples, :desired_read_length, 'Desired Number of Cycles' %><br/>
-          <%= text_field :samples, :desired_read_length, :size => 6 %></p>
+          <p><%= label :sample_set, :desired_read_length, 'Desired Number of Cycles' %><br/>
+          <%= text_field :sample_set, :desired_read_length, :size => 6 %></p>
 
           <p>Alignment bases<br/>
-          <%= label :samples, :alignment_start_position, 'Start' %>
-          <%= text_field :samples, :alignment_start_position, :size => 4, :value => 1 %>
-          <%= label :samples, :alignment_end_position, 'End' %>
-          <%= text_field :samples, :alignment_end_position, :size => 4 %></p>
+          <%= label :sample_set, :alignment_start_position, 'Start' %>
+          <%= text_field :sample_set, :alignment_start_position, :size => 4, :value => 1 %>
+          <%= label :sample_set, :alignment_end_position, 'End' %>
+          <%= text_field :sample_set, :alignment_end_position, :size => 4 %></p>
         </div>
 
         <div id="paired_end" style="display:none;">
@@ -91,50 +91,50 @@
             <tr>
               <td>
                 <h3>Read 1</h3>
-                <p><%= label :samples, :desired_read_length_1, 'Desired Number of Cycles' %><br/>
-                <%= text_field :samples, :desired_read_length_1, :size => 6 %></p>
+                <p><%= label :sample_set, :desired_read_length_1, 'Desired Number of Cycles' %><br/>
+                <%= text_field :sample_set, :desired_read_length_1, :size => 6 %></p>
 
                 <p>Alignment bases<br/>
-                <%= label :samples, :alignment_start_position_1, 'Start' %>
-                <%= text_field :samples, :alignment_start_position_1, :size => 4, :value => 1 %>
-                <%= label :samples, :alignment_end_position_1, 'End' %>
-                <%= text_field :samples, :alignment_end_position_1, :size => 4 %></p>
+                <%= label :sample_set, :alignment_start_position_1, 'Start' %>
+                <%= text_field :sample_set, :alignment_start_position_1, :size => 4, :value => 1 %>
+                <%= label :sample_set, :alignment_end_position_1, 'End' %>
+                <%= text_field :sample_set, :alignment_end_position_1, :size => 4 %></p>
               </td>
               <td>
                 <h3>Read 2</h3>
-                <p><%= label :samples, :desired_read_length_2, 'Desired Number of Cycles' %><br/>
-                <%= text_field :samples, :desired_read_length_2, :size => 6 %></p>
+                <p><%= label :sample_set, :desired_read_length_2, 'Desired Number of Cycles' %><br/>
+                <%= text_field :sample_set, :desired_read_length_2, :size => 6 %></p>
 
                 <p>Alignment bases<br/>
-                <%= label :samples, :alignment_start_position_2, 'Start' %>
-                <%= text_field :samples, :alignment_start_position_2, :size => 4, :value => 1 %>
-                <%= label :samples, :alignment_end_position_2, 'End' %>
-                <%= text_field :samples, :alignment_end_position_2, :size => 4 %></p>
+                <%= label :sample_set, :alignment_start_position_2, 'Start' %>
+                <%= text_field :sample_set, :alignment_start_position_2, :size => 4, :value => 1 %>
+                <%= label :sample_set, :alignment_end_position_2, 'End' %>
+                <%= text_field :sample_set, :alignment_end_position_2, :size => 4 %></p>
               </td>
             </tr>
           </table>
         </div>
 
-        <p><%= label :samples, :multiplexing_scheme_id, 'Multiplexing' %><br/>
-        <%= collection_select :samples, :multiplexing_scheme_id,
+        <p><%= label :sample_set, :multiplexing_scheme_id, 'Multiplexing' %><br/>
+        <%= collection_select :sample_set, :multiplexing_scheme_id,
           MultiplexingScheme.all, :id, :name, {:prompt => "- None -"}, :class => "multiplexing_scheme_id" %></p>
 
         <div id="multiplexing" style="display:none;">
-          <p><label for="samples_multiplexed_number">Multiplexed Samples/Tube</label><br/>
-          <%= text_field :samples, :multiplexed_number, :size => 8 %></p>
+          <p><label for="sample_set_multiplexed_number">Multiplexed Samples/Tube</label><br/>
+          <%= text_field :sample_set, :multiplexed_number, :size => 8 %></p>
         </div>
 
         <% if platform.uses_gerald %>
-          <p><%= label :samples_eland_parameter_set_id, 'ELAND Parameters' %><br/>
-          <%= collection_select :samples, :eland_parameter_set_id,
+          <p><%= label :sample_set_eland_parameter_set_id, 'ELAND Parameters' %><br/>
+          <%= collection_select :sample_set, :eland_parameter_set_id,
             @eland_parameter_sets, 'id', 'info', {:prompt => true}, :class => "required" %><br/>
             * Contact the facility to add different eland parameter options</p>
         <% end %>
 
-        <p><label for="samples_insert_size">Insert <b>+ Adapters</b> Size</label><br/>
-        <%= text_field 'samples', 'insert_size', :size => 8, :class => "required" %></p>
+        <p><label for="sample_set_insert_size">Insert <b>+ Adapters</b> Size</label><br/>
+        <%= text_field 'sample_set', 'insert_size', :size => 8, :class => "required" %></p>
 
-        <%= hidden_field :samples, :next_step, :value => "samples", :class => "link" %>
+        <%= hidden_field :sample_set, :next_step, :value => "samples", :class => "link" %>
       </div>
     <% end %>
     <div id="samples" class="step submit_step">

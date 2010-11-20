@@ -3,7 +3,6 @@ class SampleSetsController < ApplicationController
   before_filter :load_dropdown_selections
   
   def new
-    @sample_set = SampleSet.new
   end
 
   def create
@@ -36,13 +35,13 @@ class SampleSetsController < ApplicationController
   end
   
   def sample_mixture_fields
-    @naming_scheme = NamingScheme.find(params[:samples][:naming_scheme_id]) if params[:samples][:naming_scheme_id]
+    @naming_scheme = NamingScheme.find(params[:sample_set][:naming_scheme_id]) if params[:sample_set][:naming_scheme_id]
     Rails.logger.info "naming_scheme id = #{@naming_scheme.id}" if @naming_scheme
-    @number_of_samples = params[:samples][:number_of_samples].to_i
-    @project = Project.find(params[:samples][:project_id])
-    @multiplexing_scheme = MultiplexingScheme.find(params[:samples][:multiplexing_scheme_id]) if params[:samples][:multiplexing_scheme_id]
+    @number_of_samples = params[:sample_set][:number_of_samples].to_i
+    @project = Project.find(params[:sample_set][:project_id])
+    @multiplexing_scheme = MultiplexingScheme.find(params[:sample_set][:multiplexing_scheme_id]) if params[:sample_set][:multiplexing_scheme_id]
     @samples_need_approval = @project.lab_group.lab_group_profile.samples_need_approval
-    @samples_per_mixture = params[:samples][:samples_per_mixture].to_i
+    @samples_per_mixture = params[:sample_set][:samples_per_mixture].to_i
 
     render :partial => 'sample_mixture_fields'
   end

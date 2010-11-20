@@ -20,11 +20,6 @@ describe SampleSetsController do
   end
     
   describe "#new" do
-    before(:each) do
-      @sample_set = mock_model(SampleSet)
-      SampleSet.stub!(:new).and_return(@sample_set)
-    end
-
     def do_get
       get :new
     end
@@ -38,21 +33,6 @@ describe SampleSetsController do
       do_get
       response.should render_template('new')
     end
-
-    it "makes an new sample set" do
-      SampleSet.should_receive(:new).and_return(@sample_set)
-      do_get
-    end
-
-    it "does not save the new sample set" do
-      @sample_set.should_not_receive(:save)
-      do_get
-    end
-
-    it "assigns the new sample set for the view" do
-      do_get
-      assigns[:sample_set].should equal(@sample_set)
-    end      
   end
   
   describe "#create" do

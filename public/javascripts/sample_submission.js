@@ -20,11 +20,11 @@ $(document).ready(function() {
     if( $('#1:visible,#2:visible').length > 0 ) {
       var project_id, number_of_samples, multiplexing_scheme_id, naming_scheme_id, params;
 
-      project_id = $('#samples_project_id').attr('value');
-      naming_scheme_id = $('#samples_naming_scheme_id').attr('value');
-      number_of_samples = $('#samples_number').attr('value');
+      project_id = $('#sample_set_project_id').attr('value');
+      naming_scheme_id = $('#sample_set_naming_scheme_id').attr('value');
+      number_of_samples = $('#sample_set_number').attr('value');
       multiplexing_scheme_id = $('.step:visible > p > select.multiplexing_scheme_id').attr('value');
-      multiplexed_number = $('#samples_multiplexed_number').attr('value');
+      multiplexed_number = $('#sample_set_multiplexed_number').attr('value');
 
       params = {};
       if(project_id && project_id !== "") params["project_id"] = project_id;
@@ -41,7 +41,7 @@ $(document).ready(function() {
         url : "sample_mixture_fields", 
         dataType : 'html',
         data: {
-          samples: params
+          sample_set: params
         },
         type: 'GET',
         success : function(data){
@@ -52,29 +52,29 @@ $(document).ready(function() {
     }
   });
 
-  $('#samples_sample_prep_kit_id').change(function() {
+  $('#sample_set_sample_prep_kit_id').change(function() {
     set_default_primer();
     setup_fields();
   });
 
-  $('#samples_primer_id').change(function() {
+  $('#sample_set_primer_id').change(function() {
     setup_fields();
   });
 
-  $('#samples_read_format').change(function() {
+  $('#sample_set_read_format').change(function() {
     set_default_primer();
     setup_fields();
   });
 
-  $('#samples_desired_read_length').change(function() {
+  $('#sample_set_desired_read_length').change(function() {
     setup_fields();
   });
 
-  $('#samples_desired_read_length_1').change(function() {
+  $('#sample_set_desired_read_length_1').change(function() {
     setup_fields();
   });
 
-  $('#samples_desired_read_length_2').change(function() {
+  $('#sample_set_desired_read_length_2').change(function() {
     setup_fields();
   });
 
@@ -83,78 +83,78 @@ $(document).ready(function() {
     setup_fields();
   });
 
-  $('#samples_custom_prep_kit_id').change(function() {
+  $('#sample_set_custom_prep_kit_id').change(function() {
     setup_fields();
   });
 
-  $('#samples_custom_prep_kit_name').change(function() {
+  $('#sample_set_custom_prep_kit_name').change(function() {
     setup_fields();
   });
 
-  $('#samples_custom_primer_id').change(function() {
+  $('#sample_set_custom_primer_id').change(function() {
     setup_fields();
   });
 
-  $('#samples_custom_primer_name').change(function() {
+  $('#sample_set_custom_primer_name').change(function() {
     setup_fields();
   });
 
   function set_genomic_primer() {
     primer_id = $('option:contains(Genomic primer)').attr('value');
-    $('#samples_primer_id').attr('value', primer_id);
+    $('#sample_set_primer_id').attr('value', primer_id);
   }
 
   function set_default_primer() {
-    var kit_id = $('#samples_sample_prep_kit_id').attr('value');
-    $('#samples_primer_id').attr('value', default_primers[kit_id]);
+    var kit_id = $('#sample_set_sample_prep_kit_id').attr('value');
+    $('#sample_set_primer_id').attr('value', default_primers[kit_id]);
   }
 
   function setup_fields() {
-    if( $('#samples_sample_prep_kit_id').attr('value') === "-1" ) {
+    if( $('#sample_set_sample_prep_kit_id').attr('value') === "-1" ) {
       $('#custom_prep').show();
-      $('#samples_custom_prep_kit_id').addClass('required');
+      $('#sample_set_custom_prep_kit_id').addClass('required');
     }
     else {
       $('#custom_prep').hide();
-      $('#samples_custom_prep_kit_id').removeClass('required');
+      $('#sample_set_custom_prep_kit_id').removeClass('required');
     }
 
-    if( $('#samples_custom_prep_kit_name').attr('value') === '' && $('#samples_sample_prep_kit_id').attr('value') === "-1") {
-      $('#samples_custom_prep_kit_id').addClass('required');
+    if( $('#sample_set_custom_prep_kit_name').attr('value') === '' && $('#sample_set_sample_prep_kit_id').attr('value') === "-1") {
+      $('#sample_set_custom_prep_kit_id').addClass('required');
     }
     else {
-      $('#samples_custom_prep_kit_id').removeClass('required');
+      $('#sample_set_custom_prep_kit_id').removeClass('required');
     }
 
-    if( $('#samples_primer_id').attr('value') == "-1" ) {
+    if( $('#sample_set_primer_id').attr('value') == "-1" ) {
       $('#custom_primer').show();
-      $('#samples_custom_primer_id').addClass('required');
+      $('#sample_set_custom_primer_id').addClass('required');
     }
     else {
       $('#custom_primer').hide();
-      $('#samples_custom_primer_id').removeClass('required');
+      $('#sample_set_custom_primer_id').removeClass('required');
     }
 
-    if( $('#samples_custom_primer_name').attr('value') === '' && $('#samples_primer_id').attr('value') == "-1" ) {
-      $('#samples_custom_primer_id').addClass('required');
+    if( $('#sample_set_custom_primer_name').attr('value') === '' && $('#sample_set_primer_id').attr('value') == "-1" ) {
+      $('#sample_set_custom_primer_id').addClass('required');
     }
     else {
-      $('#samples_custom_primer_id').removeClass('required');
+      $('#sample_set_custom_primer_id').removeClass('required');
     }
 
-    if( $('#samples_read_format').attr('value') == "Single read" ) {
+    if( $('#sample_set_read_format').attr('value') == "Single read" ) {
       $('#single_read').show();
       $('#paired_end').hide();
-      $('#samples_desired_read_length,#samples_alignment_start_position,#samples_alignment_end_position').addClass('required');
-      $('#samples_desired_read_length_1,#samples_alignment_start_position_1,#samples_alignment_end_position_1').removeClass('required');
-      $('#samples_desired_read_length_2,#samples_alignment_start_position_2,#samples_alignment_end_position_2').removeClass('required');
+      $('#sample_set_desired_read_length,#sample_set_alignment_start_position,#sample_set_alignment_end_position').addClass('required');
+      $('#sample_set_desired_read_length_1,#sample_set_alignment_start_position_1,#sample_set_alignment_end_position_1').removeClass('required');
+      $('#sample_set_desired_read_length_2,#sample_set_alignment_start_position_2,#sample_set_alignment_end_position_2').removeClass('required');
     }
-    else if( $('#samples_read_format').attr('value') == "Paired end" ) {
+    else if( $('#sample_set_read_format').attr('value') == "Paired end" ) {
       $('#single_read').hide();
       $('#paired_end').show();
-      $('#samples_desired_read_length,#samples_alignment_start_position,#samples_alignment_end_position').removeClass('required');
-      $('#samples_desired_read_length_1,#samples_alignment_start_position_1,#samples_alignment_end_position_1').addClass('required');
-      $('#samples_desired_read_length_2,#samples_alignment_start_position_2,#samples_alignment_end_position_2').addClass('required');
+      $('#sample_set_desired_read_length,#sample_set_alignment_start_position,#sample_set_alignment_end_position').removeClass('required');
+      $('#sample_set_desired_read_length_1,#sample_set_alignment_start_position_1,#sample_set_alignment_end_position_1').addClass('required');
+      $('#sample_set_desired_read_length_2,#sample_set_alignment_start_position_2,#sample_set_alignment_end_position_2').addClass('required');
       set_genomic_primer();
     }
     else {
@@ -164,17 +164,17 @@ $(document).ready(function() {
 
     if( $('.multiplexing_scheme_id').attr('value') === "" ) {
       $('#multiplexing').hide();
-      $('#samples_multiplexed_number').removeClass('required');
+      $('#sample_set_multiplexed_number').removeClass('required');
     }
     else {
       $('#multiplexing').show();
-      $('#samples_multiplexed_number').addClass('required');
+      $('#sample_set_multiplexed_number').addClass('required');
       set_genomic_primer();
     }
 
-    $('#samples_alignment_end_position').attr('value', $('#samples_desired_read_length').attr('value'));
-    $('#samples_alignment_end_position_1').attr('value', $('#samples_desired_read_length_1').attr('value'));
-    $('#samples_alignment_end_position_2').attr('value', $('#samples_desired_read_length_2').attr('value'));
+    $('#sample_set_alignment_end_position').attr('value', $('#sample_set_desired_read_length').attr('value'));
+    $('#sample_set_alignment_end_position_1').attr('value', $('#sample_set_desired_read_length_1').attr('value'));
+    $('#sample_set_alignment_end_position_2').attr('value', $('#sample_set_desired_read_length_2').attr('value'));
   }
 
   setup_fields();
