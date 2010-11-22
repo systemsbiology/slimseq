@@ -118,7 +118,8 @@ describe SampleMixture do
   
   it "should provide browsing categories" do
     # make sure there are no other schemes to get in the way
-    NamingScheme.destroy_all
+    NamingElement.delete_all
+    NamingScheme.delete_all
 
     scheme = create_naming_scheme(:name => "Mouse")
     strain = create_naming_element(:naming_scheme => scheme, :name => "Strain")
