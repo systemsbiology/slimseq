@@ -12,7 +12,7 @@
     </thead>
     <% (1..@number_of_samples).each do |m| %>
       <tr>
-        <td><%= text_field 'sample_set[sample_mixtures]', :name_on_tube, :size => 10, :index => m %></td>
+        <td><%= text_field 'sample_set[sample_mixtures]', :name_on_tube, :size => 10, :index => m, :class => "required" %></td>
 
         <td>
           <% if @multiplexing_scheme %>
@@ -22,14 +22,14 @@
             <% (1..@samples_per_mixture).each do |s| %>
               <tr>
                 <% if @naming_scheme == nil %>
-                  <td><%= text_field 'sample_set[sample_mixtures]', :sample_description, :size => 30, :index => m %></td>
+                  <td><%= text_field "sample_set[sample_mixtures][#{m}][samples]", :sample_description, :size => 30, :index => m, :class => "required sample_description" %></td>
                 <% else %>
                   <%= render :partial => 'samples/schemed_sample_description', :locals => { :sample_fields => sample_fields } %>
                 <% end %>
                 <td>
                   <% if @multiplexing_scheme %>
-                    Barcode: <%= collection_select "sample_mixtures[samples]", :multiplex_code_id, @multiplexing_scheme.multiplex_codes,
-                      :id, :name, {:prompty => true} %>
+                    Barcode: <%= collection_select "sample_set[sample_mixtures][#{m}][samples]", :multiplex_code_id, @multiplexing_scheme.multiplex_codes,
+                      :id, :name, {:prompt => true} %>
                   <% end %>
                 </td>
               </tr>
@@ -48,3 +48,9 @@
     <% end %>
   </table>
 </div>
+
+<script type="text/javascript">
+  $.validator.addClassRules('sample_description', {
+    noSpaces: true
+  });
+</script>

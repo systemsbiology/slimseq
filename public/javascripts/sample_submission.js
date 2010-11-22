@@ -1,4 +1,9 @@
 $(document).ready(function() {
+
+  $.validator.addMethod("noSpaces", function(value, element) {
+    return !/\s/.test(value);
+  }, "No spaces are allowed in this field");
+
   $(function(){
     $("form").formwizard({ 
       formPluginEnabled: true,
@@ -12,45 +17,58 @@ $(document).ready(function() {
       },
       inDuration : 200,
       outDuration: 200
-     }
-    );
+    });
   });
 
-  $('input[type=submit]').click(function() {
-    if( $('#1:visible,#2:visible').length > 0 ) {
-      var project_id, number_of_samples, multiplexing_scheme_id, naming_scheme_id, params;
-
-      project_id = $('#sample_set_project_id').attr('value');
-      naming_scheme_id = $('#sample_set_naming_scheme_id').attr('value');
-      number_of_samples = $('#sample_set_number').attr('value');
-      multiplexing_scheme_id = $('.step:visible > p > select.multiplexing_scheme_id').attr('value');
-      multiplexed_number = $('#sample_set_multiplexed_number').attr('value');
-
-      params = {};
-      if(project_id && project_id !== "") params["project_id"] = project_id;
-      if(naming_scheme_id && naming_scheme_id !== "") params["naming_scheme_id"] = naming_scheme_id;
-      if(number_of_samples) params["number_of_samples"] = number_of_samples;
-      if(multiplexing_scheme_id) {
-        params["multiplexing_scheme_id"] = multiplexing_scheme_id;
-        params["samples_per_mixture"] = multiplexed_number || 1;
-      }else {
-        params["samples_per_mixture"] = 1;
-      }
-
-      $.ajax({ // add a remote ajax call when moving next from the second step
-        url : "sample_mixture_fields", 
-        dataType : 'html',
-        data: {
-          sample_set: params
-        },
-        type: 'GET',
-        success : function(data){
-          $('#sample_mixture_fields').replaceWith(data);
-          return true; //return true to make the wizard move to the next step
-        }
-      });
+  // generate the sample mixture fields
+  //$('input[type=submit]').click(function() {
+  //});
+  $('form').bind('step_shown', function(event, data) {
+    if(data.currentStep == "samples") {
+      generate_mixture_form();
+    }
+    if(data.previousStep == "samples") {
+      remove_mixture_form();
     }
   });
+
+  function generate_mixture_form() {
+    var project_id, number_of_samples, multiplexing_scheme_id, naming_scheme_id, params;
+
+    project_id = $('#sample_set_project_id').attr('value');
+    naming_scheme_id = $('#sample_set_naming_scheme_id').attr('value');
+    number_of_samples = $('#sample_set_number').attr('value');
+    multiplexing_scheme_id = $('.step:visible > p > select.multiplexing_scheme_id').attr('value');
+    multiplexed_number = $('#sample_set_multiplexed_number').attr('value');
+
+    params = {};
+    if(project_id && project_id !== "") params["project_id"] = project_id;
+    if(naming_scheme_id && naming_scheme_id !== "") params["naming_scheme_id"] = naming_scheme_id;
+    if(number_of_samples) params["number_of_samples"] = number_of_samples;
+    if(multiplexing_scheme_id) {
+      params["multiplexing_scheme_id"] = multiplexing_scheme_id;
+      params["samples_per_mixture"] = multiplexed_number || 1;
+    }else {
+      params["samples_per_mixture"] = 1;
+    }
+
+    $.ajax({ // add a remote ajax call when moving next from the second step
+      url : "sample_mixture_fields", 
+      dataType : 'html',
+      data: {
+        sample_set: params
+      },
+      type: 'GET',
+      success : function(data){
+        $('#sample_mixture_fields').replaceWith(data);
+        return true; //return true to make the wizard move to the next step
+      }
+    });
+  }
+
+  function remove_mixture_form() {
+    $('#sample_mixture_fields').replaceWith('<div id="sample_mixture_fields"></div>');
+  }
 
   $('#sample_set_sample_prep_kit_id').change(function() {
     set_default_primer();
