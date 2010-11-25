@@ -237,12 +237,8 @@ class SampleMixture < ActiveRecord::Base
     conditions={:org=>org_name}
 
     real_readlen=real_read_length
-    if real_readlen <= 75
-      conditions[:read_length]=real_readlen
-      conditions[:align]='bowtie'
-    else
-      conditions[:align]='blat'
-    end
+    conditions[:read_length]=real_readlen
+    conditions[:align]='bowtie'
     
 #    raise "conditions: #{conditions.inspect}"
 
@@ -274,9 +270,12 @@ class SampleMixture < ActiveRecord::Base
 
   def real_read_length
     fcls=flow_cell_lanes()
-    return nil if fcls.size==0
+    raise "No flow cell lanes" if fcls.size==0    
+    raise "No ELAND output files" if fcls[0].eland_output_files.nil?
+
     export_file=fcls[0].eland_output_files.first
-    return nil if export_file.nil?
+    raise "No ELAND output files" if export_file.nil?
+
     len=0
     begin
       File.open export_file do |f|
@@ -289,10 +288,6 @@ class SampleMixture < ActiveRecord::Base
       len=0                     # I guess...
     end
     len
-  end
-
-  def rnaseq_aligner
-    real_read_length >= 50? 'blat' : 'bowtie'
   end
 
   def n_jobs
