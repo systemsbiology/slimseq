@@ -28,8 +28,8 @@ $(document).ready(function() {
   });
 
   function submissionError(data) {
-    $('#error_messages').replaceWith( '<p id="error_messages">' + JSON.parse(data.responseText).message + '</p>');
-    $('#error').show();
+    $('#ErrorExplanation>p').replaceWith( '<p>' + JSON.parse(data.responseText).message + '</p>');
+    $('#ErrorExplanation').show();
   }
 
   // generate the sample mixture fields

@@ -2,6 +2,7 @@ class SampleMixture < ActiveRecord::Base
   has_many :samples, :dependent => :destroy, :validate => false
   has_many :flow_cell_lanes
   has_many :rnaseq_pipelines, :dependent => :destroy, :validate => false
+  has_many :desired_reads
 
   belongs_to :user, :foreign_key => "submitted_by_id"
   belongs_to :project
@@ -18,9 +19,7 @@ class SampleMixture < ActiveRecord::Base
   }
 
   validates_presence_of :name_on_tube, :submission_date, :budget_number,
-    :desired_read_length, :project_id, :sample_prep_kit_id
-  validates_numericality_of :alignment_start_position, :greater_than_or_equal_to => 1
-  validates_numericality_of :alignment_end_position, :greater_than_or_equal_to => 1
+    :project_id, :sample_prep_kit_id
 
   acts_as_state_machine :initial => :submitted, :column => 'status'
   
@@ -56,7 +55,7 @@ class SampleMixture < ActiveRecord::Base
         :submission_date => submission_date}
     )
     if( s != nil && s.id != id )
-      errors.add("Duplicate submission date/name on tube")
+      errors.add(:name_on_tube, "has already been used for this date")
     end
   end
   

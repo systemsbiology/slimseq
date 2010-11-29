@@ -1,60 +1,143 @@
 #class SampleSet < ActiveRecord::BaseWithoutTable
 class SampleSet < ActiveRecord::Base
-  # use validatable gem since we're validating attributes that aren't fields
-  # in the sample_sets table (because they're transient)
-  include Validatable
-
-  attr_accessor :submission_date
-  attr_accessor :number_of_samples
-  attr_accessor :project_id
-  attr_accessor :naming_scheme_id
-  attr_accessor :sample_prep_kit_id
-  attr_accessor :budget_number
-  attr_accessor :reference_genome_id
-  attr_accessor :desired_read_length
-  attr_accessor :insert_size
-  attr_accessor :alignment_start_position
-  attr_accessor :alignment_end_position
-  attr_accessor :eland_parameter_set_id
-  attr_accessor :submitted_by
-  attr_accessor :multiplex_number
-  attr_accessor :submission_step
-  attr_accessor :platform_id
-
   has_many :sample_mixtures
-  belongs_to :platform
 
-  validates_presence_of :budget_number, :reference_genome_id,
-    :sample_prep_kit_id, :desired_read_length, :project_id
-  validates_presence_of :eland_parameter_set_id, :if => Proc.new{|sample_set| Platform.find_by_id(sample_set.platform_id).uses_gerald}
-  validates_presence_of :number_of_samples, :if => lambda { sample_mixtures.nil? || sample_mixtures.empty? }
-  validates_numericality_of :alignment_start_position
-  validates_numericality_of :alignment_end_position
-  validates_true_for :alignment_start_position,
-    :logic => lambda { alignment_start_position.to_i > 0 }
-  validates_true_for :alignment_end_position,
-    :logic => lambda { alignment_start_position.to_i > 0 }
-  
-  def self.new(attributes=nil)
-    mixture_attributes = attributes.delete("sample_mixtures_attributes") || attributes.delete("sample_mixtures") if attributes
-    deprecated_sample_attributes = attributes.delete("samples") if attributes
+  def self.parse_api(attributes)
+    unless attributes["submitted_by_id"]
+      attributes["submitted_by_id"] = User.find_by_login(attributes["submitted_by"]).id
+    end
 
-    parse_multi_field_date(attributes)
-    sample_set = super
+    shared_mixture_attributes = {
+      :budget_number => attributes["budget_number"],
+      :submission_date => parse_multi_field_date(attributes),
+      :eland_parameter_set_id => attributes["eland_parameter_set_id"],
+      :primer_id => attributes["primer_id"],
+      :project_id => attributes["project_id"],
+      :platform_id => attributes["platform_id"],
+      :submitted_by_id => attributes["submitted_by_id"]
+    }
+    shared_sample_attributes = {
+      :insert_size => attributes["insert_size"],
+      :reference_genome_id => attributes["reference_genome_id"],
+      :naming_scheme_id => attributes["naming_scheme_id"]
+    }
 
-    sample_set.alignment_start_position ||= 1
-    sample_set.submission_date ||= Date.today
+    if attributes["sample_prep_kit_id"].to_i > 0
+      shared_mixture_attributes = shared_mixture_attributes.merge(
+        :sample_prep_kit_id => attributes["sample_prep_kit_id"]
+      )
+    elsif attributes["custom_prep_kit_id"].to_i > 0
+      shared_mixture_attributes = shared_mixture_attributes.merge(
+        :sample_prep_kit_id => attributes["custom_prep_kit_id"]
+      )
+    elsif attributes["custom_prep_kit_name"].size > 0
+      shared_mixture_attributes = shared_mixture_attributes.merge(
+        :sample_prep_kit_id => SamplePrepKit.create(
+          :name => attributes["custom_prep_kit_name"],
+          :platform_id => attributes["platform_id"].id,
+          :custom => true )
+      )
+    end
 
-    # build empty sample mixtures and samples
-    # these will be replaced if sample mixture attributes have been provided
-    sample_set.build_blank_mixtures_and_samples
-    sample_set.submission_step = 1
+    if attributes["primer_id"].to_i > 0
+      shared_mixture_attributes = shared_mixture_attributes.merge(
+        :primer_id => attributes["primer_id"]
+      )
+    elsif attributes["custom_primer_id"].to_i > 0
+      shared_mixture_attributes = shared_mixture_attributes.merge(
+        :primer_id => attributes["custom_primer_id"]
+      )
+    elsif attributes["custom_primer_name"].size > 0
+      shared_mixture_attributes = shared_mixture_attributes.merge(
+        :primer_id => Primer.create(
+          :name => attributes["custom_primer_name"],
+          :platform_id => attributes["platform_id"].id,
+          :custom => true )
+      )
+    end
 
-    normalized_mixture_attributes = normalize_mixture_attributes(mixture_attributes, deprecated_sample_attributes)
-    sample_set.load_mixture_attributes(normalized_mixture_attributes)
+    case attributes["read_format"]
+    when "Single read"
+      reads_attributes = [
+        { :desired_read_length => attributes["desired_read_length"],
+          :alignment_start_position => attributes["alignment_start_position"],
+          :alignment_end_position => attributes["alignment_end_position"] }
+      ]
+    when "Paired end read"
+      reads_attributes = [
+        { :desired_read_length => attributes["desired_read_length_1"],
+          :alignment_start_position => attributes["alignment_start_position_1"],
+          :alignment_end_position => attributes["alignment_end_position_1"] },
+        { :desired_read_length => attributes["desired_read_length_2"],
+          :alignment_start_position => attributes["alignment_start_position_2"],
+          :alignment_end_position => attributes["alignment_end_position_2"] }
+      ]
+    end
 
+    sample_set = SampleSet.new
+    attributes["sample_mixtures"].sort.each do |index, mixture_attributes|
+      mixture_attributes = mixture_attributes.merge(shared_mixture_attributes)
+      samples_attributes = mixture_attributes.delete("samples")
+      sample_mixture = sample_set.sample_mixtures.build(mixture_attributes)
+
+      samples_attributes.sort.each do |index, sample_attributes|
+        sample_attributes = sample_attributes.merge(shared_sample_attributes)
+        sample_mixture.samples.build(sample_attributes)
+      end
+
+      reads_attributes.each do |read_attributes|
+        sample_mixture.desired_reads.build(read_attributes)
+      end
+    end
+    
     return sample_set
   end
+
+  def error_message
+    messages = Array.new
+    message = ""
+
+    sample_mixtures.each do |mixture|
+      unless mixture.valid?
+        mixture.samples.each do |sample|
+          if sample.valid?
+            mixture.errors.each do |error|
+              messages << "#{error[0].humanize} #{error[1]}"
+            end
+          else
+            sample.errors.each do |error|
+              messages << "#{error[0].humanize} #{error[1]}"
+            end 
+          end
+        end
+      end
+    end
+
+    message += messages.uniq.join(", ")
+
+    return message
+  end
+
+  #def self.new(attributes=nil)
+  #  mixture_attributes = attributes.delete("sample_mixtures_attributes") || attributes.delete("sample_mixtures") if attributes
+  #  deprecated_sample_attributes = attributes.delete("samples") if attributes
+
+  #  parse_multi_field_date(attributes)
+  #  sample_set = super
+
+  #  sample_set.alignment_start_position ||= 1
+  #  sample_set.submission_date ||= Date.today
+
+  #  # build empty sample mixtures and samples
+  #  # these will be replaced if sample mixture attributes have been provided
+  #  sample_set.build_blank_mixtures_and_samples
+  #  sample_set.submission_step = 1
+
+  #  normalized_mixture_attributes = normalize_mixture_attributes(mixture_attributes, deprecated_sample_attributes)
+  #  sample_set.load_mixture_attributes(normalized_mixture_attributes)
+
+  #  return sample_set
+  #end
 
   # needed this to get fields_for to work in the view
   def sample_mixtures_attributes=(attributes)
@@ -93,28 +176,28 @@ class SampleSet < ActiveRecord::Base
     return sample_mixtures
   end
 
-  def valid?
-    if submission_step == 2
-      # manually collect errors across sample_mixtures and samples, rather than use the automatic
-      # nested error reporting that isn't as user-friendly
-      sample_mixtures.each do |mixture|
-        unless mixture.valid?
-          error_message = mixture.errors.full_messages.join(",")
-          errors.add(:sample, error_message) unless errors.on(:sample) && errors.on(:sample).include?(error_message)
-        end
-        mixture.samples.each do |sample|
-          unless sample.valid?
-            error_message = sample.errors.full_messages.join(",")
-            errors.add(:sample, error_message) unless errors.on(:sample) && errors.on(:sample).include?(error_message)
-          end
-        end
-      end
-    end
+  #def valid?
+  #  if submission_step == 2
+  #    # manually collect errors across sample_mixtures and samples, rather than use the automatic
+  #    # nested error reporting that isn't as user-friendly
+  #    sample_mixtures.each do |mixture|
+  #      unless mixture.valid?
+  #        error_message = mixture.errors.full_messages.join(",")
+  #        errors.add(:sample, error_message) unless errors.on(:sample) && errors.on(:sample).include?(error_message)
+  #      end
+  #      mixture.samples.each do |sample|
+  #        unless sample.valid?
+  #          error_message = sample.errors.full_messages.join(",")
+  #          errors.add(:sample, error_message) unless errors.on(:sample) && errors.on(:sample).include?(error_message)
+  #        end
+  #      end
+  #    end
+  #  end
 
-    return false unless errors.empty?
+  #  return false unless errors.empty?
 
-    super
-  end
+  #  super
+  #end
 
   def save(perform_validation = true)
     return false if perform_validation && !valid?
@@ -122,17 +205,10 @@ class SampleSet < ActiveRecord::Base
     super
 
     # send notification email
+    project = Project.find_by_id(sample_mixtures.first.project_id)
     Notifier.deliver_sample_submission_notification(sample_mixtures, project && project.lab_group)
 
     return true
-  end
-
-  def project
-    return Project.find_by_id(project_id)
-  end
-
-  def naming_scheme
-    NamingScheme.find_by_id(naming_scheme_id)
   end
 
   private
@@ -220,11 +296,11 @@ class SampleSet < ActiveRecord::Base
     return unless attributes
 
     # assume multi-field if year field is present
-    if attributes["submission_date(1i)"]
-      attributes["submission_date"] = Date.new(
-        attributes.delete("submission_date(1i)").to_i,
-        attributes.delete("submission_date(2i)").to_i,
-        attributes.delete("submission_date(3i)").to_i
+    if attributes["date(1i)"]
+      return Date.new(
+        attributes.delete("date(1i)").to_i,
+        attributes.delete("date(2i)").to_i,
+        attributes.delete("date(3i)").to_i
       )
     end
   end

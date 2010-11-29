@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101118232601) do
+ActiveRecord::Schema.define(:version => 20101122182028) do
 
   create_table "bioanalyzer_runs", :force => true do |t|
     t.string   "name",         :limit => 100
@@ -102,6 +102,15 @@ ActiveRecord::Schema.define(:version => 20101118232601) do
 
   create_table "chips", :force => true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "desired_reads", :force => true do |t|
+    t.integer  "desired_read_length"
+    t.integer  "alignment_start_position"
+    t.integer  "alignment_end_position"
+    t.integer  "sample_mixture_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -521,12 +530,9 @@ ActiveRecord::Schema.define(:version => 20101118232601) do
     t.string   "sample_description"
     t.integer  "project_id"
     t.string   "budget_number"
-    t.integer  "desired_read_length"
-    t.integer  "alignment_start_position", :default => 1
-    t.integer  "alignment_end_position"
-    t.boolean  "control",                  :default => false
+    t.boolean  "control",                :default => false
     t.string   "comment"
-    t.boolean  "ready_for_sequencing",     :default => true
+    t.boolean  "ready_for_sequencing",   :default => true
     t.integer  "eland_parameter_set_id"
     t.date     "submission_date"
     t.string   "status"

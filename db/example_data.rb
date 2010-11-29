@@ -86,14 +86,17 @@ module FixtureReplacement
     m.sample_description = random_string(30)
     m.project = create_project
     m.submission_date = Date.today
-    m.desired_read_length = 36
-    m.alignment_start_position = 1
-    m.alignment_end_position = 36
     m.control = false
     m.comment = ""
     m.status = "submitted"
     m.budget_number = 1234
     m.sample_prep_kit = create_sample_prep_kit
+  end
+
+  attributes_for :desired_read do |r|
+    r.desired_read_length = 36
+    r.alignment_start_position = 1
+    r.alignment_end_position = 36
   end
 
   attributes_for :sequencing_run do |sr|
