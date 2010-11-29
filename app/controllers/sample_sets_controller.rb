@@ -6,27 +6,13 @@ class SampleSetsController < ApplicationController
   end
 
   def create
-    respond_to do |format|
-      format.html do
-        @sample_set = SampleSet.parse_form( params[:sample_set].merge(:submitted_by_id => current_user.id) )
+    @sample_set = SampleSet.parse_api( params[:sample_set].merge(:submitted_by_id => current_user.id) )
 
-        if @sample_set.save
-          flash[:notice] = 'Samples were successfully created.'
-          redirect_to(samples_url)
-        else
-          render :action => 'new'
-        end
-      end
-      format.json do
-        @sample_set = SampleSet.parse_api( params[:sample_set].merge(:submitted_by_id => current_user.id) )
-
-        if @sample_set.save
-          render :json => {:message => "Samples recorded"}
-        else
-          error_text = @sample_set.error_message
-          render :json => {:message => error_text}, :status => :unprocessable_entity
-        end
-      end
+    if @sample_set.save
+      render :json => {:message => "Samples recorded"}
+    else
+      error_text = @sample_set.error_message
+      render :json => {:message => error_text}, :status => :unprocessable_entity
     end
   end
 

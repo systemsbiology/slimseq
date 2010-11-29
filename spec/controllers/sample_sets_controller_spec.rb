@@ -38,7 +38,7 @@ describe SampleSetsController do
   describe "#create" do
     before(:each) do
       @sample_set = mock_model(SampleSet)
-      SampleSet.stub!(:parse_form).and_return(@sample_set)
+      SampleSet.stub!(:parse_api).and_return(@sample_set)
     end
 
     context "with a valid sample set" do
@@ -51,7 +51,7 @@ describe SampleSetsController do
       end
   
       it "should make a new sample set from the form parameters" do
-        SampleSet.should_receive(:parse_form).and_return(@sample_set)
+        SampleSet.should_receive(:parse_api).and_return(@sample_set)
         do_post
       end
       
@@ -60,9 +60,9 @@ describe SampleSetsController do
         do_post
       end
 
-      it "should redirect to the list of samples" do
+      it "" do
         do_post
-        response.should redirect_to(samples_url)
+        response.status.should == "200 OK"
       end
       
     end
@@ -70,6 +70,7 @@ describe SampleSetsController do
     context "with an invalid sample set" do
       before(:each) do
         @sample_set.stub!(:save).and_return(false)
+        @sample_set.stub!(:error_message).and_return("Error with sample set")
       end
 
       def do_post
@@ -81,50 +82,10 @@ describe SampleSetsController do
         do_post
       end
 
-      it "re-renders the 'new' template" do
+      it "provides an unprocessable response with an error message" do
         do_post
-        response.should render_template('new')
+        response.status.should == "422 Unprocessable Entity"
       end
-    end
-  end
-
-  describe "handling POST /sample_sets with a JSON mime type" do
-    it "should create the samples when valid parameters are given" do
-      sample_set = mock_model(SampleSet)
-      SampleSet.should_receive(:parse_api).with(
-        {"naming_scheme_id" => "12",
-        "sample_prep_kit_id" => "4",
-        "reference_genome_id" => "7",
-        "project_id" => "43",
-        "alignment_start_position" => "1",
-        "alignment_end_position" => "36",
-        "desired_read_length" => "36",
-        "eland_parameter_set_id" => "3",
-        "budget_number" => "12345678",
-        "submitted_by" => "jsmith",
-        "samples" => [
-          { "name_on_tube" => "RM11-1a pbp1::URA3", "Sample Key" => "YO 1" },
-          { "name_on_tube" => "DBVPG 1373", "Sample Key" => "YO 2" },
-        ]}
-      ).and_return(sample_set)
-      sample_set.should_receive(:save).and_return(true)
-
-      request.env["HTTP_ACCEPT"] = "application/json"
-
-      post :create, :sample_set => {
-        "naming_scheme_id" => "12",
-        "sample_prep_kit_id" => "4",
-        "reference_genome_id" => "7",
-        "project_id" => "43",
-        "alignment_start_position" => "1",
-        "alignment_end_position" => "36",
-        "desired_read_length" => "36",
-        "eland_parameter_set_id" => "3",
-        "budget_number" => "12345678",
-        "samples" => [
-          { "name_on_tube" => "RM11-1a pbp1::URA3", "Sample Key" => "YO 1" },
-          { "name_on_tube" => "DBVPG 1373", "Sample Key" => "YO 2" }
-        ] }
     end
   end
 
