@@ -63,7 +63,9 @@ class SampleMixture < ActiveRecord::Base
     if samples.size > 1
       self.sample_description = "#{samples.size} multiplexed samples"
     else
-      self.sample_description = samples.first && samples.first.sample_description
+      if samples.first && samples.first.sample_description
+        self.sample_description = samples.first.sample_description
+      end
     end
 
     super
