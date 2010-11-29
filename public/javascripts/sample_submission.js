@@ -1,5 +1,8 @@
 $(document).ready(function() {
 
+  $('#js_enabled').show();
+  $('#js_disabled').hide();
+
   $.validator.addMethod("noSpaces", function(value, element) {
     return !/\s/.test(value);
   }, "No spaces are allowed in this field");
@@ -10,15 +13,24 @@ $(document).ready(function() {
       validationEnabled: true,
       focusFirstInput : true,
       formOptions :{
-        success: function(data){$("#status").fadeTo(500,1,function(){ $(this).html("You are now registered!").fadeTo(5000, 0); })},
+        success: function(data){
+          $('#error').hide();
+          $('form').hide();
+          $('#success').show();
+        },
+        error: function(data) { submissionError(data); },
         beforeSubmit: function(data){$("#data").html("data sent to the server: " + $.param(data));},
         dataType: 'json',
-        resetForm: true
       },
       inDuration : 200,
       outDuration: 200
     });
   });
+
+  function submissionError(data) {
+    $('#error_messages').replaceWith( '<p id="error_messages">' + JSON.parse(data.responseText).message + '</p>');
+    $('#error').show();
+  }
 
   // generate the sample mixture fields
   //$('input[type=submit]').click(function() {
