@@ -12,6 +12,8 @@ class SampleMixture < ActiveRecord::Base
   belongs_to :primer
   belongs_to :platform
 
+  accepts_nested_attributes_for :desired_reads
+
   named_scope :accessible_to_user, lambda {|*args|
     { :include => :project,
       :conditions => [ "projects.lab_group_id IN (?) AND control = ?",

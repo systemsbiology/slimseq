@@ -11,11 +11,11 @@
   <%= collection_select 'sample_mixture', 'submitted_by_id',
     @users, 'id', 'full_name', {:prompt => true} %></p>
 
+  <p><%= mixture_form.label :platform_id, 'Platform' %><br/>
+  <%= mixture_form.select :platform_id, options_from_collection_for_select(Platform.all, :id, :name), {}, :class => "link" %></p>
+
   <p><label for="sample_mixture_submission_date">Date</label><br/>
   <%= date_select 'sample_mixture', 'submission_date' %></p>
-
-  <p><label for="sample_mixture_name_on_tube">Name On Tube</label><br/>
-  <%= text_field 'sample_mixture', 'name_on_tube' %></p>
 
   <p><label for="sample_mixture_project_id">Project</label><br>
   <select id="sample_mixture_project_id" name="sample[0][project_id]">
@@ -25,19 +25,28 @@
   <%= collection_select 'sample_mixture', 'sample_prep_kit_id',
     @sample_prep_kits, 'id', 'name', {:prompt => true} %></p>
 
-  <p><label for="sample_mixture_desired_read_length">Desired Number of Cycles</label><br/>
-  <%= text_field 'sample_mixture', 'desired_read_length' %></p>
+  <p><%= mixture_form.label :primer_id, 'Primer' %><br/>
+  <%= mixture_form.collection_select :primer_id,
+    Primer.all, :id, :name, {:prompt => true}, :class => "required" %></p>
 
-  <p>Alignment bases</p>
-  <p><label for="sample_mixture_alignment_start_position">Start</label>
-    <%= text_field 'sample_mixture', 'alignment_start_position', :size => 4,
-      :default => 1 %> 
+  <% read_number = 1 %>
+  <% mixture_form.fields_for :desired_reads do |read_form| %>
+    <div class="field_grouping">
+      <p>Read <%= read_number %></p>
+      <p><%= read_form.label :desired_read_length, "Desired Number of Cycles" %><br/>
+      <%= read_form.text_field :desired_read_length %></p>
 
-  <label for="sample_mixture_alignment_end_position">End</label>
-  <%= text_field 'sample_mixture', 'alignment_end_position', :size => 4 %></p>
+      <p>Alignment bases</p>
+      <p><%= read_form.label :alignment_start_position, "Start" %><br/>
+      <%= read_form.text_field :alignment_start_position, :size => 4,
+        :default => 1 %> 
 
-  <%= observe_field :sample_mixture_desired_read_length,
-    :function => "$('sample_mixture_alignment_end_position').value = value;" %>
+      <p><%= read_form.label :alignment_end_position, "End" %><br/>
+      <%= read_form.text_field :alignment_end_position, :size => 4 %></p>
+    </div>
+
+    <% read_number += 1 %>
+  <% end %>
   
   <p><label for="sample_mixture_budget_number">Budget Number</label><br/>
   <%= text_field 'sample_mixture', 'budget_number' %></p>
@@ -51,8 +60,8 @@
   <%= mixture_form.collection_select 'eland_parameter_set_id',
     @eland_parameter_sets, 'id', 'info', {:prompt => "Not specified - Using SLIMseq defaults"} %><br/>
       
-  <p><label for="sample_mixture_comment">Sample Comment</label><br/>
-  <%= text_field 'sample_mixture', 'comment' %></p>
+  <p><label for="sample_mixture_name_on_tube">Name On Tube</label><br/>
+  <%= text_field 'sample_mixture', 'name_on_tube' %></p>
 
   <% @samples = @sample_mixture.samples %>
   <% mixture_form.fields_for :samples do |sample_fields| %>
@@ -113,6 +122,9 @@
       <% end  %>
     </p>
   <% end %>
+
+  <p><label for="sample_mixture_comment">Sample Comment</label><br/>
+  <%= text_field 'sample_mixture', 'comment' %></p>
 
   <%= submit_tag 'Update' %>
 <% end %>
