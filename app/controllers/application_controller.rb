@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
     rescue_from 'ActionController::UnknownAction', :with => :unknown_action
     rescue_from 'ActionController::MethodNotAllowed', :with => :invalid_method
     rescue_from 'ActiveSupport::JSON::ParseError', :with => :bad_json
+    rescue_from 'StandardError', :with => :standard_error
   end
 
   # Exception Notifier plugin
@@ -36,6 +37,12 @@ class ApplicationController < ActionController::Base
 
     def unknown_action(exception)
       error_with_status(exception, :not_found, 404)
+    end
+
+    def standard_error(exception)
+      if exception.message == "Invalid JSON string"
+        error_with_status(exception, :unprocessable_entity, 500)
+      end
     end
 
     def error_with_status(exception, status, html_error_file)
