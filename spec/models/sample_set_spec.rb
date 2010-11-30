@@ -7,10 +7,11 @@ describe SampleSet do
     @naming_element = create_naming_element(:naming_scheme => @naming_scheme, :name => "Sample Key")
     @yo1 = create_naming_term(:naming_element => @naming_element, :term => "YO 1", :abbreviated_term => "YO1")
     @yo2 = create_naming_term(:naming_element => @naming_element, :term => "YO 2", :abbreviated_term => "YO2")
-    @user = mock_model(User)
+    @user = mock_model(User, :login => "bsmith")
     User.stub!(:find_by_login).and_return(@user)
     @platform = mock_model(Platform, :uses_gerald => true)
     Platform.stub!(:find_by_id).and_return(@platform)
+    @primer = create_primer
   end
 
   #describe "making a new sample set with JSON-style attributes" do
@@ -93,7 +94,7 @@ describe SampleSet do
               "next_step" => "samples",
               "number" => "2",
               "platform_id" => "2",
-              "primer_id" => "4",
+              "primer_id" => @primer.id,
               "project_id" => "1",
               "read_format" => "Single read",
               "reference_genome_id" => "1",
@@ -109,7 +110,8 @@ describe SampleSet do
                   }
                 }
               },
-              "sample_prep_kit_id" => "1"
+              "sample_prep_kit_id" => "1",
+              "submitted_by_id" => @user.id
             }
           )
           sample_set.should be_valid
@@ -118,7 +120,7 @@ describe SampleSet do
             "budget_number" => "12345678",
             "eland_parameter_set_id" => 3,
             "platform_id" => 2,
-            "primer_id" => 4,
+            "primer_id" => @primer.id,
             "project_id" => 1,
             "sample_prep_kit_id" => 1,
             "submitted_by_id" => @user.id,
@@ -176,9 +178,9 @@ describe SampleSet do
           "eland_parameter_set_id" => "3",
           "budget_number" => "12345678",
           "insert_size" => "100",
-          "submitted_by" => "bmarzolf",
+          "submitted_by" => @user.login,
           "read_format" => "Single read",
-          "primer_id" => "1",
+          "primer_id" => @primer.id,
           "platform_id" => "1",
           "sample_mixtures" => [
             { "name_on_tube" => "RM11-1a pbp1::URA3",

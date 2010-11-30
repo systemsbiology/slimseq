@@ -9,17 +9,7 @@ class SampleSet < ActiveRecord::Base
   def self.parse_api(attributes)
     sample_set = SampleSet.new
 
-    required_keys = [
-      "budget_number", "eland_parameter_set_id", "primer_id", "project_id", "platform_id",
-      "insert_size", "reference_genome_id", "naming_scheme_id", "read_format", "sample_mixtures"
-    ]
-    required_keys.each do |key|
-      unless attributes.has_key? key
-        sample_set.errors.add_to_base "#{key.humanize} must be provided"
-      end
-    end
-
-    unless attributes["submitted_by_id"]
+    if attributes["submitted_by"]
       attributes["submitted_by_id"] = User.find_by_login(attributes["submitted_by"]).id
     end
 
@@ -72,14 +62,7 @@ class SampleSet < ActiveRecord::Base
       )
     end
 
-    case attributes["read_format"]
-    when "Single read"
-      reads_attributes = [
-        { :desired_read_length => attributes["desired_read_length"],
-          :alignment_start_position => attributes["alignment_start_position"],
-          :alignment_end_position => attributes["alignment_end_position"] }
-      ]
-    when "Paired end read"
+    if attributes["read_format"] == "Paired end read"
       reads_attributes = [
         { :desired_read_length => attributes["desired_read_length_1"],
           :alignment_start_position => attributes["alignment_start_position_1"],
@@ -88,6 +71,12 @@ class SampleSet < ActiveRecord::Base
           :alignment_start_position => attributes["alignment_start_position_2"],
           :alignment_end_position => attributes["alignment_end_position_2"] }
       ]
+    else
+      reads_attributes = [
+        { :desired_read_length => attributes["desired_read_length"],
+          :alignment_start_position => attributes["alignment_start_position"],
+          :alignment_end_position => attributes["alignment_end_position"] }
+      ]
     end
 
     # normalize sample_mixtures
@@ -95,7 +84,7 @@ class SampleSet < ActiveRecord::Base
       attributes["sample_mixtures"] = hash_values_sorted_by_keys(attributes["sample_mixtures"])
     end
 
-    return SampleSet.new unless attributes["sample_mixtures"]
+    return sample_set unless attributes["sample_mixtures"]
 
     attributes["sample_mixtures"].each do |mixture_attributes|
       mixture_attributes = mixture_attributes.merge(shared_mixture_attributes)

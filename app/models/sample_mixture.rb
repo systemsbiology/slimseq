@@ -9,6 +9,8 @@ class SampleMixture < ActiveRecord::Base
   belongs_to :eland_parameter_set
   belongs_to :sample_set
   belongs_to :sample_prep_kit
+  belongs_to :primer
+  belongs_to :platform
 
   named_scope :accessible_to_user, lambda {|*args|
     { :include => :project,
@@ -19,7 +21,7 @@ class SampleMixture < ActiveRecord::Base
   }
 
   validates_presence_of :name_on_tube, :submission_date, :budget_number,
-    :project_id, :sample_prep_kit_id
+    :project_id, :sample_prep_kit_id, :desired_reads, :primer, :platform
 
   acts_as_state_machine :initial => :submitted, :column => 'status'
   

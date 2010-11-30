@@ -91,6 +91,9 @@ module FixtureReplacement
     m.status = "submitted"
     m.budget_number = 1234
     m.sample_prep_kit = create_sample_prep_kit
+    m.primer = create_primer
+    m.platform = create_platform
+    m.desired_reads = [create_desired_read]
   end
 
   attributes_for :desired_read do |r|
@@ -158,5 +161,9 @@ module FixtureReplacement
 
   attributes_for :platform do |p|
     p.name = random_string(8)
+  end
+
+  attributes_for :primer do |p|
+    p.name = random_string(15)
   end
 end
