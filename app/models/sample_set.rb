@@ -4,6 +4,8 @@ class SampleSet < ActiveRecord::Base
 
   after_save :send_notification
 
+  validate :at_least_one_sample_mixture
+
   def self.parse_api(attributes)
     sample_set = SampleSet.new
 
@@ -44,7 +46,7 @@ class SampleSet < ActiveRecord::Base
       shared_mixture_attributes = shared_mixture_attributes.merge(
         :sample_prep_kit_id => attributes["custom_prep_kit_id"]
       )
-    elsif attributes["custom_prep_kit_name"].size > 0
+    elsif attributes["custom_prep_kit_name"] && attributes["custom_prep_kit_name"].size > 0
       shared_mixture_attributes = shared_mixture_attributes.merge(
         :sample_prep_kit_id => SamplePrepKit.create(
           :name => attributes["custom_prep_kit_name"],
@@ -93,6 +95,8 @@ class SampleSet < ActiveRecord::Base
       attributes["sample_mixtures"] = hash_values_sorted_by_keys(attributes["sample_mixtures"])
     end
 
+    return SampleSet.new unless attributes["sample_mixtures"]
+
     attributes["sample_mixtures"].each do |mixture_attributes|
       mixture_attributes = mixture_attributes.merge(shared_mixture_attributes)
       samples_attributes = mixture_attributes.delete("samples")
@@ -133,7 +137,7 @@ class SampleSet < ActiveRecord::Base
   end
 
   def error_message
-    messages = Array.new
+    messages = errors.full_messages
     message = ""
 
     sample_mixtures.each do |mixture|
@@ -196,5 +200,9 @@ class SampleSet < ActiveRecord::Base
         attributes.delete("date(3i)").to_i
       )
     end
+  end
+
+  def at_least_one_sample_mixture
+    errors.add(:sample_mixtures, "must be provided") unless sample_mixtures.size >= 1
   end
 end
