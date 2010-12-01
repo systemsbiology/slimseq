@@ -27,6 +27,9 @@
         <%= read_form.text_field :number_of_cycles, :style => "width:2em;" -%>
       </td>
     <% end -%>
+    <% if lane_form.object.actual_reads.size == 1 %>
+      <td></td>
+    <% end %>
     <td><%= lane_form.text_field :comment %></td>
   <% end %>
   </tr>
