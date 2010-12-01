@@ -9,7 +9,7 @@ describe SampleSet do
     @yo2 = create_naming_term(:naming_element => @naming_element, :term => "YO 2", :abbreviated_term => "YO2")
     @user = mock_model(User, :login => "bsmith")
     User.stub!(:find_by_login).and_return(@user)
-    @platform = mock_model(Platform, :uses_gerald => true)
+    @platform = create_platform
     Platform.stub!(:find_by_id).and_return(@platform)
     @primer = create_primer
   end
@@ -93,7 +93,7 @@ describe SampleSet do
               "naming_scheme_id" => @naming_scheme.id,
               "next_step" => "samples",
               "number" => "2",
-              "platform_id" => "2",
+              "platform_id" => @platform.id,
               "primer_id" => @primer.id,
               "project_id" => "1",
               "read_format" => "Single read",
@@ -114,12 +114,13 @@ describe SampleSet do
               "submitted_by_id" => @user.id
             }
           )
+          debugger
           sample_set.should be_valid
           
           shared_mixture_attributes = {
             "budget_number" => "12345678",
             "eland_parameter_set_id" => 3,
-            "platform_id" => 2,
+            "platform_id" => @platform.id,
             "primer_id" => @primer.id,
             "project_id" => 1,
             "sample_prep_kit_id" => 1,
@@ -181,7 +182,7 @@ describe SampleSet do
           "submitted_by" => @user.login,
           "read_format" => "Single read",
           "primer_id" => @primer.id,
-          "platform_id" => "1",
+          "platform_id" => @platform.id,
           "sample_mixtures" => [
             { "name_on_tube" => "RM11-1a pbp1::URA3",
               "sample_description" => "YO1",
