@@ -8,7 +8,7 @@ class PipelineRunsController < ApplicationController
     @pipeline_run = PipelineRun.new(
       :base_directory => params[:run_folder],
       :summary_files => params[:summary_files],
-      :output_files => params[:eland_output_files]
+      :eland_output_files => params[:eland_output_files]
     )
     
     respond_to do |format|
