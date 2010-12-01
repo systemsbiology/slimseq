@@ -20,7 +20,7 @@ describe SampleMixture do
     end
 
     it "should provide a seed length of 17 if the eland seed length is 25 but the desired read length is 18" do
-      sample_mixture = create_sample_mixture(:desired_read_length => 18)
+      sample_mixture = create_sample_mixture(:desired_reads => [create_desired_read(:desired_read_length => 18)])
       sample_mixture.eland_seed_length.should == 17
     end
   end

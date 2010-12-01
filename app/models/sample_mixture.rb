@@ -109,6 +109,7 @@ class SampleMixture < ActiveRecord::Base
       max_length = gerald_defaults.eland_seed_length
     end
 
+    desired_read_length = desired_reads.first.desired_read_length
     if desired_read_length > max_length
       return max_length
     else
