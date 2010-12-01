@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe "Project" do
-  fixtures :projects, :samples, :charge_sets, :projects
+  fixtures :site_config, :projects, :samples, :charge_sets, :projects
 
   it "should provide a hash of summary attributes" do
     project = create_project(:name => "Fungus Project")

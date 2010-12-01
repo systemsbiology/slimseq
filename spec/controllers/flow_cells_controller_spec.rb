@@ -103,7 +103,10 @@ describe FlowCellsController do
       FlowCell.should_receive(:new).and_return(@flow_cell)
       @flow_cell_lanes = [mock_model(FlowCellLane),mock_model(FlowCellLane)]
       @flow_cell.stub!(:flow_cell_lanes).and_return(@flow_cell_lanes)
-      @flow_cell_lanes.stub!(:build)
+      @flow_cell_lane = mock_model(FlowCellLane)
+      @actual_reads = mock("Actual Reads Array", :build => true)
+      @flow_cell_lane.stub!(:actual_reads).and_return(@actual_reads)
+      @flow_cell_lanes.stub!(:build).and_return(@flow_cell_lane)
     end
   
     it "should expose a new flow_cell as @flow_cell" do
