@@ -114,7 +114,6 @@ describe SampleSet do
               "submitted_by_id" => @user.id
             }
           )
-          debugger
           sample_set.should be_valid
           
           shared_mixture_attributes = {
