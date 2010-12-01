@@ -522,7 +522,7 @@ class Sample < ActiveRecord::Base
     end
 
     read_array = Array.new
-    desired_reads.each do |read|
+    sample_mixture.desired_reads.each do |read|
       read_array << {
         :desired_read_length => read.desired_read_length,
         :alignment_start_position => read.alignment_start_position,

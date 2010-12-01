@@ -478,11 +478,9 @@ describe Sample do
       :project => project,
       :submission_date => Date.today,
       :sample_prep_kit => sample_prep_kit,
-      :desired_read_length => 36,
-      :alignment_start_position => 2,
-      :alignment_end_position => 30,
       :budget_number => "1234",
-      :comment => "failed"
+      :comment => "failed",
+      :desired_reads => [create_desired_read(:alignment_start_position => 2, :alignment_end_position => 30)]
     )
     sample = create_sample(
       :sample_mixture => sample_mixture,
@@ -511,9 +509,11 @@ describe Sample do
       :sample_prep_kit_restriction_enzyme => "DpnII",
       :sample_prep_kit_uri => "http://example.com/sample_prep_kits/#{sample_prep_kit.id}",
       :insert_size => 250,
-      :desired_number_of_cycles => 36,
-      :alignment_start_position => 2,
-      :alignment_end_position => 30,
+      :desired_reads => [{
+        :desired_read_length => 36,
+        :alignment_start_position => 2,
+        :alignment_end_position => 30,
+      }],
       :reference_genome_id => reference_genome.id,
       :reference_genome => {
         :name => "Yeast 5.0",
