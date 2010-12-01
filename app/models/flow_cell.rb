@@ -6,6 +6,8 @@ class FlowCell < ActiveRecord::Base
   validates_presence_of :name, :date_generated
   validates_uniqueness_of :name
 
+  accepts_nested_attributes_for :flow_cell_lanes
+
   acts_as_state_machine :initial => :clustered, :column => 'status'
   
   state :clustered, :after => :unsequence_lanes
@@ -24,21 +26,21 @@ class FlowCell < ActiveRecord::Base
     transitions :from => :sequenced, :to => :completed    
   end
 
-  def new_lane_attributes=(lane_attributes)
-    lane_attributes.each do |attributes|
-      flow_cell_lanes.build(attributes)
-    end
-  end
-  
-  def existing_lane_attributes=(lane_attributes)
-    flow_cell_lanes.reject(&:new_record?).each do |lane|
-      attributes = lane_attributes[lane.id.to_s]
-      if attributes
-        lane.attributes = attributes
-        lane.save
-      end
-    end
-  end
+  #def new_lane_attributes=(lane_attributes)
+  #  lane_attributes.each do |attributes|
+  #    flow_cell_lanes.build(attributes)
+  #  end
+  #end
+  #
+  #def existing_lane_attributes=(lane_attributes)
+  #  flow_cell_lanes.reject(&:new_record?).each do |lane|
+  #    attributes = lane_attributes[lane.id.to_s]
+  #    if attributes
+  #      lane.attributes = attributes
+  #      lane.save
+  #    end
+  #  end
+  #end
   
   def summary_hash
     return {

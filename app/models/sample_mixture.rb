@@ -97,7 +97,8 @@ class SampleMixture < ActiveRecord::Base
   end
 
   def short_and_long_name_with_cycles
-    "#{name_on_tube} (#{sample_description}) - #{desired_read_length} cycles"
+    cycles = desired_reads.collect{|r| r.desired_read_length.to_s}.join("/")
+    "#{name_on_tube} (#{sample_description}) - #{cycles} cycles"
   end
   
   def eland_seed_length

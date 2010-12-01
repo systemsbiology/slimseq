@@ -166,4 +166,9 @@ module FixtureReplacement
   attributes_for :primer do |p|
     p.name = random_string(15)
   end
+
+  attributes_for :actual_read do |r|
+    r.read_order = 1
+    r.number_of_cycles = 50
+  end
 end

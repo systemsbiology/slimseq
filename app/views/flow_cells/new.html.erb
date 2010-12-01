@@ -13,7 +13,7 @@
   <p><label>Flow Cell Comment</label><br>
      <%= f.text_field :comment %></p>
      
-     <%= render :partial => "lanes", :locals => {:lanes => @flow_cell.flow_cell_lanes} %>
+     <%= render :partial => "lanes", :locals => {:lanes => @flow_cell.flow_cell_lanes, :flow_cell_form => f} %>
 
    <%= f.submit "Create" %>
 <% end %>

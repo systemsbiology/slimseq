@@ -520,6 +520,15 @@ class Sample < ActiveRecord::Base
         st.naming_element.name => st.text
       }
     end
+
+    read_array = Array.new
+    desired_reads.each do |read|
+      read_array << {
+        :desired_read_length => read.desired_read_length,
+        :alignment_start_position => read.alignment_start_position,
+        :alignment_end_position => read.alignment_end_position
+      }
+    end
     
     return {
       :id => id,
@@ -533,9 +542,7 @@ class Sample < ActiveRecord::Base
       :sample_prep_kit_restriction_enzyme => sample_mixture.sample_prep_kit.restriction_enzyme,
       :sample_prep_kit_uri => "#{SiteConfig.site_url}/sample_prep_kits/#{sample_mixture.sample_prep_kit.id}",
       :insert_size => insert_size,
-      :desired_number_of_cycles => sample_mixture.desired_read_length,
-      :alignment_start_position => sample_mixture.alignment_start_position,
-      :alignment_end_position => sample_mixture.alignment_end_position,
+      :desired_reads => read_array,
       :reference_genome_id => reference_genome_id,
       :reference_genome => {
         :name => reference_genome.name,

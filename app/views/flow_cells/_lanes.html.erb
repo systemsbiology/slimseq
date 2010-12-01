@@ -1,21 +1,32 @@
 <table class="nonsortable">
   <tr>
-    <th>Lane Number</th>
-    <th>Sample</th>
-    <th>Starting Concentration (ng/mL)</th>
-    <th>Loaded Concentration (pM)</th>
-    <th>Number of cycles</th>
-    <th>Lane Comment</th>
+    <th rowspan="2">Lane Number</th>
+    <th rowspan="2">Sample</th>
+    <th rowspan="2">Starting Concentration (ng/mL)</th>
+    <th rowspan="2">Loaded Concentration (pM)</th>
+    <th colspan="2">
+      Cycles per Read
+    </th>
+    <th rowspan="2">Lane Comment</th>
+  </tr>
+  <tr>
+    <th>1</th>
+    <th>2</th>
   </tr>
 <% for lane in lanes %>
   <tr>
-  <% form.fields_for "new_lane_attributes[]", lane do |lane_form| %>
+  <% flow_cell_form.fields_for :flow_cell_lanes, lane do |lane_form| %>
     <td><%=h lane.lane_number %>
         <%= lane_form.hidden_field :lane_number %></td>
     <td><%= lane_form.collection_select :sample_mixture_id, @sample_mixtures, :id, :short_and_long_name_with_cycles %></td>
     <td><%= lane_form.text_field :starting_concentration, :size => 10 %></td>
     <td><%= lane_form.text_field :loaded_concentration, :size => 10 %></td>
-    <td><%= lane_form.text_field :number_of_cycles, :size => 10 %></td>
+    <% lane_form.fields_for :actual_reads do |read_form| -%>
+      <td>
+        <%= read_form.hidden_field :read_order -%>
+        <%= read_form.text_field :number_of_cycles, :style => "width:2em;" -%>
+      </td>
+    <% end -%>
     <td><%= lane_form.text_field :comment %></td>
   <% end %>
   </tr>

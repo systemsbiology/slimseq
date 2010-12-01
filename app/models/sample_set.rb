@@ -62,18 +62,21 @@ class SampleSet < ActiveRecord::Base
       )
     end
 
-    if attributes["read_format"] == "Paired end read"
+    if attributes["read_format"] == "Paired end"
       reads_attributes = [
-        { :desired_read_length => attributes["desired_read_length_1"],
+        { :read_order => 1,
+          :desired_read_length => attributes["desired_read_length_1"],
           :alignment_start_position => attributes["alignment_start_position_1"],
           :alignment_end_position => attributes["alignment_end_position_1"] },
-        { :desired_read_length => attributes["desired_read_length_2"],
+        { :read_order => 2,
+          :desired_read_length => attributes["desired_read_length_2"],
           :alignment_start_position => attributes["alignment_start_position_2"],
           :alignment_end_position => attributes["alignment_end_position_2"] }
       ]
     else
       reads_attributes = [
-        { :desired_read_length => attributes["desired_read_length"],
+        { :read_order => 1,
+          :desired_read_length => attributes["desired_read_length"],
           :alignment_start_position => attributes["alignment_start_position"],
           :alignment_end_position => attributes["alignment_end_position"] }
       ]
@@ -102,6 +105,7 @@ class SampleSet < ActiveRecord::Base
 
           sample_mixture.samples.build(sample_attributes)
         end
+
       else
         sample_attributes = shared_sample_attributes
 

@@ -9,7 +9,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101122182028) do
+ActiveRecord::Schema.define(:version => 20101130194053) do
+
+  create_table "actual_reads", :force => true do |t|
+    t.integer  "read_order"
+    t.integer  "number_of_cycles"
+    t.integer  "flow_cell_lane_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "bioanalyzer_runs", :force => true do |t|
     t.string   "name",         :limit => 100
@@ -113,6 +121,7 @@ ActiveRecord::Schema.define(:version => 20101122182028) do
     t.integer  "sample_mixture_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "read_order",               :default => 1
   end
 
   create_table "eland_parameter_sets", :force => true do |t|
@@ -161,7 +170,6 @@ ActiveRecord::Schema.define(:version => 20101122182028) do
     t.float    "percent_pass_filter_clusters"
     t.float    "percent_align"
     t.float    "percent_error"
-    t.integer  "number_of_cycles"
     t.integer  "sample_mixture_id"
   end
 

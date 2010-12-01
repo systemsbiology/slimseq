@@ -154,102 +154,140 @@ describe FlowCellLane do
 
   it "should use the provided number of cycles" do
     mixture = create_sample_mixture
-    lane = FlowCellLane.new(:number_of_cycles => 40, :sample_mixture => mixture)
-    lane.number_of_cycles.should == 40
+    lane = create_flow_cell_lane(:sample_mixture => mixture, :actual_reads => [create_actual_read])
+    lane.actual_reads.first.number_of_cycles.should == 50
   end
 
   it "should use the desired read length from the sample mixture if number of cycles isn't provided" do
-    mixture = create_sample_mixture(:desired_read_length => 36)
-    lane = FlowCellLane.new(:sample_mixture => mixture)
-    lane.number_of_cycles.should == 36
+    mixture = create_sample_mixture
+    lane = create_flow_cell_lane(:sample_mixture => mixture)
+    lane.actual_reads.first.number_of_cycles.should == 36
   end
 
   describe "producing a USE_BASES string for Gerald" do
-    describe "with a desired read length that matches the number of cycles on the lane" do
-      describe "with last base skipping turned off" do
-        it "should return 'Y36' if the alignment start and stop span the full desired read" do
-          mixture = new_sample_mixture(:alignment_start_position => 1, :alignment_end_position => 36,
-            :desired_read_length => 36)
-          lane = create_flow_cell_lane(:sample_mixture => mixture, :number_of_cycles => 36)
-          lane.use_bases_string(false).should == "Y36"
-        end
-        
-        it "should return 'Y25n11' for the first 25 of 36 bases of the desired read length" do
-          mixture = new_sample_mixture(:alignment_start_position => 1, :alignment_end_position => 25,
-            :desired_read_length => 36)
-          lane = create_flow_cell_lane(:sample_mixture => mixture, :number_of_cycles => 36)
-          lane.use_bases_string(false).should == "Y25n11"
-        end
-        
-        it "should return 'n2Y34' for the last 34 of 36 bases of the desired read length" do
-          mixture = new_sample_mixture(:alignment_start_position => 3, :alignment_end_position => 36,
-            :desired_read_length => 36)
-          lane = create_flow_cell_lane(:sample_mixture => mixture, :number_of_cycles => 36)
-          lane.use_bases_string(false).should == "n2Y34"
+    context "with a single read" do
+      context "desired read length matches the number of cycles on the lane" do
+        context "last base skipping turned off" do
+          it "returns 'Y36' if the alignment start and stop span the full desired read" do
+            mixture = new_sample_mixture(
+              :desired_reads => [create_desired_read(
+                :alignment_start_position => 1, :alignment_end_position => 36, :desired_read_length => 36)] )
+            lane = create_flow_cell_lane(:sample_mixture => mixture,
+              :actual_reads => [create_actual_read(:number_of_cycles => 36)] )
+            lane.use_bases_string(false).should == "Y36"
+          end
+          
+          it "provides 'Y25n11' for the first 25 of 36 bases of the desired read length" do
+            mixture = new_sample_mixture(
+              :desired_reads => [create_desired_read(
+                :alignment_start_position => 1, :alignment_end_position => 25, :desired_read_length => 36)] )
+            lane = create_flow_cell_lane(:sample_mixture => mixture,
+              :actual_reads => [create_actual_read(:number_of_cycles => 36)] )
+            lane.use_bases_string(false).should == "Y25n11"
+          end
+          
+          it "provides 'n2Y34' for the last 34 of 36 bases of the desired read length" do
+            mixture = new_sample_mixture(
+              :desired_reads => [create_desired_read(
+                :alignment_start_position => 3, :alignment_end_position => 36, :desired_read_length => 36)] )
+            lane = create_flow_cell_lane(:sample_mixture => mixture,
+              :actual_reads => [create_actual_read(:number_of_cycles => 36)] )
+            lane.use_bases_string(false).should == "n2Y34"
+          end
+
+          it "provides 'n4Y15n17' for the 5th through 19th bases of a 36 base read" do
+            mixture = new_sample_mixture(
+              :desired_reads => [create_desired_read(
+                :alignment_start_position => 5, :alignment_end_position => 19, :desired_read_length => 36)] )
+            lane = create_flow_cell_lane(:sample_mixture => mixture,
+              :actual_reads => [create_actual_read(:number_of_cycles => 36)] )
+            lane.use_bases_string(false).should == "n4Y15n17"
+          end
         end
 
-        it "should return 'n4Y15n17' for the 5th through 19th bases of a 36 base read" do
-          mixture = new_sample_mixture(:alignment_start_position => 5, :alignment_end_position => 19,
-            :desired_read_length => 36)
-          lane = create_flow_cell_lane(:sample_mixture => mixture, :number_of_cycles => 36)
-          lane.use_bases_string(false).should == "n4Y15n17"
+        context "with last base skipping turned on" do
+          it "provides 'Y35n' if the alignment start and stop span the full desired read" do
+            mixture = new_sample_mixture(
+              :desired_reads => [create_desired_read(
+                :alignment_start_position => 1, :alignment_end_position => 36, :desired_read_length => 36)] )
+            lane = create_flow_cell_lane(:sample_mixture => mixture,
+              :actual_reads => [create_actual_read(:number_of_cycles => 36)] )
+            lane.use_bases_string(true).should == "Y35n1"
+          end
+          
+          it "provides 'Y25n11' for the first 25 of 36 bases of the desired read length" do
+            mixture = new_sample_mixture(
+              :desired_reads => [create_desired_read(
+                :alignment_start_position => 1, :alignment_end_position => 25, :desired_read_length => 36)] )
+            lane = create_flow_cell_lane(:sample_mixture => mixture,
+              :actual_reads => [create_actual_read(:number_of_cycles => 36)] )
+            lane.use_bases_string(true).should == "Y25n11"
+          end
+          
+          it "provides 'n2Y33n1' for the last 34 of 36 bases of the desired read length" do
+            mixture = new_sample_mixture(
+              :desired_reads => [create_desired_read(
+                :alignment_start_position => 3, :alignment_end_position => 36, :desired_read_length => 36)] )
+            lane = create_flow_cell_lane(:sample_mixture => mixture,
+              :actual_reads => [create_actual_read(:number_of_cycles => 36)] )
+            lane.use_bases_string(true).should == "n2Y33n1"
+          end
+
+          it "provides 'n4Y15n17' for the 5th through 19th bases of a 36 base read" do
+            mixture = new_sample_mixture(
+              :desired_reads => [create_desired_read(
+                :alignment_start_position => 5, :alignment_end_position => 19, :desired_read_length => 36)] )
+            lane = create_flow_cell_lane(:sample_mixture => mixture,
+              :actual_reads => [create_actual_read(:number_of_cycles => 36)] )
+            lane.use_bases_string(true).should == "n4Y15n17"
+          end
+        end
+
+        context "when the alignment end position is greater than the desired read length" do
+          it "should use the read length as the alignment end position" do
+            mixture = new_sample_mixture(
+              :desired_reads => [create_desired_read(
+                :alignment_start_position => 5, :alignment_end_position => 41, :desired_read_length => 36)] )
+            lane = create_flow_cell_lane(:sample_mixture => mixture,
+              :actual_reads => [create_actual_read(:number_of_cycles => 36)] )
+            lane.use_bases_string(true).should == "n4Y31n1"
+          end
         end
       end
 
-      describe "with last base skipping turned on" do
-        it "should return 'Y35n' if the alignment start and stop span the full desired read" do
-          mixture = new_sample_mixture(:alignment_start_position => 1, :alignment_end_position => 36,
-            :desired_read_length => 36)
-          lane = create_flow_cell_lane(:sample_mixture => mixture, :number_of_cycles => 36)
-          lane.use_bases_string(true).should == "Y35n1"
-        end
-        
-        it "should return 'Y25n11' for the first 25 of 36 bases of the desired read length" do
-          mixture = new_sample_mixture(:alignment_start_position => 1, :alignment_end_position => 25,
-            :desired_read_length => 36)
-          lane = create_flow_cell_lane(:sample_mixture => mixture, :number_of_cycles => 36)
-          lane.use_bases_string(true).should == "Y25n11"
-        end
-        
-        it "should return 'n2Y33n1' for the last 34 of 36 bases of the desired read length" do
-          mixture = new_sample_mixture(:alignment_start_position => 3, :alignment_end_position => 36,
-            :desired_read_length => 36)
-          lane = create_flow_cell_lane(:sample_mixture => mixture, :number_of_cycles => 36)
-          lane.use_bases_string(true).should == "n2Y33n1"
-        end
-
-        it "should return 'n4Y15n17' for the 5th through 19th bases of a 36 base read" do
-          mixture = new_sample_mixture(:alignment_start_position => 5, :alignment_end_position => 19,
-            :desired_read_length => 36)
-          lane = create_flow_cell_lane(:sample_mixture => mixture, :number_of_cycles => 36)
-          lane.use_bases_string(true).should == "n4Y15n17"
-        end
-
-        it "should return 'Y35n,Y35n' for a paired end sample with full read alignment" do
-          sample_prep_kit = create_sample_prep_kit(:paired_end => true)
-          mixture = new_sample_mixture(:alignment_start_position => 1, :alignment_end_position => 36,
-            :desired_read_length => 36, :sample_prep_kit => sample_prep_kit)
-          lane = create_flow_cell_lane(:sample_mixture => mixture, :number_of_cycles => 36)
-          lane.use_bases_string(true).should == "Y35n1,Y35n1"
-        end
-      end
-
-      describe "when the alignment end position is greater than the desired read length" do
-        it "should use the read length as the alignment end position" do
-          mixture = new_sample_mixture(:alignment_start_position => 5, :alignment_end_position => 41,
-            :desired_read_length => 36)
-          lane = create_flow_cell_lane(:sample_mixture => mixture, :number_of_cycles => 36)
-          lane.use_bases_string(true).should == "n4Y31n1"
+      context "with number of cycles not matching desired read length" do
+        it "should override the sample alignement start and stop" do
+          mixture = new_sample_mixture(
+            :desired_reads => [create_desired_read(
+              :alignment_start_position => 5, :alignment_end_position => 19, :desired_read_length => 36)] )
+          lane = create_flow_cell_lane(:sample_mixture => mixture,
+            :actual_reads => [create_actual_read(:number_of_cycles => 40)] )
+          lane.use_bases_string(true).should == "Y39n1"
         end
       end
     end
 
-    describe "with number of cycles not matching desired read length" do
-      it "should override the sample alignement start and stop" do
-        mixture = new_sample_mixture(:alignment_start_position => 5, :alignment_end_position => 19,
-          :desired_read_length => 36)
-        lane = create_flow_cell_lane(:sample_mixture => mixture, :number_of_cycles => 40)
-        lane.use_bases_string(true).should == "Y39n1"
+    context "with paired end reads" do
+      it "provides 'Y35n,Y35n' for paired 36bp reads" do
+        mixture = new_sample_mixture(
+          :desired_reads => [
+            create_desired_read(:alignment_start_position => 1, :alignment_end_position => 36, :desired_read_length => 36),
+            create_desired_read(:alignment_start_position => 1, :alignment_end_position => 36, :desired_read_length => 36, :read_order => 2)
+        ] )
+        lane = create_flow_cell_lane(:sample_mixture => mixture,
+          :actual_reads => [create_actual_read(:number_of_cycles => 36), create_actual_read(:number_of_cycles => 36, :read_order => 2)] )
+        lane.use_bases_string(true).should == "Y35n1,Y35n1"
+      end
+
+      it "provides 'Y79n,Y39n' for 80/40 reads" do
+        mixture = new_sample_mixture(
+          :desired_reads => [
+            create_desired_read(:alignment_start_position => 1, :alignment_end_position => 80, :desired_read_length => 80),
+            create_desired_read(:alignment_start_position => 1, :alignment_end_position => 40, :desired_read_length => 40, :read_order => 2)
+        ] )
+        lane = create_flow_cell_lane(:sample_mixture => mixture,
+          :actual_reads => [create_actual_read(:number_of_cycles => 80), create_actual_read(:number_of_cycles => 40, :read_order => 2)] )
+        lane.use_bases_string(true).should == "Y79n1,Y39n1"
       end
     end
   end

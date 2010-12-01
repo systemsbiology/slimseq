@@ -76,7 +76,10 @@ Get detailed information about a single flow cell.
     end
     
     @flow_cell = FlowCell.new
-    (1..8).to_a.each{ |n| @flow_cell.flow_cell_lanes.build(:lane_number => n) }
+    (1..8).each do |n|
+      lane = @flow_cell.flow_cell_lanes.build(:lane_number => n)
+      (1..2).each{|o| lane.actual_reads.build(:read_order => o)}
+    end
 
     respond_to do |format|
       format.html # new.html.erb
