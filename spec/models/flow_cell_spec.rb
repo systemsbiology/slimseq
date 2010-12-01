@@ -3,38 +3,6 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe FlowCell do
   fixtures :site_config
   
-  it "should build new lanes from a set of attributes" do
-    flow_cell = FlowCell.new
-    flow_cell_lanes = [FlowCellLane.new,FlowCellLane.new]
-    flow_cell.should_receive(:flow_cell_lanes).twice.and_return(flow_cell_lanes)
-    flow_cell_lanes.should_receive(:build).exactly(2).times
-    flow_cell.new_lane_attributes = [
-      {"starting_concentration"=>"234", "loaded_concentration"=>"987",
-       "sample_mixture_id"=>"7", "lane_number"=>"1"},
-      {"starting_concentration"=>"0987", "loaded_concentration"=>"089",
-       "sample_mixture_id"=>"8", "lane_number"=>"2"}
-    ]
-  end
-
-  describe "updating existing lanes from a set of attributes" do
-    fixtures :samples, :sample_mixtures, :flow_cells, :flow_cell_lanes
-    
-    it "should update the attributes" do
-      flow_cell = flow_cells(:flow_cell_1)
-      flow_cell.existing_lane_attributes = {
-        flow_cell_lanes(:lane_1).id.to_s => {"starting_concentration"=>"234",
-                                        "loaded_concentration"=>"987",
-                                        "sample_mixture_id"=>sample_mixtures(:sample_mixture_3).id.to_s, "lane_number"=>"1"},
-        flow_cell_lanes(:lane_2).id.to_s => {"starting_concentration"=>"0987",
-                                        "loaded_concentration"=>"089",
-                                        "sample_mixture_id"=>sample_mixtures(:sample_mixture_4).id.to_s, "lane_number"=>"2"}
-      }
-
-      FlowCellLane.find(flow_cell_lanes(:lane_1).id).starting_concentration.should == "234"
-      FlowCellLane.find(flow_cell_lanes(:lane_2).id).starting_concentration.should == "0987"
-    end
-  end
-  
   it "should mark the associated flow cell lanes as sequenced when the flow cell is sequenced" do
     flow_cell_lane_1 = create_flow_cell_lane
     flow_cell_lane_2 = create_flow_cell_lane
