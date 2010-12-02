@@ -78,7 +78,7 @@
         <% @n = 0 %>
         <table class="sortable" id="samples">
           <tr>
-            <%= render :partial => 'samples/schemed_sample_description', :locals => { :sample_fields => sample_fields } %>
+            <%= render :partial => 'samples/schemed_sample_description', :locals => { :field_prefix => sample_fields.object_name } %>
           </tr>
         </table>
       <% else %>

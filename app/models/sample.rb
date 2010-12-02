@@ -32,7 +32,6 @@ class Sample < ActiveRecord::Base
   def self.new(attributes=nil)
     schemed_params = attributes.delete("schemed_name") if attributes
 
-    debugger
     sample = super
     sample.schemed_name = schemed_params
     
