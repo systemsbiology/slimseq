@@ -23,7 +23,7 @@ class SampleSetsController < ApplicationController
   
   def sample_mixture_fields
     @naming_scheme = NamingScheme.find(params[:sample_set][:naming_scheme_id]) if params[:sample_set][:naming_scheme_id]
-    @naming_elements = @naming_scheme.naming_elements.find(:all, :order => "element_order ASC")
+    @naming_elements = @naming_scheme.naming_elements.find(:all, :order => "element_order ASC") if @naming_scheme
     @number_of_samples = params[:sample_set][:number_of_samples].to_i
     @project = Project.find(params[:sample_set][:project_id])
     @multiplexing_scheme = MultiplexingScheme.find(params[:sample_set][:multiplexing_scheme_id]) if params[:sample_set][:multiplexing_scheme_id]
