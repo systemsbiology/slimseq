@@ -1,7 +1,7 @@
 class SamplePrepKit < ActiveRecord::Base
   belongs_to :platform
   belongs_to :default_primer, :class_name => "Primer"
-  has_many :samples
+  has_many :sample_mixtures
 
   belongs_to :multiplexing_scheme
 
