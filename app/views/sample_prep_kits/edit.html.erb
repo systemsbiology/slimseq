@@ -20,17 +20,6 @@
   </p>
 
   <p>
-    <b>Paired End</b><br />
-    <%= f.check_box :paired_end %>
-  </p>
-
-  <p>
-    <b>Multiplexing</b><br />
-    <%= f.collection_select :multiplexing_scheme_id, MultiplexingScheme.all,
-      :id, :name, {:prompt => "None"} %>
-  </p>
-
-  <p>
     <b>Custom Prep Method</b><br />
     <%= f.check_box :custom %>
   </p>
