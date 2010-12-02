@@ -13,6 +13,7 @@ class SampleMixture < ActiveRecord::Base
   belongs_to :platform
 
   accepts_nested_attributes_for :desired_reads
+  accepts_nested_attributes_for :samples
 
   named_scope :accessible_to_user, lambda {|*args|
     { :include => :project,
@@ -75,12 +76,12 @@ class SampleMixture < ActiveRecord::Base
     super
   end
 
-  # needed this to get fields_for to work in the view
-  def samples_attributes=(attributes)
-    attributes.keys.collect{|k| k.to_i}.sort.each do |index|
-      self.samples[index].update_attributes(attributes[index.to_s])
-    end
-  end
+  ## needed this to get fields_for to work in the view
+  #def samples_attributes=(attributes)
+  #  attributes.keys.collect{|k| k.to_i}.sort.each do |index|
+  #    self.samples[index].update_attributes(attributes[index.to_s])
+  #  end
+  #end
 
   def submitted_by=(login)
     self.user = User.find_by_login(login)

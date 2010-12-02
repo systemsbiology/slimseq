@@ -3,16 +3,16 @@
 <% end %>
 </tr>
 <tr>
-<% for @m in 0..@naming_elements.size-1 
-   @element = @naming_elements[@m]
+<% for @e in 0..@naming_elements.size-1 
+   @element = @naming_elements[@e]
    @dependent_elements = NamingElement.find(:all,
      :conditions => ["dependent_element_id = ?", @element.id]) %>
     <td>
       <div id="sample_<%=@n%>_schemed_name_<%=@element.safe_name%>_block">
-        <% if @sample.naming_element_visibility[@m] == true %>
-            <%= render :partial => 'samples/shown_naming_element', :locals => { :sample_fields => sample_fields } %>
+        <% if @sample.naming_element_visibility[@e] == true %>
+          <%= render :partial => 'samples/shown_naming_element', :locals => { :field_prefix => field_prefix } %>
         <% else %>
-            <%= render :partial => 'samples/hidden_naming_element', :locals => { :sample_fields => sample_fields } %>
+          <%= render :partial => 'samples/hidden_naming_element', :locals => { :field_prefix => field_prefix } %>
         <% end %>
       </div>
     </td>

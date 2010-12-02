@@ -10,21 +10,25 @@
       <th>Sample Comment</th>
     </tr>
     </thead>
-    <% (1..@number_of_samples).each do |m| %>
+    <% @n = 0 %>
+    <% (1..@number_of_samples).each do |@m| %>
       <tr>
-        <td><%= text_field 'sample_set[sample_mixtures]', :name_on_tube, :size => 10, :index => m, :class => "required" %></td>
+        <td><%= text_field 'sample_set[sample_mixtures]', :name_on_tube, :size => 10, :index => @m, :class => "required" %></td>
 
         <td>
           <% if @multiplexing_scheme %>
             Multiplexed samples
           <% end %>
           <table class="nonsortable">
-            <% (1..@samples_per_mixture).each do |s| %>
+            <% (1..@samples_per_mixture).each do %>
+              <% @n += 1 %>
               <tr>
                 <% if @naming_scheme == nil %>
-                  <td><%= text_field "sample_set[sample_mixtures][#{m}][samples]", :sample_description, :size => 30, :index => m, :class => "required sample_description" %></td>
+                  <td><%= text_field "sample_set[sample_mixtures][#{@m}][samples]", :sample_description, :size => 30, :index => @m, :class => "required sample_description" %></td>
                 <% else %>
-                  <%= render :partial => 'samples/schemed_sample_description', :locals => { :sample_fields => sample_fields } %>
+                  <% @sample = Sample.new(:naming_scheme_id => @naming_scheme.id) %>
+                  <%= render :partial => 'samples/schemed_sample_description', :locals => { 
+                    :field_prefix => "sample_set[sample_mixtures][#{@m}][samples][#{@n}]" } %>
                 <% end %>
                 <td>
                   <% if @multiplexing_scheme %>
@@ -38,12 +42,12 @@
         </td>
         
         <% if @samples_need_approval %>
-          <%= hidden_field 'sample_set[sample_mixtures]', :ready_for_sequencing, :value => 0, :index => m %>
+          <%= hidden_field 'sample_set[sample_mixtures]', :ready_for_sequencing, :value => 0, :index => @m %>
         <% else %>
-          <td><%= check_box 'sample_set[sample_mixtures]', :ready_for_sequencing, :checked => true, :index => m %></td>
+          <td><%= check_box 'sample_set[sample_mixtures]', :ready_for_sequencing, :checked => true, :index => @m %></td>
         <% end %>
 
-        <td><%= text_field 'sample_set[sample_mixtures]', :comment, :size => 30, :index => m %></td>
+        <td><%= text_field 'sample_set[sample_mixtures]', :comment, :size => 30, :index => @m %></td>
       </tr>
     <% end %>
   </table>

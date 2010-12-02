@@ -1,16 +1,16 @@
 <% if @element.free_text %>
   <input id="sample_<%=@n%>_schemed_name_<%=h @element.safe_name%>" 
-    name="<%= sample_fields.object_name %>[schemed_name][<%=h @element.safe_name%>]" size="10" type="text"
+    name="<%= field_prefix %>[schemed_name][<%=h @element.safe_name%>]" size="10" type="text"
     value="<%= @sample.text_values[@element.name] %>" />
 <% else %>
   <select id="sample_<%=@n%>_schemed_name_<%=@element.safe_name%>"
-    name="<%= sample_fields.object_name %>[schemed_name][<%=h @element.safe_name%>]">
+    name="<%= field_prefix %>[schemed_name][<%=h @element.safe_name%>]">
   <% if @element.optional == true %>
       <option value="-1">- None -</option>
   <% end %>
 
   <% if @sample.naming_element_selections != nil %>
-     <%= options_from_collection_for_select @element.ordered_naming_terms, "id", "term", selected_value=@sample.naming_element_selections[@m.to_i].to_i %>
+     <%= options_from_collection_for_select @element.ordered_naming_terms, "id", "term", selected_value=@sample.naming_element_selections[@e.to_i].to_i %>
   <% else %>
      <%= options_from_collection_for_select @element.ordered_naming_terms, "id", "term" %>
   <% end %>
