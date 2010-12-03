@@ -32,7 +32,7 @@
                 <% end %>
                 <td>
                   <% if @multiplexing_scheme %>
-                    Barcode: <%= collection_select "sample_set[sample_mixtures][#{m}][samples]", :multiplex_code_id, @multiplexing_scheme.multiplex_codes,
+                    Barcode: <%= collection_select "sample_set[sample_mixtures][#{@m}][samples]", :multiplex_code_id, @multiplexing_scheme.multiplex_codes,
                       :id, :name, {:prompt => true} %>
                   <% end %>
                 </td>
