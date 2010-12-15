@@ -343,6 +343,10 @@ class SampleMixture < ActiveRecord::Base
 
 ########################################################################
 
+  def desired_read_lengths
+    desired_reads.collect{|r| r.desired_read_length}.join(" / ")
+  end
+
 private
 
   def add_comment(base, comment, type)
