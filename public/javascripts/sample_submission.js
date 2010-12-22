@@ -7,24 +7,22 @@ $(document).ready(function() {
     return !/\s/.test(value);
   }, "No spaces are allowed in this field");
 
-  $(function(){
-    $("form").formwizard({ 
-      formPluginEnabled: true,
-      validationEnabled: true,
-      focusFirstInput : true,
-      formOptions :{
-        success: function(data){
-          $('#error').hide();
-          $('form').hide();
-          $('#success').show();
-        },
-        error: function(data) { submissionError(data); },
-        beforeSubmit: function(data){$("#data").html("data sent to the server: " + $.param(data));},
-        dataType: 'json',
+  $("form").formwizard({ 
+    formPluginEnabled: true,
+    validationEnabled: true,
+    focusFirstInput: true,
+    inDuration: 200,
+    outDuration: 200,
+    formOptions: {
+      success: function(data){
+        $('#error').hide();
+        $('form').hide();
+        $('#success').show();
       },
-      inDuration : 200,
-      outDuration: 200
-    });
+      error: function(data) { submissionError(data); },
+      beforeSubmit: function(data){$("#data").html("data sent to the server: " + $.param(data));},
+      dataType: 'json'
+    }
   });
 
   function submissionError(data) {

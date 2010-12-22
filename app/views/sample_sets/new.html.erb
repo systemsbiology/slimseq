@@ -162,9 +162,7 @@
     
     <script type="text/javascript">
       var default_primers = {
-        <% SamplePrepKit.all.each do |kit| -%>
-          "<%= kit.id %>": <%= kit.default_primer_id || 'null' %>,
-        <% end -%>
+        <%= SamplePrepKit.all.collect{|kit| "\"#{kit.id}\": #{kit.default_primer_id || 'null'}" }.join(",") %>
       }
     </script>
   <% else %>
