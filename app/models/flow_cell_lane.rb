@@ -167,7 +167,7 @@ private
 
     # only use the alignment start and stop positions if the samples's desired read length
     # matches the lane's number of cycles
-    if desired_read.desired_read_length == actual_read.number_of_cycles
+    if desired_read && desired_read.desired_read_length == actual_read.number_of_cycles
       alignment_start_position = desired_read.alignment_start_position
       alignment_end_position = desired_read.alignment_end_position
     else
