@@ -59,9 +59,13 @@
             </div>
           </div>
 
+          
           <p><%= label :sample_set, :primer_id, 'Primer' %><br/>
           <%= collection_select :sample_set, :primer_id,
-            primer_choices(platform), :id, :name, {:prompt => true}, :class => "required" %></p>
+            primer_choices(platform), :id, :name, {:prompt => true}, :class => "required" %><br/>
+            <span style="color: red">If the adapters you used were not part of your sample prep kit,<br/>
+              be sure to specify the correct primer here.</span>
+            </p>
 
           <div id="custom_primer" style="display:none;">
             <p><%= label :sample_set, :custom_primer_id, 'Custom Primer' %><br/>
