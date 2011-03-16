@@ -274,13 +274,6 @@ describe ProjectsController do
         do_post
       end
 
-      it "should make a new sample set that pointed at this project" do
-        SampleSet.should_receive(:new).
-          with(:project_id => @project.id).
-          and_return(@sample_set)
-        do_post
-      end
-
       it "should render the sample_sets/projects partial" do
         do_post
         response.should render_template('sample_sets/_projects')
