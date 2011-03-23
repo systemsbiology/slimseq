@@ -100,6 +100,7 @@ class SampleSet < ActiveRecord::Base
       end
 
       if samples_attributes
+        debugger
         samples_attributes.each do |sample_attributes|
           sample_attributes = sample_attributes.merge(shared_sample_attributes)
 
