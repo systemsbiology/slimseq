@@ -103,25 +103,26 @@
     <% if @samples.size > 1 %>
       <p><label>Multiplex Code</label><br/>
       <%= sample_fields.collection_select :multiplex_code_id,
-        @sample_mixture.sample_prep_kit.multiplexing_scheme.multiplex_codes, :id, :name %></p>
+        @sample_mixture.multiplexing_scheme.multiplex_codes, :id, :name %></p>
     <% end %>
 
     <% if @samples.size > 1 %>
       </div>
     <% end %>
 
-    <p>
-      <label><b>Raw Data Directory/Directories</b></label><br/>
-      <% @sample_mixture.flow_cell_lanes.each do |lane| %>
-        <% if lane.pipeline_results.size > 0 %>
-          <% mixture_form.fields_for "lane_paths[]", lane do |lane_form| %>
-            <li>Flow cell <%=h lane.flow_cell.name %>, Lane #<%=h lane.lane_number %>: 
-            <%= lane_form.text_field :raw_data_path, :size => 60 %>
-          <% end %>
-        <% end %>
-      <% end  %>
-    </p>
   <% end %>
+
+  <p>
+    <label><b>Raw Data Directory/Directories</b></label><br/>
+    <% @sample_mixture.flow_cell_lanes.each do |lane| %>
+      <% if lane.pipeline_results.size > 0 %>
+        <% mixture_form.fields_for "lane_paths[]", lane do |lane_form| %>
+          <li>Flow cell <%=h lane.flow_cell.name %>, Lane #<%=h lane.lane_number %>: 
+          <%= lane_form.text_field :raw_data_path, :size => 60 %>
+        <% end %>
+      <% end %>
+    <% end  %>
+  </p>
 
   <p><label for="sample_mixture_comment">Sample Comment</label><br/>
   <%= text_field 'sample_mixture', 'comment' %></p>
