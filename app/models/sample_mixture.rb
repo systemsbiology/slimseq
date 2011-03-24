@@ -11,6 +11,7 @@ class SampleMixture < ActiveRecord::Base
   belongs_to :sample_prep_kit
   belongs_to :primer
   belongs_to :platform
+  belongs_to :multiplexing_scheme
 
   accepts_nested_attributes_for :desired_reads
   accepts_nested_attributes_for :samples

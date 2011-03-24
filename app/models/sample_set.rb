@@ -20,7 +20,8 @@ class SampleSet < ActiveRecord::Base
       :primer_id => attributes["primer_id"],
       :project_id => attributes["project_id"],
       :platform_id => attributes["platform_id"],
-      :submitted_by_id => attributes["submitted_by_id"]
+      :submitted_by_id => attributes["submitted_by_id"],
+      :multiplexing_scheme_id => attributes["multiplexing_scheme_id"]
     }
     shared_sample_attributes = {
       :insert_size => attributes["insert_size"],
@@ -100,7 +101,6 @@ class SampleSet < ActiveRecord::Base
       end
 
       if samples_attributes
-        debugger
         samples_attributes.each do |sample_attributes|
           sample_attributes = sample_attributes.merge(shared_sample_attributes)
 
