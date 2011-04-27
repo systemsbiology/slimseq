@@ -33,6 +33,14 @@ Rails::Initializer.run do |config|
   # (by default production uses :info, the others :debug)
   # config.log_level = :debug
 
+  # Use the database for sessions instead of the cookie-based default,
+  # which shouldn't be used to store highly confidential information
+  # (create the session table with 'rake db:sessions:create')
+  # config.action_controller.session_store = :active_record_store
+
+  # Use cookie-based store, which works nicely with protect_from_forgery in application.rb
+  config.action_controller.session_store = :active_record_store
+
   # Your secret key for verifying cookie session data integrity.
   # If you change this key, all old sessions will become invalid!
   # Make sure the secret is at least 30 characters and all random, 
@@ -41,14 +49,6 @@ Rails::Initializer.run do |config|
     :session_key => '_slimseq_session',
     :secret      => 'f60f394add7aa3c74c2529e823cb87fc30780205e8f058b2fdd0e08a26d60f23c53f5fbc4142a58df75ef237b8ff3f79c9d5b571bf372d1cb70f28818aae3975'
   }
-
-  # Use the database for sessions instead of the cookie-based default,
-  # which shouldn't be used to store highly confidential information
-  # (create the session table with 'rake db:sessions:create')
-  # config.action_controller.session_store = :active_record_store
-
-  # Use cookie-based store, which works nicely with protect_from_forgery in application.rb
-  config.action_controller.session_store = :cookie_store
   
   # Use SQL instead of Active Record's schema dumper when creating the test database.
   # This is necessary if your schema can't be completely dumped by the schema dumper,
