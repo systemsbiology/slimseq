@@ -24,12 +24,13 @@
               <% @n += 1 %>
               <tr>
                 <% if @naming_scheme == nil %>
-                  <td><%= text_field "sample_set[sample_mixtures][#{@m}][samples][#{@n}]", :sample_description, :size => 30, :class => "required sample_description" %></td>
+                  <td>Sample Name: <%= text_field "sample_set[sample_mixtures][#{@m}][samples][#{@n}]", :sample_description, :size => 30, :class => "required sample_description" %></td>
                 <% else %>
                   <% @sample = Sample.new(:naming_scheme_id => @naming_scheme.id) %>
                   <%= render :partial => 'samples/schemed_sample_description', :locals => { 
                     :field_prefix => "sample_set[sample_mixtures][#{@m}][samples][#{@n}]" } %>
                 <% end %>
+                <td>Insert <b>+ Adapters</b> Size: <%= text_field "sample_set[sample_mixtures][#{@m}][samples][#{@n}]", :insert_size, :size => 30, :class => "required" %></td>
                 <td>
                   <% if @multiplexing_scheme %>
                     Barcode: <%= collection_select "sample_set[sample_mixtures][#{@m}][samples][#{@n}]", :multiplex_code_id, @multiplexing_scheme.multiplex_codes,

@@ -14,19 +14,19 @@ class SampleSet < ActiveRecord::Base
     end
 
     shared_mixture_attributes = {
-      :budget_number => attributes["budget_number"],
-      :submission_date => parse_multi_field_date(attributes) || Date.today,
-      :eland_parameter_set_id => attributes["eland_parameter_set_id"],
-      :primer_id => attributes["primer_id"],
-      :project_id => attributes["project_id"],
-      :platform_id => attributes["platform_id"],
-      :submitted_by_id => attributes["submitted_by_id"],
-      :multiplexing_scheme_id => attributes["multiplexing_scheme_id"]
+      "budget_number" => attributes["budget_number"],
+      "submission_date" => parse_multi_field_date(attributes) || Date.today,
+      "eland_parameter_set_id" => attributes["eland_parameter_set_id"],
+      "primer_id" => attributes["primer_id"],
+      "project_id" => attributes["project_id"],
+      "platform_id" => attributes["platform_id"],
+      "submitted_by_id" => attributes["submitted_by_id"],
+      "multiplexing_scheme_id" => attributes["multiplexing_scheme_id"]
     }
     shared_sample_attributes = {
-      :insert_size => attributes["insert_size"],
-      :reference_genome_id => attributes["reference_genome_id"],
-      :naming_scheme_id => attributes["naming_scheme_id"]
+      "insert_size" => attributes["insert_size"],
+      "reference_genome_id" => attributes["reference_genome_id"],
+      "naming_scheme_id" => attributes["naming_scheme_id"]
     }
 
     if attributes["sample_prep_kit_id"].to_i > 0
@@ -102,7 +102,7 @@ class SampleSet < ActiveRecord::Base
 
       if samples_attributes
         samples_attributes.each do |sample_attributes|
-          sample_attributes = sample_attributes.merge(shared_sample_attributes)
+          sample_attributes = shared_sample_attributes.merge(sample_attributes)
 
           sample_mixture.samples.build(sample_attributes)
         end
