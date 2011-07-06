@@ -15,7 +15,7 @@ REST-like API.
 SLIMseq can be installed either as a standalone application, or using shared infrastructure that 
 allows single sign-on and shared users and lab groups with other applications such as SLIMarray. 
 The shared infrastructure install requires that you separately install SLIMcore 
-(http://github.com/bmarzolf/slimcore/tree/master) and RubyCAS-server 
+(http://github.com/systemsbiology/slimcore/tree/master) and RubyCAS-server 
 (http://github.com/gunark/rubycas-server/tree/master). See INSTALL.rdoc for details on 
 installing these.
 
@@ -31,7 +31,7 @@ SLIMseq is a Ruby on Rails application. Those familiar with setting up Ruby on R
 may find the following sufficient to get it up and running (with slimcore):
 
     gem install rails -v=2.3.11
-    git clone git://github.com/bmarzolf/slimseq.git
+    it clone git://github.com/systemsbiology/slimseq.git
     cd slimseq
     rake setup authorizer=slimcore
     script/server
