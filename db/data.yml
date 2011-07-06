@@ -1,5 +1,26 @@
 
 --- 
+desired_reads: 
+  columns: 
+  - id
+  - desired_read_length
+  - alignment_start_position
+  - alignment_end_position
+  - sample_mixture_id
+  - created_at
+  - updated_at
+  - read_order
+  records: 
+  - - "1"
+    - "18"
+    - "1"
+    - "18"
+    - "1"
+    - 2011-07-06 10:45:55
+    - 2011-07-06 10:45:55
+    - "1"
+
+--- 
 lab_memberships: 
   columns: 
   - id
@@ -30,6 +51,31 @@ organisms:
     - "0"
     - 
     - 
+
+--- 
+platforms: 
+  columns: 
+  - id
+  - name
+  - samples_per_flow_cell
+  - loading_location_name
+  - uses_gerald
+  - requires_concentrations
+  - created_at
+  - updated_at
+  - flow_cell_and_sequencing_separate
+  - uses_run_number
+  records: 
+  - - "1"
+    - Illumina
+    - "8"
+    - lane
+    - true
+    - true
+    - 2011-07-06 10:45:53
+    - 2011-07-06 10:45:53
+    - true
+    - true
 
 --- 
 projects: 
@@ -76,6 +122,49 @@ reference_genomes:
     - 
 
 --- 
+sample_mixtures: 
+  columns: 
+  - id
+  - name_on_tube
+  - sample_description
+  - project_id
+  - budget_number
+  - control
+  - comment
+  - ready_for_sequencing
+  - eland_parameter_set_id
+  - submission_date
+  - status
+  - submitted_by_id
+  - sample_prep_kit_id
+  - sample_set_id
+  - created_at
+  - updated_at
+  - platform_id
+  - primer_id
+  - multiplexing_scheme_id
+  records: 
+  - - "1"
+    - PhiX
+    - PhiX_Control
+    - "1"
+    - "00000000"
+    - true
+    - ""
+    - true
+    - 
+    - "2008-08-21"
+    - completed
+    - 
+    - "1"
+    - 
+    - 2010-05-11 12:23:53
+    - 2011-07-06 10:45:54
+    - "1"
+    - 
+    - 
+
+--- 
 sample_prep_kits: 
   columns: 
   - id
@@ -85,15 +174,48 @@ sample_prep_kits:
   - updated_at
   - restriction_enzyme
   - paired_end
-  - multiplexing_scheme_id
+  - platform_id
+  - custom
+  - default_primer_id
   records: 
   - - "1"
     - PhiX Control
-    - "0"
+    - "1"
     - 
-    - 
+    - 2011-07-06 10:45:54
     - 
     - false
+    - "1"
+    - false
+    - 
+
+--- 
+samples: 
+  columns: 
+  - id
+  - sample_description
+  - insert_size
+  - reference_genome_id
+  - naming_scheme_id
+  - lock_version
+  - created_at
+  - updated_at
+  - experiment_id
+  - postback_uri
+  - sample_mixture_id
+  - multiplex_code_id
+  records: 
+  - - "1"
+    - PhiX_Control
+    - "100"
+    - "1"
+    - "0"
+    - "61"
+    - 
+    - 2010-05-11 12:23:53
+    - 
+    - 
+    - "1"
     - 
 
 --- 
@@ -182,75 +304,3 @@ users:
     - "0"
     - false
     - false
-
---- 
-sample_mixtures: 
-  columns: 
-  - id
-  - name_on_tube
-  - sample_description
-  - project_id
-  - budget_number
-  - desired_read_length
-  - alignment_start_position
-  - alignment_end_position
-  - control
-  - comment
-  - ready_for_sequencing
-  - eland_parameter_set_id
-  - submission_date
-  - status
-  - submitted_by_id
-  - sample_prep_kit_id
-  - sample_set_id
-  - created_at
-  - updated_at
-  records: 
-  - - "1"
-    - PhiX
-    - PhiX_Control
-    - "1"
-    - "00000000"
-    - "18"
-    - "1"
-    - "18"
-    - true
-    - ""
-    - true
-    - 
-    - "2008-08-21"
-    - completed
-    - 
-    - "1"
-    - 
-    - 2010-05-11 12:23:53
-    - 2010-05-11 12:23:53
-
---- 
-samples: 
-  columns: 
-  - id
-  - sample_description
-  - insert_size
-  - reference_genome_id
-  - naming_scheme_id
-  - lock_version
-  - created_at
-  - updated_at
-  - experiment_id
-  - postback_uri
-  - sample_mixture_id
-  - multiplex_code_id
-  records: 
-  - - "1"
-    - PhiX_Control
-    - "100"
-    - "1"
-    - ""
-    - "61"
-    - 
-    - 2010-05-11 12:23:53
-    - 
-    - 
-    - "1"
-    - 
