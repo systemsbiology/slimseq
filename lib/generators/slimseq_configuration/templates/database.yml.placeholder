@@ -21,3 +21,24 @@ test:
   database: slimseq_test
   username: test
   password: test
+
+slimcore_production:
+  adapter: mysql
+  host: localhost
+  database: slimcore_production
+  username: slimcore
+  password: slimcore
+
+slimcore_development:
+  adapter: mysql
+  host: localhost
+  database: slimcore_development
+  username: slimcore
+  password: slimcore
+  
+slimcore_test:
+  adapter: mysql
+  host: localhost
+  database: slimcore_test
+  username: slimcore
+  password: slimcore
