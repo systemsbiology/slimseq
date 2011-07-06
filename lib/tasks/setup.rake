@@ -43,9 +43,9 @@ namespace :setup do
     
     case ENV['authorizer']
     when "slimcore"
-      `ruby script/plugin install git://github.com/bmarzolf/slimcore_authorizer.git`
+      `ruby script/plugin install git://github.com/systemsbiology/slimcore_authorizer.git`
     when "slimsolo"
-      `ruby script/plugin install git://github.com/bmarzolf/slimsolo_authorizer.git`
+      `ruby script/plugin install git://github.com/systemsbiology/slimsolo_authorizer.git`
     end
   end
 
