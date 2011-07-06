@@ -1,6 +1,6 @@
 [submodule "vendor/plugins/naming_schemer"]
 	path = vendor/plugins/naming_schemer
-	url = git://github.com/bmarzolf/naming_schemer.git
+	url = git://github.com/systemsbiology/naming_schemer.git
 [submodule "public/ext"]
 	path = public/ext
 	url = git://github.com/probonogeek/extjs
