@@ -238,15 +238,15 @@ site_config:
   records: 
   - - "1"
     - SLIMseq
-    - Institute for Systems Biology
+    - My Organization
     - Sequencing Facility
     - false
     - false
-    - ldap.systemsbiology.net
-    - cn=users,dc=systemsbiology,dc=net
-    - bmarzolf@systemsbiology.org
+    - ldap.example.com
+    - cn=users,dc=example,dc=com
+    - admin@example.com
     - /solexa
-    - http://osiris:3000
+    - http://example.com
     - "7"
     - 
     - 2008-12-02 08:57:09
