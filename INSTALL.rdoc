@@ -12,7 +12,7 @@ being used at Institute for Systems Biology where SLIMseq was developed.
 SLIMseq can be installed either as a standalone application, or using shared infrastructure that 
 allows single sign-on and shared users and lab groups with other applications such as SLIMarray. 
 The shared infrastructure install requires that you separately install SLIMcore 
-(http://github.com/bmarzolf/slimcore/tree/master) and RubyCAS-server 
+(http://github.com/systemsbiology/slimcore/tree/master) and RubyCAS-server 
 (http://github.com/gunark/rubycas-server/tree/master).
 
 See the "Install Extras for SLIMcore Authorizer" at the end of this document for details on 
@@ -48,7 +48,7 @@ installing SLIMcore and RubyCAS-server/RubyCAS-client.
     sudo mkdir /apps
     sudo chown notroot:notroot /apps
     cd /apps/
-    git clone git://github.com/bmarzolf/slimseq.git
+    git clone git://github.com/systemsbiology/slimseq.git
     cd slimseq
 
 == Run the setup task
@@ -96,7 +96,7 @@ Now you should be get to SLIMseq at http://www.yourhost.com
 
 === SLIMcore Install Instructions (only needed with SLIMcore Authorizer)
 
-Follow the documentation at http://github.com/bmarzolf/slimcore/tree/master.
+Follow the documentation at http://github.com/systemsbiology/slimcore/tree/master.
 
 === RubyCAS Install Instructions (only needed with SLIMcore Authorizer)
 
@@ -106,7 +106,7 @@ Passenger 2.1+. When installing RubyCAS-server, be sure to install the following
 of Picnic and RubyCAS-server:
 
     sudo gem sources -a http://gems.github.com
-    sudo gem install bmarzolf-picnic -v=0.8.0.20090421
+    sudo gem install systemsbiology-picnic -v=0.8.0.20090421
 
 Also install the gettext gem:
 
@@ -114,7 +114,7 @@ Also install the gettext gem:
 
 Then, install RubyCAS-server from this source:
 
-    git clone git://github.com/bmarzolf/rubycas-server.git /apps/rubycas-server
+    git clone git://github.com/systemsbiology/rubycas-server.git /apps/rubycas-server
     cd /apps/rubycas-server
     cp config.example.yml config.yml
     # edit setting in config.yml
