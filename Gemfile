@@ -11,6 +11,7 @@ gem "nokogiri",'1.2.3'
 gem "rubycas-client",'2.1.0'
 gem "highline",'1.4.0'
 gem "validatable",'1.6.7'
+gem 'crypt-isaac', '0.9.1'
 
 group :test, :development do
   gem 'rspec', '1.3.0'

@@ -13,6 +13,7 @@ GEM
     activesupport (2.3.11)
     builder (2.1.2)
     columnize (0.3.4)
+    crypt-isaac (0.9.1)
     cucumber (0.3.1)
       builder (>= 2.1.2)
       diff-lcs (>= 1.1.2)
@@ -64,6 +65,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  crypt-isaac (= 0.9.1)
   cucumber (= 0.3.1)
   highline (= 1.4.0)
   hpricot (= 0.6.161)
