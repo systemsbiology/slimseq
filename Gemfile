@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 gem 'rails', '2.3.11'
 gem 'mysql', '2.8.1'
 
-gem "json", '1.1.3'
+gem "json", '2.3.0'
 gem "parseexcel",'0.5.2'
 gem "rest-client", '0.8.2', :require => "rest_client"
 gem "hpricot",'0.6.161'
