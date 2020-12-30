@@ -7,7 +7,7 @@ gem "json", '1.1.3'
 gem "parseexcel",'0.5.2'
 gem "rest-client", '0.8.2', :require => "rest_client"
 gem "hpricot",'0.6.161'
-gem "nokogiri",'1.2.3'
+gem "nokogiri",'1.10.10'
 gem "rubycas-client",'2.1.0'
 gem "highline",'1.4.0'
 gem "validatable",'1.6.7'
