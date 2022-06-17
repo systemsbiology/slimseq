@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '2.3.11'
+gem 'rails', '3.2.17'
 gem 'mysql', '2.8.1'
 
 gem "json", '1.1.3'
